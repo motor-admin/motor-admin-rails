@@ -1,18 +1,45 @@
 <template>
-  <div>
-    <p>hello admin</p>
+  <Layout>
     <AppHeader />
-    <RouterView />
-  </div>
+    <Layout :has-sider="true">
+      <Sider
+        hide-trigger
+        :style="{background: '#fff'}"
+      >
+        <ResourcesMenu :resources="schema" />
+      </Sider>
+      <Layout>
+        <AppBreadcrumbs :style="{ margin: '14px 10px' }" />
+        <Content :style="{padding: '24px', minHeight: '280px', background: '#fff'}">
+          <RouterView />
+        </Content>
+      </Layout>
+    </Layout>
+  </Layout>
 </template>
 
 <script>
+import store from 'store'
 import AppHeader from 'navigation/components/header'
+import AppBreadcrumbs from 'navigation/components/breadcrumbs'
+import ResourcesMenu from 'navigation/components/resources'
 
 export default {
   name: 'App',
   components: {
-    AppHeader
+    AppHeader,
+    AppBreadcrumbs,
+    ResourcesMenu
+  },
+  computed: {
+    schema () {
+      return store.getters.schema
+    }
+  },
+  mounted () {
   }
 }
 </script>
+
+<style lang="scss">
+</style>

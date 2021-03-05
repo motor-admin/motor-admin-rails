@@ -1,13 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { basePath } from 'utils/scripts/configs'
 
-import ResourcesIndex from 'resources/pages/index'
-
-const basePath = document.getElementById('app').dataset['base-path']
+import ResourcesBase from 'resources/pages/base'
 
 const routes = [
   {
     path: '/',
-    component: ResourcesIndex,
+    component: ResourcesBase,
+    name: 'dashboard'
+  },
+  {
+    path: '/resources/:fragments+',
+    component: ResourcesBase,
     name: 'resources'
   }
 ]

@@ -1,10 +1,13 @@
 module Motor
-  class UiController < ActionController::Base
+  class UiController < ApplicationController
     layout 'motor/application'
 
     def show
+      Motor.reload! if Motor.development?
+
       @data = {
-        base_path: Motor::Admin.routes.url_helpers.motor_path
+        base_path: Motor::Admin.routes.url_helpers.motor_path,
+        schema: Motor::Schema.load
       }
     end
   end

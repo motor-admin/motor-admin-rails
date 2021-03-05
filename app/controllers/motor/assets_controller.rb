@@ -10,6 +10,8 @@ module Motor
       self.response_body = CACHE_STORE.fetch(filename) do
         Motor::Assets.load_asset(filename)
       end
+
+      self.headers["Content-Type"] = Marcel::MimeType.for(name: filename)
     end
   end
 end

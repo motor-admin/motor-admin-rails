@@ -22,6 +22,8 @@ import Header from 'view3/src/components/header'
 import Switch from 'view3/src/components/switch'
 import Card from 'view3/src/components/card'
 import Icon from 'view3/src/components/icon'
+import Content from 'view3/src/components/content'
+import Layout from 'view3/src/components/layout'
 import Input from 'view3/src/components/input'
 import Form from 'view3/src/components/form'
 import FormItem from 'view3/src/components/form-item'
@@ -39,6 +41,9 @@ import Select from 'view3/src/components/select'
 import Option from 'view3/src/components/option'
 import Cell from 'view3/src/components/cell'
 import CellGroup from 'view3/src/components/cell-group'
+import Sider from 'view3/src/components/sider'
+import Breadcrumb from 'view3/src/components/breadcrumb'
+import BreadcrumbItem from 'view3/src/components/breadcrumb-item'
 
 import ContentPlaceholders from 'vue-content-placeholders/src/components/ContentPlaceholders'
 import ContentPlaceholdersText from 'vue-content-placeholders/src/components/ContentPlaceholdersText'
@@ -48,16 +53,16 @@ const app = createApp(App)
 app.directive('popover', PopoverDirective)
 app.directive('clipboard', VueClipboard)
 
-app.component('IButton', Button)
-app.component('ISwitch', Switch)
+app.component('VButton', Button)
+app.component('VSwitch', Switch)
 app.component('Menu', Menu)
 app.component('Submenu', Submenu)
 app.component('MenuItem', MenuItem)
 app.component('Icon', Icon)
-app.component('IHeader', Header)
+app.component('VHeader', Header)
 app.component('Card', Card)
-app.component('IInput', Input)
-app.component('IForm', Form)
+app.component('VInput', Input)
+app.component('VForm', Form)
 app.component('FormItem', FormItem)
 app.component('Spin', Spin)
 app.component('Checkbox', Checkbox)
@@ -69,11 +74,16 @@ app.component('RadioGroup', RadioGroup)
 app.component('Collapse', Collapse)
 app.component('Panel', Panel)
 app.component('Tooltip', Tooltip)
-app.component('ISelect', Select)
-app.component('IOption', Option)
+app.component('VSelect', Select)
+app.component('VOption', Option)
 app.component('Cell', Cell)
+app.component('Content', Content)
+app.component('Layout', Layout)
+app.component('Sider', Sider)
 app.component('CellGroup', CellGroup)
-app.component('ContentPlaceholders', ContentPlaceholders)
+app.component('Breadcrumb', Breadcrumb)
+app.component('BreadcrumbItem', BreadcrumbItem)
+app.component('CntentPlaceholders', ContentPlaceholders)
 app.component('ContentPlaceholdersText', ContentPlaceholdersText)
 
 app.use(router)

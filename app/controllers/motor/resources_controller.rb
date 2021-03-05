@@ -5,7 +5,7 @@ module Motor
     before_action :load_and_authorize_resource
 
     def index
-      render json: @resources
+      render json: @resources.limit(20)
     end
 
     def show
@@ -38,7 +38,7 @@ module Motor
       cancan =
         CanCan::ControllerResource.new(self,
                                        resource_name.to_sym,
-                                       class: params[:resource].singularize.capitalize.constantize,
+                                       class: resource_name.classify.constantize,
                                        parent: false,
                                        name: resource_name,
                                        instance_name: INSTANCE_VARIABLE_NAME)

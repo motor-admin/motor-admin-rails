@@ -1,7 +1,8 @@
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
-const { VueLoaderPlugin } = require('vue-loader');
+const { VueLoaderPlugin } = require('vue-loader')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const webpack = require('webpack')
 
 module.exports = (env = {}) => ({
@@ -84,7 +85,8 @@ module.exports = (env = {}) => ({
       output: 'manifest.json',
       publicPath: true
     }),
-    new VueLoaderPlugin({ whitespace: 'preserve' })
+    new VueLoaderPlugin({ whitespace: 'preserve' }),
+    new CleanWebpackPlugin()
   ],
   devServer: {
     port: 9090,
