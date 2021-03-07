@@ -1,4 +1,5 @@
-import './index.scss'
+import 'index.scss'
+import 'utils/styles/bootstrap.scss'
 
 import { createApp } from 'vue'
 
@@ -8,6 +9,7 @@ import router from './router'
 import store from './store'
 
 import PopoverDirective from 'view3/src/directives/popover'
+import TooltipDirective from 'view3/src/directives/tooltip'
 import VueClipboard from 'view3/src/directives/clipboard'
 
 import DynamicModal from 'view3/src/plugins/dynamic-modal'
@@ -44,6 +46,8 @@ import CellGroup from 'view3/src/components/cell-group'
 import Sider from 'view3/src/components/sider'
 import Breadcrumb from 'view3/src/components/breadcrumb'
 import BreadcrumbItem from 'view3/src/components/breadcrumb-item'
+import Table from 'view3/src/components/table'
+import Page from 'view3/src/components/page'
 
 import ContentPlaceholders from 'vue-content-placeholders/src/components/ContentPlaceholders'
 import ContentPlaceholdersText from 'vue-content-placeholders/src/components/ContentPlaceholdersText'
@@ -51,6 +55,7 @@ import ContentPlaceholdersText from 'vue-content-placeholders/src/components/Con
 const app = createApp(App)
 
 app.directive('popover', PopoverDirective)
+app.directive('tooltip', TooltipDirective)
 app.directive('clipboard', VueClipboard)
 
 app.component('VButton', Button)
@@ -83,6 +88,8 @@ app.component('Sider', Sider)
 app.component('CellGroup', CellGroup)
 app.component('Breadcrumb', Breadcrumb)
 app.component('BreadcrumbItem', BreadcrumbItem)
+app.component('VTable', Table)
+app.component('Pagination', Page)
 app.component('CntentPlaceholders', ContentPlaceholders)
 app.component('ContentPlaceholdersText', ContentPlaceholdersText)
 

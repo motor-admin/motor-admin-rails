@@ -41,6 +41,7 @@ module Motor
         model.columns.map do |column|
           {
             name: column.name,
+            display_name: column.name.humanize,
             column_type: column.type.to_s,
             validators: fetch_validators(model, column.name)
           }

@@ -17,7 +17,7 @@ export default {
   name: 'AppBreadcrumbs',
   computed: {
     fragments () {
-      return this.$route.params.fragments
+      return this.$route.params.fragments || []
     },
     crumbs () {
       const slugsMap = store.getters.slugsMap

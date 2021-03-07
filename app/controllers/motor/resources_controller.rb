@@ -5,23 +5,31 @@ module Motor
     before_action :load_and_authorize_resource
 
     def index
-      render json: @resources.limit(20)
+      @resources = Motor::Query.call(@resources, params)
+
+      json = { data: @resources, meta: {} }
+
+      if params[:meta].to_s.include?('count')
+        json[:meta][:count] = @resources.limit(nil).offset(nil).reorder(nil).count
+      end
+
+      render json: json
     end
 
     def show
-      render json: @resource
+      render json: { data: @resource }
     end
 
     def create
       @resource.save!
 
-      render json: @resource
+      render json: { data: @resource }
     end
 
     def update
       @resource.update!(params)
 
-      render json: @resource
+      render json: { data: @resource }
     end
 
     def destroy

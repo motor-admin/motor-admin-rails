@@ -9,8 +9,10 @@
       v-for="resource in resources"
       :key="resource.name"
       :name="resource.name"
+      class="h4"
       :to="{ name: 'resources', params: { fragments: [resource.slug] } }"
     >
+      <Icon type="md-list" />
       {{ resource.display_name }}
     </MenuItem>
   </Menu>

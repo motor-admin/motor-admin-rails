@@ -3,14 +3,13 @@
     <AppHeader />
     <Layout :has-sider="true">
       <Sider
-        hide-trigger
-        :style="{background: '#fff'}"
+        :style="{ background: '#fff' }"
       >
         <ResourcesMenu :resources="schema" />
       </Sider>
       <Layout>
         <AppBreadcrumbs :style="{ margin: '14px 10px' }" />
-        <Content :style="{padding: '24px', minHeight: '280px', background: '#fff'}">
+        <Content>
           <RouterView />
         </Content>
       </Layout>

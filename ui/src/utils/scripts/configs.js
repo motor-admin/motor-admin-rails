@@ -1,5 +1,6 @@
-const appNote = document.getElementById('app')
-const basePath = appNote.dataset['base-path']
-const schema = JSON.parse(appNote.dataset.schema)
+const appNode = document.getElementById('app')
+
+const basePath = appNode.getAttribute('data-base-path')
+const schema = JSON.parse(appNode.getAttribute('data-schema'))
 
 export { basePath, schema }

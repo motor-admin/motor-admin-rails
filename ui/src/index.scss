@@ -2,8 +2,8 @@ $primary-color: #6190e8;
 $link-color: #6190e8;
 $body-background: #f9fbfc;
 $layout-body-background: #f9fbfc;
-$font-size-base: 16px;
-$font-size-small: 14px;
+$font-size-base: 14px;
+$font-size-small: 12px;
 $font-size-large: $font-size-base;
 
 $spin-dot-size-small: 22px;
@@ -41,6 +41,8 @@ $spin-dot-size-large: 42px;
 @import 'view3/src/styles/components/collapse';
 @import 'view3/src/styles/components/layout';
 @import 'view3/src/styles/components/breadcrumb';
+@import 'view3/src/styles/components/table';
+@import 'view3/src/styles/components/page';
 
 .#{$spin-prefix-cls} {
   &-fix {
