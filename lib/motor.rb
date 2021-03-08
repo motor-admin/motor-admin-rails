@@ -3,6 +3,7 @@ require "motor/admin"
 require "motor/api"
 require "motor/assets"
 require "motor/schema"
+require "motor/query"
 
 module Motor
   module_function

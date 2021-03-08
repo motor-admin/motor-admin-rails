@@ -5,7 +5,10 @@
       <Sider
         :style="{ background: '#fff' }"
       >
-        <ResourcesMenu :resources="schema" />
+        <ResourcesMenu
+          :resources="schema"
+          :style="{ maxHeight: 'calc(100vh - 64px)', overflowY: 'scroll' }"
+        />
       </Sider>
       <Layout>
         <AppBreadcrumbs :style="{ margin: '14px 10px' }" />

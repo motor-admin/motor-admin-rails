@@ -1,3 +1,8 @@
+require_relative './query/sort'
+require_relative './query/paginate'
+require_relative './query/filter'
+require_relative './query/build_meta'
+
 module Motor
   module Query
     module_function

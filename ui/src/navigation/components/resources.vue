@@ -9,8 +9,8 @@
       v-for="resource in resources"
       :key="resource.name"
       :name="resource.name"
-      class="h4"
-      :to="{ name: 'resources', params: { fragments: [resource.slug] } }"
+      :class="itemClass"
+      :to="{ name: 'resources', params: { fragments: [...pathFragments, resource.slug] } }"
     >
       <Icon type="md-list" />
       {{ resource.display_name }}
@@ -25,6 +25,16 @@ export default {
     resources: {
       type: Array,
       required: true
+    },
+    itemClass: {
+      type: String,
+      required: false,
+      default: 'h4'
+    },
+    pathFragments: {
+      type: Array,
+      required: false,
+      default: () => []
     }
   },
   data () {

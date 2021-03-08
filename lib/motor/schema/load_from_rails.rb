@@ -29,11 +29,12 @@ module Motor
 
       def build_resource_shema(model)
         {
-          name: model.name,
+          name: model.name.underscore,
           slug: model.name.underscore.pluralize,
           table_name: model.table_name,
           display_name: model.name.titleize.pluralize,
-          columns: fetch_columns(model)
+          columns: fetch_columns(model),
+          associations: fetch_associations(model)
         }
       end
 
@@ -45,6 +46,33 @@ module Motor
             column_type: column.type.to_s,
             validators: fetch_validators(model, column.name)
           }
+        end
+      end
+
+      def fetch_associations(model)
+        model.reflections.flat_map do |name, ref|
+          {
+            name: name,
+            display_name: name.humanize,
+            slug: name.underscore,
+            table_name: ref.klass.table_name,
+            association_type: fetch_association_type(ref)
+          }
+        end
+      end
+
+      def fetch_association_type(association)
+        case association.association_class.to_s
+        when 'ActiveRecord::Associations::HasManyAssociation',
+             'ActiveRecord::Associations::HasManyThroughAssociation'
+          'has_many'
+        when 'ActiveRecord::Associations::HasOneAssociation',
+             'ActiveRecord::Associations::HasOneThroughAssociation'
+          'has_one'
+        when 'ActiveRecord::Associations::BelongsToAssociation'
+          'belongs_to'
+        else
+          raise ArgumentError, 'Unknown association type'
         end
       end
 

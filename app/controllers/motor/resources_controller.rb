@@ -3,17 +3,15 @@ module Motor
     INSTANCE_VARIABLE_NAME = 'resource'
 
     before_action :load_and_authorize_resource
+    before_action :load_and_authorize_association
 
     def index
       @resources = Motor::Query.call(@resources, params)
 
-      json = { data: @resources, meta: {} }
-
-      if params[:meta].to_s.include?('count')
-        json[:meta][:count] = @resources.limit(nil).offset(nil).reorder(nil).count
-      end
-
-      render json: json
+      render json: {
+        data: @resources,
+        meta: Motor::Query::BuildMeta.call(@resources, params)
+      }
     end
 
     def show
@@ -42,16 +40,50 @@ module Motor
 
     def load_and_authorize_resource
       resource_name = params[:resource].singularize
+      resource_class = resource_name.classify.constantize
 
-      cancan =
-        CanCan::ControllerResource.new(self,
-                                       resource_name.to_sym,
-                                       class: resource_name.classify.constantize,
-                                       parent: false,
-                                       name: resource_name,
-                                       instance_name: INSTANCE_VARIABLE_NAME)
+      options = {
+        class: resource_class,
+        parent: false,
+        name: resource_name,
+        instance_name: INSTANCE_VARIABLE_NAME
+      }
 
-      cancan.load_and_authorize_resource
+      if params[:resource_id].present?
+        options = options.merge(
+          parent: true,
+          id_param: :resource_id
+        )
+      end
+
+      CanCan::ControllerResource.new(
+        self,
+        resource_name.to_sym,
+        options
+      ).load_and_authorize_resource
+    end
+
+    def load_and_authorize_association
+      return if params[:association].blank?
+
+      resource_name = params[:resource].singularize
+      resource_class = resource_name.classify.constantize
+      association = resource_class.reflections[params[:association]]
+
+      if association
+        CanCan::ControllerResource.new(
+          self,
+          resource_name.to_sym,
+          class: association.klass,
+          parent: false,
+          name: params[:association],
+          through: :resource,
+          through_association: params[:association].to_sym,
+          instance_name: INSTANCE_VARIABLE_NAME
+        ).load_and_authorize_resource
+      else
+        render json: { message: 'Unknown association' }, status: :not_found
+      end
     end
 
     # def current_ability

@@ -3,11 +3,12 @@
     v-if="!isReloading"
   >
     <VTable
-      :fixed-height="'calc(100vh - 188px)'"
+      :fixed-height="height"
       :data="rows"
       :loading="isLoading"
       :columns="columns"
       @on-sort-change="applySort"
+      @on-row-click="onRowClick"
     />
     <div class="text-center bg-white p-1">
       <Pagination
@@ -52,6 +53,16 @@ export default {
     resourceName: {
       type: String,
       required: true
+    },
+    height: {
+      type: String,
+      required: false,
+      default: 500
+    },
+    associationParams: {
+      type: Object,
+      require: false,
+      default: null
     }
   },
   data () {
@@ -64,6 +75,18 @@ export default {
     }
   },
   computed: {
+    queryPath () {
+      if (this.associationParams) {
+        return [
+          'data',
+          this.resourceName,
+          this.associationParams.id,
+          this.associationParams.name
+        ].join('/')
+      } else {
+        return `data/${this.resourceName}`
+      }
+    },
     queryParams () {
       const params = {
         meta: 'count',
@@ -121,6 +144,9 @@ export default {
   watch: {
     resourceName () {
       this.reset()
+    },
+    associationParams () {
+      this.loadData()
     }
   },
   mounted () {
@@ -138,10 +164,18 @@ export default {
 
       this.loadData()
     },
+    onRowClick (value) {
+      this.$router.push({
+        name: 'resources',
+        params: {
+          fragments: [...this.$route.params.fragments, value.id]
+        }
+      })
+    },
     loadData () {
       this.isLoading = true
 
-      api.get(`data/${this.resourceName}`, {
+      api.get(this.queryPath, {
         params: this.queryParams
       }).then((result) => {
         this.rows = result.data.data

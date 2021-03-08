@@ -12,6 +12,7 @@
 
 <script>
 import store from 'store'
+import { normalizeFragments } from 'navigation/scripts/normalize_fragments'
 
 export default {
   name: 'AppBreadcrumbs',
@@ -20,23 +21,22 @@ export default {
       return this.$route.params.fragments || []
     },
     crumbs () {
-      const slugsMap = store.getters.slugsMap
-      const fragments = this.fragments
+      const fragments = normalizeFragments(this.fragments, store.getters.slugsMap)
       const crumbs = []
 
-      for (let i = fragments.length; i > 0; i--) {
+      for (let i = 0; i < fragments.length; i++) {
         const crumb = {
-          label: slugsMap[fragments[i - 1]]?.display_name || fragments[i - 1]
+          label: fragments[i].association?.display_name || fragments[i].schema?.display_name || this.fragments[i]
         }
 
-        if (i !== fragments.length) {
-          crumb.to = { name: 'resources', params: { fragments: fragments.slice(0, i) } }
+        if ((i - 1) !== fragments.length) {
+          crumb.to = { name: 'resources', params: { fragments: this.fragments.slice(0, i + 1) } }
         }
 
         crumbs.push(crumb)
       }
 
-      return crumbs.reverse()
+      return crumbs
     }
   }
 }
