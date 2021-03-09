@@ -46,7 +46,6 @@ import CellGroup from 'view3/src/components/cell-group'
 import Sider from 'view3/src/components/sider'
 import Breadcrumb from 'view3/src/components/breadcrumb'
 import BreadcrumbItem from 'view3/src/components/breadcrumb-item'
-import Table from 'view3/src/components/table'
 import Page from 'view3/src/components/page'
 
 import ContentPlaceholders from 'vue-content-placeholders/src/components/ContentPlaceholders'
@@ -88,7 +87,6 @@ app.component('Sider', Sider)
 app.component('CellGroup', CellGroup)
 app.component('Breadcrumb', Breadcrumb)
 app.component('BreadcrumbItem', BreadcrumbItem)
-app.component('VTable', Table)
 app.component('Pagination', Page)
 app.component('CntentPlaceholders', ContentPlaceholders)
 app.component('ContentPlaceholdersText', ContentPlaceholdersText)

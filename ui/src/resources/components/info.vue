@@ -1,5 +1,5 @@
 <template>
-  <div style="white-space: break-spaces">
+  <div>
     {{ resource }}
   </div>
 </template>

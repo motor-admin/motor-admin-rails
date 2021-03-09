@@ -8,19 +8,22 @@
         :resources="associations"
         :item-class="'h5'"
         :path-fragments="pathFragments"
-        :style="{ maxHeight: 'calc(100vh - 116px)', overflowY: 'scroll' }"
+        :active-name="associationName"
+        class="border-top"
+        :style="{ maxHeight: 'calc(100vh - 116px)', overflowY: 'scroll', minHeight: '100%' }"
       />
     </Sider>
     <Layout>
       <Content>
         <ResourceInfo
+          :key="resourceName + resourceId"
           :resource-name="resourceName"
           :resource-id="resourceId"
           :style="infoStyle"
         />
         <ResourceTable
           v-if="showTable"
-          :height="'calc(50vh - 94px)'"
+          :height="'calc(50vh - 58px)'"
           :resource-name="resourceName"
           :association-params="{ name: associationName, id: resourceId }"
         />
@@ -63,7 +66,7 @@ export default {
       if (this.showTable) {
         return { height: 'calc(50vh - 94px)', overflowY: 'scroll' }
       } else {
-        return { height: 'calc(100vh - 188px)', overflowY: 'scroll' }
+        return { height: 'calc(100vh - 116px)', overflowY: 'scroll' }
       }
     },
     showTable () {

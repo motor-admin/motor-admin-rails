@@ -1,13 +1,17 @@
 <template>
   <Layout>
     <AppHeader />
-    <Layout :has-sider="true">
+    <Layout
+      :has-sider="true"
+      :style="{ height: 'calc(100vh - 64px)' }"
+    >
       <Sider
         :style="{ background: '#fff' }"
       >
         <ResourcesMenu
           :resources="schema"
-          :style="{ maxHeight: 'calc(100vh - 64px)', overflowY: 'scroll' }"
+          :active-name="$route.params.fragments[0]"
+          :style="{ maxHeight: 'calc(100vh - 64px)', overflowY: 'scroll', height: '100%' }"
         />
       </Sider>
       <Layout>

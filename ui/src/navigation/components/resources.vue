@@ -1,14 +1,14 @@
 <template>
   <Menu
-    active-name="1-2"
+    :active-name="activeName"
     theme="light"
     width="auto"
     :open-names="openNames"
   >
     <MenuItem
       v-for="resource in resources"
-      :key="resource.name"
-      :name="resource.name"
+      :key="resource.slug"
+      :name="resource.slug"
       :class="itemClass"
       :to="{ name: 'resources', params: { fragments: [...pathFragments, resource.slug] } }"
     >
@@ -35,6 +35,11 @@ export default {
       type: Array,
       required: false,
       default: () => []
+    },
+    activeName: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   data () {

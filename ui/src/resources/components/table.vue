@@ -1,16 +1,16 @@
 <template>
-  <div
+  <template
     v-if="!isReloading"
   >
-    <VTable
-      :fixed-height="height"
+    <DataTable
       :data="rows"
       :loading="isLoading"
       :columns="columns"
-      @on-sort-change="applySort"
-      @on-row-click="onRowClick"
+      :style="{ height: height, paddingBottom: '1px' }"
+      @sort-change="applySort"
+      @row-click="onRowClick"
     />
-    <div class="text-center bg-white p-1">
+    <div class="text-center border-top bg-white p-1">
       <Pagination
         :current="paginationParams.current"
         :total="paginationParams.total"
@@ -26,16 +26,21 @@
         @on-page-size-change="loadData"
       />
     </div>
-  </div>
-  <Spin
+  </template>
+  <div
     v-else
-    fix
-  />
+    :style="{ height: height, paddingBottom: '1px' }"
+  >
+    <Spin
+      fix
+    />
+  </div>
 </template>
 
 <script>
 import api from 'api'
 import store from 'store'
+import DataTable from 'data_tables/components/table'
 
 import DateTimeCell from 'cells/components/date_time'
 import JsonCell from 'cells/components/json'
@@ -49,6 +54,9 @@ const defaultPaginationParams = {
 
 export default {
   name: 'ResourceTable',
+  components: {
+    DataTable
+  },
   props: {
     resourceName: {
       type: String,
@@ -57,7 +65,7 @@ export default {
     height: {
       type: String,
       required: false,
-      default: 500
+      default: '500px'
     },
     associationParams: {
       type: Object,
@@ -131,12 +139,6 @@ export default {
       })
 
       return [
-        {
-          type: 'selection',
-          width: 60,
-          align: 'center',
-          fixed: 'left'
-        },
         ...cols
       ]
     }

@@ -4,6 +4,7 @@
       v-for="(crumb, index) in crumbs"
       :key="index"
       :to="crumb.to"
+      class="h4"
     >
       {{ crumb.label }}
     </BreadcrumbItem>

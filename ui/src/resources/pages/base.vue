@@ -7,7 +7,7 @@
   />
   <ResourceTable
     v-else
-    :height="'calc(100vh - 188px)'"
+    :height="'calc(100vh - 151px)'"
     :resource-name="resourceName"
   />
 </template>
@@ -54,7 +54,6 @@ export default {
         return store.getters.slugsMap[this.resourceSlug].slug
       } else {
         const normalizedFragments = normalizeFragments(this.fragments, store.getters.slugsMap)
-        console.log(normalizedFragments)
         const association = normalizedFragments.find((assoc) => assoc.fragment === this.resourceSlug)
 
         return association.schema.slug

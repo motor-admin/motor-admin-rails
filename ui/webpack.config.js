@@ -19,14 +19,24 @@ module.exports = (env = {}) => ({
         use: [
           {
             loader: 'vue-loader',
-            options: { whitespace: 'preserve' }
+          }
+        ]
+      },
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: [
+          { loader: 'ts-loader',
+   options: {
+                appendTsSuffixTo: [/\.vue$/]
+            }
           }
         ]
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "babel-loader"
+        loader: 'babel-loader'
       },
       {
         test: /\.css$/,
@@ -74,7 +84,7 @@ module.exports = (env = {}) => ({
       path.resolve(__dirname, './src'),
       path.resolve(__dirname, './node_modules')
     ],
-    extensions: ['.js', '.vue', '.json', '.less' , '.scss', '.css']
+    extensions: ['.js', '.ts', '.vue', '.json', '.less' , '.scss', '.css']
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -85,7 +95,7 @@ module.exports = (env = {}) => ({
       output: 'manifest.json',
       publicPath: true
     }),
-    new VueLoaderPlugin({ whitespace: 'preserve' }),
+    new VueLoaderPlugin(),
     new CleanWebpackPlugin()
   ],
   devServer: {

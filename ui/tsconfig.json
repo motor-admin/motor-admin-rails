@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es2015",
+    "lib": ["es2017", "es7", "es6", "dom"],
+    "declaration": false,
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "esModuleInterop": true
+  },
+  "types": [
+    "@vue/compiler-core/dist/compiler-core",
+    "@vue/compiler-dom/dist/compiler-dom",
+    "@vue/compiler-sfc/dist/compiler-sfc",
+    "@vue/compiler-ssr/dist/compiler-ssr",
+    "@vue/reactivity/dist/reactivity",
+    "@vue/runtime-core/dist/runtime-core",
+    "@vue/runtime-dom/dist/runtime-dom"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
