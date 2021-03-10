@@ -9,25 +9,25 @@ module Motor
       @resources = Motor::Query.call(@resources, params)
 
       render json: {
-        data: @resources,
+        data: Motor::Query::BuildJson.call(@resources, params),
         meta: Motor::Query::BuildMeta.call(@resources, params)
       }
     end
 
     def show
-      render json: { data: @resource }
+      render json: { data: Motor::Query::BuildJson.call(@resource, params) }
     end
 
     def create
       @resource.save!
 
-      render json: { data: @resource }
+      render json: { data: Motor::Query::BuildJson.call(@resource, params) }
     end
 
     def update
       @resource.update!(params)
 
-      render json: { data: @resource }
+      render json: { data: Motor::Query::BuildJson.call(@resource, params) }
     end
 
     def destroy
@@ -39,13 +39,11 @@ module Motor
     private
 
     def load_and_authorize_resource
-      resource_name = params[:resource].singularize
-      resource_class = resource_name.classify.constantize
+      resource_class = Motor::Schema::Utils.classify_slug(params[:resource])
 
       options = {
         class: resource_class,
         parent: false,
-        name: resource_name,
         instance_name: INSTANCE_VARIABLE_NAME
       }
 
@@ -58,7 +56,6 @@ module Motor
 
       CanCan::ControllerResource.new(
         self,
-        resource_name.to_sym,
         options
       ).load_and_authorize_resource
     end
@@ -66,17 +63,14 @@ module Motor
     def load_and_authorize_association
       return if params[:association].blank?
 
-      resource_name = params[:resource].singularize
-      resource_class = resource_name.classify.constantize
+      resource_class = Motor::Schema::Utils.classify_slug(params[:resource])
       association = resource_class.reflections[params[:association]]
 
       if association
         CanCan::ControllerResource.new(
           self,
-          resource_name.to_sym,
           class: association.klass,
           parent: false,
-          name: params[:association],
           through: :resource,
           through_association: params[:association].to_sym,
           instance_name: INSTANCE_VARIABLE_NAME
@@ -86,16 +80,16 @@ module Motor
       end
     end
 
-    # def current_ability
-    #   super || begin
-    #     klass = Class.new
-    #     klass.include(CanCan::Ability)
-    #     klass.define_method(:initialize) do |user|
-    #       can :manage, :all
-    #     end
-    #
-    #     klass.new(current_user)
-    #   end
-    # end
+    def current_ability
+      begin
+        klass = Class.new
+        klass.include(CanCan::Ability)
+        klass.define_method(:initialize) do |user|
+          can :manage, :all
+        end
+
+        klass.new(current_user)
+      end
+    end
   end
 end

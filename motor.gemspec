@@ -14,9 +14,6 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  spec.add_dependency "rails", "~> 6.1.1"
-  spec.add_dependency "jsonapi-serializer"
-  spec.add_dependency "panko_serializer"
-  spec.add_dependency "cancancan"
-  spec.add_dependency "oj"
+  spec.add_dependency 'rails', "~> 6.0.0"
+  spec.add_dependency 'cancancan'
 end

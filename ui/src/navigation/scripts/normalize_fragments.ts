@@ -7,7 +7,7 @@ function normalizeFragments (fragments, schemaMap) {
       normalizeFragments[i - 2]?.schema?.associations?.find((assoc) => assoc.slug === fragments[i])
     )
 
-    const schema = schemaMap[fragments[i]] || schemaMap[association?.table_name]
+    const schema = schemaMap[fragments[i]] || schemaMap[association?.schema_slug]
 
     const crumb = {
       fragment: fragments[i],

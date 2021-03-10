@@ -1,12 +1,12 @@
 <template>
-  <span>{{ formattedDate }}</span>
+  <span v-if="value">{{ formattedDate }}</span>
 </template>
 
 <script>
 import { formatDate, timeDiff } from 'utils/scripts/date_format'
 
 export default {
-  name: 'DateTimeCell',
+  name: 'DateTime',
   props: {
     value: {
       type: String,

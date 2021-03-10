@@ -11,3 +11,4 @@
 /ui/node_modules
 /ui/dist
 .byebug_history
+Gemfile.lock

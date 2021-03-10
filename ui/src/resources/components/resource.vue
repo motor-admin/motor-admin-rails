@@ -19,10 +19,13 @@
           :key="resourceName + resourceId"
           :resource-name="resourceName"
           :resource-id="resourceId"
+          :one-column="!showTable"
+          class="border-top p-3"
           :style="infoStyle"
         />
         <ResourceTable
           v-if="showTable"
+          :key="resourceName + resourceId + associationName"
           :height="'calc(50vh - 58px)'"
           :resource-name="resourceName"
           :association-params="{ name: associationName, id: resourceId }"

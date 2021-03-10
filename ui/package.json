@@ -4,7 +4,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0-beta1",
-    "kitsu-core": "^8.1.1",
+    "color-hash": "^1.0.3",
     "qs": "^6.9.3",
     "view3": "https://github.com/omohokcoj/view3",
     "vue": "^3.0.0",

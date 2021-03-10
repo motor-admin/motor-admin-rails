@@ -7,6 +7,7 @@
       :loading="isLoading"
       :columns="columns"
       :style="{ height: height, paddingBottom: '1px' }"
+      :sort-params="sortParams"
       @sort-change="applySort"
       @row-click="onRowClick"
     />
@@ -29,7 +30,7 @@
   </template>
   <div
     v-else
-    :style="{ height: height, paddingBottom: '1px' }"
+    :style="{ height: height, paddingBottom: '1px', position: 'relative' }"
   >
     <Spin
       fix
@@ -42,14 +43,18 @@ import api from 'api'
 import store from 'store'
 import DataTable from 'data_tables/components/table'
 
-import DateTimeCell from 'cells/components/date_time'
-import JsonCell from 'cells/components/json'
+import DataTypes from 'data_cells/scripts/data_types'
 
 const defaultPaginationParams = {
   current: 1,
   pageSize: 20,
   total: 0,
-  pageSizeOpts: [20, 50, 75, 100]
+  pageSizeOpts: [20, 50, 100, 250, 500]
+}
+
+const defaultSortParams = {
+  order: 'desc',
+  key: 'id'
 }
 
 export default {
@@ -78,7 +83,7 @@ export default {
       isLoading: true,
       isReloading: true,
       rows: [],
-      sortParams: {},
+      sortParams: { ...defaultSortParams },
       paginationParams: { ...defaultPaginationParams }
     }
   },
@@ -108,39 +113,45 @@ export default {
         params.sort = `${this.sortParams.order === 'desc' ? '-' : ''}${this.sortParams.key}`
       }
 
+      if (this.includeParams) {
+        params.include = this.includeParams
+      }
+
       return params
     },
+    includeParams () {
+      return this.resourceSchema.columns.map((column) => {
+        return column.reference?.name
+      }).filter(Boolean).join(',')
+    },
     resourceSchema () {
-      return store.getters.slugsMap[this.resourceName]
+      let schema = store.getters.slugsMap[this.resourceName]
+
+      if (this.associationParams?.name) {
+        const assocSchemaName = schema.associations.find((assoc) => {
+          return assoc.slug === this.associationParams.name
+        }).schema_name
+
+        schema = store.getters.namesMap[assocSchemaName]
+      }
+
+      return schema
     },
     columns () {
-      const cols = this.resourceSchema.columns.map((column) => {
-        const col = {
-          key: column.name,
-          title: column.display_name,
-          width: 300,
-          sortable: 'custom'
-        }
+      return this.resourceSchema.columns.map((column) => {
+        const type = column.validators.find((v) => v.includes?.length) ? DataTypes.TAG : column.column_type
 
-        if (column.column_type === 'datetime') {
-          col.width = 190
-          col.render = (h, { row }) => {
-            return h(DateTimeCell, { value: row[column.name] })
+        if (column.reference?.name !== store.getters.slugsMap[this.resourceName].name) {
+          return {
+            key: column.name,
+            title: column.display_name,
+            reference: column.reference,
+            type
           }
+        } else {
+          return null
         }
-
-        if (['jsonb', 'json', 'hstore'].includes(column.column_type)) {
-          col.render = (h, { row }) => {
-            return h(JsonCell, { value: row[column.name] })
-          }
-        }
-
-        return col
-      })
-
-      return [
-        ...cols
-      ]
+      }).filter(Boolean)
     }
   },
   watch: {
@@ -156,7 +167,7 @@ export default {
   },
   methods: {
     reset () {
-      this.sortParams = {}
+      this.sortParams = { ...defaultSortParams }
       this.paginationParams = { ...defaultPaginationParams }
       this.isReloading = true
       this.loadData()

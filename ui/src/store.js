@@ -12,7 +12,8 @@ const store = new Vuex.Store({
   },
   getters: {
     schema: state => state.schema,
-    slugsMap: state => Object.fromEntries(state.schema.map((res) => [res.slug, res]))
+    slugsMap: state => Object.fromEntries(state.schema.map((res) => [res.slug, res])),
+    namesMap: state => Object.fromEntries(state.schema.map((res) => [res.name, res]))
   }
 })
 

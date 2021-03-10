@@ -1,13 +1,14 @@
 <template>
   <div
     class="table-wrapper"
-    :style="{ overflow: 'auto', opacity: loading ? 0.8 : 1 }"
+    :style="{ overflow: 'auto' }"
   >
     <table
       cellspacing="0"
       cellpadding="0"
       border="0"
       class="ivu-table ivu-table-default"
+      style="position: relative"
     >
       <thead class="ivu-table-header">
         <tr>
@@ -19,7 +20,7 @@
               <Checkbox
                 :model-value="isSelectedAll"
                 :disabled="data.length === 0"
-                @on-change="toggleAll"
+                @on-change="toggleSelectAll"
               />
             </div>
           </th>
@@ -29,8 +30,11 @@
             class="ivu-table-column"
             :style="{ position: 'sticky', top: 0 }"
           >
-            <div class="ivu-table-cell nowrap">
-              <span class="ivu-table-cell-sort">{{ column.title }}</span>
+            <div class="ivu-table-cell">
+              <span
+                class="ivu-table-cell-sort"
+                @click.prevent="toggleSort(column.key)"
+              >{{ column.title }}</span>
               {{ ' ' }}
               <span class="ivu-table-sort">
                 <i
@@ -52,19 +56,23 @@
         v-if="data.length"
         class="ivu-table-tbody"
       >
+        <Spin
+          v-if="loading"
+          fix
+        />
         <tr
           v-for="(row, index) in data"
           :key="index"
           class="ivu-table-row"
           draggable="false"
-          @click.stop="$emit('row-click', row)"
+          @click.prevent="onRowClick(row)"
         >
           <td
             class="ivu-table-column ivu-table-column-center"
             :style="{ position: 'sticky', left: 0 }"
             @click.stop
           >
-            <div class="ivu-table-cell nowrap ivu-table-cell-with-selection">
+            <div class="ivu-table-cell ivu-table-cell-with-selection">
               <Checkbox v-model="row._selected" />
             </div>
           </td>
@@ -74,7 +82,19 @@
             class="ivu-table-column"
           >
             <div class="ivu-table-cell">
-              <span>{{ row[column.key] }}</span>
+              <Reference
+                v-if="column.reference && row[column.key]"
+                :resource-id="row[column.key]"
+                :show-popover="!!column.reference.polymorphic_key"
+                :reference-name="column.reference.name"
+                :reference-data="row[column.reference.name]"
+                :polymorphic-name="row[column.reference.polymorphic_key]"
+              />
+              <DataCell
+                v-else
+                :value="row[column.key]"
+                :type="column.type"
+              />
             </div>
           </td>
         </tr>
@@ -92,8 +112,15 @@
 </template>
 
 <script>
+import DataCell from 'data_cells/components/data_cell'
+import Reference from 'data_cells/components/reference'
+
 export default {
   name: 'DataTable',
+  components: {
+    DataCell,
+    Reference
+  },
   props: {
     data: {
       type: Array,
@@ -132,11 +159,34 @@ export default {
   },
   watch: {
     sortParams (value) {
-      this.sortData = value
+      this.dataSort = value
     }
   },
+  mounted () {
+    this.dataSort = this.sortParams
+  },
   methods: {
-    toggleAll (value) {
+    onRowClick (row) {
+      setTimeout(() => {
+        if (window.getSelection().toString().length === 0) {
+          this.$emit('row-click', row)
+        }
+      }, 0)
+    },
+    toggleSort (key) {
+      if (this.dataSort.key === key) {
+        if (this.dataSort.order === '') {
+          this.applySort({ key: key, order: 'desc' })
+        } else if (this.dataSort.order === 'desc') {
+          this.applySort({ key: key, order: 'asc' })
+        } else if (this.dataSort.order === 'asc') {
+          this.applySort({})
+        }
+      } else {
+        this.applySort({ key: key, order: 'desc' })
+      }
+    },
+    toggleSelectAll (value) {
       this.data.forEach((row) => {
         row._selected = value
       })
@@ -174,5 +224,14 @@ export default {
 
 .ivu-table-cell {
   white-space: nowrap;
+}
+
+.ivu-table-cell-sort {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 </style>

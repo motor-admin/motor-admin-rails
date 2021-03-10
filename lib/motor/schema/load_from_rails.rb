@@ -30,7 +30,7 @@ module Motor
       def build_resource_shema(model)
         {
           name: model.name.underscore,
-          slug: model.name.underscore.pluralize,
+          slug: Utils.slugify(model),
           table_name: model.table_name,
           display_name: model.name.titleize.pluralize,
           columns: fetch_columns(model),
@@ -44,21 +44,40 @@ module Motor
             name: column.name,
             display_name: column.name.humanize,
             column_type: column.type.to_s,
-            validators: fetch_validators(model, column.name)
+            validators: fetch_validators(model, column.name),
+            reference: fetch_reference(model, column.name)
           }
         end
       end
 
       def fetch_associations(model)
-        model.reflections.flat_map do |name, ref|
+        model.reflections.map do |name, ref|
+          next if ref.polymorphic?
+
           {
             name: name,
             display_name: name.humanize,
             slug: name.underscore,
             table_name: ref.klass.table_name,
+            schema_name: ref.klass.name.underscore,
+            schema_slug: Utils.slugify(ref.klass),
             association_type: fetch_association_type(ref)
           }
-        end
+        end.compact
+      end
+
+      def fetch_reference(model, column_name)
+        klass =
+          model.reflections.values.find do |assoc|
+            assoc.belongs_to? && assoc.foreign_key == column_name
+          end
+
+        return unless klass
+
+        {
+          name: klass.name.to_s.underscore,
+          polymorphic_key: klass.polymorphic? ? klass.name.to_s.underscore + '_type' : nil
+        }
       end
 
       def fetch_association_type(association)
@@ -77,7 +96,7 @@ module Motor
       end
 
       def fetch_validators(model, column_name)
-        model.validators_on(column_name).filter_map do |validator|
+        model.validators_on(column_name).map do |validator|
           case validator
           when ActiveModel::Validations::InclusionValidator
             { includes: validator.send(:delimiter) }
@@ -90,7 +109,7 @@ module Motor
           else
             raise ArgumentError, 'Unknown validator class'
           end
-        end
+        end.compact
       end
     end
   end
