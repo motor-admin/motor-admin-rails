@@ -15,11 +15,16 @@ import VueClipboard from 'view3/src/directives/clipboard'
 import DynamicModal from 'view3/src/plugins/dynamic-modal'
 import DynamicDrawer from 'view3/src/plugins/dynamic-drawer'
 import DynamicPopover from 'view3/src/plugins/dynamic-popover'
+import DynamicDialog from 'view3/src/plugins/dynamic-dialog'
+import DynamicMessage from 'view3/src/plugins/dynamic-message'
 
 import Button from 'view3/src/components/button'
 import Submenu from 'view3/src/components/submenu'
 import Menu from 'view3/src/components/menu'
 import MenuItem from 'view3/src/components/menu-item'
+import Dropdown from 'view3/src/components/dropdown'
+import DropdownMenu from 'view3/src/components/dropdown-menu'
+import DropdownItem from 'view3/src/components/dropdown-item'
 import Header from 'view3/src/components/header'
 import Switch from 'view3/src/components/switch'
 import Card from 'view3/src/components/card'
@@ -88,6 +93,9 @@ app.component('CellGroup', CellGroup)
 app.component('Breadcrumb', Breadcrumb)
 app.component('BreadcrumbItem', BreadcrumbItem)
 app.component('Pagination', Page)
+app.component('Dropdown', Dropdown)
+app.component('DropdownMenu', DropdownMenu)
+app.component('DropdownItem', DropdownItem)
 app.component('CntentPlaceholders', ContentPlaceholders)
 app.component('ContentPlaceholdersText', ContentPlaceholdersText)
 
@@ -97,6 +105,8 @@ app.use(store)
 app.use(DynamicModal)
 app.use(DynamicDrawer)
 app.use(DynamicPopover)
+app.use(DynamicDialog)
+app.use(DynamicMessage)
 
 document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('app')) {

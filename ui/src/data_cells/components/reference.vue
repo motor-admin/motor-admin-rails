@@ -57,7 +57,7 @@ export default {
         trigger: 'mouseenter',
         render: (h) => {
           return h(require('resources/components/info').default, {
-            resourceName: this.resourceSlug,
+            resourceName: this.resourceSchema.name,
             resourceId: this.resourceId,
             oneColumn: true,
             referencePopover: false

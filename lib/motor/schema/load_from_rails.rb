@@ -34,6 +34,7 @@ module Motor
           name: model.name.underscore,
           slug: Utils.slugify(model),
           table_name: model.table_name,
+          primary_key: model.primary_key,
           display_name: model.name.titleize.pluralize,
           display_column: Schema::FindDisplayColumn.call(model),
           columns: fetch_columns(model),

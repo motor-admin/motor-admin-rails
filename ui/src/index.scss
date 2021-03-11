@@ -19,6 +19,7 @@ $spin-dot-size-large: 42px;
 
 @import 'view3/src/styles/components/button';
 @import 'view3/src/styles/components/switch';
+@import 'view3/src/styles/components/dropdown';
 @import 'view3/src/styles/components/select';
 @import 'view3/src/styles/components/select-dropdown';
 @import 'view3/src/styles/components/modal';
@@ -106,4 +107,8 @@ body {
 
 .text-break-all {
   word-break: break-all;
+}
+
+.nowrap {
+  white-space: nowrap;
 }

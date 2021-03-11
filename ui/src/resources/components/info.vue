@@ -4,43 +4,66 @@
     :style="{ position: 'relative' }"
   >
     <Spin
-      v-if="isLoading"
+      v-if="isLoading || isReloading"
       fix
     />
     <div
-      v-else
+      v-if="!isLoading"
       class="row"
-      :style="oneColumn ? 'max-width: 500px' : ''"
     >
-      <template
-        v-for="column in columns"
-        :key="column.name"
+      <div
+        class="pe-4"
+        :class="withActions ? 'col-11' : 'col-12'"
       >
         <div
-          v-if="resource[column.name]"
-          :class="oneColumn ? 'col-12' : 'col-xxl-3 col-xl-6 col-md-12 col-12'"
-          class="mb-3"
+          class="row"
+          :style="oneColumn ? 'max-width: 500px' : ''"
         >
-          <b>
-            {{ column.display_name }}:
-          </b>
-          <br>
-          <Reference
-            v-if="column.reference"
-            :resource-id="resource[column.name]"
-            :reference-name="column.reference.name"
-            :show-popover="referencePopover"
-            :reference-data="resource[column.reference.name]"
-            :polymorphic-name="resource[column.reference.polymorphic_key]"
-          />
-          <DataCell
-            v-else
-            :value="resource[column.name]"
-            :text-truncate="false"
-            :type="columnType(column)"
-          />
+          <template
+            v-for="column in columns"
+            :key="column.name"
+          >
+            <div
+              v-if="resource[column.name]"
+              :class="oneColumn ? 'col-12' : 'col-xxl-3 col-xl-6 col-md-12 col-12'"
+              class="mb-3"
+            >
+              <b>
+                {{ column.display_name }}:
+              </b>
+              <br>
+              <Reference
+                v-if="column.reference"
+                :resource-id="resource[column.name]"
+                :reference-name="column.reference.name"
+                :show-popover="referencePopover"
+                :reference-data="resource[column.reference.name]"
+                :polymorphic-name="resource[column.reference.polymorphic_key]"
+              />
+              <DataCell
+                v-else
+                :value="resource[column.name]"
+                :text-truncate="false"
+                :type="columnType(column)"
+              />
+            </div>
+          </template>
         </div>
-      </template>
+      </div>
+      <div
+        v-if="withActions"
+        class="col-1 d-flex justify-content-end"
+      >
+        <ResourceActions
+          :resources="[resource]"
+          :resource-name="schema.name"
+          :button-type="'primary'"
+          :button-ghost="false"
+          :label="'Actions'"
+          @start-action="isReloading = true"
+          @finish-action="onFinisAction"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -51,6 +74,7 @@ import store from 'store'
 
 import DataCell from 'data_cells/components/data_cell'
 import Reference from 'data_cells/components/reference'
+import ResourceActions from './actions'
 
 import DataTypes from 'data_cells/scripts/data_types'
 
@@ -58,7 +82,8 @@ export default {
   name: 'ResourceInfo',
   components: {
     DataCell,
-    Reference
+    Reference,
+    ResourceActions
   },
   props: {
     resourceName: {
@@ -68,6 +93,11 @@ export default {
     resourceId: {
       type: [String, Number],
       required: true
+    },
+    withActions: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     oneColumn: {
       type: Boolean,
@@ -83,12 +113,13 @@ export default {
   data () {
     return {
       resource: {},
-      isLoading: true
+      isLoading: true,
+      isReloading: true
     }
   },
   computed: {
     schema () {
-      return store.getters.slugsMap[this.resourceName]
+      return store.getters.namesMap[this.resourceName]
     },
     columns () {
       return this.schema.columns
@@ -113,11 +144,18 @@ export default {
     this.loadData()
   },
   methods: {
+    onFinisAction (action) {
+      if (action === 'remove') {
+        this.$emit('remove', this.resource)
+      } else {
+        this.loadData()
+      }
+    },
     columnType (column) {
       return column.validators.find((v) => v.includes?.length) ? DataTypes.TAG : column.column_type
     },
     loadData () {
-      this.isLoading = true
+      this.isReoading = true
 
       api.get(`data/${this.resourceName}/${this.resourceId}`, {
         params: this.queryParams
@@ -127,6 +165,7 @@ export default {
         console.error(error)
       }).finally(() => {
         this.isLoading = false
+        this.isReloading = false
       })
     }
   }

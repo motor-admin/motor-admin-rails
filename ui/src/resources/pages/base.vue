@@ -60,12 +60,12 @@ export default {
     },
     resourceName () {
       if (store.getters.slugsMap[this.resourceSlug]) {
-        return store.getters.slugsMap[this.resourceSlug].slug
+        return store.getters.slugsMap[this.resourceSlug].name
       } else {
         const normalizedFragments = this.normalizedFragments
         const association = normalizedFragments.find((assoc) => assoc.fragment === this.resourceSlug)
 
-        return association.schema.slug
+        return association.schema.name
       }
     },
     crumbs () {

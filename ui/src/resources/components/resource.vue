@@ -19,9 +19,11 @@
           :key="resourceName + resourceId"
           :resource-name="resourceName"
           :resource-id="resourceId"
+          :with-actions="true"
           :one-column="!showTable"
           class="border-y p-3"
           :style="infoStyle"
+          @remove="goToParent"
         />
         <ResourceTable
           v-if="showTable"
@@ -86,12 +88,20 @@ export default {
       }
     },
     associations () {
-      return store.getters.slugsMap[this.resourceName].associations.filter((assoc) => {
+      return store.getters.namesMap[this.resourceName].associations.filter((assoc) => {
         return assoc.association_type === 'has_many'
       })
     }
   },
   methods: {
+    goToParent () {
+      this.$router.push({
+        name: 'resources',
+        params: {
+          fragments: this.pathFragments.slice(0, this.pathFragments.length - 1)
+        }
+      })
+    }
   }
 }
 </script>

@@ -14,6 +14,11 @@ module Motor
         phone
         title
         url
+        make
+        brand
+        manufacturer
+        model
+        address
       ].freeze
 
       DISPLAY_NAME_REGEXP = Regexp.new(Regexp.union(DISPLAY_NAMES), Regexp::IGNORECASE)

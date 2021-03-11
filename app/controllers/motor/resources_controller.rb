@@ -33,7 +33,11 @@ module Motor
     end
 
     def destroy
-      @resource.destroy
+      if @resource.respond_to?(:deleted_at)
+        @resource.update(deleted_at: Time.current)
+      else
+        @resource.destroy!
+      end
 
       head :ok
     end

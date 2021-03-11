@@ -6,18 +6,27 @@
       class="row"
       :style="{ margin: '10px 0' }"
     >
-      <div class="col-4 d-flex align-items-center">
+      <div class="col-6 d-flex align-items-center">
         <b
-          v-if="withTitle"
-          class="h4"
-        >{{ associationSchema?.display_name || resourceSchema.display_name }}</b>
+          v-if="withTitle && !selectedRows.length"
+          class="h4 nowrap"
+        >{{ title }}</b>
+        <ResourceActions
+          v-if="selectedRows.length"
+          :resources="selectedRows"
+          :with-deselect="true"
+          :resource-name="schema.name"
+          :label="`Actions (${selectedRows.length})`"
+          @start-action="isLoading = true"
+          @finish-action="loadData"
+        />
       </div>
-      <div class="col-8 d-flex justify-content-end">
+      <div class="col-6 d-flex justify-content-end">
         <ResourceSearch
           v-model="searchQuery"
           style="max-width: 400px"
           class="mx-1"
-          :placeholder="`Search ${(associationSchema?.display_name || resourceSchema.display_name).toLowerCase()}...`"
+          :placeholder="`Search ${(associationSchema?.display_name || schema.display_name).toLowerCase()}...`"
           @search="loadData"
         />
         <VButton
@@ -73,6 +82,8 @@ import api from 'api'
 import store from 'store'
 import DataTable from 'data_tables/components/table'
 import ResourceSearch from './search'
+import ResourceActions from './actions'
+import { truncate } from 'utils/scripts/string'
 
 import DataTypes from 'data_cells/scripts/data_types'
 
@@ -92,7 +103,8 @@ export default {
   name: 'ResourceTable',
   components: {
     DataTable,
-    ResourceSearch
+    ResourceSearch,
+    ResourceActions
   },
   props: {
     resourceName: {
@@ -126,16 +138,22 @@ export default {
     }
   },
   computed: {
+    title () {
+      return truncate(this.associationSchema?.display_name || this.schema.display_name, 60)
+    },
+    selectedRows () {
+      return this.rows.filter((row) => row._selected)
+    },
     queryPath () {
       if (this.associationParams) {
         return [
           'data',
-          this.resourceName,
+          store.getters.namesMap[this.resourceName].slug,
           this.associationParams.id,
           this.associationParams.name
         ].join('/')
       } else {
-        return `data/${this.resourceName}`
+        return `data/${this.schema.slug}`
       }
     },
     queryParams () {
@@ -162,33 +180,33 @@ export default {
       return params
     },
     includeParams () {
-      return this.resourceSchema.columns.map((column) => {
+      return this.schema.columns.map((column) => {
         return column.reference?.name
       }).filter(Boolean).join(',')
     },
     associationSchema () {
       if (this.associationParams?.name) {
-        return store.getters.slugsMap[this.resourceName].associations.find((assoc) => {
+        return store.getters.namesMap[this.resourceName].associations.find((assoc) => {
           return assoc.slug === this.associationParams.name
         })
       } else {
         return null
       }
     },
-    resourceSchema () {
+    schema () {
       if (this.associationSchema) {
         const assocSchemaName = this.associationSchema.schema_name
 
         return store.getters.namesMap[assocSchemaName]
       } else {
-        return store.getters.slugsMap[this.resourceName]
+        return store.getters.namesMap[this.resourceName]
       }
     },
     columns () {
-      return this.resourceSchema.columns.map((column) => {
+      return this.schema.columns.map((column) => {
         const type = column.validators.find((v) => v.includes?.length) ? DataTypes.TAG : column.column_type
 
-        if (column.reference?.name !== store.getters.slugsMap[this.resourceName].name) {
+        if (column.reference?.name !== store.getters.namesMap[this.resourceName].name) {
           return {
             key: column.name,
             title: column.display_name,
