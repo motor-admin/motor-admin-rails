@@ -17,21 +17,6 @@
 import store from 'store'
 import { truncate, underscore } from 'utils/scripts/string'
 
-const DISPLAY_KEYS = [
-  'name',
-  'full_name',
-  'last_name',
-  'first_name',
-  'phone',
-  'email',
-  'domain',
-  'phone',
-  'title',
-  'url'
-]
-
-const DISPLAY_KEY_REGEXP = new RegExp(DISPLAY_KEYS.join('|'))
-
 export default {
   name: 'ResourceReference',
   props: {
@@ -64,12 +49,7 @@ export default {
       if (this.referenceData.first_name && this.referenceData.last_name) {
         return [this.referenceData.first_name, this.referenceData.last_name].join(' ')
       } else {
-        const key = (
-          DISPLAY_KEYS.find((key) => this.referenceData[key]) ||
-          Object.keys(this.referenceData).find((key) => key.match(DISPLAY_KEY_REGEXP))
-        )
-
-        return this.referenceData[key]
+        return this.referenceData[this.resourceSchema.display_column]
       }
     },
     popoverParams () {
@@ -93,12 +73,15 @@ export default {
         }
       }
     },
-    resourceSlug () {
+    resourceSchema () {
       if (this.polymorphicName) {
-        return store.getters.namesMap[underscore(this.polymorphicName)].slug
+        return store.getters.namesMap[underscore(this.polymorphicName)]
       } else {
-        return store.getters.namesMap[this.referenceName].slug
+        return store.getters.namesMap[this.referenceName]
       }
+    },
+    resourceSlug () {
+      return this.resourceSchema.slug
     }
   },
   methods: { truncate }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Motor::Admin.routes.draw do
   namespace 'motor', path: '' do
     resources :resources, path: '/data/:resource',

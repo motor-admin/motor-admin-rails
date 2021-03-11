@@ -62,7 +62,7 @@
         />
         <tr
           v-for="(row, index) in data"
-          :key="index"
+          :key="row.id || index"
           class="ivu-table-row"
           draggable="false"
           @click.prevent="onRowClick(row)"

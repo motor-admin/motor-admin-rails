@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Motor
   class UiController < ApplicationController
     layout 'motor/application'

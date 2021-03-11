@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Motor
   module Schema
     module LoadFromRails
@@ -33,6 +35,7 @@ module Motor
           slug: Utils.slugify(model),
           table_name: model.table_name,
           display_name: model.name.titleize.pluralize,
+          display_column: Schema::FindDisplayColumn.call(model),
           columns: fetch_columns(model),
           associations: fetch_associations(model)
         }
@@ -54,11 +57,16 @@ module Motor
         model.reflections.map do |name, ref|
           next if ref.polymorphic?
 
+          begin
+            ref.klass
+          rescue StandardError
+            next
+          end
+
           {
             name: name,
             display_name: name.humanize,
             slug: name.underscore,
-            table_name: ref.klass.table_name,
             schema_name: ref.klass.name.underscore,
             schema_slug: Utils.slugify(ref.klass),
             association_type: fetch_association_type(ref)
@@ -76,7 +84,7 @@ module Motor
 
         {
           name: klass.name.to_s.underscore,
-          polymorphic_key: klass.polymorphic? ? klass.name.to_s.underscore + '_type' : nil
+          polymorphic_key: klass.polymorphic? ? "#{klass.name.to_s.underscore}_type" : nil
         }
       end
 
@@ -104,10 +112,12 @@ module Motor
             { required: true }
           when ActiveModel::Validations::FormatValidator
             { format: validator.options[:with] }
-          when ActiveRecord::Validations::UniquenessValidator
-            next
+          when ActiveRecord::Validations::LengthValidator
+            { length: validator.options }
+          when ActiveModel::Validations::NumericalityValidator
+            { numeric: validator.options }
           else
-            raise ArgumentError, 'Unknown validator class'
+            next
           end
         end.compact
       end

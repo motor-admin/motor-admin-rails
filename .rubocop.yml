@@ -1,0 +1,40 @@
+AllCops:
+  NewCops: enable
+  Exclude:
+    - test/**/*
+    - node_modules/**/*
+    - ui/node_modules/**/*
+    - bin/*
+    - vendor/**/*
+  TargetRubyVersion: '2.6'
+
+Metrics/BlockLength:
+  Exclude:
+    - Rakefile
+    - '**/*.rake'
+    - spec/**/*
+    - config/routes.rb
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Metrics/AbcSize:
+  Max: 20
+
+Naming/FileName:
+  Enabled: false
+
+Naming/MethodParameterName:
+  MinNameLength: 2
+
+Metrics/ModuleLength:
+  Max: 200

@@ -1,9 +1,13 @@
-require "motor/version"
-require "motor/admin"
-require "motor/api"
-require "motor/assets"
-require "motor/schema"
-require "motor/query"
+# frozen_string_literal: true
+
+require 'ar_lazy_preload'
+
+require 'motor/version'
+require 'motor/admin'
+require 'motor/api'
+require 'motor/assets'
+require 'motor/schema'
+require 'motor/query'
 
 module Motor
   module_function

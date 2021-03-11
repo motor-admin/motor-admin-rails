@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Motor
   module Query
     module Paginate
@@ -6,12 +8,10 @@ module Motor
       module_function
 
       def call(rel, params)
-        page_params = params.fetch(:page, {})
+        params ||= {}
 
-        rel = rel.limit([MAX_PER_PAGE, (page_params[:limit] || MAX_PER_PAGE).to_i].min)
-        rel = rel.offset(page_params[:offset].to_i)
-
-        rel
+        rel = rel.limit([MAX_PER_PAGE, (params[:limit] || MAX_PER_PAGE).to_i].min)
+        rel.offset(params[:offset].to_i)
       end
     end
   end

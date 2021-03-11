@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 module Motor
   module Query
     module Sort
-      FIELD_PARSE_REGEXP = /\A(-)?(.*)\z/
+      FIELD_PARSE_REGEXP = /\A(-)?(.*)\z/.freeze
 
       module_function
 
       def call(rel, params)
-        return rel if params[:sort].blank?
+        return rel if params.blank?
 
-        normalized_params = build_params(params[:sort])
+        normalized_params = build_params(params)
 
         rel.order(normalized_params)
       end

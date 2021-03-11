@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Motor
   class AssetsController < ActionController::Metal
     CACHE_STORE = ActiveSupport::Cache::MemoryStore.new
@@ -11,7 +13,7 @@ module Motor
         Motor::Assets.load_asset(filename)
       end
 
-      self.headers["Content-Type"] = Marcel::MimeType.for(name: filename)
+      headers['Content-Type'] = Marcel::MimeType.for(name: filename)
     end
   end
 end

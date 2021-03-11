@@ -2,6 +2,36 @@
   <template
     v-if="!isReloading"
   >
+    <div
+      class="row"
+      :style="{ margin: '10px 0' }"
+    >
+      <div class="col-4 d-flex align-items-center">
+        <b
+          v-if="withTitle"
+          class="h4"
+        >{{ associationSchema?.display_name || resourceSchema.display_name }}</b>
+      </div>
+      <div class="col-8 d-flex justify-content-end">
+        <ResourceSearch
+          v-model="searchQuery"
+          style="max-width: 400px"
+          class="mx-1"
+          :placeholder="`Search ${(associationSchema?.display_name || resourceSchema.display_name).toLowerCase()}...`"
+          @search="loadData"
+        />
+        <VButton
+          type="default"
+          icon="ios-funnel"
+          class="mx-1"
+        />
+        <VButton
+          type="success"
+          icon="md-add"
+          class="mx-1"
+        />
+      </div>
+    </div>
     <DataTable
       :data="rows"
       :loading="isLoading"
@@ -42,6 +72,7 @@
 import api from 'api'
 import store from 'store'
 import DataTable from 'data_tables/components/table'
+import ResourceSearch from './search'
 
 import DataTypes from 'data_cells/scripts/data_types'
 
@@ -60,7 +91,8 @@ const defaultSortParams = {
 export default {
   name: 'ResourceTable',
   components: {
-    DataTable
+    DataTable,
+    ResourceSearch
   },
   props: {
     resourceName: {
@@ -71,6 +103,11 @@ export default {
       type: String,
       required: false,
       default: '500px'
+    },
+    withTitle: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     associationParams: {
       type: Object,
@@ -84,6 +121,7 @@ export default {
       isReloading: true,
       rows: [],
       sortParams: { ...defaultSortParams },
+      searchQuery: '',
       paginationParams: { ...defaultPaginationParams }
     }
   },
@@ -117,6 +155,10 @@ export default {
         params.include = this.includeParams
       }
 
+      if (this.searchQuery) {
+        params.q = this.searchQuery
+      }
+
       return params
     },
     includeParams () {
@@ -124,18 +166,23 @@ export default {
         return column.reference?.name
       }).filter(Boolean).join(',')
     },
-    resourceSchema () {
-      let schema = store.getters.slugsMap[this.resourceName]
-
+    associationSchema () {
       if (this.associationParams?.name) {
-        const assocSchemaName = schema.associations.find((assoc) => {
+        return store.getters.slugsMap[this.resourceName].associations.find((assoc) => {
           return assoc.slug === this.associationParams.name
-        }).schema_name
-
-        schema = store.getters.namesMap[assocSchemaName]
+        })
+      } else {
+        return null
       }
+    },
+    resourceSchema () {
+      if (this.associationSchema) {
+        const assocSchemaName = this.associationSchema.schema_name
 
-      return schema
+        return store.getters.namesMap[assocSchemaName]
+      } else {
+        return store.getters.slugsMap[this.resourceName]
+      }
     },
     columns () {
       return this.resourceSchema.columns.map((column) => {

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Motor
   module Query
     module BuildMeta
@@ -6,9 +8,7 @@ module Motor
       def call(rel, params)
         meta = {}
 
-        if params[:meta].to_s.include?('count')
-          meta[:count] = rel.limit(nil).offset(nil).reorder(nil).count
-        end
+        meta[:count] = rel.limit(nil).offset(nil).reorder(nil).count if params[:meta].to_s.include?('count')
 
         meta
       end

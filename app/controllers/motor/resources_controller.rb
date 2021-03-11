@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Motor
   class ResourcesController < ActionController::API
     INSTANCE_VARIABLE_NAME = 'resource'
@@ -81,15 +83,13 @@ module Motor
     end
 
     def current_ability
-      begin
-        klass = Class.new
-        klass.include(CanCan::Ability)
-        klass.define_method(:initialize) do |user|
-          can :manage, :all
-        end
-
-        klass.new(current_user)
+      klass = Class.new
+      klass.include(CanCan::Ability)
+      klass.define_method(:initialize) do |_user|
+        can :manage, :all
       end
+
+      klass.new(current_user)
     end
   end
 end

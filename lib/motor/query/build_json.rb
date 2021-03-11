@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Motor
   module Query
     module BuildJson
@@ -6,10 +8,9 @@ module Motor
       def call(rel, params)
         json_params = {}
 
-        if (params[:include])
+        if params[:include]
           include_params = params[:include].split(',')
 
-          rel = rel.preload(include_params) if rel.is_a?(ActiveRecord::Relation)
           json_params[:include] = include_params
         end
 

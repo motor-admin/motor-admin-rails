@@ -15,10 +15,7 @@
         />
       </Sider>
       <Layout>
-        <AppBreadcrumbs :style="{ margin: '14px 10px' }" />
-        <Content>
-          <RouterView />
-        </Content>
+        <RouterView />
       </Layout>
     </Layout>
   </Layout>
@@ -27,14 +24,12 @@
 <script>
 import store from 'store'
 import AppHeader from 'navigation/components/header'
-import AppBreadcrumbs from 'navigation/components/breadcrumbs'
 import ResourcesMenu from 'navigation/components/resources'
 
 export default {
   name: 'App',
   components: {
     AppHeader,
-    AppBreadcrumbs,
     ResourcesMenu
   },
   computed: {
