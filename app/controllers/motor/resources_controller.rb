@@ -27,7 +27,7 @@ module Motor
     end
 
     def update
-      @resource.update!(params)
+      @resource.update!(resource_params)
 
       render json: { data: Motor::Query::BuildJson.call(@resource, params) }
     end
@@ -44,9 +44,11 @@ module Motor
 
     private
 
-    def load_and_authorize_resource
-      resource_class = Motor::Schema::Utils.classify_slug(params[:resource])
+    def resource_class
+      @resource_class ||= Motor::Schema::Utils.classify_slug(params[:resource])
+    end
 
+    def load_and_authorize_resource
       options = {
         class: resource_class,
         parent: false,
@@ -69,7 +71,6 @@ module Motor
     def load_and_authorize_association
       return if params[:association].blank?
 
-      resource_class = Motor::Schema::Utils.classify_slug(params[:resource])
       association = resource_class.reflections[params[:association]]
 
       if association
@@ -94,6 +95,10 @@ module Motor
       end
 
       klass.new(current_user)
+    end
+
+    def resource_params
+      params.fetch(:data, {}).except(resource_class.primary_key).permit!
     end
   end
 end

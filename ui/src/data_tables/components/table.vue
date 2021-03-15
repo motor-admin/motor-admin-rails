@@ -85,10 +85,10 @@
               <Reference
                 v-if="column.reference && row[column.key]"
                 :resource-id="row[column.key]"
-                :show-popover="!!column.reference.polymorphic_key"
+                :show-popover="!!column.reference.polymorphic"
                 :reference-name="column.reference.name"
                 :reference-data="row[column.reference.name]"
-                :polymorphic-name="row[column.reference.polymorphic_key]"
+                :polymorphic-name="row[column.reference.name + '_type']"
               />
               <DataCell
                 v-else
@@ -130,7 +130,9 @@ export default {
     sortParams: {
       type: Object,
       required: false,
-      default: () => {}
+      default () {
+        return {}
+      }
     },
     columns: {
       type: Array,

@@ -2,15 +2,15 @@
   <Layout :has-sider="!!associations.length">
     <Sider
       v-if="associations.length"
-      :style="{ background: '#fff' }"
+      class="border-top"
+      :style="{ background: '#fff', maxHeight: 'calc(100vh - 116px)', overflowY: 'scroll' }"
     >
       <ResourcesMenu
         :resources="associations"
         :item-class="'h5'"
         :path-fragments="pathFragments"
         :active-name="associationName"
-        class="border-top"
-        :style="{ maxHeight: 'calc(100vh - 116px)', overflowY: 'scroll', minHeight: '100%' }"
+        :style="{ minHeight: '100%' }"
       />
     </Sider>
     <Layout>
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import store from 'store'
+import { modelNameMap } from 'utils/scripts/schema'
 
 import ResourcesMenu from 'navigation/components/resources'
 import ResourceTable from './table'
@@ -88,7 +88,7 @@ export default {
       }
     },
     associations () {
-      return store.getters.namesMap[this.resourceName].associations.filter((assoc) => {
+      return modelNameMap[this.resourceName].associations.filter((assoc) => {
         return assoc.association_type === 'has_many'
       })
     }

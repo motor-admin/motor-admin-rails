@@ -80,10 +80,10 @@ export default {
   },
   computed: {
     stringValue () {
-      if (!this.value) {
-        return ''
-      } else if (typeof this.value === 'object') {
+      if (typeof this.value === 'object') {
         return JSON.stringify(this.value, null, '  ')
+      } else if (typeof this.value === 'number') {
+        return this.value.toString()
       } else {
         return (this.value || '').toString()
       }

@@ -6,12 +6,22 @@ module Motor
       DISPLAY_NAMES = %w[
         name
         full_name
+        fullname
         last_name
+        lastname
         first_name
+        firstname
+        fname
+        lname
+        sname
         phone
+        phone_number
         email
         domain
         phone
+        company
+        filename
+        file_name
         title
         url
         make

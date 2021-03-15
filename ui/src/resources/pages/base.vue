@@ -20,11 +20,11 @@
 </template>
 
 <script>
-import store from 'store'
+import { modelSlugMap } from 'utils/scripts/schema'
 import Resource from '../components/resource'
 import ResourceTable from '../components/table'
-import { normalizeFragments } from 'navigation/scripts/normalize_fragments'
 import Breadcrumbs from 'navigation/components/breadcrumbs'
+import { breadcrumbStore } from 'navigation/scripts/breadcrumb_store'
 
 export default {
   name: 'ResourcesBase',
@@ -38,7 +38,26 @@ export default {
       return this.$route.params.fragments
     },
     normalizedFragments () {
-      return normalizeFragments(this.fragments, store.getters.slugsMap)
+      const normalizeFragments = []
+
+      for (let i = 0; i < this.fragments.length; i++) {
+        const association = (
+          modelSlugMap[this.fragments[i - 2]]?.associations?.find((assoc) => assoc.slug === this.fragments[i]) ||
+          normalizeFragments[i - 2]?.model?.associations?.find((assoc) => assoc.slug === this.fragments[i])
+        )
+
+        const model = modelSlugMap[this.fragments[i]] || modelSlugMap[association?.model_slug]
+
+        const crumb = {
+          fragment: this.fragments[i],
+          association: association,
+          model: model
+        }
+
+        normalizeFragments.push(crumb)
+      }
+
+      return normalizeFragments
     },
     associationName () {
       const last = this.fragments[this.fragments.length - 1]
@@ -59,13 +78,13 @@ export default {
       }
     },
     resourceName () {
-      if (store.getters.slugsMap[this.resourceSlug]) {
-        return store.getters.slugsMap[this.resourceSlug].name
+      if (modelSlugMap[this.resourceSlug]) {
+        return modelSlugMap[this.resourceSlug].name
       } else {
         const normalizedFragments = this.normalizedFragments
         const association = normalizedFragments.find((assoc) => assoc.fragment === this.resourceSlug)
 
-        return association.schema.name
+        return association.model.name
       }
     },
     crumbs () {
@@ -74,7 +93,12 @@ export default {
 
       for (let i = 0; i < fragments.length; i++) {
         const crumb = {
-          label: fragments[i].association?.display_name || fragments[i].schema?.display_name || this.fragments[i]
+          label: (
+            fragments[i].association?.display_name ||
+            fragments[i].model?.display_name ||
+            (breadcrumbStore[fragments[i - 1]?.model.name] || {})[this.fragments[i]] ||
+            `#${this.fragments[i]}`
+          )
         }
 
         if ((i - 1) !== fragments.length) {
@@ -96,8 +120,6 @@ export default {
         return null
       }
     }
-  },
-  methods: {
   }
 }
 </script>

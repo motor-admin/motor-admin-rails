@@ -3,11 +3,20 @@
 module Motor
   module Schema
     module LoadFromRails
+      module ColumnAccessTypes
+        ALL = [
+          READ_ONLY = 'read_only',
+          WRITE_ONLY = 'write_only',
+          READ_WRITE = 'read_write',
+          HIDDEN = 'hidden'
+        ].freeze
+      end
+
       module_function
 
       def call
         models.map do |model|
-          build_resource_shema(model)
+          build_model_schema(model)
         end
       end
 
@@ -29,7 +38,7 @@ module Motor
         end
       end
 
-      def build_resource_shema(model)
+      def build_model_schema(model)
         {
           name: model.name.underscore,
           slug: Utils.slugify(model),
@@ -38,7 +47,8 @@ module Motor
           display_name: model.name.titleize.pluralize,
           display_column: Schema::FindDisplayColumn.call(model),
           columns: fetch_columns(model),
-          associations: fetch_associations(model)
+          associations: fetch_associations(model),
+          default_values: model.new.attributes.select { |_, v| v.present? }
         }
       end
 
@@ -48,15 +58,15 @@ module Motor
             name: column.name,
             display_name: column.name.humanize,
             column_type: column.type.to_s,
-            validators: fetch_validators(model, column.name),
-            reference: fetch_reference(model, column.name)
+            access_type: ColumnAccessTypes::READ_WRITE,
+            validators: fetch_validators(model, column.name)
           }
         end
       end
 
       def fetch_associations(model)
         model.reflections.map do |name, ref|
-          next if ref.polymorphic?
+          next if ref.polymorphic? && !ref.belongs_to?
 
           begin
             ref.klass
@@ -68,25 +78,13 @@ module Motor
             name: name,
             display_name: name.humanize,
             slug: name.underscore,
-            schema_name: ref.klass.name.underscore,
-            schema_slug: Utils.slugify(ref.klass),
-            association_type: fetch_association_type(ref)
+            model_name: ref.klass.name.underscore,
+            model_slug: Utils.slugify(ref.klass),
+            association_type: fetch_association_type(ref),
+            foreign_key: ref.foreign_key,
+            polymorphic: ref.polymorphic?
           }
         end.compact
-      end
-
-      def fetch_reference(model, column_name)
-        klass =
-          model.reflections.values.find do |assoc|
-            assoc.belongs_to? && assoc.foreign_key == column_name
-          end
-
-        return unless klass
-
-        {
-          name: klass.name.to_s.underscore,
-          polymorphic_key: klass.polymorphic? ? "#{klass.name.to_s.underscore}_type" : nil
-        }
       end
 
       def fetch_association_type(association)
@@ -112,7 +110,7 @@ module Motor
           when ActiveRecord::Validations::PresenceValidator
             { required: true }
           when ActiveModel::Validations::FormatValidator
-            { format: validator.options[:with] }
+            { format: JsRegex.new(validator.options[:with]).to_h.slice(:source, :options) }
           when ActiveRecord::Validations::LengthValidator
             { length: validator.options }
           when ActiveModel::Validations::NumericalityValidator

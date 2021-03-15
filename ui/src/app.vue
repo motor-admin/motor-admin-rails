@@ -6,12 +6,12 @@
       :style="{ height: 'calc(100vh - 64px)' }"
     >
       <Sider
-        :style="{ background: '#fff' }"
+        :style="{ background: '#fff', maxHeight: 'calc(100vh - 64px)', overflowY: 'scroll' }"
       >
         <ResourcesMenu
           :resources="schema"
           :active-name="$route.params.fragments[0]"
-          :style="{ maxHeight: 'calc(100vh - 64px)', overflowY: 'scroll', height: '100%' }"
+          :style="{ minHeight: '100%' }"
         />
       </Sider>
       <Layout>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import store from 'store'
+import { schema } from 'utils/scripts/schema'
 import AppHeader from 'navigation/components/header'
 import ResourcesMenu from 'navigation/components/resources'
 
@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     schema () {
-      return store.getters.schema
+      return schema
     }
   },
   mounted () {

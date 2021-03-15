@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+require 'cancancan'
 require 'ar_lazy_preload'
+require 'js_regex'
 
 require 'motor/version'
 require 'motor/admin'

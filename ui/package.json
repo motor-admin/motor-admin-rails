@@ -8,9 +8,7 @@
     "qs": "^6.9.3",
     "view3": "https://github.com/omohokcoj/view3",
     "vue": "^3.0.0",
-    "vue-content-placeholders": "^0.2.1",
-    "vue-router": "^4.0.0",
-    "vuex": "^4.0.0-rc.2"
+    "vue-router": "^4.0.0"
   },
   "scripts": {
     "serve": "webpack serve",

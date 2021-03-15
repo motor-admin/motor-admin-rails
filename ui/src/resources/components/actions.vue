@@ -13,7 +13,10 @@
     </VButton>
     <template #list>
       <DropdownMenu>
-        <DropdownItem :disabled="resources.length > 1">
+        <DropdownItem
+          :disabled="resources.length > 1"
+          @click="edit"
+        >
           Edit
         </DropdownItem>
         <DropdownItem
@@ -37,7 +40,9 @@
 
 <script>
 import api from 'api'
-import store from 'store'
+import { modelNameMap } from 'utils/scripts/schema'
+import ResourceForm from './form'
+import { titleize } from 'utils/scripts/string'
 
 export default {
   name: 'ResourceActions',
@@ -73,8 +78,11 @@ export default {
   },
   emits: ['start-action', 'finish-action'],
   computed: {
-    resourceSchema () {
-      return store.getters.namesMap[this.resourceName]
+    resource () {
+      return this.resources[0]
+    },
+    model () {
+      return modelNameMap[this.resourceName]
     }
   },
   methods: {
@@ -84,7 +92,28 @@ export default {
       })
     },
     removeRequest (resource) {
-      return api.delete(`data/${this.resourceSchema.slug}/${resource[this.resourceSchema.primary_key]}`)
+      return api.delete(`data/${this.model.slug}/${resource[this.model.primary_key]}`)
+    },
+    edit () {
+      const resourceTitle = `${titleize(this.resourceName)} #${this.resource.id}`
+
+      this.$Drawer.open(ResourceForm, {
+        resource: this.resource,
+        action: 'edit',
+        resourceName: this.resourceName,
+        onClose: () => {
+          this.$Drawer.remove()
+        },
+        onSuccess: (data) => {
+          this.$Drawer.remove()
+          this.$Message.success(`${resourceTitle} has been updated`)
+          this.$emit('finish-action', 'edit')
+        }
+      }, {
+        title: `Edit ${resourceTitle}`,
+        className: 'drawer-no-bottom-padding',
+        closable: true
+      })
     },
     remove () {
       this.$Dialog.confirm({
@@ -104,7 +133,7 @@ export default {
               this.$Message.info('Selected item has been removed')
             }
           }).catch((error) => {
-            console.log(error)
+            console.erro(error)
             this.$Message.error('Unable to remove items')
           }).finally(() => {
             this.$emit('finish-action', 'remove')

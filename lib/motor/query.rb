@@ -16,6 +16,7 @@ module Motor
       rel = Query::Paginate.call(rel, params[:page])
       rel = Query::Filter.call(rel, params[:filter])
       rel = Query::Search.call(rel, params[:q] || params[:search] || params[:query])
+
       rel.preload_associations_lazily
     end
   end

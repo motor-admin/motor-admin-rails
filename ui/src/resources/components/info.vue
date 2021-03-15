@@ -24,28 +24,33 @@
             :key="column.name"
           >
             <div
-              v-if="resource[column.name]"
+              v-if="![null, undefined, ''].includes(resource[column.name])"
               :class="oneColumn ? 'col-12' : 'col-xxl-3 col-xl-6 col-md-12 col-12'"
               class="mb-3"
             >
-              <b>
-                {{ column.display_name }}:
-              </b>
-              <br>
-              <Reference
-                v-if="column.reference"
-                :resource-id="resource[column.name]"
-                :reference-name="column.reference.name"
-                :show-popover="referencePopover"
-                :reference-data="resource[column.reference.name]"
-                :polymorphic-name="resource[column.reference.polymorphic_key]"
-              />
-              <DataCell
-                v-else
-                :value="resource[column.name]"
-                :text-truncate="false"
-                :type="columnType(column)"
-              />
+              <h2 v-if="column.name === 'id'">
+                {{ titleize(model.name) }} #{{ resource.id }}
+              </h2>
+              <template v-else>
+                <b>
+                  {{ column.display_name }}:
+                </b>
+                <br>
+                <Reference
+                  v-if="column.reference"
+                  :resource-id="resource[column.name]"
+                  :reference-name="column.reference.name"
+                  :show-popover="referencePopover"
+                  :reference-data="resource[column.reference.name]"
+                  :polymorphic-name="resource[column.reference.name + '_type']"
+                />
+                <DataCell
+                  v-else
+                  :value="resource[column.name]"
+                  :text-truncate="false"
+                  :type="columnType(column)"
+                />
+              </template>
             </div>
           </template>
         </div>
@@ -56,7 +61,7 @@
       >
         <ResourceActions
           :resources="[resource]"
-          :resource-name="schema.name"
+          :resource-name="model.name"
           :button-type="'primary'"
           :button-ghost="false"
           :label="'Actions'"
@@ -70,11 +75,14 @@
 
 <script>
 import api from 'api'
-import store from 'store'
+import { modelNameMap } from 'utils/scripts/schema'
 
 import DataCell from 'data_cells/components/data_cell'
 import Reference from 'data_cells/components/reference'
 import ResourceActions from './actions'
+
+import { assignBreadcrumbLabel } from 'navigation/scripts/breadcrumb_store'
+import { titleize, truncate } from 'utils/scripts/string'
 
 import DataTypes from 'data_cells/scripts/data_types'
 
@@ -110,6 +118,7 @@ export default {
       default: true
     }
   },
+  emits: ['remove'],
   data () {
     return {
       resource: {},
@@ -118,11 +127,11 @@ export default {
     }
   },
   computed: {
-    schema () {
-      return store.getters.namesMap[this.resourceName]
+    model () {
+      return modelNameMap[this.resourceName]
     },
     columns () {
-      return this.schema.columns
+      return this.model.columns
     },
     includeParams () {
       return this.columns.map((column) => {
@@ -144,6 +153,7 @@ export default {
     this.loadData()
   },
   methods: {
+    titleize,
     onFinisAction (action) {
       if (action === 'remove') {
         this.$emit('remove', this.resource)
@@ -157,10 +167,18 @@ export default {
     loadData () {
       this.isReoading = true
 
-      api.get(`data/${this.resourceName}/${this.resourceId}`, {
+      api.get(`data/${this.model.slug}/${this.resourceId}`, {
         params: this.queryParams
       }).then((result) => {
         this.resource = result.data.data
+
+        if (this.model.display_column && this.resource[this.model.display_column]) {
+          assignBreadcrumbLabel(
+            this.resourceName,
+            this.resourceId,
+            `#${this.resourceId} ${truncate(this.resource[this.model.display_column], 22)}`
+          )
+        }
       }).catch((error) => {
         console.error(error)
       }).finally(() => {

@@ -12,4 +12,8 @@ function underscore (string) {
     .toLowerCase()
 }
 
-export { truncate, underscore }
+function titleize (string) {
+  return string.replace(/_+/g, ' ').replace(/(?:^|\s|-)\S/g, x => x.toUpperCase())
+}
+
+export { truncate, underscore, titleize }

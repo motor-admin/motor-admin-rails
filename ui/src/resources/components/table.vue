@@ -15,7 +15,7 @@
           v-if="selectedRows.length"
           :resources="selectedRows"
           :with-deselect="true"
-          :resource-name="schema.name"
+          :resource-name="model.name"
           :label="`Actions (${selectedRows.length})`"
           @start-action="isLoading = true"
           @finish-action="loadData"
@@ -26,7 +26,7 @@
           v-model="searchQuery"
           style="max-width: 400px"
           class="mx-1"
-          :placeholder="`Search ${(associationSchema?.display_name || schema.display_name).toLowerCase()}...`"
+          :placeholder="`Search ${(associationModel?.display_name || model.display_name).toLowerCase()}...`"
           @search="loadData"
         />
         <VButton
@@ -34,10 +34,11 @@
           icon="ios-funnel"
           class="mx-1"
         />
-        <VButton
-          type="success"
-          icon="md-add"
+        <NewResourceButton
           class="mx-1"
+          :resource-name="model.name"
+          :parent-resource="associationParams ? { name: resourceName, id: associationParams.id } : null"
+          @success="loadData"
         />
       </div>
     </div>
@@ -79,10 +80,12 @@
 
 <script>
 import api from 'api'
-import store from 'store'
+import { modelNameMap } from 'utils/scripts/schema'
 import DataTable from 'data_tables/components/table'
 import ResourceSearch from './search'
 import ResourceActions from './actions'
+import NewResourceButton from './new_button'
+
 import { truncate } from 'utils/scripts/string'
 
 import DataTypes from 'data_cells/scripts/data_types'
@@ -104,7 +107,8 @@ export default {
   components: {
     DataTable,
     ResourceSearch,
-    ResourceActions
+    ResourceActions,
+    NewResourceButton
   },
   props: {
     resourceName: {
@@ -139,7 +143,7 @@ export default {
   },
   computed: {
     title () {
-      return truncate(this.associationSchema?.display_name || this.schema.display_name, 60)
+      return truncate(this.associationModel?.display_name || this.model.display_name, 60)
     },
     selectedRows () {
       return this.rows.filter((row) => row._selected)
@@ -148,12 +152,12 @@ export default {
       if (this.associationParams) {
         return [
           'data',
-          store.getters.namesMap[this.resourceName].slug,
+          modelNameMap[this.resourceName].slug,
           this.associationParams.id,
           this.associationParams.name
         ].join('/')
       } else {
-        return `data/${this.schema.slug}`
+        return `data/${this.model.slug}`
       }
     },
     queryParams () {
@@ -180,33 +184,33 @@ export default {
       return params
     },
     includeParams () {
-      return this.schema.columns.map((column) => {
+      return this.model.columns.map((column) => {
         return column.reference?.name
       }).filter(Boolean).join(',')
     },
-    associationSchema () {
+    associationModel () {
       if (this.associationParams?.name) {
-        return store.getters.namesMap[this.resourceName].associations.find((assoc) => {
+        return modelNameMap[this.resourceName].associations.find((assoc) => {
           return assoc.slug === this.associationParams.name
         })
       } else {
         return null
       }
     },
-    schema () {
-      if (this.associationSchema) {
-        const assocSchemaName = this.associationSchema.schema_name
+    model () {
+      if (this.associationModel) {
+        const assocSchemaName = this.associationModel.model_name
 
-        return store.getters.namesMap[assocSchemaName]
+        return modelNameMap[assocSchemaName]
       } else {
-        return store.getters.namesMap[this.resourceName]
+        return modelNameMap[this.resourceName]
       }
     },
     columns () {
-      return this.schema.columns.map((column) => {
+      return this.model.columns.map((column) => {
         const type = column.validators.find((v) => v.includes?.length) ? DataTypes.TAG : column.column_type
 
-        if (column.reference?.name !== store.getters.namesMap[this.resourceName].name) {
+        if (column.reference?.name !== modelNameMap[this.resourceName].name) {
           return {
             key: column.name,
             title: column.display_name,
@@ -219,14 +223,6 @@ export default {
       }).filter(Boolean)
     }
   },
-  watch: {
-    resourceName () {
-      this.reset()
-    },
-    associationParams () {
-      this.loadData()
-    }
-  },
   mounted () {
     this.loadData()
   },
@@ -235,6 +231,7 @@ export default {
       this.sortParams = { ...defaultSortParams }
       this.paginationParams = { ...defaultPaginationParams }
       this.isReloading = true
+
       this.loadData()
     },
     applySort (sort) {

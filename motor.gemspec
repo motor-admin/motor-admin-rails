@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'ar_lazy_preload'
   spec.add_dependency 'cancancan'
-  spec.add_dependency 'rails', '>= 5.0'
+  spec.add_dependency 'js_regex'
+  spec.add_dependency 'rails', '>= 5.2'
   spec.add_development_dependency 'rubocop', '~> 1.3.1'
 end

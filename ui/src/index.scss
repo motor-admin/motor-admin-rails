@@ -43,6 +43,7 @@ $spin-dot-size-large: 42px;
 @import 'view3/src/styles/components/breadcrumb';
 @import 'view3/src/styles/components/table';
 @import 'view3/src/styles/components/page';
+@import 'view3/src/styles/components/input-number';
 
 .#{$spin-prefix-cls} {
   &-fix {
@@ -111,4 +112,8 @@ body {
 
 .nowrap {
   white-space: nowrap;
+}
+
+.ivu-form-item-error-tip {
+  padding: 0;
 }

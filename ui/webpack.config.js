@@ -26,9 +26,10 @@ module.exports = (env = {}) => ({
         test: /\.ts$/,
         exclude: /node_modules/,
         use: [
-          { loader: 'ts-loader',
-   options: {
-                appendTsSuffixTo: [/\.vue$/]
+          {
+            loader: 'ts-loader',
+            options: {
+              appendTsSuffixTo: [/\.vue$/]
             }
           }
         ]

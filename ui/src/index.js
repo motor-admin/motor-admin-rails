@@ -6,7 +6,6 @@ import { createApp } from 'vue'
 import App from './app'
 
 import router from './router'
-import store from './store'
 
 import PopoverDirective from 'view3/src/directives/popover'
 import TooltipDirective from 'view3/src/directives/tooltip'
@@ -32,6 +31,7 @@ import Icon from 'view3/src/components/icon'
 import Content from 'view3/src/components/content'
 import Layout from 'view3/src/components/layout'
 import Input from 'view3/src/components/input'
+import InputNumber from 'view3/src/components/input-number'
 import Form from 'view3/src/components/form'
 import FormItem from 'view3/src/components/form-item'
 import Radio from 'view3/src/components/radio'
@@ -52,9 +52,6 @@ import Sider from 'view3/src/components/sider'
 import Breadcrumb from 'view3/src/components/breadcrumb'
 import BreadcrumbItem from 'view3/src/components/breadcrumb-item'
 import Page from 'view3/src/components/page'
-
-import ContentPlaceholders from 'vue-content-placeholders/src/components/ContentPlaceholders'
-import ContentPlaceholdersText from 'vue-content-placeholders/src/components/ContentPlaceholdersText'
 
 const app = createApp(App)
 
@@ -96,11 +93,9 @@ app.component('Pagination', Page)
 app.component('Dropdown', Dropdown)
 app.component('DropdownMenu', DropdownMenu)
 app.component('DropdownItem', DropdownItem)
-app.component('CntentPlaceholders', ContentPlaceholders)
-app.component('ContentPlaceholdersText', ContentPlaceholdersText)
+app.component('InputNumber', InputNumber)
 
 app.use(router)
-app.use(store)
 
 app.use(DynamicModal)
 app.use(DynamicDrawer)

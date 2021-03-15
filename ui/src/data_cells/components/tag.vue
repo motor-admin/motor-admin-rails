@@ -7,12 +7,13 @@
     <span
       class="ivu-tag-text ivu-tag-color-white"
       :style="textStyle"
-    >{{ normalized }}</span>
+    >{{ titleize(value) }}</span>
   </div>
 </template>
 
 <script>
 import { colorsForTag } from '../scripts/tag_colors'
+import { titleize } from 'utils/scripts/string'
 
 const COLORS = {
   ok: 'ivu-tag-green',
@@ -55,10 +56,10 @@ export default {
     },
     textStyle () {
       return this.colorClass ? '' : `color: ${this.tagColors[1]} !important`
-    },
-    normalized () {
-      return this.value.replace(/_+/g, ' ').replace(/(^|\s)\S/g, (t) => t.toUpperCase())
     }
+  },
+  methods: {
+    titleize
   }
 }
 </script>

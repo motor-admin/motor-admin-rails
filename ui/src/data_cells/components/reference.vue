@@ -8,13 +8,13 @@
     @click.stop
   >
     #{{ resourceId }} <template v-if="!polymorphicName">
-      {{ truncate(displayText, 22) }}
+      {{ truncate(displayText, 20) }}
     </template>
   </VButton>
 </template>
 
 <script>
-import store from 'store'
+import { modelNameMap } from 'utils/scripts/schema'
 import { truncate, underscore } from 'utils/scripts/string'
 
 export default {
@@ -49,7 +49,7 @@ export default {
       if (this.referenceData.first_name && this.referenceData.last_name) {
         return [this.referenceData.first_name, this.referenceData.last_name].join(' ')
       } else {
-        return this.referenceData[this.resourceSchema.display_column]
+        return this.referenceData[this.model.display_column]
       }
     },
     popoverParams () {
@@ -57,7 +57,7 @@ export default {
         trigger: 'mouseenter',
         render: (h) => {
           return h(require('resources/components/info').default, {
-            resourceName: this.resourceSchema.name,
+            resourceName: this.model.name,
             resourceId: this.resourceId,
             oneColumn: true,
             referencePopover: false
@@ -66,6 +66,7 @@ export default {
         disabled: !this.showPopover,
         placement: 'right',
         bodyStyle: {
+          whiteSpace: 'break-spaces',
           overflowY: 'scroll',
           minHeight: '50px',
           maxHeight: '300px',
@@ -73,15 +74,15 @@ export default {
         }
       }
     },
-    resourceSchema () {
+    model () {
       if (this.polymorphicName) {
-        return store.getters.namesMap[underscore(this.polymorphicName)]
+        return modelNameMap[underscore(this.polymorphicName)]
       } else {
-        return store.getters.namesMap[this.referenceName]
+        return modelNameMap[this.referenceName]
       }
     },
     resourceSlug () {
-      return this.resourceSchema.slug
+      return this.model.slug
     }
   },
   methods: { truncate }
