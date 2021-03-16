@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Motor
-  module Query
+  module ApiQuery
     module Sort
       FIELD_PARSE_REGEXP = /\A(-)?(.*)\z/.freeze
 

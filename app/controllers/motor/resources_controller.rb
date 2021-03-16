@@ -1,35 +1,35 @@
 # frozen_string_literal: true
 
 module Motor
-  class ResourcesController < ActionController::API
+  class ResourcesController < ApiBaseController
     INSTANCE_VARIABLE_NAME = 'resource'
 
     before_action :load_and_authorize_resource
     before_action :load_and_authorize_association
 
     def index
-      @resources = Motor::Query.call(@resources, params)
+      @resources = Motor::ApiQuery.call(@resources, params)
 
       render json: {
-        data: Motor::Query::BuildJson.call(@resources, params),
-        meta: Motor::Query::BuildMeta.call(@resources, params)
+        data: Motor::ApiQuery::BuildJson.call(@resources, params),
+        meta: Motor::ApiQuery::BuildMeta.call(@resources, params)
       }
     end
 
     def show
-      render json: { data: Motor::Query::BuildJson.call(@resource, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params) }
     end
 
     def create
       @resource.save!
 
-      render json: { data: Motor::Query::BuildJson.call(@resource, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params) }
     end
 
     def update
       @resource.update!(resource_params)
 
-      render json: { data: Motor::Query::BuildJson.call(@resource, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params) }
     end
 
     def destroy
@@ -45,7 +45,7 @@ module Motor
     private
 
     def resource_class
-      @resource_class ||= Motor::Schema::Utils.classify_slug(params[:resource])
+      @resource_class ||= Motor::BuildSchema::Utils.classify_slug(params[:resource])
     end
 
     def load_and_authorize_resource

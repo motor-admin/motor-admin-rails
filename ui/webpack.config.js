@@ -24,7 +24,6 @@ module.exports = (env = {}) => ({
       },
       {
         test: /\.ts$/,
-        exclude: /node_modules/,
         use: [
           {
             loader: 'ts-loader',
@@ -43,7 +42,8 @@ module.exports = (env = {}) => ({
         test: /\.css$/,
         use: [
           MiniCssExtractPlugin.loader,
-          'css-loader'
+          'css-loader',
+          'sass-loader',
         ]
       },
       {
@@ -97,7 +97,10 @@ module.exports = (env = {}) => ({
       publicPath: true
     }),
     new VueLoaderPlugin(),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin({
+      dangerouslyAllowCleanPatternsOutsideProject: true,
+      verbose: true
+    })
   ],
   devServer: {
     port: 9090,

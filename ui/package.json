@@ -3,11 +3,13 @@
   "private": true,
   "dependencies": {
     "axios": "^0.21.1",
-    "bootstrap": "^5.0.0-beta1",
+    "bootstrap": "^5.0.0-beta2",
     "color-hash": "^1.0.3",
+    "prismjs": "^1.23.0",
     "qs": "^6.9.3",
     "view3": "https://github.com/omohokcoj/view3",
     "vue": "^3.0.0",
+    "vue-prism-editor": "https://github.com/koca/vue-prism-editor#feature/next",
     "vue-router": "^4.0.0"
   },
   "scripts": {

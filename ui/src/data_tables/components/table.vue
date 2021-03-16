@@ -1,18 +1,21 @@
 <template>
   <div
+    ref="wrapper"
     class="table-wrapper"
-    :style="{ overflow: 'auto' }"
+    :style="{ overflow: 'auto', height: '100%' }"
   >
     <table
       cellspacing="0"
       cellpadding="0"
       border="0"
       class="ivu-table ivu-table-default"
+      :class="{ 'ivu-table-clickable-rows': clickRows }"
       style="position: relative"
     >
       <thead class="ivu-table-header">
         <tr>
           <th
+            v-if="withSelect && columns.length"
             class="ivu-table-column ivu-table-column-center"
             :style="{ position: 'sticky', top: 0, left: 0, zIndex: 1 }"
           >
@@ -32,11 +35,14 @@
           >
             <div class="ivu-table-cell">
               <span
-                class="ivu-table-cell-sort"
+                :class="{ 'ivu-table-cell-sort': withSorting }"
                 @click.prevent="toggleSort(column.key)"
               >{{ column.title }}</span>
               {{ ' ' }}
-              <span class="ivu-table-sort">
+              <span
+                v-if="withSorting"
+                class="ivu-table-sort"
+              >
                 <i
                   class="ion ion-md-arrow-dropup"
                   :class="{ on: dataSort.key === column.key && dataSort.order === 'asc' }"
@@ -68,6 +74,7 @@
           @click.prevent="onRowClick(row)"
         >
           <td
+            v-if="withSelect"
             class="ivu-table-column ivu-table-column-center"
             :style="{ position: 'sticky', left: 0 }"
             @click.stop
@@ -86,7 +93,7 @@
                 v-if="column.reference && row[column.key]"
                 :resource-id="row[column.key]"
                 :show-popover="!!column.reference.polymorphic"
-                :reference-name="column.reference.name"
+                :reference-name="column.reference.model_name"
                 :reference-data="row[column.reference.name]"
                 :polymorphic-name="row[column.reference.name + '_type']"
               />
@@ -102,7 +109,7 @@
     </table>
     <div
       v-if="data.length === 0"
-      style="margin: auto; height: calc(100% - 40px); display: flex;"
+      :style="{ margin: 'auto', height: columns.length ? 'calc(100% - 40px)' : '100%', display: 'flex' }"
     >
       <div style="margin: auto;">
         No Data
@@ -136,7 +143,23 @@ export default {
     },
     columns: {
       type: Array,
-      required: true
+      required: false,
+      default: () => []
+    },
+    withSelect: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    clickRows: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    withSorting: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     loading: {
       type: Boolean,
@@ -162,6 +185,9 @@ export default {
   watch: {
     sortParams (value) {
       this.dataSort = value
+    },
+    data () {
+      this.$refs.wrapper.scrollTop = 0
     }
   },
   mounted () {
@@ -220,8 +246,10 @@ export default {
   }
 }
 
-.ivu-table-row {
-  cursor: pointer;
+.ivu-table-clickable-rows {
+  .ivu-table-row {
+    cursor: pointer;
+  }
 }
 
 .ivu-table-cell {

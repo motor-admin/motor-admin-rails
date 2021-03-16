@@ -1,5 +1,5 @@
 <template>
-  <template
+  <div
     v-if="!isReloading"
   >
     <div
@@ -67,7 +67,7 @@
         @on-page-size-change="loadData"
       />
     </div>
-  </template>
+  </div>
   <div
     v-else
     :style="{ height: height, paddingBottom: '1px', position: 'relative' }"

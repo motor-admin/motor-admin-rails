@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Motor
-  module Schema
+  module BuildSchema
     module LoadFromRails
       module ColumnAccessTypes
         ALL = [
@@ -26,7 +26,7 @@ module Motor
         models = load_descendants(ActiveRecord::Base).uniq
         models = models.reject(&:abstract_class)
 
-        models -= Motor::ApplicationRecord.descendants
+        # models -= Motor::ApplicationRecord.descendants
         models -= [ActiveRecord::SchemaMigration] if defined?(ActiveRecord::SchemaMigration)
 
         models
@@ -45,7 +45,7 @@ module Motor
           table_name: model.table_name,
           primary_key: model.primary_key,
           display_name: model.name.titleize.pluralize,
-          display_column: Schema::FindDisplayColumn.call(model),
+          display_column: FindDisplayColumn.call(model),
           columns: fetch_columns(model),
           associations: fetch_associations(model),
           default_values: model.new.attributes.select { |_, v| v.present? }

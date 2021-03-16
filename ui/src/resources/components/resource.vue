@@ -3,7 +3,7 @@
     <Sider
       v-if="associations.length"
       class="border-top"
-      :style="{ background: '#fff', maxHeight: 'calc(100vh - 116px)', overflowY: 'scroll' }"
+      :style="{ background: '#fff', maxHeight: 'calc(100vh - 112px)', overflowY: 'scroll' }"
     >
       <ResourcesMenu
         :resources="associations"
@@ -21,16 +21,17 @@
           :resource-id="resourceId"
           :with-actions="true"
           :one-column="!showTable"
-          class="border-y p-3"
+          class="border-top p-3"
           :style="infoStyle"
           @remove="goToParent"
         />
         <ResourceTable
           v-if="showTable"
           :key="resourceName + resourceId + associationName"
-          :height="'calc(50vh - 109px)'"
+          :height="'calc(50vh - 108px)'"
           :resource-name="resourceName"
           :with-title="true"
+          class="border-top"
           :association-params="{ name: associationName, id: resourceId }"
         />
       </Content>
@@ -70,9 +71,9 @@ export default {
   computed: {
     infoStyle () {
       if (this.showTable) {
-        return { height: 'calc(50vh - 94px)', overflowY: 'scroll' }
+        return { height: 'calc(50vh - 91px)', overflowY: 'scroll' }
       } else {
-        return { height: 'calc(100vh - 116px)', overflowY: 'scroll' }
+        return { height: 'calc(100vh - 112px)', overflowY: 'scroll' }
       }
     },
     showTable () {

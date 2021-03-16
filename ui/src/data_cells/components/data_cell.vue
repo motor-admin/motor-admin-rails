@@ -80,7 +80,7 @@ export default {
   },
   computed: {
     stringValue () {
-      if (typeof this.value === 'object') {
+      if (this.value && typeof this.value === 'object') {
         return JSON.stringify(this.value, null, '  ')
       } else if (typeof this.value === 'number') {
         return this.value.toString()
@@ -89,7 +89,7 @@ export default {
       }
     },
     isDateTime () {
-      return this.type === DataTypes.DATE_TIME
+      return this.type === DataTypes.DATE_TIME || this.type === DataTypes.TIMESTAMP
     },
     isTag () {
       return this.type === DataTypes.TAG

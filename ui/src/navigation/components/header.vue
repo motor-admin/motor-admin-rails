@@ -1,35 +1,51 @@
 <template>
-  <VHeader>
-    <Menu
-      mode="horizontal"
-      theme="dark"
-      active-name="1"
-    >
-      <div class="layout-logo" />
-      <div class="layout-nav">
-        <MenuItem name="1">
-          <Icon type="ios-navigate" />
-          Item 1
-        </MenuItem>
-        <MenuItem name="2">
-          <Icon type="ios-keypad" />
-          Item 2
-        </MenuItem>
-        <MenuItem name="3">
-          <Icon type="ios-analytics" />
-          Item 3
-        </MenuItem>
-        <MenuItem name="4">
-          <Icon type="ios-paper" />
-          Item 4
-        </MenuItem>
-      </div>
-    </Menu>
-  </VHeader>
+  <Menu
+    mode="horizontal"
+    theme="light"
+    active-name="1"
+    class="row m-0"
+    :style="{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05)', zIndex: 1 }"
+  >
+    <div class="col-4 ps-4">
+      <RouterLink :to="{name: 'home'}">
+        <h2>
+          ⚙️ MotorAdmin
+        </h2>
+      </RouterLink>
+    </div>
+    <div class="col-4">
+      <Search :placeholder="'Search'" />
+    </div>
+    <div class="col-4 d-flex justify-content-end">
+      <MenuItem
+        name="1"
+        :to="{ name: 'resources_home' }"
+      >
+        Resources
+      </MenuItem>
+      <MenuItem
+        name="3"
+        :to="{ name: 'new_query' }"
+      >
+        Queries
+      </MenuItem>
+      <MenuItem name="2">
+        Dashboards
+      </MenuItem>
+      <MenuItem name="4">
+        Settings
+      </MenuItem>
+    </div>
+  </Menu>
 </template>
 
 <script>
+import Search from './search'
+
 export default {
-  name: 'AppHeader'
+  name: 'AppHeader',
+  components: {
+    Search
+  }
 }
 </script>

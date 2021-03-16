@@ -52,6 +52,8 @@ import Sider from 'view3/src/components/sider'
 import Breadcrumb from 'view3/src/components/breadcrumb'
 import BreadcrumbItem from 'view3/src/components/breadcrumb-item'
 import Page from 'view3/src/components/page'
+import AutoComplete from 'view3/src/components/auto-complete'
+import Split from 'view3/src/components/split'
 
 const app = createApp(App)
 
@@ -94,6 +96,8 @@ app.component('Dropdown', Dropdown)
 app.component('DropdownMenu', DropdownMenu)
 app.component('DropdownItem', DropdownItem)
 app.component('InputNumber', InputNumber)
+app.component('AutoComplete', AutoComplete)
+app.component('Split', Split)
 
 app.use(router)
 

@@ -39,7 +39,7 @@
                 <Reference
                   v-if="column.reference"
                   :resource-id="resource[column.name]"
-                  :reference-name="column.reference.name"
+                  :reference-name="column.reference.model_name"
                   :show-popover="referencePopover"
                   :reference-data="resource[column.reference.name]"
                   :polymorphic-name="resource[column.reference.name + '_type']"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Motor
-  module Query
+  module ApiQuery
     module Paginate
       MAX_PER_PAGE = 500
 

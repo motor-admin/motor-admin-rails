@@ -6,7 +6,7 @@ const VALIDATORS = {
     return value >= option
   },
   equal_to: (option, value) => {
-    return value == option
+    return parseFloat(value) === parseFloat(option)
   },
   less_than: (option, value) => {
     return value < option
@@ -15,7 +15,7 @@ const VALIDATORS = {
     return value <= option
   },
   other_than: (option, value) => {
-    return value != option
+    return parseFloat(value) !== parseFloat(option)
   }
 }
 

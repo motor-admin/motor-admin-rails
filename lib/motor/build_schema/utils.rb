@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Motor
-  module Schema
+  module BuildSchema
     module Utils
       module_function
 

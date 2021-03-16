@@ -1,29 +1,47 @@
 <template>
-  <template v-if="fragments.length > 1">
-    <Breadcrumbs
-      :crumbs="crumbs"
-      :style="{ margin: '14px 10px' }"
-    />
-    <Resource
-      :resource-name="resourceName"
-      :resource-id="resourceId"
-      :association-name="associationName"
-    />
-  </template>
-  <ResourceTable
-    v-else
-    :key="resourceName"
-    :height="'calc(100vh - 151px)'"
-    :with-title="true"
-    :resource-name="resourceName"
-  />
+  <Layout
+    :has-sider="true"
+    :style="{ height: 'calc(100vh - 60px)' }"
+  >
+    <Sider
+      :style="{ background: '#fff', maxHeight: 'calc(100vh - 60px)', overflowY: 'scroll' }"
+    >
+      <ResourcesMenu
+        :resources="schema"
+        :active-name="fragments[0]"
+        :style="{ minHeight: '100%' }"
+      />
+    </Sider>
+    <Layout>
+      <template v-if="fragments && fragments.length > 1">
+        <Breadcrumbs
+          :crumbs="crumbs"
+          :style="{ margin: '14px 10px' }"
+        />
+        <Resource
+          :resource-name="resourceName"
+          :resource-id="resourceId"
+          :association-name="associationName"
+        />
+      </template>
+      <ResourceTable
+        v-if="fragments.length === 1"
+        :key="resourceName"
+        :height="'calc(100vh - 146px)'"
+        :with-title="true"
+        :resource-name="resourceName"
+      />
+    </Layout>
+  </Layout>
 </template>
 
 <script>
-import { modelSlugMap } from 'utils/scripts/schema'
+import { schema, modelSlugMap } from 'utils/scripts/schema'
 import Resource from '../components/resource'
 import ResourceTable from '../components/table'
 import Breadcrumbs from 'navigation/components/breadcrumbs'
+import ResourcesMenu from 'navigation/components/resources'
+
 import { breadcrumbStore } from 'navigation/scripts/breadcrumb_store'
 
 export default {
@@ -31,11 +49,15 @@ export default {
   components: {
     ResourceTable,
     Resource,
-    Breadcrumbs
+    Breadcrumbs,
+    ResourcesMenu
   },
   computed: {
+    schema () {
+      return schema
+    },
     fragments () {
-      return this.$route.params.fragments
+      return this.$route.params.fragments || []
     },
     normalizedFragments () {
       const normalizeFragments = []
@@ -114,7 +136,7 @@ export default {
       const index = this.associationName ? 2 : 1
       const last = this.fragments[this.fragments.length - index]
 
-      if (last.match(/^\d+$/)) {
+      if (last && last.match(/^\d+$/)) {
         return last
       } else {
         return null

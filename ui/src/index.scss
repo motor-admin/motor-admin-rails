@@ -44,6 +44,8 @@ $spin-dot-size-large: 42px;
 @import 'view3/src/styles/components/table';
 @import 'view3/src/styles/components/page';
 @import 'view3/src/styles/components/input-number';
+@import 'view3/src/styles/components/auto-complete';
+@import 'view3/src/styles/components/split';
 
 .#{$spin-prefix-cls} {
   &-fix {
@@ -116,4 +118,17 @@ body {
 
 .ivu-form-item-error-tip {
   padding: 0;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+*[contenteditable]:focus {
+  outline-color: transparent;
+  outline-style: none;
+}
+
+.ivu-tag .ion-ios-close {
+  font-size: 16px !important;
 }

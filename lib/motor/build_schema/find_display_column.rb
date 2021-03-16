@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Motor
-  module Schema
+  module BuildSchema
     module FindDisplayColumn
       DISPLAY_NAMES = %w[
         name
@@ -50,7 +50,7 @@ module Motor
 
       def fetch_column_names(model)
         model.columns.map do |column|
-          next unless column.type.in?(Schema::SEARCHABLE_COLUMN_TYPES)
+          next unless column.type.in?(BuildSchema::SEARCHABLE_COLUMN_TYPES)
 
           column.name
         end.compact

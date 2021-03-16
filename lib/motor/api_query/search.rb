@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module Motor
-  module Query
+  module ApiQuery
     module Search
       SELECT_COLUMNS_AMOUNT = 2
-      COLUMN_TYPES = Schema::SEARCHABLE_COLUMN_TYPES
+      COLUMN_TYPES = BuildSchema::SEARCHABLE_COLUMN_TYPES
 
       module_function
 
@@ -45,7 +45,7 @@ module Motor
       def select_columns(columns)
         selected_columns =
           columns.select do |name|
-            Schema::FindDisplayColumn::DISPLAY_NAME_REGEXP.match?(name)
+            BuildSchema::FindDisplayColumn::DISPLAY_NAME_REGEXP.match?(name)
           end.presence
 
         selected_columns ||= columns.first(SELECT_COLUMNS_AMOUNT)

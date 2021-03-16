@@ -3,7 +3,7 @@
 module Motor
   class SchemasController < ActionController::API
     def show
-      render json: Motor::Schema.load
+      render json: Motor::BuildSchema.call
     end
 
     def update; end

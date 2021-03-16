@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require_relative './schema/load_from_rails'
-require_relative './schema/find_display_column'
-require_relative './schema/utils'
+require_relative './build_schema/load_from_rails'
+require_relative './build_schema/find_display_column'
+require_relative './build_schema/utils'
 
 module Motor
-  module Schema
+  module BuildSchema
     SEARCHABLE_COLUMN_TYPES = %i[citext text string bitstring].freeze
 
     module_function
 
-    def load
+    def call
       LoadFromRails.call
     end
   end
