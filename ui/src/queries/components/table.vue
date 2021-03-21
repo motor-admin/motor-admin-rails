@@ -5,6 +5,8 @@
     :with-select="false"
     :with-sorting="false"
     :click-rows="false"
+    :borderless="borderless"
+    :compact="compact"
     :columns="normalizedColumns"
   />
   <div class="text-center border-top bg-white p-1">
@@ -14,9 +16,9 @@
       :page-size="paginationParams.pageSize"
       :page-size-opts="pageSizeOpts"
       size="small"
-      show-sizer
-      show-elevator
-      show-total
+      :show-sizer="!minimalPagination"
+      :show-elevator="!minimalPagination"
+      :show-total="true"
       @update:current="paginationParams.current = $event"
       @update:page-size="paginationParams.pageSize = $event"
     />
@@ -42,13 +44,33 @@ export default {
       type: Array,
       required: false,
       default: () => []
+    },
+    borderless: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    compact: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    defaultPageSize: {
+      type: Number,
+      required: false,
+      default: 100
+    },
+    minimalPagination: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data () {
     return {
       paginationParams: {
         current: 1,
-        pageSize: 100
+        pageSize: this.defaultPageSize
       }
     }
   },

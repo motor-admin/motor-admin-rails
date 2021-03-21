@@ -5,6 +5,7 @@ import ResourcesIndex from 'resources/pages/index'
 import ResourcesBase from 'resources/pages/base'
 import QueriesShow from 'queries/pages/show'
 import ReportsIndex from 'reports/pages/index'
+import DashboardsShow from 'dashboards/pages/show'
 import NavigatioHome from 'navigation/pages/home'
 
 const routes = [
@@ -27,6 +28,16 @@ const routes = [
     path: '/queries/new',
     component: QueriesShow,
     name: 'new_query'
+  },
+  {
+    path: '/dashboards/:id',
+    component: DashboardsShow,
+    name: 'dashboard'
+  },
+  {
+    path: '/dashboards/new',
+    component: DashboardsShow,
+    name: 'new_dashboard'
   },
   {
     path: '/queries/:id',

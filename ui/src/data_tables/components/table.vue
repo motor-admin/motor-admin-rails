@@ -9,7 +9,7 @@
       cellpadding="0"
       border="0"
       class="ivu-table ivu-table-default"
-      :class="{ 'ivu-table-clickable-rows': clickRows }"
+      :class="{ 'ivu-table-clickable-rows': clickRows, 'ivu-table-borderless': borderless, 'ivu-table-compact': compact }"
       style="position: relative"
     >
       <thead class="ivu-table-header">
@@ -17,6 +17,7 @@
           <th
             v-if="withSelect && columns.length"
             class="ivu-table-column ivu-table-column-center"
+            :class="{ 'border-top' : !borderless }"
             :style="{ position: 'sticky', top: 0, left: 0, zIndex: 1 }"
           >
             <div class="ivu-table-cell ivu-table-cell-with-selection">
@@ -31,6 +32,7 @@
             v-for="column in columns"
             :key="column.key"
             class="ivu-table-column"
+            :class="{ 'border-top' : !borderless }"
             :style="{ position: 'sticky', top: 0 }"
           >
             <div class="ivu-table-cell">
@@ -161,6 +163,16 @@ export default {
       required: false,
       default: true
     },
+    borderless: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    compact: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     loading: {
       type: Boolean,
       required: false,
@@ -240,12 +252,6 @@ export default {
   height: auto;
 }
 
-.ivu-table-header {
-  .ivu-table-column {
-    border-top: 1px solid #e8eaec;
-  }
-}
-
 .ivu-table-clickable-rows {
   .ivu-table-row {
     cursor: pointer;
@@ -254,6 +260,18 @@ export default {
 
 .ivu-table-cell {
   white-space: nowrap;
+}
+
+.ivu-table.ivu-table-borderless {
+  th {
+    background: #fff;
+  }
+}
+
+.ivu-table.ivu-table-compact {
+  .ivu-table-column {
+    height: 32px;
+  }
 }
 
 .ivu-table-cell-sort {

@@ -2,6 +2,8 @@ import { reactive } from 'vue'
 import api from 'api'
 
 const itemsStore = reactive([])
+const queriesStore = reactive([])
+const dashboardsStore = reactive([])
 
 function normalizeItems (items, type) {
   return items.map((item) => {
@@ -29,8 +31,8 @@ function loadItems () {
       params: {
         include: 'tags',
         fields: {
-          dashboard: 'title,tags',
-          tags: 'name'
+          dashboard: 'id,title,tags',
+          tags: 'id,name'
         }
       }
     })
@@ -40,9 +42,11 @@ function loadItems () {
     const queries = normalizeItems(queriesResult.data.data, 'query')
 
     itemsStore.splice(0, itemsStore.length, ...dashboards.concat(queries))
+    queriesStore.splice(0, queriesStore.length, ...queries)
+    dashboardsStore.splice(0, dashboardsStore.length, ...dashboards)
   }).catch((error) => {
     console.error(error)
   })
 }
 
-export { itemsStore, loadItems }
+export { itemsStore, loadItems, queriesStore, dashboardsStore }

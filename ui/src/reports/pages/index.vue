@@ -3,97 +3,95 @@
     v-if="isLoading"
     fix
   />
-  <div class="container">
-    <div class="row mt-3 mb-2">
-      <div class="col-2">
-        <h1 class="">
-          Reports
-        </h1>
-      </div>
-      <div class="col-10 col-lg-10 text-end">
-        <VButton
-          icon="md-add"
-          size="large"
-          type="default"
-          class="me-2"
-        >
-          Add Dashboard
-        </VButton>
-        <VButton
-          icon="md-add"
-          size="large"
-          type="default"
-          :to="{ name: 'new_query' }"
-        >
-          Add Query
-        </VButton>
-      </div>
+  <div class="row mx-2 mt-3 mb-2">
+    <div class="col-2">
+      <h1 class="">
+        Reports
+      </h1>
     </div>
-    <div class="row">
-      <div class="d-none d-lg-block col-lg-2">
-        <template v-if="tags.length">
-          <h3 style="margin: 25px 0 5px 0">
-            Tags
-          </h3>
-          <Tag
-            v-for="tag in tags"
-            :key="tag"
-            type="dot"
-            size="large"
-            :color="selectedTags.includes(tag.name) ? 'primary' : 'light'"
-            @click="toggleTag(tag.name)"
-          >
-            {{ tag.name }} ({{ tag.count }})
-          </Tag>
-        </template>
-        <span v-else-if="items.length">Tags list is empty</span>
-      </div>
-      <div class="col-12 col-lg-8">
-        <Tabs
-          v-model="selectedType"
-          :tabs="tabs"
-        />
-        <VInput
-          v-model="searchQuery"
-          search
-          :placeholder="searchPlaceholder"
+    <div class="col-10 col-lg-10 text-end">
+      <VButton
+        icon="md-add"
+        size="large"
+        type="default"
+        class="me-2"
+        :to="{ name: 'new_dashboard' }"
+      >
+        Add Dashboard
+      </VButton>
+      <VButton
+        icon="md-add"
+        size="large"
+        type="default"
+        :to="{ name: 'new_query' }"
+      >
+        Add Query
+      </VButton>
+    </div>
+  </div>
+  <div class="row mx-2">
+    <div class="d-none d-lg-block col-lg-2">
+      <template v-if="tags.length">
+        <h3 style="margin: 25px 0 5px 0">
+          Tags
+        </h3>
+        <Tag
+          v-for="tag in tags"
+          :key="tag"
+          type="dot"
           size="large"
-          class="mb-2"
-        />
-        <div :style="{ height: 'calc(100vh - 274px)', overflow: 'scroll' }">
-          <div
-            v-for="item in filteredItems"
-            :key="item.id"
-            class="col-12"
+          :color="selectedTags.includes(tag.name) ? 'primary' : 'light'"
+          @click="toggleTag(tag.name)"
+        >
+          {{ tag.name }} ({{ tag.count }})
+        </Tag>
+      </template>
+    </div>
+    <div class="col-12 col-lg-8">
+      <Tabs
+        v-model="selectedType"
+        :tabs="tabs"
+      />
+      <VInput
+        v-model="searchQuery"
+        search
+        :placeholder="searchPlaceholder"
+        size="large"
+        class="mb-2"
+      />
+      <div :style="{ height: 'calc(100vh - 274px)', overflow: 'scroll' }">
+        <div
+          v-for="item in filteredItems"
+          :key="item.type + item.id"
+          class="col-12"
+        >
+          <RouterLink
+            class="ivu-card ivu-card-bordered mb-2"
+            :to="{ name: item.type, params: { id: item.id }}"
           >
-            <RouterLink
-              class="ivu-card ivu-card-bordered mb-2"
-              :to="{ name: item.type, params: { id: item.id }}"
-            >
-              <div class="ivu-card-body">
-                <h3 class="text-muted">
-                  <Icon :type="item.type === 'query' ? 'md-list' : 'md-add'" />
-                  {{ item.name || item.title }}
-                </h3>
-                <div />
-              </div>
-            </RouterLink>
-          </div>
+            <div class="ivu-card-body">
+              <h3 class="text-muted">
+                <Icon :type="item.type === 'query' ? 'md-list' : 'md-add'" />
+                {{ item.name || item.title }}
+              </h3>
+              <div />
+            </div>
+          </RouterLink>
         </div>
-        <div class="text-center bg-white rounded border mb-2 p-1">
-          <Pagination
-            :current="pageParams.current"
-            :total="filteredItems.length"
-            :page-size="pageParams.pageSize"
-            :page-size-opts="pageParams.pageSizeOpts"
-            size="small"
-            show-sizer
-            show-elevator
-            show-total
-            @update:current="pageParams.current = $event"
-            @update:page-size="pageParams.pageSize = $event"
-          />
-        </div>
+      </div>
+      <div class="text-center bg-white rounded border mb-2 p-1">
+        <Pagination
+          :current="pageParams.current"
+          :total="filteredItems.length"
+          :page-size="pageParams.pageSize"
+          :page-size-opts="pageParams.pageSizeOpts"
+          size="small"
+          show-sizer
+          show-elevator
+          show-total
+          @update:current="pageParams.current = $event"
+          @update:page-size="pageParams.pageSize = $event"
+        />
       </div>
     </div>
   </div>

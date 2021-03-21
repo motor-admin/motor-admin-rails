@@ -33,7 +33,7 @@ module Motor
     private
 
     def dashboard_params
-      params.require(:data).permit(:title, tags: [])
+      params.require(:data).permit(:title, preferences: {}, tags: [])
     end
   end
 end

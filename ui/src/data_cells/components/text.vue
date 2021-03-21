@@ -35,7 +35,7 @@ export default {
       return {
         content: this.value,
         trigger: 'mouseenter',
-        disabled: !this.isTruncated,
+        disabled: true, // !this.isTruncated,
         bodyStyle: {
           maxWidth: '350px',
           overflowY: 'scroll',
