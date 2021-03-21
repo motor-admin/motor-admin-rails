@@ -1,27 +1,27 @@
 # frozen_string_literal: true
 
 module Motor
-  class DashboardsController < ActionController::API
+  class DashboardsController < ApiBaseController
     load_and_authorize_resource :dashboard
 
     def index
-      render json: { data: @dashboards.to_json }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@dashboards, params) }
     end
 
     def show
-      render json: { data: @dashboard.to_json }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params) }
     end
 
     def create
       @dashboard.save!
 
-      render json: { data: @dashboard.to_json }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params) }
     end
 
     def update
       @dashboard.update!(dashboard_params)
 
-      render json: { data: @dashboard.to_json }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params) }
     end
 
     def destroy
@@ -33,7 +33,7 @@ module Motor
     private
 
     def dashboard_params
-      params.require(:data).permit(:name, :sql_body)
+      params.require(:data).permit(:title, tags: [])
     end
   end
 end

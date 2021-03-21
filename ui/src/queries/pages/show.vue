@@ -1,5 +1,8 @@
 <template>
-  <div class="row mx-2">
+  <div
+    class="row mx-2"
+    style="min-height: 74px"
+  >
     <div class="col-8">
       <h1
         class="my-3"

@@ -26,6 +26,7 @@ Motor::Admin.routes.draw do
     with_options controller: 'ui' do
       resources :queries, only: %i[index show]
       resources :dashboards, only: %i[index show]
+      resources :reports, only: %i[index show]
     end
   end
 end

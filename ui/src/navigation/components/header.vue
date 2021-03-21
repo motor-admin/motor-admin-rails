@@ -25,12 +25,9 @@
       </MenuItem>
       <MenuItem
         name="3"
-        :to="{ name: 'new_query' }"
+        :to="{ name: 'reports' }"
       >
-        Queries
-      </MenuItem>
-      <MenuItem name="2">
-        Dashboards
+        Reports
       </MenuItem>
       <MenuItem name="4">
         Settings

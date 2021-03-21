@@ -4,7 +4,7 @@ import { basePath } from 'utils/scripts/configs'
 import ResourcesIndex from 'resources/pages/index'
 import ResourcesBase from 'resources/pages/base'
 import QueriesShow from 'queries/pages/show'
-import QueriesIndex from 'queries/pages/index'
+import ReportsIndex from 'reports/pages/index'
 import NavigatioHome from 'navigation/pages/home'
 
 const routes = [
@@ -32,6 +32,11 @@ const routes = [
     path: '/queries/:id',
     component: QueriesShow,
     name: 'query'
+  },
+  {
+    path: '/reports/:type?',
+    component: ReportsIndex,
+    name: 'reports'
   }
 ]
 

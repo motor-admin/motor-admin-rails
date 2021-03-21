@@ -15,9 +15,8 @@ module Motor
       rel = ApiQuery::Sort.call(rel, params[:sort])
       rel = ApiQuery::Paginate.call(rel, params[:page])
       rel = ApiQuery::Filter.call(rel, params[:filter])
-      rel = ApiQuery::Search.call(rel, params[:q] || params[:search] || params[:query])
 
-      rel.preload_associations_lazily
+      ApiQuery::Search.call(rel, params[:q] || params[:search] || params[:query])
     end
   end
 end
