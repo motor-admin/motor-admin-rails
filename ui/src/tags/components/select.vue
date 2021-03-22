@@ -57,7 +57,6 @@ export default {
 
       api.get('api/tags').then((result) => {
         this.tags = result.data.data
-        console.log(this.tags)
       }).catch((error) => {
         console.error(error)
       }).finally(() => {

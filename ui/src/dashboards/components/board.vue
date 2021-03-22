@@ -15,10 +15,14 @@
   <QueryTable
     v-else
     :data="data"
+    :title="board.title"
     :minimal-pagination="true"
+    :errors="errors"
+    :preferences="preferences"
     :columns="columns"
     :default-page-size="10"
     :borderless="true"
+    :with-settings="false"
     :compact="true"
   />
 </template>
@@ -41,8 +45,10 @@ export default {
   data () {
     return {
       isLoading: false,
+      errors: [],
       data: [],
-      columns: []
+      columns: [],
+      preferences: {}
     }
   },
   mounted () {
@@ -53,10 +59,12 @@ export default {
       this.isLoading = true
 
       api.get(`api/run_queries/${this.board.query_id}`).then((result) => {
+        this.errors = []
         this.data = result.data.data
+        this.preferences = result.data.preferences
         this.columns = result.data.meta.columns
       }).catch((error) => {
-        console.error(error)
+        this.errors = error.response.data?.errors
       }).finally(() => {
         this.isLoading = false
       })

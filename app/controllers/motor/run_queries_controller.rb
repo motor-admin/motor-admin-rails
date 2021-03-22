@@ -7,6 +7,10 @@ module Motor
     before_action :build_query, only: :create
     authorize_resource :query, only: :create
 
+    rescue_from 'ActiveRecord::StatementInvalid' do |e|
+      render json: { errors: [{ detail: e.message }] }, status: :unprocessable_entity
+    end
+
     def show
       render json: query_result_hash(query_result)
     end
@@ -24,6 +28,7 @@ module Motor
     def query_result_hash(query_result)
       {
         data: query_result.data,
+        preferences: @query.preferences,
         meta: {
           columns: query_result.columns
         }

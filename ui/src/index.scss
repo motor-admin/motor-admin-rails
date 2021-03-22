@@ -37,6 +37,7 @@
 @import 'view3/src/styles/components/auto-complete';
 @import 'view3/src/styles/components/split';
 @import 'view3/src/styles/components/tabs';
+@import 'view3/src/styles/components/alert';
 
 .#{$spin-prefix-cls} {
   &-fix {
@@ -115,6 +116,10 @@ body {
   cursor: pointer;
 }
 
+.cursor-move {
+  cursor: move;
+}
+
 *[contenteditable]:focus {
   outline-color: transparent;
   outline-style: none;
@@ -122,4 +127,12 @@ body {
 
 .ivu-tag .ion-ios-close {
   font-size: 16px !important;
+}
+
+.float-right {
+  float: right !important;
+}
+
+.float-left {
+  float: left !important;
 }

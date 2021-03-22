@@ -8,7 +8,7 @@ module Motor
     authorize_resource :query, only: :create
 
     def index
-      render json: { data: Motor::ApiQuery::BuildJson.call(@queries, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@queries.active, params) }
     end
 
     def show
@@ -17,7 +17,7 @@ module Motor
 
     def create
       if Motor::Queries.name_already_exists?(@query)
-        render json: { error: { name: ['already exists'] } }, status: :unprocessable_entity
+        render json: { errors: [{ source: 'name', detail: 'Name already exists' }] }, status: :unprocessable_entity
       else
         ApplicationRecord.transaction { @query.save! }
 
@@ -32,7 +32,7 @@ module Motor
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@query, params) }
     rescue Motor::Queries::NameAlreadyExists
-      render json: { error: { name: ['already exists'] } }, status: :unprocessable_entity
+      render json: { errors: [{ source: 'name', detail: 'Name already exists' }] }, status: :unprocessable_entity
     end
 
     def destroy

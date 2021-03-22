@@ -46,7 +46,7 @@ module Motor
         model_name = model.name.underscore
 
         params[:fields].each do |key, values|
-          values = values.split(',')
+          values = values.split(',') if values.is_a?(String)
 
           if key == model_name || model_name.split('/').last == key
             json_params.merge!('only' => values)

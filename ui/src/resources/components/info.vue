@@ -140,6 +140,9 @@ export default {
     },
     queryParams () {
       const params = {
+        fields: {
+          [this.model.name]: this.columns.map((e) => e.name)
+        }
       }
 
       if (this.includeParams) {
@@ -165,7 +168,7 @@ export default {
       return column.validators.find((v) => v.includes?.length) ? DataTypes.TAG : column.column_type
     },
     loadData () {
-      this.isReoading = true
+      this.isReloading = true
 
       api.get(`data/${this.model.slug}/${this.resourceId}`, {
         params: this.queryParams

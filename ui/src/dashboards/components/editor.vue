@@ -1,17 +1,22 @@
 <template>
   <div
-    class="bg-white pt-2 px-2"
+    class="bg-white p-2"
+    style="height: 100%"
   >
-    <div style="height: calc(100% - 53px);">
+    <div style="height: calc(100% - 46px); overflow-y: scroll">
       <QueriesList
         v-if="isQueriesListOpened"
+        :exclude-ids="layout.map((item) => item.query_id)"
         @select="onSelectQuery"
       />
-      <template v-else>
+      <VueDraggableNext
+        v-else
+        :list="layout"
+      >
         <div
           v-for="item in layout"
           :key="item.query_id"
-          class="ivu-card ivu-card-bordered mb-2"
+          class="ivu-card ivu-card-bordered cursor-move mb-2"
         >
           <div class="ivu-card-body d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
@@ -48,7 +53,7 @@
             </div>
           </div>
         </div>
-      </template>
+      </VueDraggableNext>
     </div>
     <div class="footer">
       <VButton
@@ -65,11 +70,13 @@
 
 <script>
 import QueriesList from 'queries/components/list'
+import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {
   name: 'DashboardEditor',
   components: {
-    QueriesList
+    QueriesList,
+    VueDraggableNext
   },
   props: {
     layout: {
@@ -127,7 +134,7 @@ export default {
   bottom: 0;
   left: 0;
   border-top: 1px solid #e8e8e8;
-  padding: 10px 0 10px 0;
+  padding-top: 10px;
   text-align: right;
   background: #fff;
 }

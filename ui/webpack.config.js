@@ -1,6 +1,8 @@
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const CompressionPlugin = require("compression-webpack-plugin")
 const { VueLoaderPlugin } = require('vue-loader')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const webpack = require('webpack')
@@ -99,9 +101,12 @@ module.exports = (env = {}) => ({
     new VueLoaderPlugin(),
     new CleanWebpackPlugin({
       dangerouslyAllowCleanPatternsOutsideProject: true,
+      dry: false,
       verbose: true
-    })
-  ],
+    }),
+    env.production && new CompressionPlugin({ test: /\.(js|css)(\?.*)?$/i }),
+    process.env.BUNDLE_ANALYZE && new BundleAnalyzerPlugin()
+  ].filter(Boolean),
   devServer: {
     port: 9090,
     contentBase: './',

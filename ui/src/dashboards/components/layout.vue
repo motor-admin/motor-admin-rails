@@ -19,7 +19,10 @@
           class="ivu-card-body p-0"
           style="height: 387px"
         >
-          <Board :board="item" />
+          <Board
+            :ref="pushBoardRef"
+            :board="item"
+          />
         </div>
       </div>
     </div>
@@ -40,6 +43,11 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      boards: []
+    }
+  },
   computed: {
     classForSizeMap () {
       return {
@@ -51,7 +59,18 @@ export default {
       }
     }
   },
+  beforeUpdate () {
+    this.boards = []
+  },
   methods: {
+    pushBoardRef (el) {
+      if (el) {
+        this.boards.push(el)
+      }
+    },
+    reload () {
+      this.boards.forEach((board) => board.loadData())
+    }
   }
 }
 </script>

@@ -77,7 +77,8 @@ export default {
     },
     apiRequest () {
       const params = {
-        data: this.dataBoard
+        data: this.dataBoard,
+        include: 'tags'
       }
 
       if (this.board.id) {
@@ -99,7 +100,9 @@ export default {
               ...result.data.data
             })
           }).catch((error) => {
-            console.error(error)
+            if (error.response.data.errors?.length) {
+              this.$refs.form.setErrors(error.response.data.errors)
+            }
           })
         }
       })

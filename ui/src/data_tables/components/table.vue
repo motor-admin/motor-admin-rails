@@ -216,14 +216,14 @@ export default {
     toggleSort (key) {
       if (this.dataSort.key === key) {
         if (this.dataSort.order === '') {
-          this.applySort({ key: key, order: 'desc' })
-        } else if (this.dataSort.order === 'desc') {
           this.applySort({ key: key, order: 'asc' })
         } else if (this.dataSort.order === 'asc') {
+          this.applySort({ key: key, order: 'desc' })
+        } else if (this.dataSort.order === 'desc') {
           this.applySort({})
         }
       } else {
-        this.applySort({ key: key, order: 'desc' })
+        this.applySort({ key: key, order: 'asc' })
       }
     },
     toggleSelectAll (value) {

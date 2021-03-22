@@ -113,6 +113,9 @@ export default {
               tags: result.data.data.tags.map((t) => t.name)
             })
           }).catch((error) => {
+            if (error.response.data.errors?.length) {
+              this.$refs.form.setErrors(error.response.data.errors)
+            }
             console.error(error)
           })
         }

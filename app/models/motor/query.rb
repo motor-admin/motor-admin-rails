@@ -8,5 +8,7 @@ module Motor
     has_many :tags, through: :taggable_tags, class_name: 'Motor::Tag'
 
     serialize :preferences, HashSerializer
+
+    scope :active, -> { where(deleted_at: nil) }
   end
 end

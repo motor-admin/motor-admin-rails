@@ -6,6 +6,17 @@ module Motor
       MUTEX = Mutex.new
       DEFAULT_TYPE = 'string'
 
+      UNIFIED_TYPES = {
+        'int' => 'integer',
+        'int8' => 'integer',
+        'int16' => 'integer',
+        'bigint' => 'integer',
+        'decimal' => 'integer',
+        'text' => 'string',
+        'citext' => 'string',
+        'timestamp' => 'datetime'
+      }.freeze
+
       module_function
 
       def all
@@ -21,7 +32,7 @@ module Motor
       def find_name_for_class(klass)
         name = all[klass.to_s]
 
-        return name if name
+        return UNIFIED_TYPES.fetch(name, name) if name
 
         DEFAULT_TYPE
       end

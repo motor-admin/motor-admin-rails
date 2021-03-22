@@ -29,20 +29,23 @@
       <VButton
         size="large"
         type="primary"
-      >
-        <Icon type="md-play" />
-      </VButton>
+        icon="md-refresh"
+        @click="refresh"
+      />
     </div>
   </div>
   <div
-    :style="{ height: 'calc(100vh - 134px)', margin: '0 2px' }"
-    class="row border-top"
+    :style="{ height: 'calc(100vh - 134px)' }"
+    class="row border-top m-0"
   >
     <div
       :class="isEditorOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
       style="height: 100%; overflow: scroll"
     >
-      <DashboardLayout :layout="board.preferences.layout" />
+      <DashboardLayout
+        ref="layout"
+        :layout="board.preferences.layout"
+      />
     </div>
     <div
       v-if="isEditorOpened"
@@ -72,6 +75,7 @@ export default {
     return {
       isEditorOpened: false,
       board: {
+        tags: [],
         preferences: {
           layout: []
         }
@@ -101,8 +105,15 @@ export default {
     toggleEditor () {
       this.isEditorOpened = !this.isEditorOpened
     },
+    refresh () {
+      this.$refs.layout.reload()
+    },
     loadDashboard () {
-      return api.get(`api/dashboards/${this.$route.params.id}`).then((result) => {
+      return api.get(`api/dashboards/${this.$route.params.id}`, {
+        params: {
+          include: 'tags'
+        }
+      }).then((result) => {
         this.board = result.data.data
       }).catch((error) => {
         console.error(error)
@@ -114,7 +125,7 @@ export default {
           id: this.board.id,
           title: this.board.title,
           description: this.board.description,
-          tags: this.board.tags,
+          tags: this.board.tags.map((tag) => tag.name),
           preferences: this.board.preferences
         },
         onSuccess: (result) => {

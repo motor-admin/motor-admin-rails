@@ -191,8 +191,9 @@ export default {
       const data = {}
 
       this.columns.forEach((column) => {
-        if (['json', 'jsonb'].includes(column.column_type)) {
-          data[column.name] = JSON.stringify(resource[column.name] || {}, null, '  ')
+        const value = resource[column.name]
+        if (['json', 'jsonb'].includes(column.column_type) || (value && typeof value === 'object')) {
+          data[column.name] = JSON.stringify(value || {}, null, '  ')
         } else {
           data[column.name] = resource[column.name]
         }

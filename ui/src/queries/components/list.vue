@@ -36,6 +36,13 @@ import { queriesStore, loadItems } from 'reports/scripts/store'
 
 export default {
   name: 'ReportsIndex',
+  props: {
+    excludeIds: {
+      type: Array,
+      required: false,
+      default: () => []
+    }
+  },
   emits: ['select'],
   data () {
     return {
@@ -53,8 +60,11 @@ export default {
     filteredItems () {
       return this.items.filter((item) => {
         return (
-          !this.searchQuery ||
-          item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+          !this.excludeIds.includes(item.id) &&
+          (
+            !this.searchQuery ||
+            item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+          )
         )
       })
     }

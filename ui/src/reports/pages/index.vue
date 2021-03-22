@@ -61,22 +61,14 @@
       />
       <div :style="{ height: 'calc(100vh - 274px)', overflow: 'scroll' }">
         <div
-          v-for="item in filteredItems"
+          v-for="item in paginatedItems"
           :key="item.type + item.id"
           class="col-12"
         >
-          <RouterLink
-            class="ivu-card ivu-card-bordered mb-2"
-            :to="{ name: item.type, params: { id: item.id }}"
-          >
-            <div class="ivu-card-body">
-              <h3 class="text-muted">
-                <Icon :type="item.type === 'query' ? 'md-list' : 'md-add'" />
-                {{ item.name || item.title }}
-              </h3>
-              <div />
-            </div>
-          </RouterLink>
+          <ReportItem
+            :item="item"
+            @remove="reloadItems"
+          />
         </div>
       </div>
       <div class="text-center bg-white rounded border mb-2 p-1">
@@ -99,6 +91,7 @@
 
 <script>
 import Tabs from 'utils/components/tabs'
+import ReportItem from '../components/item'
 import { itemsStore, loadItems } from '../scripts/store'
 
 const TYPES_MAP = {
@@ -109,7 +102,8 @@ const TYPES_MAP = {
 export default {
   name: 'ReportsIndex',
   components: {
-    Tabs
+    Tabs,
+    ReportItem
   },
   data () {
     return {
@@ -163,6 +157,11 @@ export default {
         )
       })
     },
+    paginatedItems () {
+      const pageSize = this.pageParams.pageSize
+
+      return this.filteredItems.slice((this.pageParams.current - 1) * pageSize, this.pageParams.current * pageSize)
+    },
     tags () {
       return Object.values(this.items.reduce((acc, item) => {
         item.tags.forEach((tag) => {
@@ -193,6 +192,13 @@ export default {
   },
   methods: {
     loadItems,
+    reloadItems () {
+      this.isLoading = true
+
+      this.loadItems().finally(() => {
+        this.isLoading = false
+      })
+    },
     toggleTag (tag) {
       if (this.selectedTags.includes(tag)) {
         const index = this.selectedTags.indexOf(tag)

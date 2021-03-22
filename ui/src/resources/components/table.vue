@@ -163,6 +163,9 @@ export default {
     queryParams () {
       const params = {
         meta: 'count',
+        fields: {
+          [this.model.name]: this.columns.map((e) => e.key)
+        },
         page: {
           limit: this.paginationParams.pageSize,
           offset: this.paginationParams.pageSize * (this.paginationParams.current - 1)

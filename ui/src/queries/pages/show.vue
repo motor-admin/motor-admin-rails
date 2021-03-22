@@ -47,30 +47,51 @@
   </div>
   <div
     :style="{ height: 'calc(100vh - 134px)' }"
-    class="border-top"
+    class="row border-top m-0"
   >
-    <Split
-      v-model="split"
-      mode="vertical"
+    <div
+      v-if="isSettingsOpened"
+      class="p-0 col-12 col-md-6 col-lg-3 border-right"
     >
-      <template #top>
-        <SqlEditor
-          v-if="isEdit"
-          v-model="sqlBody"
-          @run="runQuery"
-        />
-      </template>
-      <template #bottom>
-        <Spin
-          v-if="isLoading"
-          fix
-        />
-        <QueryTable
-          :data="data"
-          :columns="columns"
-        />
-      </template>
-    </Split>
+      <Settings
+        :preferences="query.preferences"
+        :data="data"
+        :columns="columns"
+        style="height: 100%"
+        @close="toggleSettings"
+      />
+    </div>
+    <div
+      class="p-0"
+      :class="isSettingsOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
+    >
+      <Split
+        v-model="split"
+        mode="vertical"
+      >
+        <template #top>
+          <SqlEditor
+            v-if="isEdit"
+            v-model="sqlBody"
+            @run="runQuery"
+          />
+        </template>
+        <template #bottom>
+          <Spin
+            v-if="isLoading"
+            fix
+          />
+          <QueryTable
+            :data="data"
+            :errors="errors"
+            :title="query.name"
+            :columns="columns"
+            :preferences="query.preferences"
+            @settings="toggleSettings"
+          />
+        </template>
+      </Split>
+    </div>
   </div>
 </template>
 
@@ -78,6 +99,7 @@
 import SqlEditor from '../components/sql_editor'
 import QueryTable from '../components/table'
 import QueryForm from '../components/form'
+import Settings from '../components/settings'
 import throttle from 'view3/src/utils/throttle'
 
 import api from 'api'
@@ -93,7 +115,8 @@ export default {
   name: 'QueriesShow',
   components: {
     SqlEditor,
-    QueryTable
+    QueryTable,
+    Settings
   },
   data () {
     return {
@@ -101,6 +124,8 @@ export default {
       isLoading: false,
       query: { ...defaultQueryParams },
       sqlBody: '',
+      isSettingsOpened: false,
+      errors: [],
       columns: [],
       data: []
     }
@@ -113,7 +138,7 @@ export default {
       return JSON.parse(window.atob(location.hash.replace(/^#/, '')) || '{}')
     },
     isEdit () {
-      return this.split !== 0
+      return this.split !== 0 || this.isSettingsOpened
     },
     isExisting () {
       return this.$route.params.id
@@ -145,6 +170,9 @@ export default {
     this.onMounted()
   },
   methods: {
+    toggleSettings () {
+      this.isSettingsOpened = !this.isSettingsOpened
+    },
     onMounted () {
       this.sqlBody = this.locationHashParams.sqlBody || ''
 
@@ -191,8 +219,11 @@ export default {
       } else {
         api.get(`api/run_queries/${this.$route.params.id}`, {
         }).then((result) => {
+          this.errors = []
           this.data = result.data.data
           this.columns = result.data.meta.columns
+        }).catch((error) => {
+          this.errors = error.response.data?.errors
         }).finally(() => {
           this.isLoading = false
         })
@@ -223,6 +254,7 @@ export default {
           name: this.query.name,
           description: this.query.description,
           tags: this.query.tags,
+          preferences: this.query.preferences,
           sql_body: this.sqlBody
         },
         action: 'new',
@@ -247,8 +279,11 @@ export default {
           preferences: this.query.preferences
         }
       }).then((result) => {
+        this.errors = []
         this.data = result.data.data
         this.columns = result.data.meta.columns
+      }).catch((error) => {
+        this.errors = error.response.data?.errors
       }).finally(() => {
         this.isLoading = false
       })

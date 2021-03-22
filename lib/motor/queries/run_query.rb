@@ -8,9 +8,8 @@ module Motor
 
       QueryResult = Struct.new(:data, :columns, keyword_init: true)
 
-      WITH_STATEMENT_TEMPLATE = <<~SQL.squish
-        WITH __query__ AS (%<sql_body>s)
-        SELECT * FROM __query__ LIMIT %<limit>s;
+      WITH_STATEMENT_TEMPLATE = <<~SQL
+        WITH __query__ AS (%<sql_body>s) SELECT * FROM __query__ LIMIT %<limit>s;
       SQL
 
       module_function
@@ -47,7 +46,7 @@ module Motor
       end
 
       def prepare_sql_statement(query, limit, variables_hash)
-        variables = query.preferences[:variables].pluck(:name)
+        variables = query.preferences.fetch(:variables, []).pluck(:name)
 
         sql =
           query.sql_body.gsub(INTERPOLATION_REGEXP) do
@@ -57,7 +56,7 @@ module Motor
           end
 
         [
-          format(WITH_STATEMENT_TEMPLATE, sql_body: sql.squish.gsub(/;\z/, ''), limit: limit),
+          format(WITH_STATEMENT_TEMPLATE, sql_body: sql.gsub(/;\z/, ''), limit: limit),
           'SQL',
           variables_hash.with_indifferent_access.values_at(*variables)
         ]
