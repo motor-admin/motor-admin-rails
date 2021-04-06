@@ -12,7 +12,7 @@
       {{ data[0][0] }}
     </h1>
   </div>
-  <QueryTable
+  <QueryResult
     v-else
     :data="data"
     :title="board.title"
@@ -29,12 +29,12 @@
 
 <script>
 import api from 'api'
-import QueryTable from 'queries/components/table'
+import QueryResult from 'queries/components/result'
 
 export default {
   name: 'Board',
   components: {
-    QueryTable
+    QueryResult
   },
   props: {
     board: {

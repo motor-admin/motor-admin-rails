@@ -26,7 +26,7 @@ module Motor
         models = load_descendants(ActiveRecord::Base).uniq
         models = models.reject(&:abstract_class)
 
-        # models -= Motor::ApplicationRecord.descendants
+        models -= Motor::ApplicationRecord.descendants
         models -= [ActiveRecord::SchemaMigration] if defined?(ActiveRecord::SchemaMigration)
 
         models

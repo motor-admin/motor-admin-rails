@@ -81,7 +81,7 @@
             v-if="isLoading"
             fix
           />
-          <QueryTable
+          <QueryResult
             :data="data"
             :errors="errors"
             :title="query.name"
@@ -97,7 +97,7 @@
 
 <script>
 import SqlEditor from '../components/sql_editor'
-import QueryTable from '../components/table'
+import QueryResult from '../components/result'
 import QueryForm from '../components/form'
 import Settings from '../components/settings'
 import throttle from 'view3/src/utils/throttle'
@@ -115,7 +115,7 @@ export default {
   name: 'QueriesShow',
   components: {
     SqlEditor,
-    QueryTable,
+    QueryResult,
     Settings
   },
   data () {

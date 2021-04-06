@@ -56,7 +56,7 @@ module Motor
           end
 
         [
-          format(WITH_STATEMENT_TEMPLATE, sql_body: sql.gsub(/;\z/, ''), limit: limit),
+          format(WITH_STATEMENT_TEMPLATE, sql_body: sql.strip.gsub(/;\z/, ''), limit: limit),
           'SQL',
           variables_hash.with_indifferent_access.values_at(*variables)
         ]

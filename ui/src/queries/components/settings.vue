@@ -49,24 +49,12 @@ export default {
   emits: ['close'],
   computed: {
     visualizationOptions () {
-      const options = [
-        { label: 'Table', value: 'table' }
+      return [
+        { label: 'Table', value: 'table' },
+        { label: 'Line chart', value: 'line_chart' },
+        { label: 'Bar chart', value: 'bar_chart' },
+        { label: 'Pie chart', value: 'pie_chart' }
       ]
-
-      if (this.columns.length > 1) {
-        options.push(...[
-          { label: 'Line chart', value: 'line_chart' },
-          { label: 'Bar chart', value: 'bar_chart' }
-        ])
-      }
-
-      if (this.columns.length === 2) {
-        options.push(...[
-          { label: 'Pie chart', value: 'pie_chart' }
-        ])
-      }
-
-      return options
     }
   },
   mounted () {
