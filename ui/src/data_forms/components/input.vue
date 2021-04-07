@@ -29,6 +29,13 @@
     :style="{ width: '100%' }"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
+  <DatePicker
+    v-else-if="isDateTime || isDate"
+    :type="column.column_type"
+    :model-value="dataValue"
+    :style="{ width: '100%' }"
+    @update:modelValue="updateDateTime"
+  />
   <VInput
     v-else-if="isTextArea"
     :model-value="modelValue"
@@ -70,7 +77,7 @@ export default {
   },
   props: {
     modelValue: {
-      type: [String, Number, Boolean],
+      type: [String, Number, Boolean, Date],
       required: false,
       default: ''
     },
@@ -80,6 +87,11 @@ export default {
     }
   },
   emits: ['update:modelValue'],
+  data () {
+    return {
+      dataValue: this.modelValue
+    }
+  },
   computed: {
     isTagSelect () {
       return !!this.tagOptions
@@ -89,6 +101,12 @@ export default {
     },
     isBoolean () {
       return this.column.column_type === 'boolean'
+    },
+    isDateTime () {
+      return this.column.column_type === 'datetime'
+    },
+    isDate () {
+      return this.column.column_type === 'date'
     },
     isNumber () {
       return ['integer', 'bigint', 'int', 'float', 'demical', 'double'].includes(this.column.column_type)
@@ -104,7 +122,12 @@ export default {
     }
   },
   methods: {
-    titleize
+    titleize,
+    updateDateTime (datetime) {
+      if (datetime) {
+        this.$emit('update:modelValue', new Date(datetime.getTime() - datetime.getTimezoneOffset() * 60000))
+      }
+    }
   }
 }
 </script>

@@ -2,7 +2,7 @@ function formatDate (date, options) {
   const dateTime = new Date(date)
 
   if (dateTime.toLocaleString) {
-    return new Date(date).toLocaleString('en-US', options)
+    return new Date(dateTime.getTime() + dateTime.getTimezoneOffset() * 60000).toLocaleString('en-US', options)
   } else {
     return dateTime.toString()
   }

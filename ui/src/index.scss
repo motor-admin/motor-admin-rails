@@ -38,6 +38,8 @@
 @import 'view3/src/styles/components/split';
 @import 'view3/src/styles/components/tabs';
 @import 'view3/src/styles/components/alert';
+@import 'view3/src/styles/components/date-picker';
+@import 'view3/src/styles/components/time-picker';
 
 .#{$spin-prefix-cls} {
   &-fix {

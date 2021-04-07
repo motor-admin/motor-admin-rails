@@ -221,7 +221,7 @@ export default {
 
 <style lang="scss" scoped>
 form {
-  min-height: calc(100vh - 145px);
+  min-height: calc(100% - 53px);
 }
 
 .drawer-footer {
