@@ -30,6 +30,7 @@
     <Chart
       ref="chart"
       :data="data"
+      :labels-format="preferences.format"
       :columns="normalizedColumns"
       :chart-type="chartType"
     />
@@ -53,7 +54,7 @@
       :style="{ width: '70%' }"
     >
       <Pagination
-        v-if="isTable"
+        v-if="data.length && isTable"
         :current="paginationParams.current"
         :total="total"
         :page-size="paginationParams.pageSize"

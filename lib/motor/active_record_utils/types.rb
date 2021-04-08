@@ -7,11 +7,13 @@ module Motor
       DEFAULT_TYPE = 'string'
 
       UNIFIED_TYPES = {
+        'smallint' => 'integer',
         'int' => 'integer',
         'int8' => 'integer',
         'int16' => 'integer',
         'bigint' => 'integer',
-        'decimal' => 'integer',
+        'numeric' => 'float',
+        'decimal' => 'float',
         'text' => 'string',
         'citext' => 'string',
         'timestamp' => 'datetime'

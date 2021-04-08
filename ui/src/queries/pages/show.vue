@@ -54,7 +54,7 @@
       class="p-0 col-12 col-md-6 col-lg-3 border-right"
     >
       <Settings
-        :preferences="query.preferences"
+        :preferences="dataQuery.preferences"
         :data="data"
         :columns="columns"
         style="height: 100%"
@@ -72,7 +72,7 @@
         <template #top>
           <SqlEditor
             v-if="isEdit"
-            v-model="sqlBody"
+            v-model="dataQuery.sql_body"
             @run="runQuery"
           />
         </template>
@@ -86,7 +86,7 @@
             :errors="errors"
             :title="query.name"
             :columns="columns"
-            :preferences="query.preferences"
+            :preferences="dataQuery.preferences"
             @settings="toggleSettings"
           />
         </template>
@@ -108,7 +108,7 @@ const defaultQueryParams = {
   name: '',
   sql_body: '',
   tags: [],
-  preferences: { variables: [] }
+  preferences: {}
 }
 
 export default {
@@ -123,7 +123,10 @@ export default {
       split: 0,
       isLoading: false,
       query: { ...defaultQueryParams },
-      sqlBody: '',
+      dataQuery: {
+        sql_body: '',
+        preferences: {}
+      },
       isSettingsOpened: false,
       errors: [],
       columns: [],
@@ -135,36 +138,46 @@ export default {
       return 0.35
     },
     locationHashParams () {
-      return JSON.parse(window.atob(location.hash.replace(/^#/, '')) || '{}')
+      return JSON.parse(window.atob(location.hash.replace(/^#/, '')) || 'null')
     },
     isEdit () {
-      return this.split !== 0 || this.isSettingsOpened
+      return this.split !== 0 || this.isSettingsOpened || this.isEdited
+    },
+    isEdited () {
+      return JSON.stringify(this.dataQuery) !== JSON.stringify({ sql_body: this.query.sql_body, preferences: this.query.preferences })
     },
     isExisting () {
       return this.$route.params.id
     },
     canSave () {
-      return this.sqlBody && this.isEdit
+      return this.dataQuery.sql_body && this.isEdit
     },
     canSaveNew () {
-      return this.query.id && this.sqlBody !== this.query.sql_body
+      return this.query.id && this.isEdited
     }
   },
   watch: {
     '$route' (to, from) {
-      const isNewQuery = to.params.id !== this.query.id?.toString()
+      if (to.name === 'query') {
+        const isNewQuery = to.params.id !== this.query.id?.toString()
 
-      if (isNewQuery) {
-        this.onMounted()
+        if (isNewQuery) {
+          this.onMounted()
+        }
       }
     },
-    sqlBody: throttle(async function (value) {
-      if (this.query.sql_body !== this.sqlBody) {
-        location.hash = window.btoa(JSON.stringify({ sqlBody: value }))
-      } else {
-        location.hash = ''
-      }
-    }, 1.5 * 1000)
+    dataQuery: {
+      deep: true,
+      handler: throttle(async function (value) {
+        const stringValue = JSON.stringify(value)
+
+        if (stringValue !== JSON.stringify({ sql_body: this.query.sql_body, preferences: this.query.preferences })) {
+          location.hash = window.btoa(stringValue)
+        } else {
+          location.hash = ''
+        }
+      }, 0.5 * 1000)
+    }
   },
   mounted () {
     this.onMounted()
@@ -174,9 +187,9 @@ export default {
       this.isSettingsOpened = !this.isSettingsOpened
     },
     onMounted () {
-      this.sqlBody = this.locationHashParams.sqlBody || ''
+      this.dataQuery = JSON.parse(JSON.stringify(this.locationHashParams)) || { sql_body: '', preferences: {} }
 
-      if (this.sqlBody) {
+      if (this.dataQuery.sql_body) {
         this.openEditor()
       }
 
@@ -188,7 +201,7 @@ export default {
         this.columns = []
         this.openEditor()
 
-        if (this.sqlBody) {
+        if (this.dataQuery.sql_body) {
           this.runQuery()
         }
       }
@@ -209,12 +222,17 @@ export default {
           tags: result.data.data.tags.map((t) => t.name)
         }
 
-        this.sqlBody ||= this.query.sql_body
+        if (!this.locationHashParams) {
+          Object.assign(this.dataQuery, JSON.parse(JSON.stringify({
+            sql_body: this.query.sql_body,
+            preferences: this.query.preferences
+          })))
+        }
       }).catch((error) => {
         console.error(error)
       })
 
-      if (this.locationHashParams.sqlBody) {
+      if (this.locationHashParams?.sql_body) {
         this.runQuery()
       } else {
         api.get(`api/run_queries/${this.$route.params.id}`, {
@@ -233,7 +251,8 @@ export default {
       this.$Modal.open(QueryForm, {
         query: {
           ...this.query,
-          sql_body: this.sqlBody
+          sql_body: this.dataQuery.sql_body,
+          preferences: this.dataQuery.preferences
         },
         action: this.query.id ? 'edit' : 'new',
         onSuccess: (result) => {
@@ -254,8 +273,8 @@ export default {
           name: this.query.name,
           description: this.query.description,
           tags: this.query.tags,
-          preferences: this.query.preferences,
-          sql_body: this.sqlBody
+          preferences: this.dataQuery.preferences,
+          sql_body: this.dataQuery.sql_body
         },
         action: 'new',
         onSuccess: (result) => {
@@ -274,10 +293,7 @@ export default {
       this.isLoading = true
 
       api.post('api/run_queries', {
-        data: {
-          sql_body: this.sqlBody,
-          preferences: this.query.preferences
-        }
+        data: this.dataQuery
       }).then((result) => {
         this.errors = []
         this.data = result.data.data

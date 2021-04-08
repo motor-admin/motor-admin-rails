@@ -1,6 +1,9 @@
 <template>
   <div class="bg-white p-2">
-    <div style="height: calc(100% - 43px); overflow-y: scroll">
+    <div
+      style="height: calc(100vh - 192px); overflow-y: scroll"
+      class="pb-2"
+    >
       <h3 class="my-1">
         Visualize
       </h3>
@@ -19,6 +22,45 @@
           {{ option.label }}
         </Radio>
       </RadioGroup>
+      <template v-if="preferences.visualization !== 'table'">
+        <h3 class="my-1">
+          Format
+        </h3>
+        <RadioGroup
+          v-model="preferences.format.style"
+          class="d-flex flex-column"
+          @update:modelValue="maybeSetCurrency"
+        >
+          <Radio
+            v-for="option in formatOptions"
+            :key="option.value"
+            :label="option.value"
+            border
+            size="large"
+            class="my-1 me-0"
+          >
+            {{ option.label }}
+          </Radio>
+        </RadioGroup>
+      </template>
+      <template v-if="preferences.visualization !== 'table' && preferences.format.style === 'currency'">
+        <h3 class="my-1">
+          Currency
+        </h3>
+
+        <VSelect
+          v-model="preferences.format.options.currency"
+          filterable
+        >
+          <VOption
+            v-for="option in currencyOptions"
+            :key="option"
+            :value="option"
+          >
+            {{ option }}
+          </VOption>
+        </VSelect>
+      </template>
     </div>
     <div class="footer">
       <VButton
@@ -33,6 +75,8 @@
 </template>
 
 <script>
+import { ISO_CODES } from 'utils/scripts/currencies'
+
 export default {
   name: 'QuerySettings',
   props: {
@@ -53,12 +97,32 @@ export default {
         { label: 'Table', value: 'table' },
         { label: 'Line chart', value: 'line_chart' },
         { label: 'Bar chart', value: 'bar_chart' },
-        { label: 'Pie chart', value: 'pie_chart' }
+        { label: 'Row chart', value: 'row_chart' },
+        { label: 'Pie chart', value: 'pie_chart' },
+        { label: 'Funnel', value: 'funnel' }
+      ]
+    },
+    currencyOptions () {
+      return ISO_CODES
+    },
+    formatOptions () {
+      return [
+        { label: 'Decimal', value: 'decimal' },
+        { label: 'Percent', value: 'percent' },
+        { label: 'Currency', value: 'currency' }
       ]
     }
   },
-  mounted () {
+  created () {
     this.preferences.visualization ||= 'table'
+    this.preferences.format ||= { style: 'decimal', options: {} }
+  },
+  methods: {
+    maybeSetCurrency (value) {
+      if (value === 'currency') {
+        this.preferences.format.options.currency ||= 'USD'
+      }
+    }
   }
 }
 </script>
@@ -70,7 +134,7 @@ export default {
   bottom: 0;
   left: 0;
   border-top: 1px solid #e8e8e8;
-  padding: 8px 0;
+  padding-top: 8px;
   text-align: right;
   background: #fff;
 }

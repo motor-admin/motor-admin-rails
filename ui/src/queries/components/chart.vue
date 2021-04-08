@@ -26,7 +26,8 @@ import {
   PieController,
   ArcElement,
   Legend,
-  Tooltip
+  Tooltip,
+  Filler
 } from 'chart.js'
 
 import ChartDataLabels from 'chartjs-plugin-datalabels'
@@ -45,7 +46,8 @@ Chart.register(
   ArcElement,
   Legend,
   Tooltip,
-  ChartDataLabels
+  ChartDataLabels,
+  Filler
 )
 
 const backgroundColors = [
@@ -81,6 +83,11 @@ export default {
       required: false,
       default: () => []
     },
+    labelsFormat: {
+      type: Object,
+      required: false,
+      default: () => {}
+    },
     chartType: {
       type: String,
       required: true
@@ -92,24 +99,34 @@ export default {
     }
   },
   computed: {
+    chartTypeOption () {
+      return {
+        funnel: 'line',
+        row: 'bar'
+      }[this.chartType] || this.chartType
+    },
     transposedData () {
       return this.data[0].map((col, i) => this.data.map(([...row]) => row[i]))
     },
     datasets () {
       return this.transposedData.slice(1, this.transposedData.length).map((data, index) => {
-        return {
-          label: this.columns[index + 1].title,
-          backgroundColor: this.chartType === 'pie' ? backgroundColors : backgroundColors[index],
-          borderColor: this.chartType === 'pie' ? '#fff' : borderColors[index],
-          borderWidth: this.chartType === 'bar' ? 1 : 2,
-          data
+        if (['integer', 'float'].includes(this.columns[index + 1].type)) {
+          return {
+            fill: this.chartType === 'funnel',
+            label: this.columns[index + 1].title,
+            backgroundColor: this.chartType === 'pie' ? backgroundColors : backgroundColors[index],
+            borderColor: this.chartType === 'pie' ? '#fff' : borderColors[index],
+            borderWidth: this.chartType === 'bar' ? 1 : 2,
+            data
+          }
+        } else {
+          return null
         }
-      })
+      }).filter(Boolean)
     },
     chartParams () {
       return {
-        plugins: [ChartDataLabels],
-        type: this.chartType,
+        type: this.chartTypeOption,
         data: {
           labels: this.labels,
           datasets: this.datasets
@@ -121,8 +138,40 @@ export default {
       const options = {
         responsive: true,
         maintainAspectRatio: false,
+        indexAxis: this.chartType === 'row' ? 'y' : 'x',
         animation: false,
-        plugins: {}
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                let label = context.dataset.label || ''
+                const key = this.chartType === 'row' ? 'x' : 'y'
+
+                if (label) {
+                  label += ': '
+                }
+
+                if (context.parsed[key] !== null) {
+                  label += this.formatValue(context.parsed[key] || context.parsed)
+                }
+
+                return label
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              callback: (value) => {
+                return this.formatValue(value)
+              }
+            }
+          }
+        }
       }
 
       if (this.chartType !== 'pie' && this.datasets.length === 1) {
@@ -133,26 +182,45 @@ export default {
         })
       }
 
+      if (this.chartType === 'pie') {
+        options.radius = '85%'
+        options.plugins = deepmerge(options.plugins, {
+          legend: {
+            position: 'left'
+          }
+        })
+        options.scales.y = { display: false }
+      }
+
       if (this.chartType !== 'pie') {
-        options.scales = {
-          y: {
-            grid: {
-              display: false
-            }
-          },
+        options.scales = deepmerge(options.scales, {
           x: {
             grid: {
               display: false
             }
           }
-        }
+        })
+      }
+
+      if (this.chartType === 'funnel') {
+        options.scales = deepmerge(options.scales, {
+          y: {
+            beginAtZero: true,
+            grid: {
+              display: false
+            }
+          }
+        })
       }
 
       options.plugins = deepmerge(options.plugins, {
         datalabels: {
-          display: true,
+          display: 'auto',
           anchor: 'end',
-          align: this.chartType === 'pie' ? 'end' : 'top',
+          align: ['pie', 'row'].includes(this.chartType) ? 'end' : 'top',
+          formatter: (value) => {
+            return this.formatValue(value)
+          },
           font: {
             weight: 'bold'
           }
@@ -162,10 +230,28 @@ export default {
       if (this.chartType === 'pie') {
         options.plugins = deepmerge(options.plugins, {
           datalabels: {
+            display: 'auto',
             formatter (value, context) {
               const sum = context.dataset.data.reduce((acc, val) => acc + parseFloat(val), 0)
 
               return Math.round(value * 10000 / sum, 2) / 100 + '%'
+            }
+          }
+        })
+      }
+
+      if (this.chartType === 'funnel') {
+        options.plugins = deepmerge(options.plugins, {
+          datalabels: {
+            display: 'auto',
+            formatter (value, context) {
+              if (context.dataIndex !== 0) {
+                const base = context.dataset.data[0]
+
+                return Math.round(value * 10000 / base, 2) / 100 + '%'
+              } else {
+                return ' '
+              }
             }
           }
         })
@@ -176,6 +262,35 @@ export default {
           padding: {
             top: 25
           }
+        }
+      }
+      if (['line', 'row', 'funnel'].includes(this.chartType)) {
+        options.layout = deepmerge(options.layout, {
+          padding: {
+            right: 25
+          }
+        })
+      }
+
+      if (['row'].includes(this.chartType)) {
+        options.layout = deepmerge(options.layout, {
+          padding: {
+            right: 55
+          }
+        })
+      }
+
+      if (this.chartType === 'row') {
+        options.scales = {
+          x: {
+            grid: { display: false },
+            ticks: {
+              callback: (value) => {
+                return this.formatValue(value)
+              }
+            }
+          },
+          y: { grid: { display: false } }
         }
       }
 
@@ -196,6 +311,12 @@ export default {
     chartType () {
       this.update()
     },
+    labelsFormat: {
+      deep: true,
+      handler () {
+        this.update()
+      }
+    },
     data () {
       this.update()
     }
@@ -207,6 +328,9 @@ export default {
     update () {
       this.chart?.destroy()
       this.render()
+    },
+    formatValue (value) {
+      return new Intl.NumberFormat(navigator.language || 'en-US', { style: this.labelsFormat?.style || 'decimal', ...(this.labelsFormat?.options || {}) }).format(value)
     },
     render () {
       if (this.data.length) {

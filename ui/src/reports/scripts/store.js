@@ -14,13 +14,17 @@ function normalizeItems (items, type) {
   })
 }
 
+function sortItems (items) {
+  return items.sort((a, b) => a.updated_at > b.updated_at ? -1 : 1)
+}
+
 function loadItems () {
   const queriesRequest =
     api.get('api/queries', {
       params: {
         include: 'tags',
         fields: {
-          query: 'id,name,tags',
+          query: 'id,name,tags,updated_at',
           tags: 'id,name'
         }
       }
@@ -31,7 +35,7 @@ function loadItems () {
       params: {
         include: 'tags',
         fields: {
-          dashboard: 'id,title,tags',
+          dashboard: 'id,title,tags,updated_at',
           tags: 'id,name'
         }
       }
@@ -41,9 +45,9 @@ function loadItems () {
     const dashboards = normalizeItems(dashboardsResult.data.data, 'dashboard')
     const queries = normalizeItems(queriesResult.data.data, 'query')
 
-    itemsStore.splice(0, itemsStore.length, ...dashboards.concat(queries))
-    queriesStore.splice(0, queriesStore.length, ...queries)
-    dashboardsStore.splice(0, dashboardsStore.length, ...dashboards)
+    itemsStore.splice(0, itemsStore.length, ...sortItems(dashboards.concat(queries)))
+    queriesStore.splice(0, queriesStore.length, ...sortItems(queries))
+    dashboardsStore.splice(0, dashboardsStore.length, ...sortItems(dashboards))
   }).catch((error) => {
     console.error(error)
   })
