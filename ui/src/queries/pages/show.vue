@@ -39,10 +39,10 @@
       <VButton
         size="large"
         type="primary"
+        :loading="isLoading"
+        icon="md-play"
         @click="runQuery"
-      >
-        <Icon type="md-play" />
-      </VButton>
+      />
     </div>
   </div>
   <div
@@ -172,7 +172,7 @@ export default {
         const stringValue = JSON.stringify(value)
 
         if (stringValue !== JSON.stringify({ sql_body: this.query.sql_body, preferences: this.query.preferences })) {
-          location.hash = window.btoa(stringValue)
+          location.replace("#" + window.btoa(stringValue))
         } else {
           location.hash = ''
         }

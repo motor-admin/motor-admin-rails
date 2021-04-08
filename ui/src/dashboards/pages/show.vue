@@ -29,6 +29,7 @@
       <VButton
         size="large"
         type="primary"
+        :loading="isLoading"
         icon="md-refresh"
         @click="refresh"
       />
@@ -73,6 +74,7 @@ export default {
   },
   data () {
     return {
+      isLoading: false,
       isEditorOpened: false,
       board: {
         tags: [],
@@ -106,7 +108,11 @@ export default {
       this.isEditorOpened = !this.isEditorOpened
     },
     refresh () {
-      this.$refs.layout.reload()
+      this.isLoading = true
+
+      this.$refs.layout.reload().then(() => {
+        this.isLoading = false
+      })
     },
     loadDashboard () {
       return api.get(`api/dashboards/${this.$route.params.id}`, {

@@ -1,30 +1,38 @@
 <template>
-  <Spin
-    v-if="isLoading"
-    fix
-  />
-  <VInput
-    v-model="searchQuery"
-    search
-    :placeholder="searchPlaceholder"
-    size="large"
-    class="mb-2"
-  />
-  <div :style="{ height: 'calc(100vh - 245px)', overflow: 'scroll' }">
-    <div
-      v-for="item in filteredItems"
-      :key="item.id"
-      class="col-12"
-    >
-      <div
-        class="ivu-card ivu-card-bordered mb-2"
-        @click="$emit('select', item)"
+  <div style="position: relative">
+    <Spin
+      v-if="isLoading"
+      fix
+    />
+    <VInput
+      v-model="searchQuery"
+      search
+      :placeholder="searchPlaceholder"
+      size="large"
+      class="mb-2"
+    />
+    <div :style="{ height: 'calc(100vh - 245px)', overflow: 'scroll' }">
+      <p
+        v-if="!isLoading && !filteredItems.length"
+        class="text-center mt-2"
       >
-        <div class="ivu-card-body">
-          <h3 class="text-muted">
-            <Icon :type="item.type === 'query' ? 'md-list' : 'md-add'" />
-            {{ item.name || item.title }}
-          </h3>
+        Not Found
+      </p>
+      <div
+        v-for="item in filteredItems"
+        :key="item.id"
+        class="col-12"
+      >
+        <div
+          class="ivu-card ivu-card-bordered mb-2"
+          @click="$emit('select', item)"
+        >
+          <div class="ivu-card-body">
+            <h3 class="text-muted">
+              <Icon :type="item.type === 'query' ? 'md-list' : 'md-add'" />
+              {{ item.name || item.title }}
+            </h3>
+          </div>
         </div>
       </div>
     </div>

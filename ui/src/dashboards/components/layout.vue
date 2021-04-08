@@ -7,23 +7,10 @@
       class="p-0"
     >
       <div class="m-1 ivu-card ivu-card-bordered">
-        <div class="ivu-card-head">
-          <RouterLink
-            :to="{ name: 'query', params: { id: item.query_id } }"
-            class="text-dark"
-          >
-            <b>{{ item.title }}</b>
-          </RouterLink>
-        </div>
-        <div
-          class="ivu-card-body p-0"
-          style="height: 387px"
-        >
-          <Board
-            :ref="pushBoardRef"
-            :board="item"
-          />
-        </div>
+        <Board
+          :ref="pushBoardRef"
+          :board="item"
+        />
       </div>
     </div>
   </div>
@@ -69,7 +56,7 @@ export default {
       }
     },
     reload () {
-      this.boards.forEach((board) => board.loadData())
+      return Promise.all(this.boards.map((board) => board.loadData()))
     }
   }
 }

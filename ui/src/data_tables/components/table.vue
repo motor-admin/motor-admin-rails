@@ -272,6 +272,12 @@ export default {
   .ivu-table-column {
     height: 32px;
   }
+
+  .ivu-btn {
+    line-height: 20px;
+    padding-top: 0.1px;
+    height: 22px;
+  }
 }
 
 .ivu-table-cell-sort {

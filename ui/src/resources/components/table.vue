@@ -1,7 +1,5 @@
 <template>
-  <div
-    v-if="!isReloading"
-  >
+  <div>
     <div
       class="row"
       :style="{ margin: '10px 0' }"
@@ -42,39 +40,41 @@
         />
       </div>
     </div>
-    <DataTable
-      :data="rows"
-      :loading="isLoading"
-      :columns="columns"
-      :style="{ height: height, paddingBottom: '1px' }"
-      :sort-params="sortParams"
-      @sort-change="applySort"
-      @row-click="onRowClick"
-    />
-    <div class="text-center border-top bg-white p-1">
-      <Pagination
-        :current="paginationParams.current"
-        :total="paginationParams.total"
-        :page-size="paginationParams.pageSize"
-        :page-size-opts="paginationParams.pageSizeOpts"
-        size="small"
-        show-sizer
-        show-elevator
-        show-total
-        @update:current="paginationParams.current = $event"
-        @update:page-size="paginationParams.pageSize = $event"
-        @on-change="loadData"
-        @on-page-size-change="loadData"
+    <template v-if="!isReloading">
+      <DataTable
+        :data="rows"
+        :loading="isLoading"
+        :columns="columns"
+        :style="{ height: height, paddingBottom: '1px' }"
+        :sort-params="sortParams"
+        @sort-change="applySort"
+        @row-click="onRowClick"
+      />
+      <div class="text-center border-top bg-white p-1">
+        <Pagination
+          :current="paginationParams.current"
+          :total="paginationParams.total"
+          :page-size="paginationParams.pageSize"
+          :page-size-opts="paginationParams.pageSizeOpts"
+          size="small"
+          show-sizer
+          show-elevator
+          show-total
+          @update:current="paginationParams.current = $event"
+          @update:page-size="paginationParams.pageSize = $event"
+          @on-change="loadData"
+          @on-page-size-change="loadData"
+        />
+      </div>
+    </template>
+    <div
+      v-if="isReloading"
+      :style="{ height: height, paddingBottom: '1px', position: 'relative' }"
+    >
+      <Spin
+        fix
       />
     </div>
-  </div>
-  <div
-    v-else
-    :style="{ height: height, paddingBottom: '1px', position: 'relative' }"
-  >
-    <Spin
-      fix
-    />
   </div>
 </template>
 
