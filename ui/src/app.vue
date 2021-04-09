@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <AppHeader />
+    <AppHeader ref="header" />
     <RouterView />
   </Layout>
 </template>
@@ -16,6 +16,15 @@ export default {
   computed: {
   },
   mounted () {
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.keyCode === 80) {
+        e.preventDefault()
+
+        this.$refs.header.openSearch()
+
+        return false
+      }
+    })
   }
 }
 </script>

@@ -17,8 +17,14 @@
       >
         <div
           class="row"
-          :style="oneColumn ? 'max-width: 500px' : ''"
+          :style="oneColumn && !notFound ? 'max-width: 500px' : ''"
         >
+          <p
+            v-if="notFound"
+            class="text-center mt-2"
+          >
+            Not Found
+          </p>
           <template
             v-for="column in columns"
             :key="column.name"
@@ -56,7 +62,7 @@
         </div>
       </div>
       <div
-        v-if="withActions"
+        v-if="withActions && !notFound"
         class="col-1 d-flex justify-content-end"
       >
         <ResourceActions
@@ -122,6 +128,7 @@ export default {
   data () {
     return {
       resource: {},
+      notFound: false,
       isLoading: true,
       isReloading: true
     }
@@ -183,7 +190,11 @@ export default {
           )
         }
       }).catch((error) => {
-        console.error(error)
+        if (error.response.status === 404) {
+          this.notFound = true
+        } else {
+          console.error(error)
+        }
       }).finally(() => {
         this.isLoading = false
         this.isReloading = false

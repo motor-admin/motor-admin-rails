@@ -13,7 +13,7 @@
     />
     <div :style="{ height: 'calc(100vh - 245px)', overflow: 'scroll' }">
       <p
-        v-if="!isLoading && !filteredItems.length"
+        v-if="searchQuery && !filteredItems.length"
         class="text-center mt-2"
       >
         Not Found
@@ -63,7 +63,7 @@ export default {
       return queriesStore
     },
     searchPlaceholder () {
-      return 'Search'
+      return 'Search Query'
     },
     filteredItems () {
       return this.items.filter((item) => {

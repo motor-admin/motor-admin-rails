@@ -20,7 +20,7 @@
   <div class="drawer-footer">
     <VButton
       style="float: left"
-      @click="$emit('close')"
+      @click.stop="$emit('close')"
     >
       Cancel
     </VButton>
@@ -30,14 +30,14 @@
       ghost
       class="bg-white me-2"
       :loading="isSaveAndNewLoading"
-      @click="onIsSaveAndCreateClick"
+      @click.stop="onIsSaveAndCreateClick"
     >
       Save and Create New
     </VButton>
     <VButton
       type="primary"
       :loading="isSaveLoading"
-      @click="onIsSaveClick"
+      @click.stop="onIsSaveClick"
     >
       Save
     </VButton>

@@ -60,6 +60,12 @@
         class="mb-2"
       />
       <div :style="{ height: 'calc(100vh - 274px)', overflow: 'scroll' }">
+        <p
+          v-if="searchQuery && !paginatedItems.length"
+          class="text-center mt-2"
+        >
+          Not Found
+        </p>
         <div
           v-for="item in paginatedItems"
           :key="item.type + item.id"

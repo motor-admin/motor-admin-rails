@@ -91,8 +91,18 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      if (!to.params.id && to.params.id !== from.params.id) {
-        this.board = { preferences: { layout: [] } }
+      if (to.name === 'dashboard' || to.name === 'new_dashboard') {
+        const isChanged = to.params.id !== this.board.id?.toString()
+
+        if (isChanged) {
+          if (to.params.id) {
+            this.loadDashboard()
+            this.isEditorOpened = false
+          } else {
+            this.board = { tags: [], preferences: { layout: [] } }
+            this.isEditorOpened = true
+          }
+        }
       }
     }
   },

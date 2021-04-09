@@ -165,6 +165,17 @@ export default {
           this.onMounted()
         }
       }
+
+      if (to.name === 'new_query') {
+        const isNewQuery = to.params.id !== this.query.id?.toString()
+
+        if (isNewQuery) {
+          this.dataQuery = { sql_body: '', preferences: {} }
+          this.query = { ...defaultQueryParams }
+
+          this.onMounted()
+        }
+      }
     },
     dataQuery: {
       deep: true,
@@ -172,7 +183,7 @@ export default {
         const stringValue = JSON.stringify(value)
 
         if (stringValue !== JSON.stringify({ sql_body: this.query.sql_body, preferences: this.query.preferences })) {
-          location.replace("#" + window.btoa(stringValue))
+          location.replace('#' + window.btoa(stringValue))
         } else {
           location.hash = ''
         }
@@ -180,6 +191,8 @@ export default {
     }
   },
   mounted () {
+    this.dataQuery = JSON.parse(JSON.stringify(this.locationHashParams)) || { sql_body: '', preferences: {} }
+
     this.onMounted()
   },
   methods: {
@@ -187,8 +200,6 @@ export default {
       this.isSettingsOpened = !this.isSettingsOpened
     },
     onMounted () {
-      this.dataQuery = JSON.parse(JSON.stringify(this.locationHashParams)) || { sql_body: '', preferences: {} }
-
       if (this.dataQuery.sql_body) {
         this.openEditor()
       }

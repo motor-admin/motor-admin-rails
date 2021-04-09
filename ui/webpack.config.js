@@ -114,6 +114,7 @@ module.exports = (env = {}) => ({
     contentBase: './',
     hot: false,
     stats: 'minimal',
+    injectClient: false,
     overlay: {
       warnings: true,
       errors: true
