@@ -28,8 +28,11 @@ import { titleize } from 'utils/scripts/string'
 import throttle from 'view3/src/utils/throttle'
 
 const recentlySelectedStore = {
-  get key () {
+  get KEY () {
     return 'search:recentlySelected'
+  },
+  get DISPLAY_LIMIT () {
+    return 6
   },
   push (item) {
     const items = this.all()
@@ -40,10 +43,13 @@ const recentlySelectedStore = {
       items.splice(index, 1)
     }
 
-    localStorage.setItem(this.key, JSON.stringify([item, ...items].slice(0, 6)))
+    localStorage.setItem(this.KEY, JSON.stringify([item, ...items].slice(0, 20)))
+  },
+  display () {
+    return this.all().slice(0, this.DISPLAY_LIMIT)
   },
   all () {
-    return JSON.parse(localStorage.getItem(this.key) || '[]')
+    return JSON.parse(localStorage.getItem(this.KEY) || '[]')
   }
 }
 
@@ -132,7 +138,7 @@ export default {
     }
   },
   mounted () {
-    this.options = recentlySelectedStore.all()
+    this.options = recentlySelectedStore.display()
 
     this.$nextTick(() => {
       this.$el.querySelector('input').focus()
@@ -153,11 +159,26 @@ export default {
         ].filter(Boolean)
       }).flat().slice(0, MAX_RESOURCE_ITEMS)
 
-      return [
+      let items = [
         ...resources,
         ...reports,
         ...this.foundPages
-      ].sort((a, b) => a.value.toLowerCase() === this.normalizedValue ? -1 : 1)
+      ]
+
+      if (items.length === 0) {
+        items =
+          recentlySelectedStore.all().filter((e) => e.type === 'resource_search').map((e) => {
+            return {
+              ...e,
+              value: e.value.replace(/".*"/, `"${this.cleanedValue}"`),
+              query: this.cleanedValue
+            }
+          })
+
+        items = items.filter((v, i, a) => items.findIndex((e) => e.slug === v.slug) === i)
+      }
+
+      return items.sort((a, b) => a.value.toLowerCase() === this.normalizedValue ? -1 : 1)
     },
     withQuery (model) {
       return this.foundResources.length &&
@@ -214,7 +235,7 @@ export default {
       if (this.value.length > 1) {
         this.options = this.buildItems()
       } else {
-        this.options = recentlySelectedStore.all()
+        this.options = recentlySelectedStore.display()
       }
     }, 200)
   }

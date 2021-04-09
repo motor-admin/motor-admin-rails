@@ -1,6 +1,6 @@
 <template>
   <VButton
-    type="success"
+    type="primary"
     icon="md-add"
     @click="openForm"
   />

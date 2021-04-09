@@ -1,74 +1,108 @@
 <template>
-  <Menu
-    mode="horizontal"
-    theme="light"
-    active-name="1"
-    class="row m-0"
+  <div
+    class="ivu-menu ivu-menu-primary ivu-menu-horizontal row m-0"
     :style="{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05)', zIndex: 1 }"
   >
-    <div class="col-6 ps-4 d-flex">
-      <MenuItem
-        name="1"
+    <div class="col-6 d-flex align-items-center">
+      <VButton
         :to="{ name: 'home' }"
+        type="primary"
+        class="d-flex align-items-center justify-content-center"
+        :style="{ width: '44px', height: '42px' }"
       >
-        <Icon type="md-cog" />
-      </MenuItem>
-      <MenuItem
-        name="2"
+        <div class="d-flex align-items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="icon icon-tabler icon-tabler-bolt"
+            width="26"
+            height="26"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              stroke="none"
+              d="M0 0h26v26H0z"
+              fill="none"
+            />
+            <polyline points="13 3 13 10 19 10 11 21 11 14 5 14 13 3" />
+          </svg>
+        </div>
+      </VButton>
+      <VButton
+        type="primary"
         :to="{ name: 'resources_home' }"
+        class="ms-2"
+        size="large"
       >
         Resources
-      </MenuItem>
-      <MenuItem
-        name="3"
+      </VButton>
+      <VButton
+        type="primary"
         :to="{ name: 'reports' }"
+        class="ms-2"
+        size="large"
       >
         Reports
-      </MenuItem>
+      </VButton>
     </div>
-    <div class="col-6 d-flex justify-content-end">
-      <MenuItem
-        name="4"
+    <div class="col-6 d-flex justify-content-end align-items-center">
+      <VButton
+        type="primary"
+        size="large"
         @click="openSearch"
       >
         <Icon
           type="md-search"
           size="large"
         />
-      </MenuItem>
-      <Submenu
-        name="add"
+      </VButton>
+      <Dropdown
+        trigger="click"
+        transfer
+        class="ms-2"
       >
-        <MenuItem
-          name="10"
-          :to="{ name: 'new_query' }"
+        <VButton
+          type="primary"
+          size="large"
         >
-          <Icon type="md-text" />
-          Add Query
-        </MenuItem>
-        <MenuItem
-          name="11"
-          :to="{ name: 'new_dashboard' }"
-        >
-          <Icon type="ios-pie-outline" />
-          Add Dashboard
-        </MenuItem>
-        <MenuItem
-          name="12"
-          :to="{}"
-        >
-          <Icon type="md-alarm" />
-          Add Alert
-        </MenuItem>
-      </Submenu>
-      <MenuItem name="5">
+          <Icon
+            type="md-add"
+            size="large"
+          />
+        </VButton>
+        <template #list>
+          <DropdownMenu>
+            <DropdownItem @click="$router.push({ name: 'new_query' })">
+              <Icon type="md-text" />
+              Add Query
+            </DropdownItem>
+            <DropdownItem @click="$router.push({ name: 'new_dashboard' })">
+              <Icon type="ios-pie-outline" />
+              Add Dashboard
+            </DropdownItem>
+            <DropdownItem @click="$router.push({ name: '' })">
+              <Icon type="md-alarm" />
+              Add Alert
+            </DropdownItem>
+          </DropdownMenu>
+        </template>
+      </Dropdown>
+      <VButton
+        type="primary"
+        class="ms-2"
+        size="large"
+      >
         <Icon
           type="md-settings"
           size="large"
         />
-      </MenuItem>
+      </VButton>
     </div>
-  </Menu>
+  </div>
 </template>
 
 <script>
@@ -90,15 +124,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ion {
-  font-size: 16px;
-}
+:deep(.ivu-btn) {
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
 
-:deep(.ivu-menu-submenu-title-icon) {
-  font-size: 16px !important;
-
-  &:before {
-    content: "\f273" !important;
+  .ion-md-search {
+    font-size: 24px;
+  }
+  .ion-md-add {
+    font-size: 26px;
+  }
+  .ion-md-settings {
+    font-size: 22px;
   }
 }
 </style>

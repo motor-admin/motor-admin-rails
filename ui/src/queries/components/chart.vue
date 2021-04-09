@@ -51,17 +51,17 @@ Chart.register(
 )
 
 const backgroundColors = [
-  'rgba(97, 144, 232, 0.6)',
-  'rgba(255, 99, 132, 0.6)',
-  'rgba(54, 162, 235, 0.6)',
-  'rgba(255, 206, 86, 0.6)',
-  'rgba(75, 192, 192, 0.6)',
-  'rgba(153, 102, 255, 0.6)',
-  'rgba(255, 159, 64, 0.6)'
+  'rgb(64, 131, 207, 0.8)',
+  'rgba(255, 99, 132, 0.8)',
+  'rgba(54, 162, 235, 0.8)',
+  'rgba(255, 206, 86, 0.8)',
+  'rgba(75, 192, 192, 0.8)',
+  'rgba(153, 102, 255, 0.8)',
+  'rgba(255, 159, 64, 0.8)'
 ]
 
 const borderColors = [
-  'rgba(97, 144, 232, 1)',
+  'rgb(64, 131, 207, 1)',
   'rgba(255, 99, 132, 1)',
   'rgba(54, 162, 235, 1)',
   'rgba(255, 206, 86, 1)',
@@ -116,7 +116,7 @@ export default {
             label: this.columns[index + 1].title,
             backgroundColor: this.chartType === 'pie' ? backgroundColors : backgroundColors[index],
             borderColor: this.chartType === 'pie' ? '#fff' : borderColors[index],
-            borderWidth: this.chartType === 'bar' ? 1 : 2,
+            borderWidth: ['bar', 'row'].includes(this.chartType) ? 0 : 2,
             data
           }
         } else {
