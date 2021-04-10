@@ -1,6 +1,6 @@
 ---
 engine_version: 0.1.44
-file_version: 2021-05-21 20:23:48.488000000 Z
+file_version: 2021-05-22 09:32:53.638982000 Z
 resources:
 - name: country
   preferences: {}
@@ -65,6 +65,10 @@ resources:
         currency: USD
         currency_base: cents
   updated_at: 2021-05-21 20:14:27.117124000 +00:00
+- name: order_note
+  preferences:
+    display_name: Notes
+  updated_at: 2021-05-22 09:32:53.638982000 +00:00
 - name: product
   preferences:
     columns:

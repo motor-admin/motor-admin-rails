@@ -9,6 +9,7 @@
     <ResourceMenuItem
       v-for="resource in resources"
       :key="resource.slug"
+      :size="size"
       :with-scopes="withScopes"
       :fragments="pathFragments"
       :resource="resource"
@@ -70,7 +71,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ivu-menu-item {
+.ivu-menu-item, :deep(.ivu-menu-submenu-title) {
   line-break: normal;
 }
 

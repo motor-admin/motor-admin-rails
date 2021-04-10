@@ -2,6 +2,7 @@
   "name": "motor",
   "private": true,
   "dependencies": {
+    "@tabler/icons": "^1.39.1",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0-beta2",
     "chart.js": "^3.0.0-rc.2",
@@ -36,6 +37,7 @@
     "babel-plugin-macros": "^3.0.1",
     "clean-webpack-plugin": "^3.0.0",
     "compression-webpack-plugin": "^7.1.2",
+    "copy-webpack-plugin": "^9.0.0",
     "core-js": "^3.9.1",
     "css-loader": "^5.0.1",
     "eslint": "^7.15.0",

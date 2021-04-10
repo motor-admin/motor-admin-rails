@@ -6,12 +6,14 @@ module Motor
 
     GZIP_TYPES = [
       'application/javascript',
-      'text/css'
+      'text/css',
+      'image/svg+xml'
     ].freeze
 
     MIME_TYPES = {
       '.js' => 'application/javascript',
       '.css' => 'text/css',
+      '.svg' => 'image/svg+xml',
       '.woff2' => 'font/woff2'
     }.freeze
 

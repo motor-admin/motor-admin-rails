@@ -83,7 +83,7 @@
             >
               <div class="ivu-card-body">
                 <p class="fs-4 fw-bold text-dark">
-                  {{ resource.display_name }}
+                  {{ resource.display_name.replace('/', '\u200B/') }}
                 </p>
               </div>
             </RouterLink>

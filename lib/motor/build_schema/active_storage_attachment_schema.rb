@@ -9,6 +9,7 @@ module Motor
       primary_key: 'id',
       display_name: 'Attachments',
       display_column: 'filename',
+      icon: 'paperclip',
       columns: [
         {
           name: 'id',

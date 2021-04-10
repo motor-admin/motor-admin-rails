@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const CompressionPlugin = require("compression-webpack-plugin")
+const CopyPlugin = require('copy-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const webpack = require('webpack')
@@ -10,8 +11,8 @@ const webpack = require('webpack')
 module.exports = (env = {}) => ({
   mode: env.production ? 'production' : 'development',
   output: {
-    path: path.resolve(__dirname, "./dist"),
-    filename: "[name]-[fullhash].js",
+    path: path.resolve(__dirname, './dist'),
+    filename: '[name]-[fullhash].js',
     publicPath: '',
   },
   module: {
@@ -92,6 +93,14 @@ module.exports = (env = {}) => ({
     extensions: ['.js', '.ts', '.vue', '.json', '.less' , '.scss', '.css']
   },
   plugins: [
+   new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, './node_modules/@tabler/icons/icons'),
+          to: path.resolve(__dirname, './dist/icons')
+        }
+      ]
+    }),
     new MiniCssExtractPlugin({
       filename: '[name]-[fullhash].css'
     }),
@@ -106,7 +115,7 @@ module.exports = (env = {}) => ({
       dry: false,
       verbose: true
     }),
-    env.production && new CompressionPlugin({ test: /\.(js|css)(\?.*)?$/i }),
+    env.production && new CompressionPlugin({ test: /\.(js|css|svg)(\?.*)?$/i }),
     process.env.BUNDLE_ANALYZE && new BundleAnalyzerPlugin()
   ].filter(Boolean),
   devServer: {

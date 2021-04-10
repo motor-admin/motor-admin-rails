@@ -6,7 +6,11 @@
     :to="{ name: 'resources', params: { fragments: [...fragments, resource.slug] } }"
   >
     <template #title>
-      {{ resource.display_name }}
+      <CustomIcon
+        :type="resource.icon"
+        :size="iconSize"
+      />
+      {{ resource.display_name.replace('/', '\u200B/') }}
     </template>
 
     <MenuItem
@@ -15,7 +19,7 @@
       :name="resource.slug + '.' + scope.name"
       :to="{ name: 'resources', params: { fragments: [...fragments, resource.slug] }, query: { scope: scope.name } }"
     >
-      {{ scope.display_name }}
+      {{ scope.display_name.replace('/', '\u200B/') }}
     </MenuItem>
   </Submenu>
   <MenuItem
@@ -23,13 +27,22 @@
     :name="resource.slug"
     :to="{ name: 'resources', params: { fragments: [...fragments, resource.slug] } }"
   >
-    {{ resource.display_name }}
+    <CustomIcon
+      :type="resource.icon"
+      :size="iconSize"
+    />
+    {{ resource.display_name.replace('/', '\u200B/') }}
   </MenuItem>
 </template>
 
 <script>
+import CustomIcon from 'utils/components/custom_icon'
+
 export default {
   name: 'ResourceMenuItem',
+  components: {
+    CustomIcon
+  },
   props: {
     resource: {
       type: Object,
@@ -40,6 +53,11 @@ export default {
       required: false,
       default: true
     },
+    size: {
+      type: String,
+      required: false,
+      default: 'default'
+    },
     fragments: {
       type: Array,
       required: false,
@@ -47,6 +65,13 @@ export default {
     }
   },
   computed: {
+    iconSize () {
+      if (this.size === 'small') {
+        return 14
+      } else {
+        return 16
+      }
+    },
     visibleScopes () {
       return this.resource.scopes.filter((scope) => scope.visible)
     },

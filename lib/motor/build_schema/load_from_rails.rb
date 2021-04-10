@@ -55,6 +55,7 @@ module Motor
           display_column: FindDisplayColumn.call(model),
           columns: fetch_columns(model),
           associations: fetch_associations(model),
+          icon: Motor::FindIcon.call(model.name.titleize),
           scopes: fetch_scopes(model),
           actions: DEFAULT_ACTIONS,
           tabs: DEFAULT_TABS,
@@ -155,7 +156,7 @@ module Motor
           model_name: reflection.polymorphic? ? nil : reflection.klass.name.underscore,
           reference_type: reflection.belongs_to? ? 'belongs_to' : 'has_one',
           foreign_key: reflection.foreign_key,
-          association_primary_key: reflection.association_primary_key,
+          association_primary_key: reflection.polymorphic? ? 'id' : reflection.association_primary_key,
           polymorphic: reflection.polymorphic?
         }
       end
@@ -176,6 +177,7 @@ module Motor
             model_name: model_class.name.underscore,
             foreign_key: ref.foreign_key,
             polymorphic: ref.options[:as].present?,
+            icon: Motor::FindIcon.call(name),
             visible: true
           }
         end.compact
