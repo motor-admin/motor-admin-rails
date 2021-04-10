@@ -14,7 +14,6 @@
       >
         <div class="ivu-card-body">
           <h3 class="text-muted">
-            <Icon type="md-list" />
             {{ resource.display_name }}
           </h3>
         </div>

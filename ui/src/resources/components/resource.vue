@@ -7,7 +7,7 @@
     >
       <ResourcesMenu
         :resources="associations"
-        :item-class="'h5'"
+        :size="'small'"
         :path-fragments="pathFragments"
         :active-name="associationName"
         :style="{ minHeight: '100%' }"

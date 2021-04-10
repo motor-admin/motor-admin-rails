@@ -141,6 +141,11 @@ export default {
         indexAxis: this.chartType === 'row' ? 'y' : 'x',
         animation: false,
         plugins: {
+          legend: {
+            labels: {
+              usePointStyle: true
+            }
+          },
           tooltip: {
             callbacks: {
               label: (context) => {

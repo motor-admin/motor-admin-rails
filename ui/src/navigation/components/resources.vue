@@ -12,7 +12,6 @@
       :class="itemClass"
       :to="{ name: 'resources', params: { fragments: [...pathFragments, resource.slug] } }"
     >
-      <Icon type="md-list" />
       {{ resource.display_name }}
     </MenuItem>
   </Menu>
@@ -26,10 +25,10 @@ export default {
       type: Array,
       required: true
     },
-    itemClass: {
+    size: {
       type: String,
       required: false,
-      default: 'h4'
+      default: 'default'
     },
     pathFragments: {
       type: Array,
@@ -47,7 +46,20 @@ export default {
       openNames: []
     }
   },
-  mounted () {
-  }
+  computed: {
+    itemClass () {
+      if (this.size === 'small') {
+        return 'h5'
+      } else {
+        return 'h4'
+      }
+    }
+  },
 }
 </script>
+
+<style lang="scss" scoped>
+.ivu-menu-item {
+  padding: 14px 18px;
+}
+</style>

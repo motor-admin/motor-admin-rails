@@ -28,6 +28,7 @@ module Motor
 
         models -= Motor::ApplicationRecord.descendants
         models -= [ActiveRecord::SchemaMigration] if defined?(ActiveRecord::SchemaMigration)
+        models -= [ActiveStorage::Blob, ActiveStorage::VariantRecord] if defined?(ActiveStorage::Blob)
 
         models
       end
@@ -73,6 +74,8 @@ module Motor
           rescue StandardError
             next
           end
+
+          next if defined?(ActiveStorage::Blob) && ref.klass == ActiveStorage::Blob
 
           {
             name: name,

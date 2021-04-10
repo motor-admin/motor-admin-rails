@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Motor
   module Tags
     module_function
