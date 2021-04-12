@@ -31,8 +31,17 @@ export default {
     model () {
       return modelNameMap[this.resourceName]
     },
+    defaultValues () {
+      return this.model.columns.reduce((acc, column) => {
+        if (column.default_value) {
+          acc[column.name] = column.default_value
+        }
+
+        return acc
+      }, {})
+    },
     resource () {
-      const resource = JSON.parse(JSON.stringify(this.model.default_values))
+      const resource = JSON.parse(JSON.stringify(this.defaultValues))
 
       if (this.parentResource) {
         resource[`${this.parentResource.name}_id`] = this.parentResource.id

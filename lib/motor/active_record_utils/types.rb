@@ -16,6 +16,7 @@ module Motor
         'decimal' => 'float',
         'text' => 'string',
         'citext' => 'string',
+        'jsonb' => 'json',
         'timestamp' => 'datetime'
       }.freeze
 

@@ -77,15 +77,12 @@
         <template #list>
           <DropdownMenu>
             <DropdownItem @click="$router.push({ name: 'new_query' })">
-              <Icon type="md-text" />
               Add Query
             </DropdownItem>
             <DropdownItem @click="$router.push({ name: 'new_dashboard' })">
-              <Icon type="ios-pie-outline" />
               Add Dashboard
             </DropdownItem>
             <DropdownItem @click="$router.push({ name: '' })">
-              <Icon type="md-alarm" />
               Add Alert
             </DropdownItem>
           </DropdownMenu>
@@ -95,6 +92,7 @@
         type="primary"
         class="ms-2"
         size="large"
+        @click="openSettings"
       >
         <Icon
           type="md-settings"
@@ -107,9 +105,35 @@
 
 <script>
 import Search from './search'
+import ResourcesSettings from 'settings/components/resources_list'
+import { modelSlugMap } from 'utils/scripts/schema'
 
 export default {
   name: 'AppHeader',
+  computed: {
+    currentResource () {
+      if (this.$route.name !== 'resources') {
+        return
+      }
+
+      const resource = this.$route.params.fragments.reduce((acc, slug, index) => {
+        if (index % 2 === 0) {
+          return (
+            acc.associations?.find((assoc) => assoc.slug === slug) ||
+            modelSlugMap[slug]
+          )
+        } else {
+          return acc
+        }
+      }, {})
+
+      if (resource.model_slug) {
+        return modelSlugMap[resource.model_slug]
+      } else {
+        return resource
+      }
+    }
+  },
   methods: {
     openSearch () {
       this.$Modal.open(Search, {
@@ -117,6 +141,26 @@ export default {
         onSelected: (value) => {
           this.$Modal.remove()
         }
+      })
+    },
+    onChangeResource (resource) {
+      this.$Drawer.component.setTitle(this.drawerTitle(resource))
+    },
+    drawerTitle (resource) {
+      if (resource) {
+        return `${resource.display_name} Settings`
+      } else {
+        return 'Settings'
+      }
+    },
+    openSettings () {
+      this.$Drawer.open(ResourcesSettings, {
+        selectedResource: this.currentResource,
+        onChangeResource: this.onChangeResource
+      }, {
+        title: this.drawerTitle(this.currentResource),
+        className: 'drawer-no-bottom-padding',
+        closable: true
       })
     }
   }

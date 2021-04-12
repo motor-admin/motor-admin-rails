@@ -4,9 +4,9 @@
       style="height: calc(100vh - 192px); overflow-y: scroll"
       class="pb-2"
     >
-      <h3 class="my-1">
+      <p class="fs-4 fw-bold my-1">
         Visualize
-      </h3>
+      </p>
       <RadioGroup
         v-model="preferences.visualization"
         class="d-flex flex-column"
@@ -23,9 +23,9 @@
         </Radio>
       </RadioGroup>
       <template v-if="preferences.visualization !== 'table'">
-        <h3 class="my-1">
+        <p class="fs-4 fw-bold my-1">
           Format
-        </h3>
+        </p>
         <RadioGroup
           v-model="preferences.format.style"
           class="d-flex flex-column"
@@ -44,9 +44,9 @@
         </RadioGroup>
       </template>
       <template v-if="preferences.visualization !== 'table' && preferences.format.style === 'currency'">
-        <h3 class="my-1">
+        <p class="fs-4 fw-bold my-1">
           Currency
-        </h3>
+        </p>
 
         <VSelect
           v-model="preferences.format.options.currency"

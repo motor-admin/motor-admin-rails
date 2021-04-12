@@ -34,5 +34,16 @@ export default {
     } else {
       return true
     }
+  },
+  json (rule, value, callbacks) {
+    try {
+      if (value) {
+        JSON.parse(value)
+      }
+
+      return true
+    } catch {
+      return new Error('should be a valid JSON')
+    }
   }
 }

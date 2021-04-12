@@ -16,7 +16,7 @@
         <div
           v-for="item in layout"
           :key="item.query_id"
-          class="ivu-card ivu-card-bordered cursor-move mb-2"
+          class="ivu-card ivu-card-bordered cursor-grab mb-2"
         >
           <div class="ivu-card-body d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
@@ -30,9 +30,9 @@
                   @click.prevent="moveItem(item, 1)"
                 />
               </div>
-              <h3 class="text-muted">
+              <p class="fs-4 fw-bold">
                 {{ item.title }}
-              </h3>
+              </p>
             </div>
             <div class="d-flex align-items-center">
               <select v-model="item.size">

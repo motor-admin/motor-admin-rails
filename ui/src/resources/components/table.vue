@@ -213,7 +213,8 @@ export default {
       return this.model.columns.map((column) => {
         const type = column.validators.find((v) => v.includes?.length) ? DataTypes.TAG : column.column_type
 
-        if (column.reference?.name !== modelNameMap[this.resourceName].name) {
+        if (column.reference?.name !== modelNameMap[this.resourceName].name &&
+            ['read_only', 'read_write'].includes(column.access_type)) {
           return {
             key: column.name,
             title: column.display_name,
@@ -224,6 +225,16 @@ export default {
           return null
         }
       }).filter(Boolean)
+    }
+  },
+  watch: {
+    columns: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (newValue.length > oldValue.length) {
+          this.loadData()
+        }
+      }
     }
   },
   mounted () {

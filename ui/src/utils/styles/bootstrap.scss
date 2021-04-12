@@ -1,6 +1,15 @@
 $primary: #408ccf;
 $dark: #515a6e;
 
+$font-sizes: (
+  1: 26px,
+  2: 20px,
+  3: 18px,
+  4: 16px,
+  5: 14px,
+  6: 12px
+);
+
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';

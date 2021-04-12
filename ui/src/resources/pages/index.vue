@@ -13,9 +13,9 @@
         :to="{ name: 'resources', params: { fragments: [resource.slug] }}"
       >
         <div class="ivu-card-body">
-          <h3 class="text-muted">
+          <p class="fs-4 fw-bold text-dark">
             {{ resource.display_name }}
-          </h3>
+          </p>
         </div>
       </RouterLink>
     </div>

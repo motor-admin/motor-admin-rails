@@ -112,7 +112,7 @@ export default {
       return ['integer', 'bigint', 'int', 'float', 'demical', 'double'].includes(this.column.column_type)
     },
     isTextArea () {
-      if (['json', 'jsonb'].includes(this.column.column_type)) {
+      if (this.column.column_type === 'json') {
         return true
       } else if (!this.column.name.match(SINGLE_LINE_INPUT_REGEXP)) {
         return true

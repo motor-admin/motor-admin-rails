@@ -27,11 +27,10 @@
           class="ivu-card ivu-card-bordered mb-2"
           @click="$emit('select', item)"
         >
-          <div class="ivu-card-body">
-            <h3 class="text-muted">
-              <Icon :type="item.type === 'query' ? 'md-list' : 'md-add'" />
-              {{ item.name || item.title }}
-            </h3>
+          <div class="ivu-card-body py-2">
+            <p class="fs-4 fw-bold">
+              {{ item.name }}
+            </p>
           </div>
         </div>
       </div>

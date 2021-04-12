@@ -25,6 +25,9 @@
           >
             Not Found
           </p>
+          <h2 class="mb-3">
+            {{ titleize(model.name) }} #{{ resource.id }}
+          </h2>
           <template
             v-for="column in columns"
             :key="column.name"
@@ -34,29 +37,24 @@
               :class="oneColumn ? 'col-12' : 'col-xxl-3 col-xl-6 col-md-12 col-12'"
               class="mb-3"
             >
-              <h2 v-if="column.name === 'id'">
-                {{ titleize(model.name) }} #{{ resource.id }}
-              </h2>
-              <template v-else>
-                <b>
-                  {{ column.display_name }}:
-                </b>
-                <br>
-                <Reference
-                  v-if="column.reference"
-                  :resource-id="resource[column.name]"
-                  :reference-name="column.reference.model_name"
-                  :show-popover="referencePopover"
-                  :reference-data="resource[column.reference.name]"
-                  :polymorphic-name="resource[column.reference.name + '_type']"
-                />
-                <DataCell
-                  v-else
-                  :value="resource[column.name]"
-                  :text-truncate="false"
-                  :type="columnType(column)"
-                />
-              </template>
+              <b>
+                {{ column.display_name }}:
+              </b>
+              <br>
+              <Reference
+                v-if="column.reference"
+                :resource-id="resource[column.name]"
+                :reference-name="column.reference.model_name"
+                :show-popover="referencePopover"
+                :reference-data="resource[column.reference.name]"
+                :polymorphic-name="resource[column.reference.name + '_type']"
+              />
+              <DataCell
+                v-else
+                :value="resource[column.name]"
+                :text-truncate="false"
+                :type="columnType(column)"
+              />
             </div>
           </template>
         </div>
@@ -138,7 +136,7 @@ export default {
       return modelNameMap[this.resourceName]
     },
     columns () {
-      return this.model.columns
+      return this.model.columns.filter((column) => column.name !== 'id' && ['read_only', 'read_write'].includes(column.access_type))
     },
     includeParams () {
       return this.columns.map((column) => {
@@ -148,7 +146,7 @@ export default {
     queryParams () {
       const params = {
         fields: {
-          [this.model.name]: this.columns.map((e) => e.name)
+          [this.model.name]: ['id', ...this.columns.map((e) => e.name)]
         }
       }
 

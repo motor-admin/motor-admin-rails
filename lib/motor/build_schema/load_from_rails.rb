@@ -12,6 +12,13 @@ module Motor
         ].freeze
       end
 
+      COLUMN_NAME_ACCESS_TYPES = {
+        id: ColumnAccessTypes::READ_ONLY,
+        created_at: ColumnAccessTypes::READ_ONLY,
+        updated_at: ColumnAccessTypes::READ_ONLY,
+        deleted_at: ColumnAccessTypes::READ_ONLY
+      }.with_indifferent_access.freeze
+
       module_function
 
       def call
@@ -49,18 +56,22 @@ module Motor
           display_column: FindDisplayColumn.call(model),
           columns: fetch_columns(model),
           associations: fetch_associations(model),
-          default_values: model.new.attributes.select { |_, v| v.present? }
-        }
+          visible: true
+        }.with_indifferent_access
       end
 
       def fetch_columns(model)
+        default_attrs = model.new.attributes
+
         model.columns.map do |column|
           {
             name: column.name,
             display_name: column.name.humanize,
-            column_type: column.type.to_s,
-            access_type: ColumnAccessTypes::READ_WRITE,
-            validators: fetch_validators(model, column.name)
+            column_type: ActiveRecordUtils::Types::UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
+            access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
+            default_value: default_attrs[column.name],
+            validators: fetch_validators(model, column.name),
+            virtual: false
           }
         end
       end
@@ -85,7 +96,8 @@ module Motor
             model_slug: Utils.slugify(ref.klass),
             association_type: fetch_association_type(ref),
             foreign_key: ref.foreign_key,
-            polymorphic: ref.polymorphic?
+            polymorphic: ref.polymorphic?,
+            visible: true
           }
         end.compact
       end

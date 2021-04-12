@@ -51,8 +51,6 @@ import { modelNameMap } from 'utils/scripts/schema'
 import Validators from 'utils/scripts/validators'
 import FormInput from 'data_forms/components/input'
 
-const TIMESTAMP_COLUMN_NAMES = ['deleted_at', 'inserted_at', 'created_at', 'updated_at']
-
 export default {
   name: 'ResourceForm',
   components: {
@@ -140,7 +138,7 @@ export default {
       }
 
       this.columns.forEach((column) => {
-        if (['json', 'jsonb'].includes(column.column_type)) {
+        if (column.column_type === 'json') {
           data[column.name] = JSON.parse(data[column.name])
         }
       })
@@ -157,11 +155,10 @@ export default {
       }
     },
     columns () {
+      const accessTypes = ['read_write', 'write_only']
+
       return this.model.columns.filter((column) => {
-        return (
-          this.model.primary_key !== column.name &&
-          !TIMESTAMP_COLUMN_NAMES.includes(column.name)
-        )
+        return accessTypes.includes(column.access_type)
       })
     }
   },
@@ -192,7 +189,7 @@ export default {
 
       this.columns.forEach((column) => {
         const value = resource[column.name]
-        if (['json', 'jsonb'].includes(column.column_type) || (value && typeof value === 'object')) {
+        if (column.column_type === 'json' || (value && typeof value === 'object')) {
           data[column.name] = JSON.stringify(value || {}, null, '  ')
         } else {
           data[column.name] = resource[column.name]
@@ -222,17 +219,6 @@ export default {
 <style lang="scss" scoped>
 form {
   min-height: calc(100% - 53px);
-}
-
-.drawer-footer {
-  width: 100%;
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  border-top: 1px solid #e8e8e8;
-  padding: 10px 0px;
-  text-align: right;
-  background: #fff;
 }
 
 .ivu-form-item {

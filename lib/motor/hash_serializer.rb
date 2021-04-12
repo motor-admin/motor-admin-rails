@@ -7,9 +7,15 @@ module Motor
     end
 
     def self.load(hash)
+      return hash unless hash
+
       hash = JSON.parse(hash.presence || '{}') if hash.is_a?(String)
 
-      (hash || {}).with_indifferent_access
+      if hash.is_a?(Hash)
+        hash.with_indifferent_access
+      else
+        hash || {}
+      end
     end
   end
 end

@@ -6,13 +6,18 @@ Motor::Admin.routes.draw do
       resources :run_queries, only: %i[show create]
       resources :queries, only: %i[index show create update destroy]
       resources :tags, only: %i[index]
+      resources :configs, only: %i[index create]
+      resources :resource_configs, only: %i[index create], controller: 'resources'
       resources :dashboards, only: %i[index show create update destroy]
       resource :schema, only: %i[show update]
     end
 
     resources :resources, path: '/data/:resource',
-                          only: %i[index show update create destroy] do
-      resources :resources, path: '/:association', only: %i[index create]
+                          only: %i[index show update create destroy],
+                          controller: 'data' do
+      resources :association, path: '/:association',
+                              only: %i[index create],
+                              controller: 'data'
     end
 
     resources :assets, param: 'filename',
@@ -34,8 +39,11 @@ end
 Motor::Api.routes.draw do
   namespace :motor, path: '' do
     resources :resources, path: '/:resource',
-                          only: %i[index show update create destroy] do
-      resources :resources, path: '/:association', only: %i[index create]
+                          only: %i[index show update create destroy],
+                          controller: 'data' do
+      resources :association, path: '/:association',
+                              only: %i[index create],
+                              controller: 'data'
     end
   end
 end

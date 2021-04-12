@@ -31,7 +31,7 @@ module Motor
         end
       end
 
-      # @params result [ActiveRecord::Result]
+      # @param result [ActiveRecord::Result]
       # @return [Hash]
       def build_columns_hash(result)
         result.columns.map do |column_name|

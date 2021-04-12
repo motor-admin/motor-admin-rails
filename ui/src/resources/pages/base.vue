@@ -7,7 +7,7 @@
       :style="{ background: '#fff', maxHeight: 'calc(100vh - 60px)', overflowY: 'scroll' }"
     >
       <ResourcesMenu
-        :resources="schema"
+        :resources="visibleResources"
         :active-name="fragments[0]"
         :style="{ minHeight: '100%' }"
       />
@@ -53,8 +53,8 @@ export default {
     ResourcesMenu
   },
   computed: {
-    schema () {
-      return schema
+    visibleResources () {
+      return schema.filter((model) => model.visible)
     },
     fragments () {
       return this.$route.params.fragments || []

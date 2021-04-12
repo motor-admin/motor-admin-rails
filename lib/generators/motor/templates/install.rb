@@ -34,8 +34,15 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
     end
 
     create_table :motor_resources, force: true do |t|
-      t.column :name, :string, null: false
+      t.column :name, :string, null: false, index: { unique: true }
       t.column :preferences, :string, null: false, default: '{}'
+
+      t.timestamps
+    end
+
+    create_table :motor_configs, force: true do |t|
+      t.column :key, :string, null: false, index: { unique: true }
+      t.column :value, :string, null: false, default: '{}'
 
       t.timestamps
     end
@@ -65,6 +72,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
     drop_table :motor_taggable_tags
     drop_table :motor_tags
     drop_table :motor_resources
+    drop_table :motor_configs
     drop_table :motor_queries
     drop_table :motor_dashboards
   end

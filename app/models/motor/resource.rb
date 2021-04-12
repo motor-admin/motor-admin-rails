@@ -2,5 +2,6 @@
 
 module Motor
   class Resource < ApplicationRecord
+    serialize :preferences, HashSerializer
   end
 end

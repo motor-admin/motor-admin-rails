@@ -49,12 +49,12 @@ export default {
   computed: {
     itemClass () {
       if (this.size === 'small') {
-        return 'h5'
+        return ''
       } else {
         return 'h4'
       }
     }
-  },
+  }
 }
 </script>
 

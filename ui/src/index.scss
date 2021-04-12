@@ -52,28 +52,19 @@ body {
   height: 100%;
 }
 
-.h1 {
-  font-size: 26px !important;
+h3 {
+  font-size: 18px;
+  font-weight: normal;
 }
 
-.h2 {
-  font-size: 20px !important;
+h4 {
+  font-size: 16px;
+  font-weight: normal;
 }
 
-.h3 {
-  font-size: 18px !important;
-}
-
-.h4 {
-  font-size: 16px !important;
-}
-
-.h5 {
-  font-size: 14px !important;
-}
-
-.h6 {
-  font-size: 12px !important;
+h5 {
+  font-size: 14px;
+  font-weight: normal;
 }
 
 .ivu-tag,
@@ -122,6 +113,14 @@ body {
   cursor: move;
 }
 
+.cursor-grab {
+  cursor: grab;
+}
+
+.cursor-text {
+  cursor: text;
+}
+
 *[contenteditable]:focus {
   outline-color: transparent;
   outline-style: none;
@@ -137,4 +136,15 @@ body {
 
 .float-left {
   float: left !important;
+}
+
+.drawer-footer {
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 0px;
+  text-align: right;
+  background: #fff;
 }

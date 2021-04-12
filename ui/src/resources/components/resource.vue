@@ -90,7 +90,7 @@ export default {
     },
     associations () {
       return modelNameMap[this.resourceName].associations.filter((assoc) => {
-        return assoc.association_type === 'has_many'
+        return assoc.association_type === 'has_many' && assoc.visible
       })
     }
   },

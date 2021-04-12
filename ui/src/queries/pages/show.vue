@@ -250,6 +250,7 @@ export default {
         }).then((result) => {
           this.errors = []
           this.data = result.data.data
+          this.dataQuery.preferences = result.data.preferences
           this.columns = result.data.meta.columns
         }).catch((error) => {
           this.errors = error.response.data?.errors

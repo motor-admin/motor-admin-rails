@@ -4,16 +4,16 @@
     :to="{ name: item.type, params: { id: item.id }}"
   >
     <div class="ivu-card-body">
-      <h3 class="text-muted">
+      <p class="fs-4 fw-bold text-dark">
         <Icon :type="iconClass" />
         {{ item.name || item.title }}
         <VButton
-          class="text-muted float-right pb-2"
+          class="text-dark float-right pb-2"
           type="text"
           icon="md-trash"
           @click.prevent="remove"
         />
-      </h3>
+      </p>
       <div />
     </div>
   </RouterLink>

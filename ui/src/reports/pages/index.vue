@@ -1,8 +1,4 @@
 <template>
-  <Spin
-    v-if="isLoading"
-    fix
-  />
   <div class="row mx-2 mt-3 mb-2">
     <div class="col-2">
       <h1 class="">
@@ -32,9 +28,12 @@
   <div class="row mx-2">
     <div class="d-none d-lg-block col-lg-2">
       <template v-if="tags.length">
-        <h3 style="margin: 25px 0 5px 0">
+        <p
+          class="fs-4 fw-bold"
+          style="margin: 25px 0 5px 0"
+        >
           Tags
-        </h3>
+        </p>
         <Tag
           v-for="tag in tags"
           :key="tag"
@@ -59,7 +58,11 @@
         size="large"
         class="mb-2"
       />
-      <div :style="{ height: 'calc(100vh - 274px)', overflow: 'scroll' }">
+      <div :style="{ height: 'calc(100vh - 274px)', overflow: 'scroll', position: 'relative' }">
+        <Spin
+          v-if="isLoading"
+          fix
+        />
         <p
           v-if="searchQuery && !paginatedItems.length"
           class="text-center mt-2"

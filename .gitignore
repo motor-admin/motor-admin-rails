@@ -12,3 +12,4 @@
 /ui/dist
 .byebug_history
 Gemfile.lock
+.yardoc
