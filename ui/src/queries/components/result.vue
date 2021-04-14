@@ -72,6 +72,14 @@
       style="width: 15%"
     >
       <VButton
+        v-if="withAlert"
+        icon="md-notifications"
+        type="text"
+        size="small"
+        style="height: 24px"
+        @click="$router.push({ name: 'new_alert', query: { query_id: queryId } })"
+      />
+      <VButton
         icon="md-download"
         type="text"
         size="small"
@@ -123,6 +131,16 @@ export default {
       default () {
         return {}
       }
+    },
+    queryId: {
+      type: [Number, String],
+      required: false,
+      default: ''
+    },
+    withAlert: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     borderless: {
       type: Boolean,

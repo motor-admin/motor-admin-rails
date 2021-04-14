@@ -67,6 +67,9 @@ export default {
     }
   },
   computed: {
+    visibleModels () {
+      return schema.filter((model) => model.visible)
+    },
     iconClasses () {
       return {
         resource: 'md-share-alt',
@@ -95,14 +98,14 @@ export default {
     },
     foundResources () {
       if (this.value) {
-        let array = schema.filter((e) => {
+        let array = this.visibleModels.filter((e) => {
           const name = e.display_name.toLowerCase()
 
           return !!name.match(new RegExp(`\\b${this.normalizedValue}`))
         })
 
         if (!array.length) {
-          array = schema.filter((e) => {
+          array = this.visibleModels.filter((e) => {
             const name = e.display_name.toLowerCase()
 
             return !!name.match(new RegExp(`\\b${this.normalizedValue.replace(/\s["#\w]+$/, '')}`))
@@ -110,7 +113,7 @@ export default {
         }
 
         if (!array.length) {
-          array = schema.filter((e) => {
+          array = this.visibleModels.filter((e) => {
             const name = e.display_name.toLowerCase()
 
             return this.normalizedValue.includes(name.replace(/e?s\b/, ''))

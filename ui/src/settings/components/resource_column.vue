@@ -75,17 +75,17 @@ export default {
       displayName: this.column.display_name
     }
   },
+  computed: {
+    resource () {
+      return modelNameMap[this.resourceName]
+    }
+  },
   watch: {
     column: {
       deep: true,
       handler () {
         this.displayName = this.column.display_name
       }
-    }
-  },
-  computed: {
-    resource () {
-      return modelNameMap[this.resourceName]
     }
   },
   methods: {
@@ -112,7 +112,7 @@ export default {
             }
           }).then((result) => {
           }).catch((error) => {
-            console.log(error)
+            console.error(error)
           })
         }
       })
@@ -129,7 +129,7 @@ export default {
         }
       }).then((result) => {
       }).catch((error) => {
-        console.log(error)
+        console.error(error)
       })
     },
     toggleAccessType (value) {

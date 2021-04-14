@@ -13,24 +13,49 @@
       />
     </Sider>
     <Layout>
-      <template v-if="fragments && fragments.length > 1">
-        <Breadcrumbs
-          :crumbs="crumbs"
-          :style="{ margin: '14px 10px' }"
-        />
-        <Resource
+      <template v-if="fragments && fragments.length">
+        <template v-if="fragments.length > 1">
+          <Breadcrumbs
+            :crumbs="crumbs"
+            :style="{ margin: '14px 10px' }"
+          />
+          <Resource
+            :resource-name="resourceName"
+            :resource-id="resourceId"
+            :association-name="associationName"
+          />
+        </template>
+        <ResourceTable
+          v-if="fragments.length === 1"
+          :key="resourceName"
+          :height="'calc(100vh - 146px)'"
+          :with-title="true"
           :resource-name="resourceName"
-          :resource-id="resourceId"
-          :association-name="associationName"
         />
       </template>
-      <ResourceTable
-        v-if="fragments.length === 1"
-        :key="resourceName"
-        :height="'calc(100vh - 146px)'"
-        :with-title="true"
-        :resource-name="resourceName"
-      />
+      <template v-else>
+        <div class="row mx-2">
+          <h1 class="mt-3 mb-2">
+            Resources
+          </h1>
+          <div
+            v-for="resource in visibleResources"
+            :key="resource.slug"
+            class="col-12 col-md-6 col-lg-4 col-xl-3"
+          >
+            <RouterLink
+              class="ivu-card ivu-card-bordered my-2"
+              :to="{ name: 'resources', params: { fragments: [resource.slug] }}"
+            >
+              <div class="ivu-card-body">
+                <p class="fs-4 fw-bold text-dark">
+                  {{ resource.display_name }}
+                </p>
+              </div>
+            </RouterLink>
+          </div>
+        </div>
+      </template>
     </Layout>
   </Layout>
 </template>

@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { basePath } from 'utils/scripts/configs'
 
-import ResourcesIndex from 'resources/pages/index'
 import ResourcesBase from 'resources/pages/base'
 import QueriesShow from 'queries/pages/show'
 import ReportsIndex from 'reports/pages/index'
 import DashboardsShow from 'dashboards/pages/show'
 import NavigatioHome from 'navigation/pages/home'
+import AlertsShow from 'alerts/pages/show'
 
 const routes = [
   {
@@ -16,7 +16,7 @@ const routes = [
   },
   {
     path: '/resources',
-    component: ResourcesIndex,
+    component: ResourcesBase,
     name: 'resources_home'
   },
   {
@@ -43,6 +43,16 @@ const routes = [
     path: '/queries/:id',
     component: QueriesShow,
     name: 'query'
+  },
+  {
+    path: '/alerts/new',
+    component: AlertsShow,
+    name: 'new_alert'
+  },
+  {
+    path: '/alerts/:id',
+    component: AlertsShow,
+    name: 'alert'
   },
   {
     path: '/reports/:type?',

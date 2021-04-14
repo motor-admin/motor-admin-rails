@@ -51,7 +51,7 @@ export default {
       if (this.size === 'small') {
         return ''
       } else {
-        return 'h4'
+        return 'fs-4'
       }
     }
   }

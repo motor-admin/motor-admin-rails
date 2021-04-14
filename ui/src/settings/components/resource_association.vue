@@ -66,7 +66,7 @@ export default {
         }
       }).then((result) => {
       }).catch((error) => {
-        console.log(error)
+        console.error(error)
       })
     },
     onNameFocusLost () {

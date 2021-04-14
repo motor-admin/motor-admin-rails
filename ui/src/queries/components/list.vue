@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { queriesStore, loadItems } from 'reports/scripts/store'
+import { queriesStore, loadQueries } from 'reports/scripts/store'
 
 export default {
   name: 'ReportsIndex',
@@ -81,12 +81,12 @@ export default {
       this.isLoading = true
     }
 
-    this.loadItems().finally(() => {
+    this.loadQueries().finally(() => {
       this.isLoading = false
     })
   },
   methods: {
-    loadItems
+    loadQueries
   }
 }
 </script>

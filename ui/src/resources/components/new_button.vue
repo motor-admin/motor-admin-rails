@@ -66,7 +66,7 @@ export default {
             this.$Drawer.remove()
           }
 
-          this.$Message.success(`${resourceTitle} has been created`)
+          this.$Message.info(`${resourceTitle} has been created`)
           this.$emit('success', data)
         }
       }, {

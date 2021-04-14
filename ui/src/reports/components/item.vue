@@ -34,13 +34,19 @@ export default {
   emits: ['remove'],
   computed: {
     iconClass () {
-      return this.item.type === 'query' ? 'md-list' : 'md-analytics'
+      return {
+        query: 'md-list',
+        dashboard: 'md-analytics',
+        alert: 'md-notifications'
+      }[this.item.type]
     },
     apiPath () {
       if (this.item.type === 'query') {
         return `api/queries/${this.item.id}`
       } else if (this.item.type === 'dashboard') {
         return `api/dashboards/${this.item.id}`
+      } else if (this.item.type === 'alert') {
+        return `api/alerts/${this.item.id}`
       } else {
         return ''
       }
@@ -53,7 +59,7 @@ export default {
         closable: true,
         onOk: () => {
           api.delete(this.apiPath).then((result) => {
-            this.$Message.success(`${titleize(this.item.type)} has been removed succesfully`)
+            this.$Message.info(`${titleize(this.item.type)} has been removed succesfully`)
 
             this.$emit('remove')
           }).catch((error) => {

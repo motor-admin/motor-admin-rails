@@ -16,7 +16,7 @@ module Motor
     end
 
     def create
-      if Motor::Dashboards.title_already_exists?(@dashboard)
+      if Motor::Dashboards::Persistance.title_already_exists?(@dashboard)
         render json: { errors: [{ source: 'title', detail: 'Title already exists' }] }, status: :unprocessable_entity
       else
         ApplicationRecord.transaction { @dashboard.save! }
@@ -28,10 +28,10 @@ module Motor
     end
 
     def update
-      Motor::Dashboards.update_from_params!(@dashboard, dashboard_params)
+      Motor::Dashboards::Persistance.update_from_params!(@dashboard, dashboard_params)
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params) }
-    rescue Motor::Dashboards::TitleAlreadyExists
+    rescue Motor::Dashboards::Persistance::TitleAlreadyExists
       render json: { errors: [{ source: 'title', detail: 'Title already exists' }] }, status: :unprocessable_entity
     end
 
@@ -44,7 +44,7 @@ module Motor
     private
 
     def build_dashboard
-      @dashboard = Motor::Dashboards.build_from_params(dashboard_params)
+      @dashboard = Motor::Dashboards::Persistance.build_from_params(dashboard_params)
     end
 
     def dashboard_params

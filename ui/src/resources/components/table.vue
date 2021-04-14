@@ -7,7 +7,7 @@
       <div class="col-6 d-flex align-items-center">
         <b
           v-if="withTitle && !selectedRows.length"
-          class="h4 nowrap"
+          class="fs-4 nowrap"
         >{{ title }}</b>
         <ResourceActions
           v-if="selectedRows.length"

@@ -2,13 +2,15 @@
 
 Motor::Admin.routes.draw do
   namespace :motor, path: '' do
-    scope 'api' do
+    scope 'api', as: 'api' do
       resources :run_queries, only: %i[show create]
+      resources :send_alerts, only: %i[create]
       resources :queries, only: %i[index show create update destroy]
       resources :tags, only: %i[index]
       resources :configs, only: %i[index create]
       resources :resource_configs, only: %i[index create], controller: 'resources'
       resources :dashboards, only: %i[index show create update destroy]
+      resources :alerts, only: %i[index show create update destroy]
       resource :schema, only: %i[show update]
     end
 
@@ -28,10 +30,13 @@ Motor::Admin.routes.draw do
     get '/', to: 'ui#show'
     get '/resources/(*path)', to: 'ui#show'
 
-    with_options controller: 'ui' do
-      resources :queries, only: %i[index show]
-      resources :dashboards, only: %i[index show]
-      resources :reports, only: %i[index show]
+    scope as: 'ui' do
+      with_options controller: 'ui' do
+        resources :queries, only: %i[index show]
+        resources :dashboards, only: %i[index show]
+        resources :reports, only: %i[index show]
+        resources :alerts, only: %i[index show]
+      end
     end
   end
 end

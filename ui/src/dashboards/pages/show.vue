@@ -22,6 +22,8 @@
       <VButton
         size="large"
         class="bg-white me-2"
+        ghost
+        type="primary"
         @click="save"
       >
         Save
@@ -148,7 +150,7 @@ export default {
           this.board = result
 
           this.$Modal.remove()
-          this.$Message.success('Dashboard has been saved!')
+          this.$Message.info('Dashboard has been saved!')
 
           this.$router.push({ name: 'dashboard', params: { id: result.id } })
 

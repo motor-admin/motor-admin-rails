@@ -11,6 +11,15 @@
         size="large"
         type="default"
         class="me-2"
+        :to="{ name: 'new_query' }"
+      >
+        Add Query
+      </VButton>
+      <VButton
+        icon="md-add"
+        size="large"
+        type="default"
+        class="me-2"
         :to="{ name: 'new_dashboard' }"
       >
         Add Dashboard
@@ -19,9 +28,9 @@
         icon="md-add"
         size="large"
         type="default"
-        :to="{ name: 'new_query' }"
+        :to="{ name: 'new_alert' }"
       >
-        Add Query
+        Add Alert
       </VButton>
     </div>
   </div>
@@ -64,6 +73,12 @@
           fix
         />
         <p
+          v-else-if="!searchQuery && !paginatedItems.length"
+          class="text-center mt-2"
+        >
+          Looks like you are new here 🙃
+        </p>
+        <p
           v-if="searchQuery && !paginatedItems.length"
           class="text-center mt-2"
         >
@@ -105,7 +120,8 @@ import { itemsStore, loadItems } from '../scripts/store'
 
 const TYPES_MAP = {
   queries: 'query',
-  dashboards: 'dashboard'
+  dashboards: 'dashboard',
+  alerts: 'alert'
 }
 
 export default {
@@ -144,6 +160,11 @@ export default {
           value: 'dashboards',
           label: 'Dashboards',
           to: { name: 'reports', params: { type: 'dashboards' } }
+        },
+        {
+          value: 'alerts',
+          label: 'Alerts',
+          to: { name: 'reports', params: { type: 'alerts' } }
         }
       ]
     },

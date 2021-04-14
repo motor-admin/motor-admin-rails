@@ -82,7 +82,7 @@
             <DropdownItem @click="$router.push({ name: 'new_dashboard' })">
               Add Dashboard
             </DropdownItem>
-            <DropdownItem @click="$router.push({ name: '' })">
+            <DropdownItem @click="$router.push({ name: 'new_alert' })">
               Add Alert
             </DropdownItem>
           </DropdownMenu>

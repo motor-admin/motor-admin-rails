@@ -31,6 +31,8 @@
       <VButton
         v-if="canSave"
         size="large"
+        ghost
+        type="primary"
         class="bg-white me-2"
         @click="save"
       >
@@ -86,6 +88,8 @@
             :errors="errors"
             :title="query.name"
             :columns="columns"
+            :query-id="query.id"
+            :with-alert="query.id"
             :preferences="dataQuery.preferences"
             @settings="toggleSettings"
           />
@@ -270,7 +274,7 @@ export default {
         onSuccess: (result) => {
           this.query = result
           this.$Modal.remove()
-          this.$Message.success('Query has been saved!')
+          this.$Message.info('Query has been saved!')
 
           this.$router.push({ name: 'query', params: { id: result.id } })
         }
@@ -292,7 +296,7 @@ export default {
         onSuccess: (result) => {
           this.query = result
           this.$Modal.remove()
-          this.$Message.success('Query has been saved!')
+          this.$Message.info('Query has been saved!')
 
           this.$router.push({ name: 'query', params: { id: result.id } })
         }

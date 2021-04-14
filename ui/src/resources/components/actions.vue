@@ -106,7 +106,7 @@ export default {
         },
         onSuccess: (data) => {
           this.$Drawer.remove()
-          this.$Message.success(`${resourceTitle} has been updated`)
+          this.$Message.info(`${resourceTitle} has been updated`)
           this.$emit('finish-action', 'edit')
         }
       }, {

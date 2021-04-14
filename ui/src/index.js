@@ -38,10 +38,7 @@ import Radio from 'view3/src/components/radio'
 import RadioGroup from 'view3/src/components/radio-group'
 import Spin from 'view3/src/components/spin'
 import Checkbox from 'view3/src/components/checkbox'
-import Affix from 'view3/src/components/affix'
 import Tag from 'view3/src/components/tag'
-import Divider from 'view3/src/components/divider'
-import Collapse from 'view3/src/components/collapse'
 import Panel from 'view3/src/components/panel'
 import Tooltip from 'view3/src/components/tooltip'
 import Select from 'view3/src/components/select'
@@ -75,12 +72,9 @@ app.component('VForm', Form)
 app.component('FormItem', FormItem)
 app.component('Spin', Spin)
 app.component('Checkbox', Checkbox)
-app.component('Affix', Affix)
 app.component('Tag', Tag)
-app.component('Divider', Divider)
 app.component('Radio', Radio)
 app.component('RadioGroup', RadioGroup)
-app.component('Collapse', Collapse)
 app.component('Panel', Panel)
 app.component('Tooltip', Tooltip)
 app.component('VSelect', Select)

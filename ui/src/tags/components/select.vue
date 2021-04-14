@@ -6,7 +6,7 @@
     multiple
     placeholder="Set tags"
     :loading="isLoading"
-    size="large"
+    :size="size"
   >
     <VOption
       v-for="tag in tags"
@@ -24,6 +24,11 @@ import api from 'api'
 export default {
   name: 'TagsSelect',
   props: {
+    size: {
+      type: String,
+      required: false,
+      default: 'large'
+    },
     modelValue: {
       type: Array,
       required: false,

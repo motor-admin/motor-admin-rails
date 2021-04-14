@@ -2,6 +2,11 @@
 
 module Motor
   class Admin < ::Rails::Engine
-    # isolate_namespace Motor
+    initializer 'motor.alerts.scheduler' do
+      next if defined?(Sidekiq) && Sidekiq.server?
+
+      Motor::Alerts::Scheduler::SCHEDULER_TASK.execute
+      Motor::Alerts::ScheduledAlertsCache::UPDATE_ALERTS_TASK.execute
+    end
   end
 end

@@ -47,6 +47,34 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       t.timestamps
     end
 
+    create_table :motor_alerts, force: true do |t|
+      t.references :query, null: false, foreign_key: { to_table: :motor_queries }, index: true
+      t.column :name, :string, null: false
+      t.column :description, :string
+      t.column :to_emails, :string, null: false
+      t.column :is_enabled, :boolean, null: false, default: true
+      t.column :preferences, :string, null: false, default: '{}'
+      t.column :author_id, :integer
+      t.column :author_type, :string
+      t.column :deleted_at, :datetime
+
+      t.timestamps
+
+      t.index 'lower(name)',
+        name: 'motor_alerts_lower_name_unique_index',
+        unique: true,
+        where: 'deleted_at IS NULL'
+    end
+
+    create_table :motor_alert_locks, force: true do |t|
+      t.references :alert, null: false, foreign_key: { to_table: :motor_alerts }
+      t.column :lock_timestamp, :string, null: false
+
+      t.timestamps
+
+      t.index %i[alert_id lock_timestamp], unique: true
+    end
+
     create_table :motor_tags, force: true do |t|
       t.column :name, :string, null: false
 
@@ -69,6 +97,8 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
   end
 
   def self.down
+    drop_table :motor_alert_locks
+    drop_table :motor_alerts
     drop_table :motor_taggable_tags
     drop_table :motor_tags
     drop_table :motor_resources

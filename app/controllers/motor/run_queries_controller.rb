@@ -36,7 +36,7 @@ module Motor
     end
 
     def build_query
-      @query = Motor::Queries.build_from_params(query_params)
+      @query = Motor::Queries::Persistance.build_from_params(query_params)
     end
 
     def query_params

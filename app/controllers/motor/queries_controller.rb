@@ -16,7 +16,7 @@ module Motor
     end
 
     def create
-      if Motor::Queries.name_already_exists?(@query)
+      if Motor::Queries::Persistance.name_already_exists?(@query)
         render json: { errors: [{ source: 'name', detail: 'Name already exists' }] }, status: :unprocessable_entity
       else
         ApplicationRecord.transaction { @query.save! }
@@ -28,10 +28,10 @@ module Motor
     end
 
     def update
-      Motor::Queries.update_from_params!(@query, query_params)
+      Motor::Queries::Persistance.update_from_params!(@query, query_params)
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@query, params) }
-    rescue Motor::Queries::NameAlreadyExists
+    rescue Motor::Queries::Persistance::NameAlreadyExists
       render json: { errors: [{ source: 'name', detail: 'Name already exists' }] }, status: :unprocessable_entity
     end
 
@@ -44,7 +44,7 @@ module Motor
     private
 
     def build_query
-      @query = Motor::Queries.build_from_params(query_params)
+      @query = Motor::Queries::Persistance.build_from_params(query_params)
     end
 
     def query_params
