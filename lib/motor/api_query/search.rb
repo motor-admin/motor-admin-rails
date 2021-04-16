@@ -5,6 +5,7 @@ module Motor
     module Search
       SELECT_COLUMNS_AMOUNT = 2
       COLUMN_TYPES = BuildSchema::SEARCHABLE_COLUMN_TYPES
+      ID_REGEXP = /\A\d+\z/.freeze
 
       module_function
 
@@ -24,7 +25,7 @@ module Motor
         klass = rel.klass
         arel_table = klass.arel_table
 
-        arel_filters << arel_table[klass.primary_key].eq(keyword) if keyword.match?(/\A\d+\z/)
+        arel_filters << arel_table[klass.primary_key].eq(keyword) if keyword.match?(ID_REGEXP)
 
         string_column_names = find_searchable_columns(klass)
         selected_columns = select_columns(string_column_names)

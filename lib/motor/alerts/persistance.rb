@@ -32,7 +32,7 @@ module Motor
 
         alert = build_from_params(params, current_user)
 
-        raise InvalidInterval unless Fugit::Nat.parse(alert.preferences[:interval])
+        raise InvalidInterval unless alert.cron
 
         ApplicationRecord.transaction do
           alert.save!
@@ -48,7 +48,7 @@ module Motor
 
         alert = assign_attributes(alert, params)
 
-        raise InvalidInterval unless Fugit::Nat.parse(alert.preferences[:interval])
+        raise InvalidInterval unless alert.cron
 
         ApplicationRecord.transaction do
           alert.save!

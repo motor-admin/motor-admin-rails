@@ -116,22 +116,16 @@ export default {
         return
       }
 
-      const resource = this.$route.params.fragments.reduce((acc, slug, index) => {
+      return this.$route.params.fragments.reduce((acc, slug, index) => {
         if (index % 2 === 0) {
           return (
-            acc.associations?.find((assoc) => assoc.slug === slug) ||
+            modelSlugMap[acc.associations?.find((assoc) => assoc.slug === slug)?.model_slug] ||
             modelSlugMap[slug]
           )
         } else {
           return acc
         }
       }, {})
-
-      if (resource.model_slug) {
-        return modelSlugMap[resource.model_slug]
-      } else {
-        return resource
-      }
     }
   },
   methods: {

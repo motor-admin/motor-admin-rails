@@ -16,23 +16,19 @@ module Motor
     end
 
     def create
-      if Motor::Alerts::Persistance.name_already_exists?(@alert)
-        name_already_exists_response
-      else
-        ApplicationRecord.transaction { @alert.save! }
-        Motor::Alerts::ScheduledAlertsCache.load_alerts
+      ApplicationRecord.transaction { @alert.save! }
+      Motor::Alerts::ScheduledAlertsCache.clear
 
-        render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params) }
-      end
+      render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params) }
+    rescue Motor::Alerts::Persistance::NameAlreadyExists
+      name_already_exists_response
     rescue Motor::Alerts::Persistance::InvalidInterval
       invalid_interval_response
-    rescue ActiveRecord::RecordNotUnique
-      retry
     end
 
     def update
       Motor::Alerts::Persistance.update_from_params!(@alert, alert_params)
-      Motor::Alerts::ScheduledAlertsCache.load_alerts
+      Motor::Alerts::ScheduledAlertsCache.clear
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params) }
     rescue Motor::Alerts::Persistance::NameAlreadyExists

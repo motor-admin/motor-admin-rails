@@ -7,14 +7,22 @@ module Motor
         execution_interval: 2.minutes
       ) { Motor::Alerts::ScheduledAlertsCache.load_alerts }
 
+      CACHE_STORE = ActiveSupport::Cache::MemoryStore.new(size: 5.megabytes)
+
       module_function
 
       def all
-        @all ||= load_alerts
+        ActiveRecord::Base.logger.silence do
+          CACHE_STORE.fetch(Motor::Alert.all.maximum(:updated_at)) do
+            clear
+
+            Motor::Alert.all.active.enabled.to_a
+          end
+        end
       end
 
-      def load_alerts
-        @all = Motor::Alert.all.active.enabled
+      def clear
+        CACHE_STORE.clear
       end
     end
   end

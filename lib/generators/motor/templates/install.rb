@@ -11,6 +11,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
 
       t.timestamps
 
+      t.index :updated_at
       t.index 'lower(name)',
         name: 'motor_queries_lower_name_unique_index',
         unique: true,
@@ -27,6 +28,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
 
       t.timestamps
 
+      t.index :updated_at
       t.index 'lower(title)',
         name: 'motor_dashboards_lower_title_unique_index',
         unique: true,
@@ -38,6 +40,8 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       t.column :preferences, :string, null: false, default: '{}'
 
       t.timestamps
+
+      t.index :updated_at
     end
 
     create_table :motor_configs, force: true do |t|
@@ -45,6 +49,8 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       t.column :value, :string, null: false, default: '{}'
 
       t.timestamps
+
+      t.index :updated_at
     end
 
     create_table :motor_alerts, force: true do |t|
@@ -60,6 +66,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
 
       t.timestamps
 
+      t.index :updated_at
       t.index 'lower(name)',
         name: 'motor_alerts_lower_name_unique_index',
         unique: true,

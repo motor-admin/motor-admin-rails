@@ -13,6 +13,7 @@ require 'motor/assets'
 require 'motor/build_schema'
 require 'motor/api_query'
 require 'motor/tags'
+require 'motor/ui_configs'
 require 'motor/queries'
 require 'motor/dashboards'
 require 'motor/alerts'
@@ -28,6 +29,8 @@ module Motor
     Kernel.silence_warnings do
       Dir[PATH.join('./motor/**/*.rb')].each do |f|
         next if f.ends_with?('alerts/scheduler.rb')
+        next if f.ends_with?('alerts/scheduled_alerts_cache.rb')
+        next if f.ends_with?('ui_configs.rb')
 
         load f
       end

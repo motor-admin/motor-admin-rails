@@ -74,6 +74,18 @@ function alertsRequest () {
   return alertsRequestLock
 }
 
+function assignItems (dashboardsData, queriesData, alertsData) {
+  const dashboards = normalizeItems(dashboardsData, 'dashboard')
+  const queries = normalizeItems(queriesData, 'query')
+  const alerts = normalizeItems(alertsData, 'alert')
+
+  queriesStore.splice(0, queriesStore.length, ...sortItems(queries))
+  dashboardsStore.splice(0, dashboardsStore.length, ...sortItems(dashboards))
+  alertsStore.splice(0, alertsStore.length, ...sortItems(alerts))
+
+  itemsStore.splice(0, itemsStore.length, ...sortItems(dashboardsStore.concat(queriesStore).concat(alertsStore)))
+}
+
 function loadItems () {
   return Promise.all([
     dashboardsRequest(),
@@ -84,15 +96,11 @@ function loadItems () {
     queriesResult,
     alertsResult
   ]) => {
-    const dashboards = normalizeItems(dashboardsResult.data.data, 'dashboard')
-    const queries = normalizeItems(queriesResult.data.data, 'query')
-    const alerts = normalizeItems(alertsResult.data.data, 'alert')
-
-    queriesStore.splice(0, queriesStore.length, ...sortItems(queries))
-    dashboardsStore.splice(0, dashboardsStore.length, ...sortItems(dashboards))
-    alertsStore.splice(0, alertsStore.length, ...sortItems(alerts))
-
-    itemsStore.splice(0, itemsStore.length, ...sortItems(dashboardsStore.concat(queriesStore).concat(alertsStore)))
+    assignItems(
+      dashboardsResult.data.data,
+      queriesResult.data.data,
+      alertsResult.data.data
+    )
   }).catch((error) => {
     console.error(error)
   })
@@ -109,6 +117,14 @@ function loadQueries () {
     console.error(error)
   })
 }
+
+const appNode = document.getElementById('app')
+
+assignItems(
+  JSON.parse(appNode.getAttribute('data-dashboards')),
+  JSON.parse(appNode.getAttribute('data-queries')),
+  JSON.parse(appNode.getAttribute('data-alerts')),
+)
 
 export {
   itemsStore,

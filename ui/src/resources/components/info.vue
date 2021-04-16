@@ -131,6 +131,16 @@ export default {
       isReloading: true
     }
   },
+  watch: {
+    columns: {
+      deep: true,
+      handler (newValue, oldValue) {
+        if (newValue.length > oldValue.length) {
+          this.loadData()
+        }
+      }
+    }
+  },
   computed: {
     model () {
       return modelNameMap[this.resourceName]
