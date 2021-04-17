@@ -156,6 +156,11 @@ export default {
       }
     }
   },
+  watch: {
+    alert () {
+      this.dataAlert = JSON.parse(JSON.stringify(this.alert))
+    }
+  },
   created () {
     this.dataAlert = JSON.parse(JSON.stringify(this.alert))
   },

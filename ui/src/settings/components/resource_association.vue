@@ -11,7 +11,6 @@
         />
         <Checkbox
           v-model="association.visible"
-          @click.stop
           @change="persistChanges"
         />
         <p
@@ -19,7 +18,6 @@
           class="fs-5 fw-bold cursor-text"
           contenteditable
           @input="updateName"
-          @click.stop
           @blur="onNameFocusLost"
           @keydown.enter.prevent="$refs.contenteditable.blur()"
         >

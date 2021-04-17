@@ -1,23 +1,19 @@
 <template>
-  <VSelect
+  <MSelect
     v-model="value"
     filterable
-    :remote-method="loadResources"
+    :remote-function="loadResources"
+    :options="options"
     :loading="isLoading"
-  >
-    <VOption
-      v-for="(option, index) in options"
-      :key="index"
-      :value="option[model.primary_key]"
-    >
-      {{ '#' + option[model.primary_key] }} {{ option[model.display_column] }}
-    </VOption>
-  </VSelect>
+    :value-key="model.primary_key"
+    :label-function="(option) => `#${option[model.primary_key]} ${option[model.display_column]}`"
+  />
 </template>
 
 <script>
 import api from 'api'
 import { modelNameMap } from 'utils/scripts/schema'
+import throttle from 'view3/src/utils/throttle'
 
 export default {
   name: 'ResourceSelect',
@@ -47,17 +43,17 @@ export default {
   },
   watch: {
     modelValue (value) {
-      this.value = value
+      this.value = (value || '').toString()
     },
     value (value) {
       this.$emit('update:modelValue', value)
     }
   },
-  mounted () {
-    this.value = this.modelValue
+  created () {
+    this.value = (this.modelValue || '').toString()
   },
   methods: {
-    loadResources (query) {
+    loadResources: throttle(function (query) {
       this.isLoading = true
 
       return api.get(`data/${this.model.slug}`, {
@@ -74,7 +70,7 @@ export default {
       }).finally(() => {
         this.isLoading = false
       })
-    }
+    }, 500)
   }
 }
 </script>

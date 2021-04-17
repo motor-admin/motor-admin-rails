@@ -1,20 +1,12 @@
 <template>
-  <VSelect
+  <MSelect
     v-model="modelValue"
     filterable
     :size="size"
     :placeholder="'Timezone'"
-    @on-change="$emit('update:modelValue', $event)"
-  >
-    <VOption
-      v-for="option in options"
-      :key="option"
-      :value="option"
-      :label="option"
-    >
-      {{ option }}
-    </VOption>
-  </VSelect>
+    :options="options"
+    @update:modelValue="updateValue"
+  />
 </template>
 
 <script>
@@ -24,7 +16,9 @@ export default {
     modelValue: {
       type: String,
       required: false,
-      default: ''
+      default () {
+        return localStorage.getItem('timezone') || ''
+      }
     },
     size: {
       type: String,
@@ -188,6 +182,16 @@ export default {
         'Zagreb',
         'Zurich'
       ]
+    }
+  },
+  mounted () {
+    this.$emit('update:modelValue', this.modelValue)
+  },
+  methods: {
+    updateValue (value) {
+      localStorage.setItem('timezone', value)
+
+      this.$emit('update:modelValue', value)
     }
   }
 }

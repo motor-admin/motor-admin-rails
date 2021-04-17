@@ -28,6 +28,7 @@
     :style="{ height: 'calc(100% - 34px)' }"
   >
     <Chart
+      v-if="data.length"
       ref="chart"
       :data="data"
       :labels-format="preferences.format"

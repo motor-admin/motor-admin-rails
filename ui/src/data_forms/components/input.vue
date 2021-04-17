@@ -5,19 +5,13 @@
     :resource-name="column.reference.name"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
-  <VSelect
+  <MSelect
     v-else-if="isTagSelect"
     :model-value="modelValue"
+    :options="tagOptions"
+    :label-function="(option) => titleize(option.value)"
     @update:modelValue="$emit('update:modelValue', $event)"
-  >
-    <VOption
-      v-for="option in tagOptions"
-      :key="option"
-      :value="option"
-    >
-      {{ titleize(option) }}
-    </VOption>
-  </VSelect>
+  />
   <Checkbox
     v-else-if="isBoolean"
     :model-value="modelValue"
@@ -119,6 +113,12 @@ export default {
       } else {
         return false
       }
+    }
+  },
+  watch: {
+    column () {
+      this.dataValue = ''
+      this.$emit('update:modelValue', '')
     }
   },
   methods: {

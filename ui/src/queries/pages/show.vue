@@ -89,7 +89,7 @@
             :title="query.name"
             :columns="columns"
             :query-id="query.id"
-            :with-alert="query.id"
+            :with-alert="!!query.id"
             :preferences="dataQuery.preferences"
             @settings="toggleSettings"
           />

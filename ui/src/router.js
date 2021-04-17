@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { basePath } from 'utils/scripts/configs'
+import qs from 'qs'
 
 import ResourcesBase from 'resources/pages/base'
 import QueriesShow from 'queries/pages/show'
@@ -63,6 +64,12 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(basePath),
+  parseQuery: (string) => {
+    return qs.parse(string)
+  },
+  stringifyQuery: (query) => {
+    return qs.stringify(query)
+  },
   routes
 })
 

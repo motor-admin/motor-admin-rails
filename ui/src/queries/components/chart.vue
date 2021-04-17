@@ -86,7 +86,7 @@ export default {
     labelsFormat: {
       type: Object,
       required: false,
-      default: () => {}
+      default: () => ({})
     },
     chartType: {
       type: String,

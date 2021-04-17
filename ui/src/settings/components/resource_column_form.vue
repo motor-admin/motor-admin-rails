@@ -17,34 +17,20 @@
         label="Visibility"
         prop="access_type"
       >
-        <VSelect
+        <MSelect
           v-model="dataColumn.access_type"
-        >
-          <VOption
-            v-for="option in accessTypes"
-            :key="option.value"
-            :value="option.value"
-          >
-            {{ option.label }}
-          </VOption>
-        </VSelect>
+          :options="accessTypes"
+        />
       </FormItem>
       <FormItem
         v-if="dataColumn.access_type !== 'hidden'"
         label="Type"
         prop="column_type"
       >
-        <VSelect
+        <MSelect
           v-model="dataColumn.column_type"
-        >
-          <VOption
-            v-for="option in columnTypes"
-            :key="option.value"
-            :value="option.value"
-          >
-            {{ option.label }}
-          </VOption>
-        </VSelect>
+          :options="columnTypes"
+        />
       </FormItem>
       <FormItem
         v-if="['read_write', 'write_only'].includes(dataColumn.access_type)"
@@ -64,12 +50,12 @@
           type="error"
           ghost
           class="me-2"
-          @click.stop="$emit('remove')"
+          @click="$emit('remove')"
         >
           Remove
         </VButton>
         <VButton
-          @click.stop="$emit('cancel')"
+          @click="$emit('cancel')"
         >
           Cancel
         </VButton>
@@ -77,7 +63,7 @@
       <VButton
         type="primary"
         :loading="isLoading"
-        @click.stop="submit"
+        @click="submit"
       >
         Save
       </VButton>

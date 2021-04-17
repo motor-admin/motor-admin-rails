@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.6'
 
+  spec.add_dependency 'activerecord-filter'
   spec.add_dependency 'ar_lazy_preload'
   spec.add_dependency 'cancancan'
   spec.add_dependency 'fugit'

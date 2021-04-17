@@ -1,20 +1,13 @@
 <template>
-  <VSelect
+  <MSelect
     v-model="value"
     filterable
-    :loading="isLoading"
     :size="size"
+    :options="queries"
+    label-key="name"
+    value-key="id"
     :placeholder="'Select query'"
-  >
-    <VOption
-      v-for="query in queries"
-      :key="query.id"
-      :value="query.id"
-      :label="query.name"
-    >
-      {{ query.name }}
-    </VOption>
-  </VSelect>
+  />
 </template>
 
 <script>

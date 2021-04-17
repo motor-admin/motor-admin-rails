@@ -25,13 +25,18 @@
           style="max-width: 400px"
           class="mx-1"
           :placeholder="`Search ${(associationModel?.display_name || model.display_name).toLowerCase()}...`"
-          @search="loadDataAndCount"
+          @search="applySearch"
         />
-        <VButton
-          type="default"
-          icon="ios-funnel"
-          class="mx-1"
-        />
+        <Badge
+          :count="filtersCount"
+          type="primary"
+        >
+          <VButton
+            icon="ios-funnel"
+            class="mx-1 bg-white"
+            @click="openFiltersModal"
+          />
+        </Badge>
         <NewResourceButton
           class="mx-1"
           :resource-name="model.name"
@@ -62,8 +67,8 @@
           show-total
           @update:current="paginationParams.current = $event"
           @update:page-size="paginationParams.pageSize = $event"
-          @on-change="loadData"
-          @on-page-size-change="loadData"
+          @on-change="onPageChange"
+          @on-page-size-change="onPageSizeChange"
         />
       </div>
     </template>
@@ -86,6 +91,7 @@ import DataTable from 'data_tables/components/table'
 import ResourceSearch from './search'
 import ResourceActions from './actions'
 import NewResourceButton from './new_button'
+import Filters from './filters'
 
 import { truncate } from 'utils/scripts/string'
 
@@ -140,11 +146,42 @@ export default {
       isReloading: true,
       rows: [],
       sortParams: { ...defaultSortParams },
+      filterParams: [],
       searchQuery: '',
       paginationParams: { ...defaultPaginationParams }
     }
   },
   computed: {
+    routeQueryParams () {
+      const query = {}
+
+      if (Object.keys(this.filterParams).length) {
+        query.filter = this.filterParams
+      }
+
+      if (this.sortParams?.key &&
+        (this.sortParams.key !== defaultSortParams.key ||
+        this.sortParams.order !== defaultSortParams.order)) {
+        query.sort = `${this.sortParams.order === 'desc' ? '-' : ''}${this.sortParams.key}`
+      }
+
+      if (this.searchQuery) {
+        query.q = this.searchQuery
+      }
+
+      if (this.paginationParams.pageSize !== defaultPaginationParams.pageSize) {
+        query.per_page = this.paginationParams.pageSize
+      }
+
+      if (this.paginationParams.current !== 1) {
+        query.page = this.paginationParams.current
+      }
+
+      return query
+    },
+    filtersCount () {
+      return this.filterParams.filter((f) => f !== 'OR').length
+    },
     title () {
       return truncate(this.associationModel?.display_name || this.model.display_name, 60)
     },
@@ -171,6 +208,7 @@ export default {
     },
     queryParams () {
       const params = {
+        filter: this.filterParams,
         fields: {
           [this.model.name]: this.columns.map((e) => e.key)
         },
@@ -236,6 +274,15 @@ export default {
     }
   },
   watch: {
+    '$route' (to, from) {
+      if (!to.params.pushFromComponent &&
+        to.name === from.name &&
+        JSON.stringify(to.params.fragments) === JSON.stringify(from.params.fragments) &&
+        (JSON.stringify(to.query) !== JSON.stringify(from.query))) {
+        this.assignFromQueryParams(to.query)
+        this.loadDataAndCount()
+      }
+    },
     columns: {
       deep: true,
       handler (newValue, oldValue) {
@@ -247,10 +294,46 @@ export default {
   },
   mounted () {
     this.assignCachedItemsCount()
-    this.loadData()
-    this.loadItemsCount()
+    this.assignFromQueryParams(this.$route.query)
+    this.loadDataAndCount()
   },
   methods: {
+    openFiltersModal () {
+      this.$Drawer.open(Filters, {
+        filters: this.filterParams,
+        model: this.model,
+        onCancel: () => {
+          this.$Drawer.remove()
+        },
+        onApply: (filters) => {
+          this.filterParams = filters
+          this.paginationParams.current = 1
+          this.pushQueryParams()
+          this.loadDataAndCount()
+          this.$Drawer.remove()
+        }
+      }, {
+        title: `${this.model.display_name} Filters`,
+        className: 'drawer-no-bottom-padding',
+        closable: true
+      })
+    },
+    assignFromQueryParams (query = {}) {
+      this.filterParams = query.filter || []
+      this.searchQuery = query.q || ''
+
+      if (query.sort) {
+        this.sortParams = {
+          order: query.sort.startsWith('-') ? 'desc' : 'asc',
+          key: query.sort.replace(/^-/, '')
+        }
+      } else {
+        this.sortParams = { ...defaultSortParams }
+      }
+
+      this.paginationParams.current = parseInt(query.page) || 1
+      this.paginationParams.pageSize = parseInt(query.per_page) || defaultPaginationParams.pageSize
+    },
     loadDataAndCount () {
       return Promise.all([
         this.loadData(),
@@ -264,18 +347,29 @@ export default {
         this.paginationParams.total = count
       }
     },
-    reset () {
-      this.sortParams = { ...defaultSortParams }
-      this.paginationParams = { ...defaultPaginationParams }
-      this.isReloading = true
-
+    onPageChange () {
+      this.pushQueryParams()
       this.loadData()
-      this.loadItemsCount()
+    },
+    onPageSizeChange () {
+      this.pushQueryParams()
+      this.loadData()
+    },
+    applySearch () {
+      this.paginationParams.current = 1
+
+      this.pushQueryParams()
+
+      this.loadDataAndCount()
     },
     applySort (sort) {
       this.sortParams = sort
 
+      this.pushQueryParams()
       this.loadData()
+    },
+    pushQueryParams () {
+      this.$router.push({ query: this.routeQueryParams, params: { pushFromComponent: true } })
     },
     onRowClick (value) {
       this.$router.push({

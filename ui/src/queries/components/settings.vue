@@ -48,18 +48,11 @@
           Currency
         </p>
 
-        <VSelect
+        <MSelect
           v-model="preferences.format.options.currency"
           filterable
-        >
-          <VOption
-            v-for="option in currencyOptions"
-            :key="option"
-            :value="option"
-          >
-            {{ option }}
-          </VOption>
-        </VSelect>
+          :options="currencyOptions"
+        />
       </template>
     </div>
     <div class="footer">

@@ -5,6 +5,7 @@ require 'ar_lazy_preload'
 require 'js_regex'
 require 'fugit'
 require 'csv'
+require 'active_record/filter'
 
 require 'motor/version'
 require 'motor/admin'

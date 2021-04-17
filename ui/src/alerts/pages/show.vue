@@ -123,6 +123,17 @@ export default {
       alert: {}
     }
   },
+  watch: {
+    '$route' (to, from) {
+      if (['alert', 'new_alert'].includes(to.name)) {
+        const isNewAlert = to.params.id !== this.alert.id?.toString()
+
+        if (isNewAlert) {
+          this.onMounted()
+        }
+      }
+    }
+  },
   created () {
     this.onMounted()
   },
@@ -130,7 +141,9 @@ export default {
     onSelectQuery (queryId) {
       this.alert.query_id = queryId
 
-      this.loadQuery()
+      if (queryId) {
+        this.loadQuery()
+      }
     },
     sendNow () {
       this.isSendingLoading = true
@@ -156,6 +169,8 @@ export default {
         }
       }).then((result) => {
         this.alert.is_enabled = result.data.data.is_enabled
+
+        this.$Message.info(`Alert has been ${this.alert.is_enabled ? 'activated' : 'disabled'}`)
       }).finally(() => {
         this.isEnabledToggleLoading = false
       })
@@ -179,7 +194,7 @@ export default {
         })
       } else {
         this.alert = { ...defaultAlertParams }
-        this.alert.query_id = this.$route.query.query_id
+        this.alert.query_id = this.$route.query?.query_id
       }
     },
     onSubmit (alert) {

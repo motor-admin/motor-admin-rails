@@ -1,12 +1,12 @@
 <template>
   <div
     class="ivu-card ivu-card-bordered"
-    @click="toggleForm"
   >
     <div class="ivu-card-body py-0">
       <div
         class="cursor-pointer d-flex align-items-center justify-content-between py-2"
         :style="{ opacity: !isForm && column.access_type === 'hidden' ? 0.5 : 1 }"
+        @click="toggleForm"
       >
         <div class="d-flex align-items-center">
           <Icon
@@ -43,7 +43,6 @@
         @cancel="toggleForm"
         @remove="removeColumn"
         @submit="updateColumn"
-        @click.stop
       />
     </div>
   </div>
@@ -81,9 +80,9 @@ export default {
     }
   },
   watch: {
-    column: {
-      deep: true,
-      handler () {
+    'column.display_name' (value) {
+      if (value.trim() !== this.displayName.trim() &&
+        value.trim() !== this.$refs.contenteditable.innerText.trim()) {
         this.displayName = this.column.display_name
       }
     }

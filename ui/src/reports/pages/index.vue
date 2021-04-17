@@ -53,6 +53,16 @@
         >
           {{ tag.name }} ({{ tag.count }})
         </Tag>
+        <VButton
+          v-if="selectedTags.length"
+          type="text"
+          icon="md-close"
+          class="ms-2 mt-2 bg-transparent"
+          size="small"
+          @click="clearSelectedTags"
+        >
+          Clear selection
+        </VButton>
       </template>
     </div>
     <div class="col-12 col-lg-8">
@@ -73,7 +83,7 @@
           fix
         />
         <p
-          v-else-if="!searchQuery && !paginatedItems.length"
+          v-else-if="!searchQuery && !selectedTags.length && !paginatedItems.length"
           class="text-center mt-2"
         >
           Looks like you are new here 🙃
@@ -145,26 +155,28 @@ export default {
   },
   computed: {
     tabs () {
+      const query = this.selectedTags.length ? { tags: this.selectedTags.join(',') } : {}
+
       return [
         {
           value: 'all',
           label: 'All',
-          to: { name: 'reports' }
+          to: { name: 'reports', query }
         },
         {
           value: 'queries',
           label: 'Queries',
-          to: { name: 'reports', params: { type: 'queries' } }
+          to: { name: 'reports', params: { type: 'queries' }, query }
         },
         {
           value: 'dashboards',
           label: 'Dashboards',
-          to: { name: 'reports', params: { type: 'dashboards' } }
+          to: { name: 'reports', params: { type: 'dashboards' }, query }
         },
         {
           value: 'alerts',
           label: 'Alerts',
-          to: { name: 'reports', params: { type: 'alerts' } }
+          to: { name: 'reports', params: { type: 'alerts' }, query }
         }
       ]
     },
@@ -203,12 +215,22 @@ export default {
         })
 
         return acc
-      }, {}))
+      }, this.selectedTags.reduce((acc, tag) => {
+        acc[tag] = { name: tag, count: 0 }
+
+        return acc
+      }, {})))
     }
   },
   watch: {
     '$route' (to, from) {
       this.selectedType = to.params.type || 'all'
+
+      if (to.query?.tags) {
+        this.selectedTags = to.query.tags.split(',')
+      } else {
+        this.selectedTags = []
+      }
     }
   },
   mounted () {
@@ -219,6 +241,10 @@ export default {
     this.loadItems().finally(() => {
       this.isLoading = false
     })
+
+    if (this.$route.query?.tags) {
+      this.selectedTags = this.$route.query.tags.split(',')
+    }
   },
   methods: {
     loadItems,
@@ -229,6 +255,11 @@ export default {
         this.isLoading = false
       })
     },
+    clearSelectedTags () {
+      this.selectedTags = []
+
+      this.$router.push({ query: {} })
+    },
     toggleTag (tag) {
       if (this.selectedTags.includes(tag)) {
         const index = this.selectedTags.indexOf(tag)
@@ -236,6 +267,12 @@ export default {
         this.selectedTags.splice(index, 1)
       } else {
         this.selectedTags.push(tag)
+      }
+
+      if (this.selectedTags.length) {
+        this.$router.push({ query: { tags: this.selectedTags.join(',') } })
+      } else {
+        this.$router.push({ query: {} })
       }
     }
   }

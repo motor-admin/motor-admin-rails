@@ -8,7 +8,6 @@
 @import 'view3/src/styles/animation/index';
 
 @import 'view3/src/styles/components/button';
-@import 'view3/src/styles/components/switch';
 @import 'view3/src/styles/components/dropdown';
 @import 'view3/src/styles/components/select';
 @import 'view3/src/styles/components/select-dropdown';
@@ -17,7 +16,6 @@
 @import 'view3/src/styles/components/card';
 @import 'view3/src/styles/components/input';
 @import 'view3/src/styles/components/form';
-@import 'view3/src/styles/components/cell';
 @import 'view3/src/styles/components/spin';
 @import 'view3/src/styles/components/message';
 @import 'view3/src/styles/components/checkbox';
@@ -34,6 +32,7 @@
 @import 'view3/src/styles/components/auto-complete';
 @import 'view3/src/styles/components/split';
 @import 'view3/src/styles/components/tabs';
+@import 'view3/src/styles/components/badge';
 @import 'view3/src/styles/components/alert';
 @import 'view3/src/styles/components/date-picker';
 @import 'view3/src/styles/components/time-picker';
@@ -144,4 +143,16 @@ h5 {
   padding: 10px 0px;
   text-align: right;
   background: #fff;
+}
+
+.ivu-badge-count {
+  box-shadow: none;
+  font-family: inherit;
+  font-weight: bold;
+}
+
+.ivu-tag {
+  .ion {
+    vertical-align: middle;
+  }
 }

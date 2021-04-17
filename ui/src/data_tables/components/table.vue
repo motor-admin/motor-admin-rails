@@ -111,8 +111,12 @@
     </table>
     <div
       v-if="data.length === 0"
-      :style="{ margin: 'auto', height: columns.length ? 'calc(100% - 40px)' : '100%', display: 'flex' }"
+      :style="{ margin: 'auto', height: columns.length ? 'calc(100% - 40px)' : '100%', display: 'flex', position: 'relative' }"
     >
+      <Spin
+        v-if="loading"
+        fix
+      />
       <div style="margin: auto;">
         No Data
       </div>

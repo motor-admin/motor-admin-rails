@@ -78,7 +78,9 @@ export default {
         resource_search: 'md-search',
         resource_id: 'md-open',
         new_query: 'md-create',
-        new_dashboard: 'md-create'
+        new_dashboard: 'md-create',
+        new_alert: 'md-create',
+        alert: 'md-notifications'
       }
     },
     normalizedValue () {
@@ -133,7 +135,8 @@ export default {
     pages () {
       return [
         { value: 'New Query', type: 'new_query' },
-        { value: 'New Dashboard', type: 'new_dashboard' }
+        { value: 'New Dashboard', type: 'new_dashboard' },
+        { value: 'New Alert', type: 'new_alert' }
       ]
     },
     foundPages () {
@@ -212,6 +215,8 @@ export default {
         this.$router.push({ name: 'query', params: { id: option.id } })
       } else if (option.type === 'dashboard') {
         this.$router.push({ name: 'dashboard', params: { id: option.id } })
+      } else if (option.type === 'alert') {
+        this.$router.push({ name: 'alert', params: { id: option.id } })
       } else if (option.type === 'resource') {
         this.$router.push({ name: 'resources', params: { fragments: [option.slug] } })
       } else if (option.type === 'resource_id') {
@@ -222,6 +227,8 @@ export default {
         this.$router.push({ name: 'new_query' })
       } else if (option.type === 'new_dashboard') {
         this.$router.push({ name: 'new_dashboard' })
+      } else if (option.type === 'new_alert') {
+        this.$router.push({ name: 'new_alert' })
       }
 
       recentlySelectedStore.push(option)

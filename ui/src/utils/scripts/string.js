@@ -13,7 +13,11 @@ function underscore (string) {
 }
 
 function titleize (string) {
-  return string.replace(/_+/g, ' ').replace(/(?:^|\s|-)\S/g, x => x.toUpperCase())
+  if (string) {
+    return string.replace(/_+/g, ' ').replace(/(?:^|\s|-)\S/g, x => x.toUpperCase())
+  } else {
+    return ''
+  }
 }
 
 export { truncate, underscore, titleize }

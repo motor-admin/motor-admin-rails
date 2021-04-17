@@ -25,7 +25,6 @@ import Dropdown from 'view3/src/components/dropdown'
 import DropdownMenu from 'view3/src/components/dropdown-menu'
 import DropdownItem from 'view3/src/components/dropdown-item'
 import Header from 'view3/src/components/header'
-import Switch from 'view3/src/components/switch'
 import Card from 'view3/src/components/card'
 import Icon from 'view3/src/components/icon'
 import Content from 'view3/src/components/content'
@@ -43,8 +42,6 @@ import Panel from 'view3/src/components/panel'
 import Tooltip from 'view3/src/components/tooltip'
 import Select from 'view3/src/components/select'
 import Option from 'view3/src/components/option'
-import Cell from 'view3/src/components/cell'
-import CellGroup from 'view3/src/components/cell-group'
 import Sider from 'view3/src/components/sider'
 import Breadcrumb from 'view3/src/components/breadcrumb'
 import BreadcrumbItem from 'view3/src/components/breadcrumb-item'
@@ -52,6 +49,9 @@ import Page from 'view3/src/components/page'
 import AutoComplete from 'view3/src/components/auto-complete'
 import Split from 'view3/src/components/split'
 import DatePicker from 'view3/src/components/date-picker'
+import Badge from 'view3/src/components/badge'
+
+import MinimalSelect from 'utils/components/minimal_select'
 
 const app = createApp(App)
 
@@ -60,7 +60,6 @@ app.directive('tooltip', TooltipDirective)
 app.directive('clipboard', VueClipboard)
 
 app.component('VButton', Button)
-app.component('VSwitch', Switch)
 app.component('Menu', Menu)
 app.component('Submenu', Submenu)
 app.component('MenuItem', MenuItem)
@@ -79,11 +78,9 @@ app.component('Panel', Panel)
 app.component('Tooltip', Tooltip)
 app.component('VSelect', Select)
 app.component('VOption', Option)
-app.component('Cell', Cell)
 app.component('Content', Content)
 app.component('Layout', Layout)
 app.component('Sider', Sider)
-app.component('CellGroup', CellGroup)
 app.component('Breadcrumb', Breadcrumb)
 app.component('BreadcrumbItem', BreadcrumbItem)
 app.component('Pagination', Page)
@@ -94,6 +91,8 @@ app.component('InputNumber', InputNumber)
 app.component('AutoComplete', AutoComplete)
 app.component('Split', Split)
 app.component('DatePicker', DatePicker)
+app.component('MSelect', MinimalSelect)
+app.component('Badge', Badge)
 
 app.use(router)
 
