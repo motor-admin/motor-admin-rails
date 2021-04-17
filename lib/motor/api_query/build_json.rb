@@ -6,6 +6,8 @@ module Motor
       module_function
 
       def call(rel, params)
+        rel = rel.none if params.dig(:page, :limit).yield_self { |limit| limit.present? && limit.to_i.zero? }
+
         rel = rel.preload_associations_lazily if rel.is_a?(ActiveRecord::Relation)
 
         json_params = {}

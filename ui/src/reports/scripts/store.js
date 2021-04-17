@@ -123,7 +123,7 @@ const appNode = document.getElementById('app')
 assignItems(
   JSON.parse(appNode.getAttribute('data-dashboards')),
   JSON.parse(appNode.getAttribute('data-queries')),
-  JSON.parse(appNode.getAttribute('data-alerts')),
+  JSON.parse(appNode.getAttribute('data-alerts'))
 )
 
 export {

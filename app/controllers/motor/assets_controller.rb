@@ -14,6 +14,7 @@ module Motor
       end
 
       headers['Content-Type'] = Marcel::MimeType.for(name: filename)
+      headers['Cache-Control'] = 'max-age=31536000'
     end
   end
 end

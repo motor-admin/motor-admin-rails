@@ -16,7 +16,7 @@
           :resource-name="model.name"
           :label="`Actions (${selectedRows.length})`"
           @start-action="isLoading = true"
-          @finish-action="loadData"
+          @finish-action="loadDataAndCount"
         />
       </div>
       <div class="col-6 d-flex justify-content-end">
@@ -25,7 +25,7 @@
           style="max-width: 400px"
           class="mx-1"
           :placeholder="`Search ${(associationModel?.display_name || model.display_name).toLowerCase()}...`"
-          @search="loadData"
+          @search="loadDataAndCount"
         />
         <VButton
           type="default"
@@ -36,7 +36,7 @@
           class="mx-1"
           :resource-name="model.name"
           :parent-resource="associationParams ? { name: resourceName, id: associationParams.id } : null"
-          @success="loadData"
+          @success="loadDataAndCount"
         />
       </div>
     </div>
@@ -80,6 +80,7 @@
 
 <script>
 import api from 'api'
+import { reactive } from 'vue'
 import { modelNameMap } from 'utils/scripts/schema'
 import DataTable from 'data_tables/components/table'
 import ResourceSearch from './search'
@@ -101,6 +102,8 @@ const defaultSortParams = {
   order: 'desc',
   key: 'id'
 }
+
+const itemsCountCache = reactive({})
 
 export default {
   name: 'ResourceTable',
@@ -145,6 +148,12 @@ export default {
     title () {
       return truncate(this.associationModel?.display_name || this.model.display_name, 60)
     },
+    itemsCountCacheKey () {
+      return JSON.stringify({
+        ...this.queryParams,
+        page: {}
+      })
+    },
     selectedRows () {
       return this.rows.filter((row) => row._selected)
     },
@@ -162,7 +171,6 @@ export default {
     },
     queryParams () {
       const params = {
-        meta: 'count',
         fields: {
           [this.model.name]: this.columns.map((e) => e.key)
         },
@@ -238,15 +246,31 @@ export default {
     }
   },
   mounted () {
+    this.assignCachedItemsCount()
     this.loadData()
+    this.loadItemsCount()
   },
   methods: {
+    loadDataAndCount () {
+      return Promise.all([
+        this.loadData(),
+        this.loadItemsCount()
+      ])
+    },
+    assignCachedItemsCount () {
+      const count = itemsCountCache[this.itemsCountCacheKey]
+
+      if (count) {
+        this.paginationParams.total = count
+      }
+    },
     reset () {
       this.sortParams = { ...defaultSortParams }
       this.paginationParams = { ...defaultPaginationParams }
       this.isReloading = true
 
       this.loadData()
+      this.loadItemsCount()
     },
     applySort (sort) {
       this.sortParams = sort
@@ -261,14 +285,30 @@ export default {
         }
       })
     },
+    loadItemsCount () {
+      return api.get(this.queryPath, {
+        params: {
+          ...this.queryParams,
+          meta: 'count',
+          page: {
+            limit: 0
+          }
+        }
+      }).then((result) => {
+        this.paginationParams.total = result.data.meta.count
+
+        itemsCountCache[this.itemsCountCacheKey] = result.data.meta.count
+      }).catch((error) => {
+        console.error(error)
+      })
+    },
     loadData () {
       this.isLoading = true
 
-      api.get(this.queryPath, {
+      return api.get(this.queryPath, {
         params: this.queryParams
       }).then((result) => {
         this.rows = result.data.data
-        this.paginationParams.total = result.data.meta.count
       }).finally(() => {
         this.$nextTick(() => {
           this.isLoading = false

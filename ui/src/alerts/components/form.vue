@@ -139,7 +139,7 @@ export default {
       default: false
     }
   },
-  emits: ['submit', 'select-query'],
+  emits: ['submit', 'select-query', 'change-emails'],
   data () {
     return {
       dataAlert: {}
