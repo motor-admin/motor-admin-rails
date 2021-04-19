@@ -2,7 +2,12 @@
 
 module Motor
   module UiConfigs
-    CACHE_STORE = ActiveSupport::Cache::MemoryStore.new(size: 5.megabytes)
+    CACHE_STORE =
+      if Motor.development?
+        ActiveSupport::Cache::NullStore.new
+      else
+        ActiveSupport::Cache::MemoryStore.new(size: 5.megabytes)
+      end
 
     module_function
 

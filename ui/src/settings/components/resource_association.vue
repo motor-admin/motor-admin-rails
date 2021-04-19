@@ -1,28 +1,30 @@
 <template>
-  <div
-    class="ivu-card ivu-card-bordered"
-    :style="{ opacity: association.visible ? 1 : 0.5 }"
-  >
-    <div class="ivu-card-body d-flex align-items-center justify-content-between py-2">
-      <div class="d-flex align-items-center">
-        <Icon
-          type="ios-menu"
-          class="me-3 cursor-grab"
-        />
-        <Checkbox
-          v-model="association.visible"
-          @change="persistChanges"
-        />
-        <p
-          ref="contenteditable"
-          class="fs-5 fw-bold cursor-text"
-          contenteditable
-          @input="updateName"
-          @blur="onNameFocusLost"
-          @keydown.enter.prevent="$refs.contenteditable.blur()"
-        >
-          {{ displayName }}
-        </p>
+  <div>
+    <div
+      class="ivu-card ivu-card-bordered"
+      :style="{ opacity: association.visible ? 1 : 0.5 }"
+    >
+      <div class="ivu-card-body d-flex align-items-center justify-content-between py-2">
+        <div class="d-flex align-items-center">
+          <Icon
+            type="ios-menu"
+            class="me-3 cursor-grab"
+          />
+          <Checkbox
+            v-model="association.visible"
+            @change="persistChanges"
+          />
+          <p
+            ref="contenteditable"
+            class="fs-5 fw-bold cursor-text"
+            contenteditable
+            @input="updateName"
+            @blur="onNameFocusLost"
+            @keydown.enter.prevent="$refs.contenteditable.blur()"
+          >
+            {{ displayName }}
+          </p>
+        </div>
       </div>
     </div>
   </div>

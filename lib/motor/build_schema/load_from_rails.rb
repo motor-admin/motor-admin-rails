@@ -19,6 +19,30 @@ module Motor
         deleted_at: ColumnAccessTypes::READ_ONLY
       }.with_indifferent_access.freeze
 
+      DEFAULT_ACTIONS = [
+        {
+          name: 'create',
+          display_name: 'Create',
+          action_type: 'default',
+          preferences: {},
+          visible: true
+        },
+        {
+          name: 'edit',
+          display_name: 'Edit',
+          action_type: 'default',
+          preferences: {},
+          visible: true
+        },
+        {
+          name: 'remove',
+          display_name: 'Remove',
+          action_type: 'default',
+          preferences: {},
+          visible: true
+        }
+      ].freeze
+
       module_function
 
       def call
@@ -56,6 +80,7 @@ module Motor
           display_column: FindDisplayColumn.call(model),
           columns: fetch_columns(model),
           associations: fetch_associations(model),
+          actions: DEFAULT_ACTIONS,
           visible: true
         }.with_indifferent_access
       end

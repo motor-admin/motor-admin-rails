@@ -9,12 +9,14 @@ Motor::Admin.routes.draw do
       resources :tags, only: %i[index]
       resources :configs, only: %i[index create]
       resources :resources, only: %i[index create]
+      resources :resource_methods, only: %i[show], param: 'resource'
       resources :dashboards, only: %i[index show create update destroy]
       resources :alerts, only: %i[index show create update destroy]
       resource :schema, only: %i[show update]
       resources :resources, path: '/data/:resource',
                             only: %i[index show update create destroy],
                             controller: 'data' do
+        put '/:method', to: 'data#execute'
         resources :association, path: '/:association',
                                 only: %i[index create],
                                 controller: 'data'
@@ -46,6 +48,7 @@ Motor::Api.routes.draw do
     resources :resources, path: '/:resource',
                           only: %i[index show update create destroy],
                           controller: 'data' do
+      put '/:method', to: 'data#execute'
       resources :association, path: '/:association',
                               only: %i[index create],
                               controller: 'data'

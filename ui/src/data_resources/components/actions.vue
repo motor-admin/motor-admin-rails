@@ -14,6 +14,14 @@
     <template #list>
       <DropdownMenu>
         <DropdownItem
+          v-for="action in customActions"
+          :key="action.name"
+          :disabled="resources.length > 1 && action.action_type === 'form'"
+          @click="applyAction(action)"
+        >
+          {{ action.display_name }}
+        </DropdownItem>
+        <DropdownItem
           :disabled="resources.length > 1"
           @click="edit"
         >
@@ -81,6 +89,11 @@ export default {
     resource () {
       return this.resources[0]
     },
+    customActions () {
+      return this.model.actions.filter((action) => {
+        return !['create', 'edit', 'remove'].includes(action.name) && action.visible
+      })
+    },
     model () {
       return modelNameMap[this.resourceName]
     }
@@ -93,6 +106,40 @@ export default {
     },
     removeRequest (resource) {
       return api.delete(`data/${this.model.slug}/${resource[this.model.primary_key]}`)
+    },
+    applyAction (action) {
+      this.$emit('start-action', action.name)
+
+      const requests = this.resources.map((resource) => {
+        if (action.action_type === 'method') {
+          return this.methodRequest(resource, action)
+        } else if (action.action_type === 'api') {
+          return this.apiRequest(resource, action)
+        } else {
+          return Promise.resolve({})
+        }
+      })
+
+      Promise.all(requests).then((result) => {
+        this.$Message.info('Action has been applied!')
+      }).catch((error) => {
+        this.$Message.error(`Action failed with code ${error.response.status}`)
+      }).finally(() => {
+        this.$emit('finish-action', action.name)
+      })
+    },
+    methodRequest (resource, action) {
+      return api.put(`data/${this.model.slug}/${resource[this.model.primary_key]}/${action.preferences.method_name}`)
+    },
+    apiRequest (resource, action) {
+      const path = this.interpolatePath(action.preferences.api_path, resource)
+
+      return api.post(path)
+    },
+    interpolatePath (path, params) {
+      return path.replace(/\{\w+?\}/g, (e) => {
+        return params[e.slice(1, e.length - 1)]
+      })
     },
     edit () {
       const resourceTitle = `${titleize(this.resourceName)} #${this.resource.id}`
@@ -133,7 +180,7 @@ export default {
               this.$Message.info('Selected item has been removed')
             }
           }).catch((error) => {
-            console.erro(error)
+            console.error(error)
             this.$Message.error('Unable to remove items')
           }).finally(() => {
             this.$emit('finish-action', 'remove')

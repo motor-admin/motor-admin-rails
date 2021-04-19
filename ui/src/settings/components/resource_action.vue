@@ -6,19 +6,19 @@
       <div class="ivu-card-body py-0">
         <div
           class="cursor-pointer d-flex align-items-center justify-content-between py-2"
-          :style="{ opacity: !isForm && column.access_type === 'hidden' ? 0.5 : 1 }"
+          :style="{ opacity: !isForm && !action.visible ? 0.5 : 1 }"
           @click="toggleForm"
         >
           <div class="d-flex align-items-center">
             <Icon
+              v-if="movable"
               type="ios-menu"
               class="me-3 cursor-grab"
             />
             <Checkbox
-              :model-value="['read_only', 'read_write'].includes(column.access_type)"
-              :indeterminate="['write_only', 'read_only'].includes(column.access_type)"
+              :model-value="action.visible"
               @click.stop
-              @on-change="toggleAccessType"
+              @on-change="toggleVisible"
             />
             <p
               ref="contenteditable"
@@ -36,14 +36,16 @@
             <Icon :type="isForm ? 'ios-arrow-up' : 'ios-arrow-down'" />
           </div>
         </div>
-        <ColumnForm
+        <ActionForm
           v-if="isForm"
-          :column="column"
+          :action="action"
           class="py-3"
-          :with-remove="column.virtual"
+          :with-remove="!['edit', 'create', 'remove'].includes(action.name)"
+          :with-name="!['edit', 'create', 'remove'].includes(action.name)"
+          :resource="resource"
           @cancel="toggleForm"
-          @remove="removeColumn"
-          @submit="updateColumn"
+          @remove="removeAction"
+          @submit="updateAction"
         />
       </div>
     </div>
@@ -52,20 +54,24 @@
 
 <script>
 import api from 'api'
-import ColumnForm from './resource_column_form'
-import { modelNameMap } from 'data_resources/scripts/schema'
+import ActionForm from './resource_action_form'
 
 export default {
-  name: 'ResourceColumn',
+  name: 'ResourceAction',
   components: {
-    ColumnForm
+    ActionForm
   },
   props: {
-    resourceName: {
-      type: String,
+    resource: {
+      type: Object,
       required: true
     },
-    column: {
+    movable: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    action: {
       type: Object,
       required: true
     }
@@ -73,58 +79,40 @@ export default {
   data () {
     return {
       isForm: false,
-      displayName: this.column.display_name
-    }
-  },
-  computed: {
-    resource () {
-      return modelNameMap[this.resourceName]
+      displayName: this.action.display_name
     }
   },
   watch: {
-    'column.display_name' (value) {
+    'action.display_name' (value) {
       if (value.trim() !== this.displayName.trim() &&
         value.trim() !== this.$refs.contenteditable.innerText.trim()) {
-        this.displayName = this.column.display_name
+        this.displayName = this.action.display_name
       }
     }
   },
   methods: {
-    removeColumn () {
+    removeAction () {
       this.$Dialog.confirm({
         title: 'Are you sure?',
         closable: true,
         onOk: () => {
-          const index = this.resource.columns.findIndex((column) => column.name === this.column.name)
+          const index = this.resource.actions.findIndex((action) => action.name === this.action.name)
 
-          this.resource.columns.splice(index, 1)
-
-          api.post('resources', {
-            data: {
-              name: this.resourceName,
-              preferences: {
-                columns: [
-                  {
-                    name: this.column.name,
-                    _remove: true
-                  }
-                ]
-              }
-            }
-          }).then((result) => {
-          }).catch((error) => {
-            console.error(error)
-          })
+          this.removeRequest()
+          this.resource.actions.splice(index, 1)
         }
       })
     },
-    persistChanges () {
+    removeRequest () {
       return api.post('resources', {
         data: {
-          name: this.resourceName,
+          name: this.resource.name,
           preferences: {
-            columns: [
-              this.column
+            actions: [
+              {
+                name: this.action.name,
+                _remove: true
+              }
             ]
           }
         }
@@ -133,12 +121,23 @@ export default {
         console.error(error)
       })
     },
-    toggleAccessType (value) {
-      if (value) {
-        this.column.access_type = 'read_write'
-      } else {
-        this.column.access_type = 'hidden'
-      }
+    persistChanges () {
+      return api.post('resources', {
+        data: {
+          name: this.resource.name,
+          preferences: {
+            actions: [
+              this.action
+            ]
+          }
+        }
+      }).then((result) => {
+      }).catch((error) => {
+        console.error(error)
+      })
+    },
+    toggleVisible (value) {
+      this.action.visible = value
 
       this.persistChanges()
     },
@@ -146,23 +145,23 @@ export default {
       this.isForm = !this.isForm
     },
     updateName (event) {
-      this.column.display_name = event.target.innerText
+      this.action.display_name = event.target.innerText
     },
-    updateColumn (column) {
-      Object.assign(this.column, column)
+    updateAction (action) {
+      this.isForm = false
+
+      Object.assign(this.action, action)
 
       this.persistChanges()
-
-      this.isForm = false
     },
     onNameFocusLost () {
-      if (!this.column.display_name || this.column.display_name.match(/^\s+$/)) {
-        this.column.display_name = this.displayName
+      if (!this.action.display_name || this.action.display_name.match(/^\s+$/)) {
+        this.action.display_name = this.displayName
         this.displayName = this.displayName + ' '
       } else {
         this.persistChanges()
 
-        this.displayName = this.column.display_name
+        this.displayName = this.action.display_name
       }
     }
   }

@@ -42,6 +42,14 @@ module Motor
       head :ok
     end
 
+    def execute
+      @resource.public_send(params[:method].to_sym)
+
+      head :ok
+    rescue StandardError => e
+      render json: { message: e.message }, status: :unprocessable_entity
+    end
+
     private
 
     def resource_class

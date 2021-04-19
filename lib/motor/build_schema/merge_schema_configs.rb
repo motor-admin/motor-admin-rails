@@ -11,6 +11,11 @@ module Motor
         validators: []
       }.with_indifferent_access
 
+      ACTION_DEFAULTS = {
+        visible: true,
+        preferences: {}
+      }.with_indifferent_access
+
       module_function
 
       # @param schema [Array<HashWithIndifferentAccess>]
@@ -19,23 +24,33 @@ module Motor
         configs = load_configs
 
         schema.map do |model|
-          updated_model = model.merge(
-            configs.fetch(model[:name], {}).slice(*RESOURCE_ATTRS)
-          )
-
-          updated_model[:columns] = merge_by_name(
-            model[:columns],
-            configs.dig(model[:name], :columns),
-            COLUMN_DEFAULTS
-          )
-
-          updated_model[:associations] = merge_by_name(
-            model[:associations],
-            configs.dig(model[:name], :associations)
-          )
-
-          updated_model
+          merge_model(model, configs.fetch(model[:name], {}))
         end
+      end
+
+      # @param model [HashWithIndifferentAccess]
+      # @param configs [HashWithIndifferentAccess]
+      # @return [HashWithIndifferentAccess]
+      def merge_model(model, configs)
+        updated_model = model.merge(configs.slice(*RESOURCE_ATTRS))
+
+        updated_model[:columns] = merge_by_name(
+          model[:columns],
+          configs[:columns],
+          COLUMN_DEFAULTS
+        )
+
+        updated_model[:associations] = merge_by_name(
+          model[:associations],
+          configs[:associations]
+        )
+
+        updated_model[:actions] = merge_by_name(
+          model[:actions],
+          configs[:actions]
+        )
+
+        updated_model
       end
 
       # @param defaults [Array<HashWithIndifferentAccess>]

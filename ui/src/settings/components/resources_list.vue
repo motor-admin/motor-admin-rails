@@ -23,7 +23,6 @@
 <script>
 import ResourceItem from './resource_list_item'
 import ResourceSettings from './resource'
-import { VueDraggableNext } from 'vue-draggable-next'
 import { schema } from 'data_resources/scripts/schema'
 import api from 'api'
 
@@ -31,8 +30,7 @@ export default {
   name: 'ResourcesSettings',
   components: {
     ResourceSettings,
-    ResourceItem,
-    VueDraggableNext
+    ResourceItem
   },
   props: {
     selectedResource: {

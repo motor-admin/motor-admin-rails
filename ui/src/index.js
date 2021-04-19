@@ -51,6 +51,7 @@ import Split from 'view3/src/components/split'
 import DatePicker from 'view3/src/components/date-picker'
 import Badge from 'view3/src/components/badge'
 
+import { VueDraggableNext } from 'vue-draggable-next'
 import MinimalSelect from 'utils/components/minimal_select'
 
 const app = createApp(App)
@@ -93,6 +94,7 @@ app.component('Split', Split)
 app.component('DatePicker', DatePicker)
 app.component('MSelect', MinimalSelect)
 app.component('Badge', Badge)
+app.component('VueDraggableNext', VueDraggableNext)
 
 app.use(router)
 

@@ -6,6 +6,7 @@ module Motor
       RESOURCE_ATTRS = %w[display_name visible].freeze
       COLUMN_ATTRS = %w[name display_name column_type access_type default_value virtual].freeze
       ASSOCIATION_ATTRS = %w[name display_name visible].freeze
+      ACTION_ATTRS = %w[name display_name action_type preferences visible].freeze
 
       module_function
 
@@ -65,6 +66,14 @@ module Motor
           )
         end
 
+        if new_prefs[:actions].present?
+          normalized_preferences[:actions] = normalize_actions(
+            default_prefs[:actions],
+            existing_prefs.fetch(:actions, []),
+            new_prefs.fetch(:actions, [])
+          )
+        end
+
         normalized_preferences.compact
       end
 
@@ -86,6 +95,27 @@ module Motor
           normalized_column = reject_default(default_column, normalized_column)
 
           normalized_column.merge(name: name) if normalized_column.present?
+        end.compact.presence
+      end
+
+      # @param default_actions [Array<HashWithIndifferentAccess>]
+      # @param existing_actions [Array<HashWithIndifferentAccess>]
+      # @param new_actions [Array<HashWithIndifferentAccess>]
+      # @return [Array<HashWithIndifferentAccess>]
+      def normalize_actions(default_actions, existing_actions, new_actions)
+        (existing_actions.pluck(:name) + new_actions.pluck(:name)).uniq.map do |name|
+          new_action = safe_fetch_by_name(new_actions, name)
+
+          next if new_action[:_remove]
+
+          existing_action = safe_fetch_by_name(existing_actions, name)
+          default_action = safe_fetch_by_name(default_actions, name)
+          action_attrs = new_action.slice(*ACTION_ATTRS)
+
+          normalized_action = existing_action.merge(action_attrs)
+          normalized_action = reject_default(default_action, normalized_action)
+
+          normalized_action.merge(name: name) if normalized_action.present?
         end.compact.presence
       end
 

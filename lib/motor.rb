@@ -7,20 +7,6 @@ require 'fugit'
 require 'csv'
 require 'active_record/filter'
 
-require 'motor/version'
-require 'motor/admin'
-require 'motor/api'
-require 'motor/assets'
-require 'motor/build_schema'
-require 'motor/api_query'
-require 'motor/tags'
-require 'motor/ui_configs'
-require 'motor/queries'
-require 'motor/dashboards'
-require 'motor/alerts'
-require 'motor/hash_serializer'
-require 'motor/active_record_utils'
-
 module Motor
   PATH = Pathname.new(__dir__)
 
@@ -44,3 +30,17 @@ module Motor
     ENV['MOTOR_DEVELOPMENT'].present?
   end
 end
+
+require 'motor/version'
+require 'motor/admin'
+require 'motor/api'
+require 'motor/assets'
+require 'motor/build_schema'
+require 'motor/api_query'
+require 'motor/tags'
+require 'motor/ui_configs'
+require 'motor/queries'
+require 'motor/dashboards'
+require 'motor/alerts'
+require 'motor/hash_serializer'
+require 'motor/active_record_utils'

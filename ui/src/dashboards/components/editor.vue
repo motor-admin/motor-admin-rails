@@ -70,13 +70,11 @@
 
 <script>
 import QueriesList from 'queries/components/list'
-import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {
   name: 'DashboardEditor',
   components: {
-    QueriesList,
-    VueDraggableNext
+    QueriesList
   },
   props: {
     layout: {

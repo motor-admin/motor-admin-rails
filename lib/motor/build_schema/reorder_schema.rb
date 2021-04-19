@@ -14,18 +14,23 @@ module Motor
       schema.map do |model|
         columns_order = configs["resources.#{model[:name]}.columns.order"]
         associations_order = configs["resources.#{model[:name]}.associations.order"]
+        actions_order = configs["resources.#{model[:name]}.actions.order"]
 
         model.merge(
-          columns: columns_order ? sort_by_name(model[:columns], columns_order) : model[:columns],
-          associations: sort_by_name(model[:associations], associations_order)
+          columns: sort_by_name(model[:columns], columns_order, sort_alphabetically: false),
+          associations: sort_by_name(model[:associations], associations_order),
+          actions: sort_by_name(model[:actions], actions_order, sort_alphabetically: false)
         )
       end
     end
 
     # @param list [Array<HashWithIndifferentAccess>]
+    # @param sort_alphabetically [Boolean]
     # @param order [Array<String>]
     # @return [Array<HashWithIndifferentAccess>]
-    def sort_by_name(list, order)
+    def sort_by_name(list, order, sort_alphabetically: true)
+      return list if order.blank? && !sort_alphabetically
+
       list.sort_by do |item|
         if order.present?
           order.index(item[:name]) || Float::MAX

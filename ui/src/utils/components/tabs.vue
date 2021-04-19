@@ -10,7 +10,10 @@
           style="position: relative;"
         >
           <div class="ivu-tabs-nav-scroll">
-            <div class="ivu-tabs-nav">
+            <div
+              class="ivu-tabs-nav"
+              :class="`text-${position} w-100`"
+            >
               <component
                 :is="tab.to ? 'RouterLink' : 'div'"
                 v-for="tab in tabs"
@@ -18,6 +21,7 @@
                 :class="tab.value === currentTab ? 'ivu-tabs-tab-focused ivu-tabs-tab-active' : ''"
                 class="ivu-tabs-tab"
                 :to="tab.to"
+                @click="onTabClick(tab)"
               >
                 {{ tab.label }}
               </component>
@@ -37,12 +41,18 @@ export default {
       type: Array,
       required: true
     },
+    position: {
+      type: String,
+      required: false,
+      default: 'start'
+    },
     modelValue: {
       type: String,
       required: false,
       default: ''
     }
   },
+  emits: ['update:modelValue'],
   data () {
     return {
       currentTab: ''
@@ -55,6 +65,14 @@ export default {
   },
   mounted () {
     this.currentTab = this.modelValue || this.tabs[0]?.value
+  },
+  methods: {
+    onTabClick (tab) {
+      if (!tab.to) {
+        this.currentTab = tab.value
+        this.$emit('update:modelValue', tab.value)
+      }
+    }
   }
 }
 </script>

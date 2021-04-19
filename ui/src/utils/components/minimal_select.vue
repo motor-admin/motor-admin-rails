@@ -205,7 +205,7 @@ export default {
     } else {
       this.optionsData = this.normalizeOptions(this.options)
       this.assignSelectedFromValue(this.modelValue)
-      this.searchInput = this.getLabel(this.selectedOption)
+      this.searchInput = this.getLabel(this.selectedOption) || this.modelValue
     }
   },
   beforeUpdate () {
@@ -237,7 +237,7 @@ export default {
     },
     onSearch () {
       this.remoteFunction && this.remoteFunction(this.searchInput)
-      this.focusIndex = this.optionsToRender.findIndex((option) => option.value === this.selectedOption.value)
+      this.focusIndex = this.optionsToRender.findIndex((option) => option.value === this.selectedOption?.value)
       this.isOpen = true
       this.popper?.update()
     },
@@ -276,7 +276,10 @@ export default {
     },
     closeDropdown () {
       this.isOpen = false
-      this.searchInput = this.getLabel(this.selectedOption)
+
+      if (this.selectedOption) {
+        this.searchInput = this.getLabel(this.selectedOption)
+      }
     },
     toggleDropdown () {
       this.isOpen = !this.isOpen
