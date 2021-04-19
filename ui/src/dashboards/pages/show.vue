@@ -127,7 +127,7 @@ export default {
       })
     },
     loadDashboard () {
-      return api.get(`api/dashboards/${this.$route.params.id}`, {
+      return api.get(`dashboards/${this.$route.params.id}`, {
         params: {
           include: 'tags'
         }

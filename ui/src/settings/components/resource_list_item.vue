@@ -54,7 +54,7 @@ export default {
       this.resource.display_name = event.target.innerText
     },
     persistChanges () {
-      return api.post('api/resource_configs', {
+      return api.post('resources', {
         data: {
           name: this.resource.name,
           preferences: {

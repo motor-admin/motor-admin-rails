@@ -1,40 +1,5 @@
 <template>
-  <div class="row mx-2 mt-3 mb-2">
-    <div class="col-2">
-      <h1 class="">
-        Reports
-      </h1>
-    </div>
-    <div class="col-10 col-lg-10 text-end">
-      <VButton
-        icon="md-add"
-        size="large"
-        type="default"
-        class="me-2"
-        :to="{ name: 'new_query' }"
-      >
-        Add Query
-      </VButton>
-      <VButton
-        icon="md-add"
-        size="large"
-        type="default"
-        class="me-2"
-        :to="{ name: 'new_dashboard' }"
-      >
-        Add Dashboard
-      </VButton>
-      <VButton
-        icon="md-add"
-        size="large"
-        type="default"
-        :to="{ name: 'new_alert' }"
-      >
-        Add Alert
-      </VButton>
-    </div>
-  </div>
-  <div class="row mx-2">
+  <div class="row mx-2 mt-3">
     <div class="d-none d-lg-block col-lg-2">
       <template v-if="tags.length">
         <p
@@ -77,7 +42,7 @@
         size="large"
         class="mb-2"
       />
-      <div :style="{ height: 'calc(100vh - 274px)', overflow: 'scroll', position: 'relative', margin: '0 -12px', padding: '0 12px' }">
+      <div :style="{ height: 'calc(100vh - 224px)', overflow: 'scroll', position: 'relative', margin: '0 -12px', padding: '0 12px' }">
         <Spin
           v-if="isLoading"
           fix
@@ -96,11 +61,12 @@
         </p>
         <div
           v-for="item in paginatedItems"
-          :key="item.type + item.id"
+          :key="item.type ? item.type + item.id : 'table' + item.slug"
           class="col-12"
         >
           <ReportItem
             :item="item"
+            :item-type="item.type || 'table'"
             @remove="reloadItems"
           />
         </div>
@@ -120,6 +86,35 @@
         />
       </div>
     </div>
+    <div class="d-none d-lg-block col-lg-2 text-end">
+      <Dropdown
+        trigger="click"
+        transfer
+      >
+        <VButton
+          icon="md-add"
+          size="large"
+        >
+          Add New
+        </VButton>
+        <template #list>
+          <DropdownMenu>
+            <DropdownItem @click="$router.push({ name: 'new_query' })">
+              Query
+            </DropdownItem>
+            <DropdownItem @click="$router.push({ name: 'new_dashboard' })">
+              Dashboard
+            </DropdownItem>
+            <DropdownItem @click="$router.push({})">
+              Form
+            </DropdownItem>
+            <DropdownItem @click="$router.push({ name: 'new_alert' })">
+              Alert
+            </DropdownItem>
+          </DropdownMenu>
+        </template>
+      </Dropdown>
+    </div>
   </div>
 </template>
 
@@ -127,11 +122,13 @@
 import Tabs from 'utils/components/tabs'
 import ReportItem from '../components/item'
 import { itemsStore, loadItems } from '../scripts/store'
+import { schema } from 'data_resources/scripts/schema'
 
 const TYPES_MAP = {
   queries: 'query',
   dashboards: 'dashboard',
-  alerts: 'alert'
+  alerts: 'alert',
+  tables: 'table'
 }
 
 export default {
@@ -145,7 +142,7 @@ export default {
       isLoading: false,
       searchQuery: '',
       selectedTags: [],
-      selectedType: this.$route.params.type || 'all',
+      selectedType: this.$route.name || 'all_resources',
       pageParams: {
         current: 1,
         pageSize: 20,
@@ -159,31 +156,50 @@ export default {
 
       return [
         {
-          value: 'all',
+          value: 'all_resources',
           label: 'All',
-          to: { name: 'reports', query }
+          to: { name: 'all_resources', query }
+        },
+        {
+          value: 'tables',
+          label: 'Tables',
+          to: { name: 'tables', query }
         },
         {
           value: 'queries',
           label: 'Queries',
-          to: { name: 'reports', params: { type: 'queries' }, query }
+          to: { name: 'queries', query }
         },
         {
           value: 'dashboards',
           label: 'Dashboards',
-          to: { name: 'reports', params: { type: 'dashboards' }, query }
+          to: { name: 'dashboards', query }
+        },
+        {
+          value: 'forms',
+          label: 'Forms',
+          to: { name: 'forms', query }
         },
         {
           value: 'alerts',
           label: 'Alerts',
-          to: { name: 'reports', params: { type: 'alerts' }, query }
+          to: { name: 'alerts', query }
         }
       ]
     },
     items () {
-      return itemsStore.filter((item) => {
-        return this.selectedType === 'all' || item.type === TYPES_MAP[this.selectedType]
-      })
+      if (this.selectedType === 'all_resources') {
+        return [...itemsStore, ...this.tableItems]
+      } else if (this.selectedType === 'tables') {
+        return this.tableItems
+      } else {
+        return itemsStore.filter((item) => {
+          return item.type === TYPES_MAP[this.selectedType]
+        })
+      }
+    },
+    tableItems () {
+      return schema.filter((model) => model.visible)
     },
     searchPlaceholder () {
       return 'Search'
@@ -192,7 +208,7 @@ export default {
       return this.items.filter((item) => {
         return (
           !this.selectedTags.length ||
-          this.selectedTags.every((tag) => item.tags.includes(tag))
+          this.selectedTags.every((tag) => item.tags?.includes(tag))
         ) && (
           !this.searchQuery ||
           (item.name || item.title).toLowerCase().includes(this.searchQuery.toLowerCase())
@@ -206,7 +222,7 @@ export default {
     },
     tags () {
       return Object.values(this.items.reduce((acc, item) => {
-        item.tags.forEach((tag) => {
+        (item.tags || []).forEach((tag) => {
           acc[tag] ||= { name: tag, count: 0 }
 
           if (this.filteredItems.includes(item)) {
@@ -224,7 +240,7 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      this.selectedType = to.params.type || 'all'
+      this.selectedType = to.name || 'all_resources'
 
       if (to.query?.tags) {
         this.selectedTags = to.query.tags.split(',')

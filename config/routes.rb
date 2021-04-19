@@ -8,18 +8,17 @@ Motor::Admin.routes.draw do
       resources :queries, only: %i[index show create update destroy]
       resources :tags, only: %i[index]
       resources :configs, only: %i[index create]
-      resources :resource_configs, only: %i[index create], controller: 'resources'
+      resources :resources, only: %i[index create]
       resources :dashboards, only: %i[index show create update destroy]
       resources :alerts, only: %i[index show create update destroy]
       resource :schema, only: %i[show update]
-    end
-
-    resources :resources, path: '/data/:resource',
-                          only: %i[index show update create destroy],
-                          controller: 'data' do
-      resources :association, path: '/:association',
-                              only: %i[index create],
-                              controller: 'data'
+      resources :resources, path: '/data/:resource',
+                            only: %i[index show update create destroy],
+                            controller: 'data' do
+        resources :association, path: '/:association',
+                                only: %i[index create],
+                                controller: 'data'
+      end
     end
 
     resources :assets, param: 'filename',
@@ -28,13 +27,14 @@ Motor::Admin.routes.draw do
                        constraints: { filename: /.+/ }
 
     get '/', to: 'ui#show'
-    get '/resources/(*path)', to: 'ui#show'
+    get '/data/(*path)', to: 'ui#show'
 
     scope as: 'ui' do
       with_options controller: 'ui' do
+        resources :browse, only: %i[index]
         resources :queries, only: %i[index show]
         resources :dashboards, only: %i[index show]
-        resources :reports, only: %i[index show]
+        resources :tables, only: %i[index]
         resources :alerts, only: %i[index show]
       end
     end

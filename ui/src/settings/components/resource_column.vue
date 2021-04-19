@@ -51,7 +51,7 @@
 <script>
 import api from 'api'
 import ColumnForm from './resource_column_form'
-import { modelNameMap } from 'utils/scripts/schema'
+import { modelNameMap } from 'data_resources/scripts/schema'
 
 export default {
   name: 'ResourceColumn',
@@ -97,7 +97,7 @@ export default {
 
           this.resource.columns.splice(index, 1)
 
-          api.post('api/resource_configs', {
+          api.post('resources', {
             data: {
               name: this.resourceName,
               preferences: {
@@ -117,7 +117,7 @@ export default {
       })
     },
     persistChanges () {
-      return api.post('api/resource_configs', {
+      return api.post('resources', {
         data: {
           name: this.resourceName,
           preferences: {

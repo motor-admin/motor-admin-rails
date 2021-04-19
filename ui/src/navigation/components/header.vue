@@ -34,19 +34,11 @@
       </VButton>
       <VButton
         type="primary"
-        :to="{ name: 'resources_home' }"
+        :to="{ name: 'all_resources' }"
         class="ms-2"
         size="large"
       >
         Resources
-      </VButton>
-      <VButton
-        type="primary"
-        :to="{ name: 'reports' }"
-        class="ms-2"
-        size="large"
-      >
-        Reports
       </VButton>
     </div>
     <div class="col-6 d-flex justify-content-end align-items-center">
@@ -82,6 +74,9 @@
             <DropdownItem @click="$router.push({ name: 'new_dashboard' })">
               Add Dashboard
             </DropdownItem>
+            <DropdownItem @click="$router.push({})">
+              Add Form
+            </DropdownItem>
             <DropdownItem @click="$router.push({ name: 'new_alert' })">
               Add Alert
             </DropdownItem>
@@ -106,7 +101,7 @@
 <script>
 import Search from './search'
 import ResourcesSettings from 'settings/components/resources_list'
-import { modelSlugMap } from 'utils/scripts/schema'
+import { modelSlugMap } from 'data_resources/scripts/schema'
 
 export default {
   name: 'AppHeader',

@@ -94,7 +94,7 @@
 <script>
 import DataTable from 'data_tables/components/table'
 import Chart from './chart'
-import { modelNameMap } from 'utils/scripts/schema'
+import { modelNameMap } from 'data_resources/scripts/schema'
 import csv from 'view3/src/utils/csv'
 import { underscore } from 'utils/scripts/string'
 import { formatDate } from 'utils/scripts/date_format'

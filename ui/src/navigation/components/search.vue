@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import { schema } from 'utils/scripts/schema'
-import { itemsStore, loadItems } from 'reports/scripts/store'
+import { schema } from 'data_resources/scripts/schema'
+import { itemsStore, loadItems } from 'all_resources/scripts/store'
 import { titleize } from 'utils/scripts/string'
 import throttle from 'view3/src/utils/throttle'
 
@@ -72,7 +72,7 @@ export default {
     },
     iconClasses () {
       return {
-        resource: 'md-share-alt',
+        resource: 'md-grid',
         query: 'md-list',
         dashboard: 'md-analytics',
         resource_search: 'md-search',

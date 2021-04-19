@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { modelNameMap } from 'utils/scripts/schema'
+import { modelNameMap } from '../scripts/schema'
 
 import ResourcesMenu from 'navigation/components/resources'
 import ResourceTable from './table'

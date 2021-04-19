@@ -38,7 +38,7 @@
 
 <script>
 import FormInput from 'data_forms/components/input'
-import { modelNameMap } from 'utils/scripts/schema'
+import { modelNameMap } from '../scripts/schema'
 
 const ACTIONS = ['eq', 'neq', 'ilike', 'like', 'gt', 'gte', 'lt', 'lte']
 

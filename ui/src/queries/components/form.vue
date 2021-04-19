@@ -90,9 +90,9 @@ export default {
       }
 
       if (this.action === 'edit') {
-        return api.put(`api/queries/${this.dataQuery.id}`, params)
+        return api.put(`queries/${this.dataQuery.id}`, params)
       } else {
-        return api.post('api/queries', params)
+        return api.post('queries', params)
       }
     }
   },

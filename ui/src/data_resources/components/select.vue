@@ -12,7 +12,7 @@
 
 <script>
 import api from 'api'
-import { modelNameMap } from 'utils/scripts/schema'
+import { modelNameMap } from '../scripts/schema'
 import throttle from 'view3/src/utils/throttle'
 
 export default {

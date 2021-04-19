@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import ResourceSelect from 'resources/components/select'
+import ResourceSelect from 'data_resources/components/select'
 import { titleize } from 'utils/scripts/string'
 
 const SINGLE_LINE_INPUT_NAMES = [

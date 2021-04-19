@@ -4,7 +4,7 @@ import qs from 'qs'
 import { basePath } from 'utils/scripts/configs'
 
 const api = axios.create({
-  baseURL: basePath,
+  baseURL: basePath + 'api',
   paramsSerializer: (params) => {
     return qs.stringify(params, { arrayFormat: 'brackets' })
   }

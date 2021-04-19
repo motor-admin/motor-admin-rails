@@ -36,7 +36,7 @@
       <template v-else>
         <div class="row mx-2">
           <h1 class="mt-3 mb-2">
-            Resources
+            Hello Admin 👋
           </h1>
           <div
             v-for="resource in visibleResources"
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { schema, modelSlugMap } from 'utils/scripts/schema'
+import { schema, modelSlugMap } from '../scripts/schema'
 import Resource from '../components/resource'
 import ResourceTable from '../components/table'
 import Breadcrumbs from 'navigation/components/breadcrumbs'

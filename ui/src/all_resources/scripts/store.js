@@ -23,7 +23,7 @@ function sortItems (items) {
 let queriesRequestLock = null
 
 function queriesRequest () {
-  queriesRequestLock ||= api.get('api/queries', {
+  queriesRequestLock ||= api.get('queries', {
     params: {
       include: 'tags',
       fields: {
@@ -41,7 +41,7 @@ function queriesRequest () {
 let dashboardsRequestLock = null
 
 function dashboardsRequest () {
-  dashboardsRequestLock ||= api.get('api/dashboards', {
+  dashboardsRequestLock ||= api.get('dashboards', {
     params: {
       include: 'tags',
       fields: {
@@ -59,7 +59,7 @@ function dashboardsRequest () {
 let alertsRequestLock = null
 
 function alertsRequest () {
-  alertsRequestLock ||= api.get('api/alerts', {
+  alertsRequestLock ||= api.get('alerts', {
     params: {
       include: 'tags',
       fields: {

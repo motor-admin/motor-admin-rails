@@ -82,9 +82,9 @@ export default {
       }
 
       if (this.board.id) {
-        return api.put(`api/dashboards/${this.dataBoard.id}`, params)
+        return api.put(`dashboards/${this.dataBoard.id}`, params)
       } else {
-        return api.post('api/dashboards', params)
+        return api.post('dashboards', params)
       }
     }
   },

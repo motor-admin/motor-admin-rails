@@ -79,7 +79,7 @@
 
 <script>
 import api from 'api'
-import { modelNameMap } from 'utils/scripts/schema'
+import { modelNameMap } from '../scripts/schema'
 
 import DataCell from 'data_cells/components/data_cell'
 import Reference from 'data_cells/components/reference'

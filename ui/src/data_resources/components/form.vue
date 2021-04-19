@@ -46,7 +46,7 @@
 
 <script>
 import api from 'api'
-import { modelNameMap } from 'utils/scripts/schema'
+import { modelNameMap } from '../scripts/schema'
 
 import Validators from 'utils/scripts/validators'
 import FormInput from 'data_forms/components/input'

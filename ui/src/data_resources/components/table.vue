@@ -86,7 +86,7 @@
 <script>
 import api from 'api'
 import { reactive } from 'vue'
-import { modelNameMap } from 'utils/scripts/schema'
+import { modelNameMap } from '../scripts/schema'
 import DataTable from 'data_tables/components/table'
 import ResourceSearch from './search'
 import ResourceActions from './actions'

@@ -113,7 +113,7 @@ export default {
       this.resource.columns.push(column)
       this.newColumn = null
 
-      return api.post('api/resource_configs', {
+      return api.post('resources', {
         data: {
           name: this.resource.name,
           preferences: {
@@ -128,7 +128,7 @@ export default {
       })
     },
     onColumnMove () {
-      return api.post('api/configs', {
+      return api.post('configs', {
         data: {
           key: `resources.${this.resource.name}.columns.order`,
           value: this.resource.columns.map((column) => column.name)
@@ -139,7 +139,7 @@ export default {
       })
     },
     onAssociationMove () {
-      return api.post('api/configs', {
+      return api.post('configs', {
         data: {
           key: `resources.${this.resource.name}.associations.order`,
           value: this.resource.associations.map((assoc) => assoc.name)

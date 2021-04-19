@@ -40,7 +40,7 @@
 
 <script>
 import api from 'api'
-import { modelNameMap } from 'utils/scripts/schema'
+import { modelNameMap } from '../scripts/schema'
 import ResourceForm from './form'
 import { titleize } from 'utils/scripts/string'
 

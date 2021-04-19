@@ -227,7 +227,7 @@ export default {
     loadQuery () {
       this.isLoading = true
 
-      api.get(`api/queries/${this.$route.params.id}`, {
+      api.get(`queries/${this.$route.params.id}`, {
         params: {
           include: 'tags'
         }
@@ -250,7 +250,7 @@ export default {
       if (this.locationHashParams?.sql_body) {
         this.runQuery()
       } else {
-        api.get(`api/run_queries/${this.$route.params.id}`, {
+        api.get(`run_queries/${this.$route.params.id}`, {
         }).then((result) => {
           this.errors = []
           this.data = result.data.data
@@ -308,7 +308,7 @@ export default {
     runQuery () {
       this.isLoading = true
 
-      api.post('api/run_queries', {
+      api.post('run_queries', {
         data: this.dataQuery
       }).then((result) => {
         this.errors = []

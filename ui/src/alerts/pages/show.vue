@@ -148,7 +148,7 @@ export default {
     sendNow () {
       this.isSendingLoading = true
 
-      api.post('api/send_alerts', {
+      api.post('send_alerts', {
         data: {
           query_id: this.alert.query_id,
           to_emails: this.alert.to_emails.join(','),
@@ -163,7 +163,7 @@ export default {
     toggleEnabled () {
       this.isEnabledToggleLoading = true
 
-      api.put(`api/alerts/${this.alert.id}`, {
+      api.put(`alerts/${this.alert.id}`, {
         data: {
           is_enabled: !this.alert.is_enabled
         }
@@ -182,9 +182,9 @@ export default {
       }
 
       if (alert.id) {
-        return api.put(`api/alerts/${alert.id}`, { data, include: 'tags' })
+        return api.put(`alerts/${alert.id}`, { data, include: 'tags' })
       } else {
-        return api.post('api/alerts', { data, include: 'tags' })
+        return api.post('alerts', { data, include: 'tags' })
       }
     },
     onMounted () {
@@ -229,7 +229,7 @@ export default {
     loadAlert () {
       this.isLoadingAlert = true
 
-      return api.get(`api/alerts/${this.$route.params.id}`, {
+      return api.get(`alerts/${this.$route.params.id}`, {
         params: {
           include: 'tags'
         }
@@ -244,7 +244,7 @@ export default {
     loadQuery () {
       this.isLoadingQuery = true
 
-      return api.get(`api/run_queries/${this.alert.query_id}`, {
+      return api.get(`run_queries/${this.alert.query_id}`, {
       }).then((result) => {
         this.data = result.data.data
         this.columns = result.data.meta.columns

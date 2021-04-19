@@ -2,26 +2,25 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { basePath } from 'utils/scripts/configs'
 import qs from 'qs'
 
-import ResourcesBase from 'resources/pages/base'
+import ResourcesBase from 'data_resources/pages/base'
 import QueriesShow from 'queries/pages/show'
-import ReportsIndex from 'reports/pages/index'
+import AllResourcesIndex from 'all_resources/pages/index'
 import DashboardsShow from 'dashboards/pages/show'
-import NavigatioHome from 'navigation/pages/home'
 import AlertsShow from 'alerts/pages/show'
 
 const routes = [
   {
     path: '/',
-    component: NavigatioHome,
+    component: ResourcesBase,
     name: 'home'
   },
   {
-    path: '/resources',
+    path: '/data',
     component: ResourcesBase,
-    name: 'resources_home'
+    name: 'data_home'
   },
   {
-    path: '/resources/:fragments+',
+    path: '/data/:fragments+',
     component: ResourcesBase,
     name: 'resources'
   },
@@ -56,20 +55,41 @@ const routes = [
     name: 'alert'
   },
   {
-    path: '/reports/:type?',
-    component: ReportsIndex,
-    name: 'reports'
+    path: '/browse',
+    component: AllResourcesIndex,
+    name: 'all_resources'
+  },
+  {
+    path: '/dashboards',
+    component: AllResourcesIndex,
+    name: 'dashboards'
+  },
+  {
+    path: '/alerts',
+    component: AllResourcesIndex,
+    name: 'alerts'
+  },
+  {
+    path: '/queries',
+    component: AllResourcesIndex,
+    name: 'queries'
+  },
+  {
+    path: '/tables',
+    component: AllResourcesIndex,
+    name: 'tables'
+  },
+  {
+    path: '/forms',
+    component: AllResourcesIndex,
+    name: 'forms'
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(basePath),
-  parseQuery: (string) => {
-    return qs.parse(string)
-  },
-  stringifyQuery: (query) => {
-    return qs.stringify(query)
-  },
+  parseQuery: qs.parse,
+  stringifyQuery: qs.stringify,
   routes
 })
 

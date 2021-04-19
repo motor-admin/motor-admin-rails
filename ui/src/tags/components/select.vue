@@ -60,7 +60,7 @@ export default {
     loadTags () {
       this.isLoading = true
 
-      api.get('api/tags').then((result) => {
+      api.get('tags').then((result) => {
         this.tags = result.data.data
       }).catch((error) => {
         console.error(error)

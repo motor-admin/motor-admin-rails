@@ -113,7 +113,7 @@ export default {
     loadData () {
       this.isLoading = true
 
-      return api.get(`api/run_queries/${this.board.query_id}`).then((result) => {
+      return api.get(`run_queries/${this.board.query_id}`).then((result) => {
         this.errors = []
         this.data = result.data.data
         this.preferences = result.data.preferences

@@ -24,7 +24,7 @@
 import ResourceItem from './resource_list_item'
 import ResourceSettings from './resource'
 import { VueDraggableNext } from 'vue-draggable-next'
-import { schema } from 'utils/scripts/schema'
+import { schema } from 'data_resources/scripts/schema'
 import api from 'api'
 
 export default {
@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     updateOrder () {
-      return api.post('api/configs', {
+      return api.post('configs', {
         data: {
           key: 'resources.order',
           value: this.schema.map((e) => e.name)

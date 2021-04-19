@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { modelNameMap } from 'utils/scripts/schema'
+import { modelNameMap } from 'data_resources/scripts/schema'
 import { truncate, underscore } from 'utils/scripts/string'
 
 export default {
@@ -56,7 +56,7 @@ export default {
       return {
         trigger: 'mouseenter',
         render: (h) => {
-          return h(require('resources/components/info').default, {
+          return h(require('data_resources/components/info').default, {
             resourceName: this.model.name,
             resourceId: this.resourceId,
             oneColumn: true,
