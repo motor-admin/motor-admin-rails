@@ -4,7 +4,9 @@ import qs from 'qs'
 
 import ResourcesBase from 'data_resources/pages/base'
 import QueriesShow from 'queries/pages/show'
-import AllResourcesIndex from 'all_resources/pages/index'
+import ReportsIndex from 'reports/pages/index'
+import FormsIndex from 'custom_forms/pages/index'
+import FormsShow from 'custom_forms/pages/show'
 import DashboardsShow from 'dashboards/pages/show'
 import AlertsShow from 'alerts/pages/show'
 
@@ -55,34 +57,24 @@ const routes = [
     name: 'alert'
   },
   {
-    path: '/browse',
-    component: AllResourcesIndex,
-    name: 'all_resources'
+    path: '/forms/new',
+    component: FormsShow,
+    name: 'new_form'
   },
   {
-    path: '/dashboards',
-    component: AllResourcesIndex,
-    name: 'dashboards'
-  },
-  {
-    path: '/alerts',
-    component: AllResourcesIndex,
-    name: 'alerts'
-  },
-  {
-    path: '/queries',
-    component: AllResourcesIndex,
-    name: 'queries'
-  },
-  {
-    path: '/tables',
-    component: AllResourcesIndex,
-    name: 'tables'
+    path: '/forms/:id',
+    component: FormsShow,
+    name: 'form'
   },
   {
     path: '/forms',
-    component: AllResourcesIndex,
+    component: FormsIndex,
     name: 'forms'
+  },
+  {
+    path: '/reports/:type?',
+    component: ReportsIndex,
+    name: 'reports'
   }
 ]
 

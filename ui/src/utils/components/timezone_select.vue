@@ -1,6 +1,6 @@
 <template>
   <MSelect
-    v-model="modelValue"
+    :model-value="modelValue"
     filterable
     :size="size"
     :placeholder="'Timezone'"

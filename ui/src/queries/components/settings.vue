@@ -4,6 +4,21 @@
       style="height: calc(100vh - 192px); overflow-y: scroll"
       class="pb-2"
     >
+      <template v-if="preferences.variables?.length">
+        <p class="fs-4 fw-bold my-1">
+          Default values
+        </p>
+        <div
+          v-for="variable in preferences.variables"
+          :key="variable.name"
+          class="mb-2"
+        >
+          <label>{{ variable.display_name }}</label>
+          <VInput
+            v-model="variable.default_value"
+          />
+        </div>
+      </template>
       <p class="fs-4 fw-bold my-1">
         Visualize
       </p>
@@ -107,6 +122,7 @@ export default {
     }
   },
   created () {
+    console.log(this.preferences)
     this.preferences.visualization ||= 'table'
     this.preferences.format ||= { style: 'decimal', options: {} }
   },

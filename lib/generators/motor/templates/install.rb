@@ -35,6 +35,25 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
         where: 'deleted_at IS NULL'
     end
 
+    create_table :motor_forms, force: true do |t|
+      t.column :name, :string, null: false
+      t.column :description, :string
+      t.column :api_path, :string, null: false
+      t.column :http_method, :string, null: false
+      t.column :preferences, :string, null: false, default: '{}'
+      t.column :author_id, :integer
+      t.column :author_type, :string
+      t.column :deleted_at, :datetime
+
+      t.timestamps
+
+      t.index :updated_at
+      t.index 'lower(name)',
+        name: 'motor_forms_lower_name_unique_index',
+        unique: true,
+        where: 'deleted_at IS NULL'
+    end
+
     create_table :motor_resources, force: true do |t|
       t.column :name, :string, null: false, index: { unique: true }
       t.column :preferences, :string, null: false, default: '{}'

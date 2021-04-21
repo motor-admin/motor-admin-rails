@@ -7,7 +7,7 @@
       <h1
         class="my-3"
       >
-        {{ board.title || (isExisting ? '' : 'New dashboard') }}
+        {{ dashboard.title || (isExisting ? '' : 'New dashboard') }}
       </h1>
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
@@ -45,9 +45,20 @@
       :class="isEditorOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
       style="height: 100%; overflow: scroll"
     >
+      <div
+        v-if="variables.length"
+        class="pb-2 px-2"
+      >
+        <VariablesForm
+          v-model:data="variablesData"
+          :variables="variables"
+          @submit="refresh"
+        />
+      </div>
       <DashboardLayout
         ref="layout"
-        :layout="board.preferences.layout"
+        :variables="variablesData"
+        :dashboard="dashboard"
       />
     </div>
     <div
@@ -56,7 +67,9 @@
       style="height: 100%; overflow: scroll"
     >
       <Editor
-        :layout="board.preferences.layout"
+        :dashboard="dashboard"
+        @remove-query="removeQuery"
+        @add-query="addQuery"
       />
     </div>
   </div>
@@ -66,42 +79,55 @@
 import Editor from '../components/editor'
 import DashboardLayout from '../components/layout'
 import DashboardForm from '../components/form'
+import VariablesForm from 'queries/components/variables_form'
 import api from 'api'
 
 export default {
   name: 'DashboardsNew',
   components: {
     Editor,
-    DashboardLayout
+    DashboardLayout,
+    VariablesForm
   },
   data () {
     return {
       isLoading: false,
       isEditorOpened: false,
-      board: {
+      variablesData: {},
+      dashboard: {
         tags: [],
         preferences: {
           layout: []
-        }
+        },
+        queries: []
       }
     }
   },
   computed: {
     isExisting () {
       return this.$route.params.id
+    },
+    variables () {
+      return Object.values(this.dashboard.queries.reduce((acc, query) => {
+        query.preferences.variables?.forEach((variable) => {
+          acc[variable.name] ||= variable
+        })
+
+        return acc
+      }, {}))
     }
   },
   watch: {
     '$route' (to, from) {
       if (to.name === 'dashboard' || to.name === 'new_dashboard') {
-        const isChanged = to.params.id !== this.board.id?.toString()
+        const isChanged = to.params.id !== this.dashboard.id?.toString()
 
         if (isChanged) {
           if (to.params.id) {
             this.loadDashboard()
             this.isEditorOpened = false
           } else {
-            this.board = { tags: [], preferences: { layout: [] } }
+            this.dashboard = { tags: [], preferences: { layout: [] } }
             this.isEditorOpened = true
           }
         }
@@ -119,6 +145,29 @@ export default {
     toggleEditor () {
       this.isEditorOpened = !this.isEditorOpened
     },
+    removeQuery (queryId) {
+      const index = this.dashboard.queries.findIndex((query) => query.id === queryId)
+
+      this.dashboard.queries.splice(index, 1)
+    },
+    assignDefaultVariables () {
+      this.variables.forEach((variable) => {
+        this.variablesData[variable.name] ||= variable.default_value
+      })
+    },
+    addQuery (queryId) {
+      api.get(`queries/${queryId}`, {
+        params: {
+          fields: {
+            query: 'id,name,preferences'
+          }
+        }
+      }).then((result) => {
+        this.dashboard.queries.push(result.data.data)
+      }).catch((error) => {
+        console.error(error)
+      })
+    },
     refresh () {
       this.isLoading = true
 
@@ -129,10 +178,14 @@ export default {
     loadDashboard () {
       return api.get(`dashboards/${this.$route.params.id}`, {
         params: {
-          include: 'tags'
+          include: 'tags,queries',
+          fields: {
+            queries: 'id,name,preferences'
+          }
         }
       }).then((result) => {
-        this.board = result.data.data
+        this.dashboard = result.data.data
+        this.assignDefaultVariables()
       }).catch((error) => {
         console.error(error)
       })
@@ -140,19 +193,19 @@ export default {
     save () {
       this.$Modal.open(DashboardForm, {
         board: {
-          id: this.board.id,
-          title: this.board.title,
-          description: this.board.description,
-          tags: this.board.tags.map((tag) => tag.name),
-          preferences: this.board.preferences
+          id: this.dashboard.id,
+          title: this.dashboard.title,
+          description: this.dashboard.description,
+          tags: this.dashboard.tags.map((tag) => tag.name),
+          preferences: this.dashboard.preferences
         },
-        onSuccess: (result) => {
-          this.board = result
+        onSuccess: (dashboard) => {
+          Object.assign(this.dashboard, dashboard)
 
           this.$Modal.remove()
           this.$Message.info('Dashboard has been saved!')
 
-          this.$router.push({ name: 'dashboard', params: { id: result.id } })
+          this.$router.push({ name: 'dashboard', params: { id: dashboard.id } })
 
           this.isEditorOpened = false
         }

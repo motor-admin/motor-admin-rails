@@ -48,7 +48,7 @@
     </div>
   </div>
   <div
-    :style="{ height: 'calc(100vh - 134px)' }"
+    :style="{ height: isVariablesForm ? 'calc(100vh - 222px)' : 'calc(100vh - 134px)' }"
     class="row border-top m-0"
   >
     <div
@@ -67,6 +67,17 @@
       class="p-0"
       :class="isSettingsOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
     >
+      <div
+        v-if="isVariablesForm"
+        class="pb-3 pt-1 px-3 border-bottom"
+      >
+        <VariablesForm
+          v-model:data="variablesData"
+          :variables="dataQuery.preferences.variables"
+          @submit="runQuery"
+        />
+      </div>
+
       <Split
         v-model="split"
         mode="vertical"
@@ -80,7 +91,7 @@
         </template>
         <template #bottom>
           <Spin
-            v-if="isLoading"
+            v-if="isLoading || isLoadingQuery"
             fix
           />
           <QueryResult
@@ -105,6 +116,8 @@ import QueryResult from '../components/result'
 import QueryForm from '../components/form'
 import Settings from '../components/settings'
 import throttle from 'view3/src/utils/throttle'
+import VariablesForm from '../components/variables_form'
+import { titleize } from 'utils/scripts/string'
 
 import api from 'api'
 
@@ -120,17 +133,20 @@ export default {
   components: {
     SqlEditor,
     QueryResult,
-    Settings
+    Settings,
+    VariablesForm
   },
   data () {
     return {
       split: 0,
       isLoading: false,
+      isLoadingQuery: false,
       query: { ...defaultQueryParams },
       dataQuery: {
         sql_body: '',
         preferences: {}
       },
+      variablesData: {},
       isSettingsOpened: false,
       errors: [],
       columns: [],
@@ -158,6 +174,9 @@ export default {
     },
     canSaveNew () {
       return this.query.id && this.isEdited
+    },
+    isVariablesForm () {
+      return !!this.dataQuery.preferences.variables?.length
     }
   },
   watch: {
@@ -181,6 +200,9 @@ export default {
         }
       }
     },
+    'dataQuery.sql_body': throttle(async function (value) {
+      this.dataQuery.preferences.variables = this.extractVariablesFromSql(value)
+    }, 500),
     dataQuery: {
       deep: true,
       handler: throttle(async function (value) {
@@ -194,12 +216,19 @@ export default {
       }, 0.5 * 1000)
     }
   },
-  mounted () {
+  created () {
     this.dataQuery = JSON.parse(JSON.stringify(this.locationHashParams)) || { sql_body: '', preferences: {} }
 
     this.onMounted()
   },
   methods: {
+    assignVariablesData () {
+      this.variablesData = (this.dataQuery.preferences.variables || []).reduce((acc, variable) => {
+        acc[variable.name] = variable.default_value
+
+        return acc
+      }, {})
+    },
     toggleSettings () {
       this.isSettingsOpened = !this.isSettingsOpened
     },
@@ -225,7 +254,7 @@ export default {
       this.split = 0.35
     },
     loadQuery () {
-      this.isLoading = true
+      this.isLoadingQuery = true
 
       api.get(`queries/${this.$route.params.id}`, {
         params: {
@@ -243,24 +272,45 @@ export default {
             preferences: this.query.preferences
           })))
         }
+
+        this.assignVariablesData()
       }).catch((error) => {
         console.error(error)
+      }).finally(() => {
+        this.isLoadingQuery = false
       })
 
       if (this.locationHashParams?.sql_body) {
         this.runQuery()
       } else {
+        this.isLoading = true
+
         api.get(`run_queries/${this.$route.params.id}`, {
         }).then((result) => {
           this.errors = []
           this.data = result.data.data
-          this.dataQuery.preferences = result.data.preferences
           this.columns = result.data.meta.columns
         }).catch((error) => {
           this.errors = error.response.data?.errors
         }).finally(() => {
           this.isLoading = false
         })
+      }
+    },
+    extractVariablesFromSql (sql) {
+      if (sql) {
+        const mached = sql.match(/{{\w+}}/g)
+        const variables = mached?.map((matched) => matched.replace(/[{}]/g, '')) || []
+
+        return variables.map((variableName) => {
+          const defaultValue = this.dataQuery.preferences.variables?.find((variable) => {
+            return variable.name === variableName
+          })?.default_value
+
+          return { name: variableName, display_name: titleize(variableName), default_value: defaultValue || '' }
+        })
+      } else {
+        return []
       }
     },
     save () {
@@ -309,7 +359,8 @@ export default {
       this.isLoading = true
 
       api.post('run_queries', {
-        data: this.dataQuery
+        data: this.dataQuery,
+        variables: this.variablesData
       }).then((result) => {
         this.errors = []
         this.data = result.data.data

@@ -14,7 +14,9 @@ module Motor
 
       module_function
 
-      def call(query, limit: DEFAULT_LIMIT, variables_hash: {})
+      def call(query, variables_hash:, limit: DEFAULT_LIMIT)
+        variables_hash ||= {}
+
         result = execute_query(query, limit, variables_hash)
 
         QueryResult.new(data: result.rows, columns: build_columns_hash(result))
@@ -46,11 +48,11 @@ module Motor
       end
 
       def prepare_sql_statement(query, limit, variables_hash)
-        variables = query.preferences.fetch(:variables, []).pluck(:name)
+        variables = query.preferences.fetch(:variables, []).pluck(:name, :default_value)
 
         sql =
           query.sql_body.gsub(INTERPOLATION_REGEXP) do
-            index = variables.index(Regexp.last_match[1])
+            index = variables.index { |name, _| name == (Regexp.last_match[1]) } + 1
 
             "$#{index}"
           end
@@ -58,7 +60,7 @@ module Motor
         [
           format(WITH_STATEMENT_TEMPLATE, sql_body: sql.strip.gsub(/;\z/, ''), limit: limit),
           'SQL',
-          variables_hash.with_indifferent_access.values_at(*variables)
+          variables.map { |variable_name, default_value| variables_hash[variable_name] || default_value }
         ]
       end
     end

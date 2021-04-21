@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { queriesStore, loadQueries } from 'all_resources/scripts/store'
+import { queriesStore, loadQueries } from 'reports/scripts/store'
 
 export default {
   name: 'ResourceSelect',

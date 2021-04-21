@@ -54,6 +54,8 @@ module Motor
           alert.save!
         end
 
+        alert.tags.reload
+
         alert
       rescue ActiveRecord::RecordNotUnique
         retry

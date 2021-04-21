@@ -38,6 +38,8 @@ module Motor
           query.save!
         end
 
+        query.tags.reload
+
         query
       rescue ActiveRecord::RecordNotUnique
         retry

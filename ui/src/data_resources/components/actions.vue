@@ -48,9 +48,11 @@
 
 <script>
 import api from 'api'
+import axios from 'axios'
 import { modelNameMap } from '../scripts/schema'
 import ResourceForm from './form'
-import { titleize } from 'utils/scripts/string'
+import { titleize, interpolate } from 'utils/scripts/string'
+import CustomFormModal from 'custom_forms/components/form_modal'
 
 export default {
   name: 'ResourceActions',
@@ -108,6 +110,14 @@ export default {
       return api.delete(`data/${this.model.slug}/${resource[this.model.primary_key]}`)
     },
     applyAction (action) {
+      if (action.action_type === 'form' && this.resources.length > 1) {
+        return
+      }
+
+      if (action.action_type === 'form') {
+        return this.openForm(this.resource, action)
+      }
+
       this.$emit('start-action', action.name)
 
       const requests = this.resources.map((resource) => {
@@ -132,16 +142,28 @@ export default {
       return api.put(`data/${this.model.slug}/${resource[this.model.primary_key]}/${action.preferences.method_name}`)
     },
     apiRequest (resource, action) {
-      const path = this.interpolatePath(action.preferences.api_path, resource)
+      const path = interpolate(action.preferences.api_path, resource)
 
-      return api.post(path)
+      return axios.post(path)
     },
-    interpolatePath (path, params) {
-      return path.replace(/\{\w+?\}/g, (e) => {
-        return params[e.slice(1, e.length - 1)]
+    openForm (resource, action) {
+      this.$Drawer.open(CustomFormModal, {
+        data: {
+          [`${this.model.name}_${this.model.primary_key}`]: resource[this.model.primary_key]
+        },
+        formId: action.preferences.form_id,
+        onSuccess: (result) => {
+          this.$emit('finish-action', action.name)
+        },
+        onError: (result) => {
+        }
       })
     },
     edit () {
+      if (this.resources.length !== 1) {
+        return
+      }
+
       const resourceTitle = `${titleize(this.resourceName)} #${this.resource.id}`
 
       this.$Drawer.open(ResourceForm, {

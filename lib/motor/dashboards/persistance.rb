@@ -38,6 +38,8 @@ module Motor
           dashboard.save!
         end
 
+        dashboard.tags.reload
+
         dashboard
       rescue ActiveRecord::RecordNotUnique
         retry

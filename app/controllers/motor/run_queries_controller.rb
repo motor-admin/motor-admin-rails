@@ -22,13 +22,12 @@ module Motor
     private
 
     def query_result
-      Queries::RunQuery.call(@query)
+      Queries::RunQuery.call(@query, variables_hash: params[:variables])
     end
 
     def query_result_hash(query_result)
       {
         data: query_result.data,
-        preferences: @query.preferences,
         meta: {
           columns: query_result.columns
         }

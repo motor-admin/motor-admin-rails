@@ -34,11 +34,19 @@
       </VButton>
       <VButton
         type="primary"
-        :to="{ name: 'all_resources' }"
+        :to="{ name: 'reports' }"
         class="ms-2"
         size="large"
       >
-        Resources
+        Reports
+      </VButton>
+      <VButton
+        type="primary"
+        class="ms-2"
+        size="large"
+        :to="{ name: 'forms' }"
+      >
+        Forms
       </VButton>
     </div>
     <div class="col-6 d-flex justify-content-end align-items-center">
@@ -74,7 +82,7 @@
             <DropdownItem @click="$router.push({ name: 'new_dashboard' })">
               Add Dashboard
             </DropdownItem>
-            <DropdownItem @click="$router.push({})">
+            <DropdownItem @click="$router.push({ name: 'new_form'})">
               Add Form
             </DropdownItem>
             <DropdownItem @click="$router.push({ name: 'new_alert' })">

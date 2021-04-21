@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div
-      v-for="item in layout"
+      v-for="item in dashboard.preferences.layout"
       :key="item.query_id"
       :class="classForSizeMap[item.size]"
       class="p-0"
@@ -9,7 +9,8 @@
       <div class="m-1 ivu-card ivu-card-bordered">
         <Board
           :ref="pushBoardRef"
-          :board="item"
+          :variables="variables"
+          :query="findQuery(item.query_id)"
         />
       </div>
     </div>
@@ -25,9 +26,14 @@ export default {
     Board
   },
   props: {
-    layout: {
-      type: Array,
+    dashboard: {
+      type: Object,
       required: true
+    },
+    variables: {
+      type: Object,
+      required: false,
+      default: () => ({})
     }
   },
   data () {
@@ -50,6 +56,9 @@ export default {
     this.boards = []
   },
   methods: {
+    findQuery (queryId) {
+      return this.dashboard.queries.find((query) => query.id === queryId)
+    },
     pushBoardRef (el) {
       if (el) {
         this.boards.push(el)

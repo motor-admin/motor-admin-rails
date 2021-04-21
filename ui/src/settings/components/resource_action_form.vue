@@ -25,13 +25,13 @@
           @update:modelValue="dataAction.preferences = {}"
         />
       </FormItem>
-      <!-- <FormItem -->
-      <!--   v&#45;if="dataAction.action_type === 'form'" -->
-      <!--   label="Form" -->
-      <!--   prop="form_id" -->
-      <!-- > -->
-      <!--   <FormSelect v&#45;model="dataAction.preferences.form_id"  /> -->
-      <!-- </FormItem> -->
+      <FormItem
+        v-if="dataAction.action_type === 'form'"
+        label="Form"
+        prop="form_id"
+      >
+        <FormSelect v-model="dataAction.preferences.form_id" />
+      </FormItem>
       <FormItem
         v-if="dataAction.action_type === 'method'"
         label="Method"
@@ -81,11 +81,13 @@
 <script>
 import { underscore } from 'utils/scripts/string'
 import MethodSelect from './resource_method_select'
+import FormSelect from 'custom_forms/components/select'
 
 export default {
   name: 'ResourceActionForm',
   components: {
-    MethodSelect
+    MethodSelect,
+    FormSelect
   },
   props: {
     action: {

@@ -1,6 +1,6 @@
 <template>
   <ResourceSelect
-    v-if="column.reference"
+    v-if="column.reference && column.reference.name"
     :model-value="modelValue"
     :resource-name="column.reference.name"
     @update:modelValue="$emit('update:modelValue', $event)"
@@ -25,7 +25,7 @@
   />
   <DatePicker
     v-else-if="isDateTime || isDate"
-    :type="column.column_type"
+    :type="type"
     :model-value="dataValue"
     :style="{ width: '100%' }"
     @update:modelValue="updateDateTime"
@@ -87,6 +87,9 @@ export default {
     }
   },
   computed: {
+    type () {
+      return this.column.column_type || this.column.field_type
+    },
     isTagSelect () {
       return !!this.tagOptions
     },
@@ -94,19 +97,23 @@ export default {
       return this.column.validators.find((validator) => validator.includes?.length)?.includes
     },
     isBoolean () {
-      return this.column.column_type === 'boolean'
+      return this.type === 'boolean' || this.type === 'checkbox'
     },
     isDateTime () {
-      return this.column.column_type === 'datetime'
+      return this.type === 'datetime'
     },
     isDate () {
-      return this.column.column_type === 'date'
+      return this.type === 'date'
     },
     isNumber () {
-      return ['integer', 'bigint', 'int', 'float', 'demical', 'double'].includes(this.column.column_type)
+      return ['integer', 'bigint', 'int', 'float', 'demical', 'double', 'number'].includes(this.type)
     },
     isTextArea () {
-      if (this.column.column_type === 'json') {
+      if (this.column.field_type === 'input') {
+        return false
+      }
+
+      if (this.type === 'json' || this.type === 'textarea') {
         return true
       } else if (!this.column.name.match(SINGLE_LINE_INPUT_REGEXP)) {
         return true

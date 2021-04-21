@@ -7,9 +7,7 @@ function truncate (string, length) {
 }
 
 function underscore (string) {
-  return string.replace(/([a-z\d])([A-Z]+)/g, '$1_$2')
-    .replace(/[-\s]+/g, '_')
-    .toLowerCase()
+  return string.replace(/([a-z\d])([A-Z]+)/g, '$1_$2').replace(/[-\s]+/g, '_').toLowerCase()
 }
 
 function titleize (string) {
@@ -20,4 +18,10 @@ function titleize (string) {
   }
 }
 
-export { truncate, underscore, titleize }
+function interpolate (string, params) {
+  return string.replace(/\{\w+?\}/g, (e) => {
+    return params[e.slice(1, e.length - 1)]
+  })
+}
+
+export { truncate, underscore, titleize, interpolate }

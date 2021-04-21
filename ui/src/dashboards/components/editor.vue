@@ -31,7 +31,7 @@
                 />
               </div>
               <p class="fs-4 fw-bold">
-                {{ item.title }}
+                {{ findQuery(item.query_id).name }}
               </p>
             </div>
             <div class="d-flex align-items-center">
@@ -70,6 +70,7 @@
 
 <script>
 import QueriesList from 'queries/components/list'
+import { queriesStore } from 'reports/scripts/store'
 
 export default {
   name: 'DashboardEditor',
@@ -77,17 +78,21 @@ export default {
     QueriesList
   },
   props: {
-    layout: {
-      type: Array,
+    dashboard: {
+      type: Object,
       required: true
     }
   },
+  emits: ['add-query', 'remove-query'],
   data () {
     return {
       isQueriesListOpened: false
     }
   },
   computed: {
+    layout () {
+      return this.dashboard.preferences.layout
+    },
     sizeOptions () {
       return [
         { label: '25%', value: 25 },
@@ -102,6 +107,9 @@ export default {
     this.isQueriesListOpened = !this.layout.length
   },
   methods: {
+    findQuery (queryId) {
+      return queriesStore.find((query) => query.id === queryId)
+    },
     moveItem (item, step) {
       const index = this.layout.indexOf(item)
 
@@ -112,11 +120,15 @@ export default {
       const index = this.layout.indexOf(item)
 
       this.layout.splice(index, 1)
+
+      this.$emit('remove-query', item.id)
     },
     onSelectQuery (query) {
       this.isQueriesListOpened = false
 
-      this.layout.push({ query_id: query.id, size: 50, title: query.name })
+      this.layout.push({ query_id: query.id, size: 50 })
+
+      this.$emit('add-query', query.id)
     },
     toggleQueriesList () {
       this.isQueriesListOpened = !this.isQueriesListOpened

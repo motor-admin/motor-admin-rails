@@ -1,21 +1,13 @@
 <template>
   <RouterLink
-    class="item ivu-card ivu-card-bordered mb-2"
-    :to="toParams"
+    class="report-item ivu-card ivu-card-bordered mb-2"
+    :to="{ name: itemType, params: { id: item.id }}"
   >
     <div class="ivu-card-body">
       <p class="fs-4 fw-bold text-dark">
         <Icon :type="iconClass" />
-        {{ item.display_name || item.name || item.title }}
+        {{ item.name || item.title }}
         <VButton
-          v-if="itemType === 'table'"
-          class="text-dark float-right pb-2"
-          type="text"
-          icon="md-settings"
-          @click.prevent="openResourceSettings"
-        />
-        <VButton
-          v-else
           class="text-dark float-right pb-2"
           type="text"
           icon="md-trash"
@@ -30,7 +22,6 @@
 <script>
 import api from 'api'
 import { titleize } from 'utils/scripts/string'
-import ResourcesSettings from 'settings/components/resources_list'
 
 export default {
   name: 'ReportItem',
@@ -46,19 +37,12 @@ export default {
   },
   emits: ['remove'],
   computed: {
-    toParams () {
-      if (this.itemType === 'table') {
-        return { name: 'resources', params: { fragments: [this.item.slug] } }
-      } else {
-        return { name: this.itemType, params: { id: this.item.id } }
-      }
-    },
     iconClass () {
       return {
         query: 'md-list',
         dashboard: 'md-analytics',
         alert: 'md-notifications',
-        table: 'md-grid'
+        form: 'md-list-box'
       }[this.itemType]
     },
     apiPath () {
@@ -68,32 +52,14 @@ export default {
         return `dashboards/${this.item.id}`
       } else if (this.itemType === 'alert') {
         return `alerts/${this.item.id}`
+      } else if (this.itemType === 'form') {
+        return `forms/${this.item.id}`
       } else {
         return ''
       }
     }
   },
   methods: {
-    openResourceSettings () {
-      this.$Drawer.open(ResourcesSettings, {
-        selectedResource: this.item,
-        onChangeResource: this.onChangeResource
-      }, {
-        title: this.settingsDrawerTitle(this.item),
-        className: 'drawer-no-bottom-padding',
-        closable: true
-      })
-    },
-    onChangeResource (resource) {
-      this.$Drawer.component.setTitle(this.settingsDrawerTitle(resource))
-    },
-    settingsDrawerTitle (resource) {
-      if (resource) {
-        return `${resource.display_name} Settings`
-      } else {
-        return 'Settings'
-      }
-    },
     remove () {
       this.$Dialog.confirm({
         title: 'Selected item will be removed. Are you sure?',
@@ -114,14 +80,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.item {
+<style lang="scss">
+.report-item {
   button {
     display: none
   }
 }
 
-.item:hover {
+.report-item:hover {
   button {
     display: block
   }

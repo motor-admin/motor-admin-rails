@@ -23,7 +23,8 @@
 
 <script>
 import { schema } from 'data_resources/scripts/schema'
-import { itemsStore, loadItems } from 'all_resources/scripts/store'
+import { itemsStore, loadItems } from 'reports/scripts/store'
+import { formsStore, loadForms } from 'custom_forms/scripts/store'
 import { titleize } from 'utils/scripts/string'
 import throttle from 'view3/src/utils/throttle'
 
@@ -54,7 +55,7 @@ const recentlySelectedStore = {
 }
 
 const MAX_RESOURCE_ITEMS = 6
-const MAX_REPORT_ITEMS = 8
+const MAX_ASSET_ITEMS = 8
 
 export default {
   name: 'NavigationSearch',
@@ -80,7 +81,8 @@ export default {
         new_query: 'md-create',
         new_dashboard: 'md-create',
         new_alert: 'md-create',
-        alert: 'md-notifications'
+        alert: 'md-notifications',
+        form: 'md-list-box'
       }
     },
     normalizedValue () {
@@ -127,10 +129,15 @@ export default {
         return []
       }
     },
-    foundReports () {
-      return itemsStore.filter((e) => {
+    foundAssets () {
+      return this.allAssets.filter((e) => {
         return (e.name || e.title).toLowerCase().includes(this.normalizedValue)
-      }).slice(0, MAX_REPORT_ITEMS)
+      }).slice(0, MAX_ASSET_ITEMS)
+    },
+    allAssets () {
+      return [...itemsStore, ...formsStore.map((form) => {
+        return { ...form, type: 'form' }
+      })]
     },
     pages () {
       return [
@@ -153,7 +160,7 @@ export default {
   },
   methods: {
     buildItems () {
-      const reports = this.foundReports.map((e) => {
+      const reports = this.foundAssets.map((e) => {
         return { value: e.title || e.name, type: e.type, id: e.id }
       })
 
@@ -217,6 +224,8 @@ export default {
         this.$router.push({ name: 'dashboard', params: { id: option.id } })
       } else if (option.type === 'alert') {
         this.$router.push({ name: 'alert', params: { id: option.id } })
+      } else if (option.type === 'form') {
+        this.$router.push({ name: 'form', params: { id: option.id } })
       } else if (option.type === 'resource') {
         this.$router.push({ name: 'resources', params: { fragments: [option.slug] } })
       } else if (option.type === 'resource_id') {
@@ -240,6 +249,7 @@ export default {
 
       if (!this.isLoaded) {
         loadItems()
+        loadForms()
       }
 
       if (this.value.length > 1) {

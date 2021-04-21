@@ -35,7 +35,10 @@ module Motor
                                              include: { tags: { only: %i[id name] } }),
         alerts: Motor::Alert.all.active.preload(:tags)
                             .as_json(only: %i[id name is_enabled updated_at],
-                                     include: { tags: { only: %i[id name] } })
+                                     include: { tags: { only: %i[id name] } }),
+        forms: Motor::Form.all.active.preload(:tags)
+                          .as_json(only: %i[id name updated_at],
+                                   include: { tags: { only: %i[id name] } })
       }
     end
 
@@ -48,7 +51,8 @@ module Motor
             Motor::Resource.select('MAX(updated_at)').to_sql,
             Motor::Dashboard.select('MAX(updated_at)').to_sql,
             Motor::Alert.select('MAX(updated_at)').to_sql,
-            Motor::Query.select('MAX(updated_at)').to_sql
+            Motor::Query.select('MAX(updated_at)').to_sql,
+            Motor::Form.select('MAX(updated_at)').to_sql
           ].join(') UNION (')
         })"
       ).to_a.hash.to_s

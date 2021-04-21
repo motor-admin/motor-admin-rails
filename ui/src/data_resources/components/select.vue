@@ -6,7 +6,7 @@
     :options="options"
     :loading="isLoading"
     :value-key="model.primary_key"
-    :label-function="(option) => `#${option[model.primary_key]} ${option[model.display_column]}`"
+    :label-function="labelFunction"
   />
 </template>
 
@@ -53,6 +53,15 @@ export default {
     this.value = (this.modelValue || '').toString()
   },
   methods: {
+    labelFunction (option) {
+      const displayValue = option[this.model.display_column]
+
+      if (displayValue) {
+        return `#${option[this.model.primary_key]} ${displayValue}`
+      } else {
+        return `#${option[this.model.primary_key]}`
+      }
+    },
     loadResources: throttle(function (query) {
       this.isLoading = true
 
