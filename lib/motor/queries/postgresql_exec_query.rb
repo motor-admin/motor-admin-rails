@@ -16,7 +16,11 @@ module Motor
             types[fname] = conn.send(:get_oid_type, ftype, fmod, fname)
           end
 
-          conn.send(:build_result, columns: fields, rows: result.values, column_types: types)
+          if conn.respond_to?(:build_result, true)
+            conn.send(:build_result, columns: fields, rows: result.values, column_types: types)
+          else
+            ActiveRecord::Result.new(fields, result.values, types)
+          end
         end
       end
     end

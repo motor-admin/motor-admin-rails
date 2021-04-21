@@ -6,7 +6,7 @@
       :class="classForSizeMap[item.size]"
       class="p-0"
     >
-      <div class="m-1 ivu-card ivu-card-bordered">
+      <div class="mb-2 mx-1 ivu-card ivu-card-bordered">
         <Board
           :ref="pushBoardRef"
           :variables="variables"

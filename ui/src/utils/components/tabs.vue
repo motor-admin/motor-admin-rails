@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     onTabClick (tab) {
-      if (!tab.to) {
+      if (tab.value) {
         this.currentTab = tab.value
         this.$emit('update:modelValue', tab.value)
       }

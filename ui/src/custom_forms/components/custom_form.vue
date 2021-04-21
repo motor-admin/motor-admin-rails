@@ -137,7 +137,7 @@ export default {
       this.isLoading = true
 
       return axios[method](path, {
-        data: this.formData
+        ...this.formData
       }).then((result) => {
         this.$emit('success', result)
         this.formData = Object.assign({ ...this.data }, this.defaultValues)

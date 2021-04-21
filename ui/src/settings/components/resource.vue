@@ -6,6 +6,7 @@
       :tabs="[
         { label: 'Columns', value: 'columns' },
         { label: 'Actions', value: 'actions' },
+        { label: 'Tabs', value: 'tabs' },
         { label: 'Associations', value: 'associations' }
       ]"
     />
@@ -19,6 +20,10 @@
     />
     <ActionsList
       v-if="selectedTab === 'actions'"
+      :resource="resource"
+    />
+    <TabsList
+      v-if="selectedTab === 'tabs'"
       :resource="resource"
     />
   </div>
@@ -38,6 +43,7 @@
 import ResourceColumnsList from './columns_list'
 import AssociationsList from './associations_list'
 import ActionsList from './actions_list'
+import TabsList from './tabs_list'
 import Tabs from 'utils/components/tabs'
 
 export default {
@@ -46,6 +52,7 @@ export default {
     AssociationsList,
     ResourceColumnsList,
     ActionsList,
+    TabsList,
     Tabs
   },
   props: {

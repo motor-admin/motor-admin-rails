@@ -28,7 +28,7 @@
       <FormItem
         v-if="dataAction.action_type === 'form'"
         label="Form"
-        prop="form_id"
+        prop="preferences.form_id"
       >
         <FormSelect v-model="dataAction.preferences.form_id" />
       </FormItem>
@@ -146,10 +146,15 @@ export default {
     },
     actionTypes () {
       const actions = [
-        { label: 'Method call', value: 'method' },
-        { label: 'API request', value: 'api' },
         { label: 'Form', value: 'form' }
       ]
+
+      if (!['create', 'edit'].includes(this.dataAction.name)) {
+        actions.unshift(
+          { label: 'Method call', value: 'method' },
+          { label: 'API request', value: 'api' }
+        )
+      }
 
       if (this.isCrudAction) {
         actions.unshift({ label: 'Default', value: 'default' })

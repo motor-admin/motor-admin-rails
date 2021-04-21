@@ -1,6 +1,7 @@
 <template>
   <Layout>
     <AppHeader ref="header" />
+
     <RouterView />
   </Layout>
 </template>

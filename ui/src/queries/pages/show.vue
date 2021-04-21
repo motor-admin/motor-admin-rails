@@ -69,7 +69,7 @@
     >
       <div
         v-if="isVariablesForm"
-        class="pb-3 pt-1 px-3 border-bottom"
+        class="pb-3 pt-1 px-4 border-bottom"
       >
         <VariablesForm
           v-model:data="variablesData"

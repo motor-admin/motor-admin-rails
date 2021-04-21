@@ -10,7 +10,7 @@
       :key="resource.slug"
       :name="resource.slug"
       :class="itemClass"
-      :to="{ name: 'resources', params: { fragments: [...pathFragments, resource.slug] } }"
+      :to="{ name: 'resources', params: { fragments: [...pathFragments, resource.slug] }, query }"
     >
       {{ resource.display_name }}
     </MenuItem>
@@ -34,6 +34,11 @@ export default {
       type: Array,
       required: false,
       default: () => []
+    },
+    query: {
+      type: Object,
+      required: false,
+      default: () => ({})
     },
     activeName: {
       type: String,

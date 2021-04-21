@@ -15,11 +15,13 @@ module Motor
         columns_order = configs["resources.#{model[:name]}.columns.order"]
         associations_order = configs["resources.#{model[:name]}.associations.order"]
         actions_order = configs["resources.#{model[:name]}.actions.order"]
+        tabs_order = configs["resources.#{model[:name]}.tabs.order"]
 
         model.merge(
           columns: sort_by_name(model[:columns], columns_order, sort_alphabetically: false),
           associations: sort_by_name(model[:associations], associations_order),
-          actions: sort_by_name(model[:actions], actions_order, sort_alphabetically: false)
+          actions: sort_by_name(model[:actions], actions_order, sort_alphabetically: false),
+          tabs: sort_by_name(model[:tabs], tabs_order, sort_alphabetically: false)
         )
       end
     end

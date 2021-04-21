@@ -4,17 +4,9 @@ module Motor
   module BuildSchema
     module MergeSchemaConfigs
       RESOURCE_ATTRS = PersistResourceConfigs::RESOURCE_ATTRS
-
-      COLUMN_DEFAULTS = {
-        access_type: 'read_write',
-        default_value: nil,
-        validators: []
-      }.with_indifferent_access
-
-      ACTION_DEFAULTS = {
-        visible: true,
-        preferences: {}
-      }.with_indifferent_access
+      COLUMN_DEFAULTS = PersistResourceConfigs::COLUMN_DEFAULTS
+      ACTION_DEFAULTS = PersistResourceConfigs::ACTION_DEFAULTS
+      TAB_DEFAULTS = PersistResourceConfigs::TAB_DEFAULTS
 
       module_function
 
@@ -47,7 +39,14 @@ module Motor
 
         updated_model[:actions] = merge_by_name(
           model[:actions],
-          configs[:actions]
+          configs[:actions],
+          ACTION_DEFAULTS
+        )
+
+        updated_model[:tabs] = merge_by_name(
+          model[:tabs],
+          configs[:tabs],
+          ACTION_DEFAULTS
         )
 
         updated_model

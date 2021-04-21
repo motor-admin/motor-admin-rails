@@ -1,16 +1,18 @@
 <template>
-  <CustomForm
-    v-if="form"
-    :form="form"
-    :data="data"
-    @success="$emit('success', $event)"
-    @error="$emit('error', $event)"
-    @submit="$emit('submit', $event)"
-  />
-  <Spin
-    v-else
-    fix
-  />
+  <div>
+    <CustomForm
+      v-if="form"
+      :form="form"
+      :data="data"
+      @success="$emit('success', $event)"
+      @error="$emit('error', $event)"
+      @submit="$emit('submit', $event)"
+    />
+    <Spin
+      v-else
+      fix
+    />
+  </div>
 </template>
 
 <script>

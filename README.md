@@ -1,5 +1,6 @@
 # Motor
-Short description and motivation.
+
+Admin UI and Business Analytics.
 
 ## Usage
 How to use my plugin.
@@ -8,21 +9,24 @@ How to use my plugin.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'motor'
+gem 'motor-admin'
 ```
 
 And then execute:
 ```bash
-$ bundle
+$ bundle install
 ```
 
 Or install it yourself as:
 ```bash
-$ gem install motor
+$ gem install motor-admin
 ```
 
-## Contributing
-Contribution directions go here.
+Create and run migration:
+```bash
+$ rails generate motor:install && rake db:migrate
+```
 
 ## License
+
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

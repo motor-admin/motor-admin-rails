@@ -27,6 +27,7 @@ module Motor
       {
         base_path: Motor::Admin.routes.url_helpers.motor_path,
         schema: Motor::BuildSchema.call,
+        header_links: Motor::Config.find_by(key: 'header.links')&.value || [],
         queries: Motor::Query.all.active.preload(:tags)
                              .as_json(only: %i[id name updated_at],
                                       include: { tags: { only: %i[id name] } }),

@@ -7,6 +7,23 @@ module Motor
       COLUMN_ATTRS = %w[name display_name column_type access_type default_value virtual].freeze
       ASSOCIATION_ATTRS = %w[name display_name visible].freeze
       ACTION_ATTRS = %w[name display_name action_type preferences visible].freeze
+      TAB_ATTRS = %w[name display_name tab_type preferences visible].freeze
+
+      COLUMN_DEFAULTS = {
+        access_type: 'read_write',
+        default_value: nil,
+        validators: []
+      }.with_indifferent_access
+
+      ACTION_DEFAULTS = {
+        visible: true,
+        preferences: {}
+      }.with_indifferent_access
+
+      TAB_DEFAULTS = {
+        visible: true,
+        preferences: {}
+      }.with_indifferent_access
 
       module_function
 
@@ -74,6 +91,14 @@ module Motor
           )
         end
 
+        if new_prefs[:tabs].present?
+          normalized_preferences[:tabs] = normalize_tabs(
+            default_prefs[:tabs],
+            existing_prefs.fetch(:tabs, []),
+            new_prefs.fetch(:tabs, [])
+          )
+        end
+
         normalized_preferences.compact
       end
 
@@ -113,9 +138,30 @@ module Motor
           action_attrs = new_action.slice(*ACTION_ATTRS)
 
           normalized_action = existing_action.merge(action_attrs)
-          normalized_action = reject_default(default_action, normalized_action)
+          normalized_action = reject_default(default_action.presence || TAB_DEFAULTS, normalized_action)
 
           normalized_action.merge(name: name) if normalized_action.present?
+        end.compact.presence
+      end
+
+      # @param default_tabs [Array<HashWithIndifferentAccess>]
+      # @param existing_tabs [Array<HashWithIndifferentAccess>]
+      # @param new_tabs [Array<HashWithIndifferentAccess>]
+      # @return [Array<HashWithIndifferentAccess>]
+      def normalize_tabs(default_tabs, existing_tabs, new_tabs)
+        (existing_tabs.pluck(:name) + new_tabs.pluck(:name)).uniq.map do |name|
+          new_tab = safe_fetch_by_name(new_tabs, name)
+
+          next if new_tab[:_remove]
+
+          existing_tab = safe_fetch_by_name(existing_tabs, name)
+          default_tab = safe_fetch_by_name(default_tabs, name)
+          tab_attrs = new_tab.slice(*TAB_ATTRS)
+
+          normalized_tab = existing_tab.merge(tab_attrs)
+          normalized_tab = reject_default(default_tab.presence || TAB_DEFAULTS, normalized_tab)
+
+          normalized_tab.merge(name: name) if normalized_tab.present?
         end.compact.presence
       end
 

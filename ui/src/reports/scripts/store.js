@@ -118,6 +118,18 @@ function loadQueries () {
   })
 }
 
+function loadDashboards () {
+  return dashboardsRequest().then((dashboardsResult) => {
+    const dashboards = normalizeItems(dashboardsResult.data.data, 'dashboard')
+
+    dashboardsStore.splice(0, dashboardsStore.length, ...sortItems(dashboards))
+
+    itemsStore.splice(0, itemsStore.length, ...sortItems(queriesStore.concat(dashboardsStore).concat(alertsStore)))
+  }).catch((error) => {
+    console.error(error)
+  })
+}
+
 const appNode = document.getElementById('app')
 
 assignItems(
@@ -130,6 +142,7 @@ export {
   itemsStore,
   loadItems,
   loadQueries,
+  loadDashboards,
   queriesStore,
   dashboardsStore,
   alertsStore

@@ -15,24 +15,25 @@
     </Sider>
     <Layout>
       <Content>
-        <ResourceInfo
+        <ResourceTabs
+          v-if="!showTable || !isFullscreenTable"
           :key="resourceName + resourceId"
           :resource-name="resourceName"
           :resource-id="resourceId"
-          :with-actions="true"
-          :one-column="!showTable"
-          class="border-top p-3"
-          :style="infoStyle"
+          :minimized="showTable"
+          class="border-top"
           @remove="goToParent"
         />
         <ResourceTable
           v-if="showTable"
           :key="resourceName + resourceId + associationName"
-          :height="'calc(50vh - 108px)'"
+          :height="isFullscreenTable ? 'calc(100vh - 199px)' : 'calc(50vh - 108px)'"
+          :with-resize="true"
           :resource-name="resourceName"
           :with-title="true"
           class="border-top"
           :association-params="{ name: associationName, id: resourceId }"
+          @click-resize="toggleSize"
         />
       </Content>
     </Layout>
@@ -44,14 +45,16 @@ import { modelNameMap } from '../scripts/schema'
 
 import ResourcesMenu from 'navigation/components/resources'
 import ResourceTable from './table'
-import ResourceInfo from './info'
+import ResourceTabs from './tabs'
+
+const fullscreenTableKey = 'resources:fullscreenAssociationTable'
 
 export default {
   name: 'ResourcesShow',
   components: {
     ResourcesMenu,
     ResourceTable,
-    ResourceInfo
+    ResourceTabs
   },
   props: {
     resourceName: {
@@ -68,14 +71,12 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      isFullscreenTable: localStorage.getItem(fullscreenTableKey) === 'true'
+    }
+  },
   computed: {
-    infoStyle () {
-      if (this.showTable) {
-        return { height: 'calc(50vh - 91px)', overflowY: 'scroll' }
-      } else {
-        return { height: 'calc(100vh - 112px)', overflowY: 'scroll' }
-      }
-    },
     showTable () {
       return !!this.associationName
     },
@@ -88,13 +89,21 @@ export default {
         return fragments
       }
     },
+    model () {
+      return modelNameMap[this.resourceName]
+    },
     associations () {
-      return modelNameMap[this.resourceName].associations.filter((assoc) => {
+      return this.model.associations.filter((assoc) => {
         return assoc.association_type === 'has_many' && assoc.visible
       })
     }
   },
   methods: {
+    toggleSize () {
+      this.isFullscreenTable = !this.isFullscreenTable
+
+      localStorage.setItem(fullscreenTableKey, this.isFullscreenTable.toString())
+    },
     goToParent () {
       this.$router.push({
         name: 'resources',

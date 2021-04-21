@@ -31,7 +31,7 @@
                 />
               </div>
               <p class="fs-4 fw-bold">
-                {{ findQuery(item.query_id).name }}
+                {{ findQueryName(item.query_id) }}
               </p>
             </div>
             <div class="d-flex align-items-center">
@@ -107,8 +107,11 @@ export default {
     this.isQueriesListOpened = !this.layout.length
   },
   methods: {
-    findQuery (queryId) {
-      return queriesStore.find((query) => query.id === queryId)
+    findQueryName (queryId) {
+      return (
+        this.dashboard.queries.find((query) => query.id === queryId) ||
+        queriesStore.find((query) => query.id === queryId)
+      )?.name
     },
     moveItem (item, step) {
       const index = this.layout.indexOf(item)

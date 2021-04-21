@@ -5,6 +5,14 @@
       :style="{ margin: '10px 0' }"
     >
       <div class="col-6 d-flex align-items-center">
+        <VButton
+          v-if="withResize"
+          icon="md-resize"
+          size="small"
+          type="dashed"
+          class="me-2 bg-transparent"
+          @click="$emit('click-resize')"
+        />
         <b
           v-if="withTitle && !selectedRows.length"
           class="fs-4 nowrap"
@@ -134,12 +142,18 @@ export default {
       required: false,
       default: false
     },
+    withResize: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     associationParams: {
       type: Object,
       require: false,
       default: null
     }
   },
+  emits: ['click-resize'],
   data () {
     return {
       isLoading: true,
@@ -275,7 +289,7 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      if (!to.params.pushFromComponent &&
+      if (!to.params.doNotWatch &&
         to.name === from.name &&
         JSON.stringify(to.params.fragments) === JSON.stringify(from.params.fragments) &&
         (JSON.stringify(to.query) !== JSON.stringify(from.query))) {
@@ -369,7 +383,7 @@ export default {
       this.loadData()
     },
     pushQueryParams () {
-      this.$router.push({ query: this.routeQueryParams, params: { pushFromComponent: true } })
+      this.$router.push({ query: this.routeQueryParams, params: { doNotWatch: true } })
     },
     onRowClick (value) {
       this.$router.push({

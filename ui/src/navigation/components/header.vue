@@ -3,7 +3,7 @@
     class="ivu-menu ivu-menu-primary ivu-menu-horizontal row m-0"
     :style="{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05)', zIndex: 1 }"
   >
-    <div class="col-6 d-flex align-items-center">
+    <div class="col-10 d-flex align-items-center">
       <VButton
         :to="{ name: 'home' }"
         type="primary"
@@ -35,24 +35,43 @@
       <VButton
         type="primary"
         :to="{ name: 'reports' }"
-        class="ms-2"
+        class="header-btn ms-2"
         size="large"
       >
         Reports
       </VButton>
       <VButton
         type="primary"
-        class="ms-2"
+        class="header-btn ms-2"
         size="large"
         :to="{ name: 'forms' }"
       >
         Forms
       </VButton>
+      <VButton
+        :is="link.component"
+        v-for="link in linksToRender"
+        :key="link.name"
+        type="primary"
+        class="header-btn ms-2"
+        :target="link.target"
+        size="large"
+        :to="link.to"
+      >
+        {{ link.name }}
+      </VButton>
+      <VButton
+        type="primary"
+        class="ms-2 add-item-btn"
+        icon="md-add"
+        @click="openEditModal"
+      />
     </div>
-    <div class="col-6 d-flex justify-content-end align-items-center">
+    <div class="col-2 d-flex justify-content-end align-items-center">
       <VButton
         type="primary"
         size="large"
+        class="header-btn"
         @click="openSearch"
       >
         <Icon
@@ -68,6 +87,7 @@
         <VButton
           type="primary"
           size="large"
+          class="header-btn"
         >
           <Icon
             type="md-add"
@@ -93,7 +113,7 @@
       </Dropdown>
       <VButton
         type="primary"
-        class="ms-2"
+        class="ms-2 header-btn"
         size="large"
         @click="openSettings"
       >
@@ -109,11 +129,33 @@
 <script>
 import Search from './search'
 import ResourcesSettings from 'settings/components/resources_list'
+import HeaderEdit from './header_edit'
 import { modelSlugMap } from 'data_resources/scripts/schema'
+import { basePath } from 'utils/scripts/configs'
 
 export default {
   name: 'AppHeader',
+  data () {
+    return {
+      links: JSON.parse(document.getElementById('app').getAttribute('data-header-links'))
+    }
+  },
   computed: {
+    linksToRender () {
+      return this.links.map((link) => {
+        const params = { name: link.name }
+
+        const path = link.path.replace(location.origin, '').replace(new RegExp(`^${basePath}`), '/')
+
+        params.to = path
+
+        if (path.match(/^https?:/)) {
+          params.target = '_blank'
+        }
+
+        return params
+      })
+    },
     currentResource () {
       if (this.$route.name !== 'resources') {
         return
@@ -150,6 +192,14 @@ export default {
         return 'Settings'
       }
     },
+    openEditModal () {
+      this.$Drawer.open(HeaderEdit, {
+        links: this.links
+      }, {
+        title: 'Header',
+        closable: true
+      })
+    },
     openSettings () {
       this.$Drawer.open(ResourcesSettings, {
         selectedResource: this.currentResource,
@@ -165,7 +215,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.ivu-btn) {
+.header-btn {
   font-size: 15px;
   font-weight: 500;
   display: flex;

@@ -43,6 +43,16 @@ module Motor
         }
       ].freeze
 
+      DEFAULT_TABS = [
+        {
+          name: 'summary',
+          display_name: 'Summary',
+          tab_type: 'default',
+          preferences: {},
+          visible: true
+        }
+      ].freeze
+
       module_function
 
       def call
@@ -81,6 +91,7 @@ module Motor
           columns: fetch_columns(model),
           associations: fetch_associations(model),
           actions: DEFAULT_ACTIONS,
+          tabs: DEFAULT_TABS,
           visible: true
         }.with_indifferent_access
       end

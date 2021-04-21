@@ -51,9 +51,6 @@
         <h1 style="font-size: 60px">
           {{ data[0][0] }}
         </h1>
-        <h2>
-          {{ columns[0].name }}
-        </h2>
       </div>
       <QueryResult
         v-else

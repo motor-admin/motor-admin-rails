@@ -47,15 +47,29 @@ module Motor
         model = rel.is_a?(ActiveRecord::Relation) ? rel.klass : rel.class
         model_name = model.name.underscore
 
-        params[:fields].each do |key, values|
-          values = values.split(',') if values.is_a?(String)
+        params[:fields].each do |key, fields|
+          fields = fields.split(',') if fields.is_a?(String)
+          fields_hash = build_fields_hash(model, fields)
 
           if key == model_name || model_name.split('/').last == key
-            json_params.merge!('only' => values)
+            json_params.merge!(fields_hash)
           else
             hash = find_key_in_params(json_params, key)
 
-            hash.merge!('only' => values)
+            hash.merge!(fields_hash)
+          end
+        end
+      end
+
+      def build_fields_hash(model, fields)
+        columns = model.columns.map(&:name)
+        fields_hash = { 'only' => [], 'methods' => [] }
+
+        fields.each_with_object(fields_hash) do |field, acc|
+          if field.in?(columns)
+            acc['only'] << field
+          else
+            acc['methods'] << field
           end
         end
       end

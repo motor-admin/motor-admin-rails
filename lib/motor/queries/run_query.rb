@@ -14,7 +14,7 @@ module Motor
 
       module_function
 
-      def call(query, variables_hash:, limit: DEFAULT_LIMIT)
+      def call(query, variables_hash: nil, limit: DEFAULT_LIMIT)
         variables_hash ||= {}
 
         result = execute_query(query, limit, variables_hash)

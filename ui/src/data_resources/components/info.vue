@@ -1,6 +1,5 @@
 <template>
   <div
-    class="bg-white"
     :style="{ position: 'relative' }"
   >
     <Spin

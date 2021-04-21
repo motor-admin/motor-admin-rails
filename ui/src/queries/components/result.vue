@@ -19,6 +19,7 @@
     :with-select="false"
     :click-rows="false"
     :borderless="borderless"
+    :header-border="headerBorder"
     :compact="compact"
     :columns="normalizedColumns"
     @sort-change="assignSortParams"
@@ -147,6 +148,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    headerBorder: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     compact: {
       type: Boolean,

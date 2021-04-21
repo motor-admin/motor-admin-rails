@@ -104,7 +104,8 @@ export default {
       return typeof this.value === 'boolean'
     },
     isImage () {
-      return this.isUrl && !!this.stringValue.match(/\.(jpg|png|jpeg|wepb|svg)$/)
+      return false
+      // return this.isUrl && !!this.stringValue.match(/\.(jpg|png|jpeg|wepb|svg)$/)
     },
     isUrl () {
       return !!this.stringValue.match(/^https?:\/\//i)

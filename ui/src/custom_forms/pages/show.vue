@@ -153,7 +153,6 @@ export default {
           tags: this.form.tags.map((tag) => tag.name)
         },
         onSuccess: (form) => {
-          console.log(form)
           Object.assign(this.form, {
             id: form.id,
             api_path: form.api_path,

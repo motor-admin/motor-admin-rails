@@ -17,7 +17,7 @@
           <th
             v-if="withSelect && columns.length"
             class="ivu-table-column ivu-table-column-center"
-            :class="{ 'border-top' : !borderless }"
+            :class="{ 'border-top' : !borderless && headerBorder }"
             :style="{ position: 'sticky', top: 0, left: 0, zIndex: 1 }"
           >
             <div class="ivu-table-cell ivu-table-cell-with-selection">
@@ -32,7 +32,7 @@
             v-for="column in columns"
             :key="column.key"
             class="ivu-table-column"
-            :class="{ 'border-top' : !borderless }"
+            :class="{ 'border-top' : !borderless && headerBorder }"
             :style="{ position: 'sticky', top: 0 }"
           >
             <div class="ivu-table-cell">
@@ -171,6 +171,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    headerBorder: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     compact: {
       type: Boolean,

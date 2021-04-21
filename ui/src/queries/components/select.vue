@@ -30,7 +30,6 @@ export default {
   emits: ['update:modelValue'],
   data () {
     return {
-      isLoading: true,
       value: ''
     }
   },
@@ -50,9 +49,7 @@ export default {
   created () {
     this.value = this.modelValue
 
-    loadQueries().finally(() => {
-      this.isLoading = false
-    })
+    loadQueries()
   },
   methods: {
   }

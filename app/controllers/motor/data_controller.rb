@@ -95,16 +95,6 @@ module Motor
       end
     end
 
-    def current_ability
-      klass = Class.new
-      klass.include(CanCan::Ability)
-      klass.define_method(:initialize) do |_user|
-        can :manage, :all
-      end
-
-      klass.new(current_user)
-    end
-
     def resource_params
       params.fetch(:data, {}).except(resource_class.primary_key).permit!
     end

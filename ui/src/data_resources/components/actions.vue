@@ -22,15 +22,17 @@
           {{ action.display_name }}
         </DropdownItem>
         <DropdownItem
+          v-if="editAction"
           :disabled="resources.length > 1"
-          @click="edit"
+          @click="applyAction(editAction)"
         >
           Edit
         </DropdownItem>
         <DropdownItem
+          v-if="removeAction"
           divided
           class="text-danger"
-          @click="remove"
+          @click="applyAction(removeAction)"
         >
           Remove
         </DropdownItem>
@@ -91,6 +93,16 @@ export default {
     resource () {
       return this.resources[0]
     },
+    editAction () {
+      return this.model.actions.find((action) => {
+        return action.name === 'edit' && action.visible
+      })
+    },
+    removeAction () {
+      return this.model.actions.find((action) => {
+        return action.name === 'remove' && action.visible
+      })
+    },
     customActions () {
       return this.model.actions.filter((action) => {
         return !['create', 'edit', 'remove'].includes(action.name) && action.visible
@@ -110,6 +122,14 @@ export default {
       return api.delete(`data/${this.model.slug}/${resource[this.model.primary_key]}`)
     },
     applyAction (action) {
+      if (action.name === 'edit' && action.action_type === 'default') {
+        return this.edit()
+      }
+
+      if (action.name === 'remove' && action.action_type === 'default') {
+        return this.remove()
+      }
+
       if (action.action_type === 'form' && this.resources.length > 1) {
         return
       }
@@ -147,16 +167,24 @@ export default {
       return axios.post(path)
     },
     openForm (resource, action) {
+      const data = action.name === 'edit'
+        ? resource
+        : {
+            id: resource[this.model.primary_key],
+            [`${this.model.name}_${this.model.primary_key}`]: resource[this.model.primary_key]
+          }
+
       this.$Drawer.open(CustomFormModal, {
-        data: {
-          [`${this.model.name}_${this.model.primary_key}`]: resource[this.model.primary_key]
-        },
+        data,
         formId: action.preferences.form_id,
         onSuccess: (result) => {
           this.$emit('finish-action', action.name)
         },
         onError: (result) => {
         }
+      }, {
+        title: action.display_name,
+        closable: true
       })
     },
     edit () {

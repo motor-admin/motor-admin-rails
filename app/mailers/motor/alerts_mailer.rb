@@ -30,21 +30,21 @@ module Motor
 
       from ||= application_mailer_default_from
       from ||= mailer_config_from_address
-      from ||= "reports@#{ENV['HOST']}" if ENV['HOST'].present?
+      from ||= "reports@#{ENV['HOST'].sub(/\Awww\./, '')}" if ENV['HOST'].present?
 
       from
     end
 
     def application_mailer_default_from
-      return if !defined?(ApplicationMailer) || ApplicationMailer.default[:from] == 'from@example.com'
+      return if !defined?(::ApplicationMailer) || ::ApplicationMailer.default[:from].to_s.include?('example.com')
 
-      ApplicationMailer.default[:from]
+      ::ApplicationMailer.default[:from].presence
     end
 
     def mailer_config_from_address
       return if Rails.application.config.action_mailer.default_url_options[:host].blank?
 
-      "reports@#{Rails.application.config.action_mailer.default_url_options[:host]}"
+      "reports@#{Rails.application.config.action_mailer.default_url_options[:host].sub(/\Awww\./, '')}"
     end
   end
 end

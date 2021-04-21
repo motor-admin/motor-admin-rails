@@ -8,10 +8,11 @@
       v-for="variable in variables"
       :key="variable.name"
       :label="variable.display_name"
-      class="col-6 col-lg-2 col-md-4 col-sm-4 mb-0"
+      class="col-6 col-lg-2 col-md-4 col-sm-4 mb-0 px-1"
     >
       <VInput
         v-model="dataValue[variable.name]"
+        @keydown.enter="$emit('submit')"
         @update:model-value="$emit('update:data', dataValue)"
       />
     </FormItem>
@@ -32,7 +33,7 @@ export default {
       required: true
     }
   },
-  emits: ['update:data'],
+  emits: ['update:data', 'submit'],
   data () {
     return {
       dataValue: { ...this.data }

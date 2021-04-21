@@ -122,7 +122,6 @@ export default {
     }
   },
   created () {
-    console.log(this.preferences)
     this.preferences.visualization ||= 'table'
     this.preferences.format ||= { style: 'decimal', options: {} }
   },

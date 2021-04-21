@@ -6,7 +6,7 @@
       <div class="ivu-card-body py-0">
         <div
           class="cursor-pointer d-flex align-items-center justify-content-between py-2"
-          :style="{ opacity: !isForm && !action.visible ? 0.5 : 1 }"
+          :style="{ opacity: !isForm && !tab.visible ? 0.5 : 1 }"
           @click="toggleForm"
         >
           <div class="d-flex align-items-center">
@@ -16,15 +16,15 @@
               class="me-3 cursor-grab"
             />
             <Checkbox
-              :model-value="action.visible"
+              v-if="'summary' !== tab.name"
+              :model-value="tab.visible"
               @click.stop
               @on-change="toggleVisible"
             />
             <p
               ref="contenteditable"
-              class="fs-5 fw-bold"
-              :contenteditable="!isCrudAction"
-              :class="{ 'cursor-text': !isCrudAction }"
+              class="fs-5 fw-bold cursor-text"
+              :contenteditable="'summary' !== tab.name"
               @input="updateName"
               @click="onTextClick"
               @blur="onNameFocusLost"
@@ -37,16 +37,16 @@
             <Icon :type="isForm ? 'ios-arrow-up' : 'ios-arrow-down'" />
           </div>
         </div>
-        <ActionForm
+        <TabForm
           v-if="isForm"
-          :action="action"
+          :tab="tab"
           class="py-3"
-          :with-remove="!isCrudAction"
-          :with-name="!isCrudAction"
+          :with-remove="'summary' !== tab.name"
+          :with-name="'summary' !== tab.name"
           :resource="resource"
           @cancel="toggleForm"
-          @remove="removeAction"
-          @submit="updateAction"
+          @remove="removeTab"
+          @submit="updateTab"
         />
       </div>
     </div>
@@ -55,12 +55,12 @@
 
 <script>
 import api from 'api'
-import ActionForm from './resource_action_form'
+import TabForm from './resource_tab_form'
 
 export default {
-  name: 'ResourceAction',
+  name: 'ResourceTab',
   components: {
-    ActionForm
+    TabForm
   },
   props: {
     resource: {
@@ -72,7 +72,7 @@ export default {
       required: false,
       default: true
     },
-    action: {
+    tab: {
       type: Object,
       required: true
     }
@@ -80,32 +80,27 @@ export default {
   data () {
     return {
       isForm: false,
-      displayName: this.action.display_name
-    }
-  },
-  computed: {
-    isCrudAction () {
-      return ['edit', 'create', 'remove'].includes(this.action.name)
+      displayName: this.tab.display_name
     }
   },
   watch: {
-    'action.display_name' (value) {
+    'tab.display_name' (value) {
       if (value.trim() !== this.displayName.trim() &&
         value.trim() !== this.$refs.contenteditable.innerText.trim()) {
-        this.displayName = this.action.display_name
+        this.displayName = this.tab.display_name
       }
     }
   },
   methods: {
-    removeAction () {
+    removeTab () {
       this.$Dialog.confirm({
         title: 'Are you sure?',
         closable: true,
         onOk: () => {
-          const index = this.resource.actions.findIndex((action) => action.name === this.action.name)
+          const index = this.resource.tabs.findIndex((tab) => tab.name === this.tab.name)
 
           this.removeRequest()
-          this.resource.actions.splice(index, 1)
+          this.resource.tabs.splice(index, 1)
         }
       })
     },
@@ -114,9 +109,9 @@ export default {
         data: {
           name: this.resource.name,
           preferences: {
-            actions: [
+            tabs: [
               {
-                name: this.action.name,
+                name: this.tab.name,
                 _remove: true
               }
             ]
@@ -132,8 +127,8 @@ export default {
         data: {
           name: this.resource.name,
           preferences: {
-            actions: [
-              this.action
+            tabs: [
+              this.tab
             ]
           }
         }
@@ -143,7 +138,7 @@ export default {
       })
     },
     toggleVisible (value) {
-      this.action.visible = value
+      this.tab.visible = value
 
       this.persistChanges()
     },
@@ -151,28 +146,28 @@ export default {
       this.isForm = !this.isForm
     },
     updateName (event) {
-      this.action.display_name = event.target.innerText
+      this.tab.display_name = event.target.innerText
     },
     onTextClick (event) {
-      if (!this.isCrudAction) {
+      if (this.tab.name === 'summary') {
         event.stopPropagation()
       }
     },
-    updateAction (action) {
+    updateTab (tab) {
       this.isForm = false
 
-      Object.assign(this.action, action)
+      Object.assign(this.tab, tab)
 
       this.persistChanges()
     },
     onNameFocusLost () {
-      if (!this.action.display_name || this.action.display_name.match(/^\s+$/)) {
-        this.action.display_name = this.displayName
+      if (!this.tab.display_name || this.tab.display_name.match(/^\s+$/)) {
+        this.tab.display_name = this.displayName
         this.displayName = this.displayName + ' '
       } else {
         this.persistChanges()
 
-        this.displayName = this.action.display_name
+        this.displayName = this.tab.display_name
       }
     }
   }

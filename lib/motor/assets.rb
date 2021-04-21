@@ -27,6 +27,8 @@ module Motor
     end
 
     def load_from_disk(filename)
+      filename += '.gz' if filename.match?(/\.(?:js|css)\z/)
+
       path = ASSETS_PATH.join(filename)
 
       raise InvalidPathError unless path.to_s.starts_with?(ASSETS_PATH.to_s)
