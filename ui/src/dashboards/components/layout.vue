@@ -3,12 +3,13 @@
     <div
       v-for="item in dashboard.preferences.layout"
       :key="item.query_id"
-      :class="classForSizeMap[item.size]"
+      :class="classForSizeMap[item.size[0]]"
       class="p-0"
     >
       <div class="mb-2 mx-1 ivu-card ivu-card-bordered">
         <Board
           :ref="pushBoardRef"
+          :item="item"
           :variables="variables"
           :query="findQuery(item.query_id)"
         />
@@ -44,11 +45,12 @@ export default {
   computed: {
     classForSizeMap () {
       return {
-        50: 'col-12 col-lg-6',
-        25: 'col-12 col-lg-3',
-        33: 'col-12 col-lg-4',
-        66: 'col-12 col-lg-8',
-        100: 'col-12'
+        1: 'col-12 col-lg-3',
+        2: 'col-12 col-lg-4',
+        3: 'col-12 col-lg-6',
+        4: 'col-12 col-lg-8',
+        5: 'col-12 col-lg-9',
+        6: 'col-12 col-lg-12'
       }
     }
   },

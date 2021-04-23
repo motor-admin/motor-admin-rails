@@ -38,12 +38,12 @@
     </div>
   </div>
   <div
-    :style="{ height: 'calc(100vh - 134px)' }"
+    :style="{ height: isEditorOpened ? 'calc(100vh - 134px)' : '100%' }"
     class="row border-top m-0"
   >
     <div
       :class="isEditorOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
-      style="height: 100%; overflow: scroll"
+      :style="{ height: '100%', overflow: isEditorOpened ? 'scroll' : 'unset' }"
     >
       <div
         v-if="variables.length"
@@ -57,6 +57,7 @@
       </div>
       <DashboardLayout
         ref="layout"
+        class="pt-1"
         :variables="variablesData"
         :dashboard="dashboard"
       />
@@ -127,7 +128,7 @@ export default {
             this.loadDashboard()
             this.isEditorOpened = false
           } else {
-            this.dashboard = { tags: [], preferences: { layout: [] } }
+            this.dashboard = { tags: [], preferences: { layout: [] }, queries: [] }
             this.isEditorOpened = true
           }
         }

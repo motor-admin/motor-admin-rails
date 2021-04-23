@@ -235,6 +235,11 @@ export default {
       })
     }
   },
+  watch: {
+    defaultPageSize (value) {
+      this.paginationParams.pageSize = value
+    }
+  },
   methods: {
     assignSortParams (params) {
       this.sortParams = params

@@ -37,7 +37,7 @@
     </div>
     <div
       class="ivu-card-body p-0"
-      style="height: 387px"
+      :style="{ height: heightsMap[item.size[1]] }"
     >
       <Spin
         v-if="isLoading"
@@ -60,7 +60,7 @@
         :errors="errors"
         :preferences="query.preferences"
         :columns="columns"
-        :default-page-size="10"
+        :default-page-size="pageSizesMap[item.size[1]]"
         :borderless="true"
         :with-settings="false"
         :compact="true"
@@ -84,6 +84,11 @@ export default {
       required: false,
       default: () => ({})
     },
+    item: {
+      type: Object,
+      required: false,
+      default: null
+    },
     query: {
       type: Object,
       required: false,
@@ -101,6 +106,22 @@ export default {
     }
   },
   computed: {
+    heightsMap () {
+      return {
+        1: '195px',
+        2: '387px',
+        3: '548px',
+        4: '710px'
+      }
+    },
+    pageSizesMap () {
+      return {
+        1: 4,
+        2: 10,
+        3: 15,
+        4: 20
+      }
+    },
     queryVariables () {
       return (this.query.preferences.variables || []).reduce((acc, variable) => {
         acc[variable.name] = this.variables[variable.name] || variable.default_value

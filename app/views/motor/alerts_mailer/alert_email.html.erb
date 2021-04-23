@@ -77,7 +77,7 @@
             <% if @query_result.data.length > 1 %>
               <p style="margin: 7px 0; float: left">Showing <%= @query_result.data.first(40).size %> of <%= @query_result.data.size %> rows</p>
             <% end %>
-            <a href="<%= Motor::Admin.routes.url_helpers.motor_ui_query_url(@alert.query, { host: 'localhost:3000'}.merge(Rails.application.config.action_mailer.default_url_options)) %>" target="blank" style="margin: 7px 0; float: right">Open query </a>
+            <a href="<%= Motor::Admin.routes.url_helpers.motor_ui_query_url(@alert.query, { host: 'localhost:3000'}.merge(Rails.application.config.action_mailer.default_url_options || {})) %>" target="blank" style="margin: 7px 0; float: right">Open query </a>
             <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
               <tr>
                 <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px; max-width: 0px; overflow: scroll">

@@ -18,7 +18,7 @@
           :key="item.query_id"
           class="ivu-card ivu-card-bordered cursor-grab mb-2"
         >
-          <div class="ivu-card-body d-flex align-items-center justify-content-between">
+          <div class="ivu-card-body d-flex align-items-center justify-content-between py-2">
             <div class="d-flex align-items-center">
               <div class="d-flex flex-column me-2">
                 <i
@@ -35,15 +35,10 @@
               </p>
             </div>
             <div class="d-flex align-items-center">
-              <select v-model="item.size">
-                <option
-                  v-for="option in sizeOptions"
-                  :key="option.value"
-                  :value="option.value"
-                >
-                  {{ option.label }}
-                </option>
-              </select>
+              <SizeControl
+                v-model="item.size"
+                class="me-1"
+              />
               <VButton
                 size="small"
                 type="text"
@@ -70,12 +65,14 @@
 
 <script>
 import QueriesList from 'queries/components/list'
+import SizeControl from './size_control'
 import { queriesStore } from 'reports/scripts/store'
 
 export default {
   name: 'DashboardEditor',
   components: {
-    QueriesList
+    QueriesList,
+    SizeControl
   },
   props: {
     dashboard: {
@@ -129,7 +126,7 @@ export default {
     onSelectQuery (query) {
       this.isQueriesListOpened = false
 
-      this.layout.push({ query_id: query.id, size: 50 })
+      this.layout.push({ query_id: query.id, size: [3, 2] })
 
       this.$emit('add-query', query.id)
     },

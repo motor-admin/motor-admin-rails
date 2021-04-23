@@ -24,16 +24,19 @@
         />
         <FormTab
           v-else-if="selectedTab.tab_type === 'form'"
+          :key="selectedTab.preferences.form_id"
           :tab="selectedTab"
           :data="resourceData"
         />
         <QueryTab
           v-else-if="selectedTab.tab_type === 'query'"
+          :key="selectedTab.preferences.query_id"
           :tab="selectedTab"
           :variables="resourceData"
         />
         <DashboardTab
           v-else-if="selectedTab.tab_type === 'dashboard'"
+          :key="selectedTab.preferences.dashboard_id"
           :tab="selectedTab"
           :variables="resourceData"
         />
