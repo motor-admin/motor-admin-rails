@@ -185,9 +185,12 @@ export default {
         this.assignSelectedFromValue(value)
       }
     },
-    options (value) {
-      this.optionsData = this.normalizeOptions(value)
-      this.assignSelectedFromValue(this.modelValue)
+    options: {
+      deep: true,
+      handler (value) {
+        this.optionsData = this.normalizeOptions(value)
+        this.assignSelectedFromValue(this.modelValue)
+      }
     },
     isOpen (value) {
       if (value) {

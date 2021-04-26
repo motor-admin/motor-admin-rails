@@ -13,10 +13,10 @@
           class="me-2 bg-transparent"
           @click="$emit('click-resize')"
         />
-        <b
+        <span
           v-if="withTitle && !selectedRows.length"
-          class="fs-4 nowrap"
-        >{{ title }}</b>
+          class="fs-4 fw-bold nowrap"
+        >{{ title }}</span>
         <ResourceActions
           v-if="selectedRows.length"
           :resources="selectedRows"

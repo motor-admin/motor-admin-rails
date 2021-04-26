@@ -81,6 +81,7 @@
       <Split
         v-model="split"
         mode="vertical"
+        :style="{ height: isSettingsOpened ? 'calc(100% - 88px)' : '100%' }"
       >
         <template #top>
           <SqlEditor
@@ -302,13 +303,15 @@ export default {
         const mached = sql.match(/{{\w+}}/g)
         const variables = mached?.map((matched) => matched.replace(/[{}]/g, '')) || []
 
-        return variables.map((variableName) => {
-          const defaultValue = this.dataQuery.preferences.variables?.find((variable) => {
-            return variable.name === variableName
-          })?.default_value
+        return Object.values(variables.reduce((acc, variableName) => {
+          acc[variableName] ||= { name: variableName, display_name: titleize(variableName) }
 
-          return { name: variableName, display_name: titleize(variableName), default_value: defaultValue || '' }
-        })
+          acc[variableName].default_value ||= this.dataQuery.preferences.variables?.find((variable) => {
+            return variable.name === variableName
+          })?.default_value || ''
+
+          return acc
+        }, {}))
       } else {
         return []
       }

@@ -31,7 +31,7 @@ module Motor
         address
       ].freeze
 
-      DISPLAY_NAME_REGEXP = Regexp.new(Regexp.union(DISPLAY_NAMES), Regexp::IGNORECASE)
+      DISPLAY_NAME_REGEXP = Regexp.new(Regexp.union(DISPLAY_NAMES).source, Regexp::IGNORECASE)
 
       module_function
 

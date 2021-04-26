@@ -30,9 +30,9 @@ module Motor
       end
 
       def update_from_params!(query, params)
-        raise NameAlreadyExists if name_already_exists?(query)
-
         query = assign_attributes(query, params)
+
+        raise NameAlreadyExists if name_already_exists?(query)
 
         ApplicationRecord.transaction do
           query.save!

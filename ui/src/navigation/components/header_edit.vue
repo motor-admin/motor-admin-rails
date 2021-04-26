@@ -94,6 +94,8 @@ export default {
       this.links.push(newLink)
 
       this.persistChanges()
+
+      this.newLink = null
     },
     persistChanges () {
       return api.post('configs', {

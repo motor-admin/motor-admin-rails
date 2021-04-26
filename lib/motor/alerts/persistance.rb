@@ -44,10 +44,9 @@ module Motor
       end
 
       def update_from_params!(alert, params)
-        raise NameAlreadyExists if name_already_exists?(alert)
-
         alert = assign_attributes(alert, params)
 
+        raise NameAlreadyExists if name_already_exists?(alert)
         raise InvalidInterval unless alert.cron
 
         ApplicationRecord.transaction do

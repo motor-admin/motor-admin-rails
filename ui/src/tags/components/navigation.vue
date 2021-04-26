@@ -63,7 +63,7 @@ export default {
         acc[tag] = { name: tag, count: 0 }
 
         return acc
-      }, {})))
+      }, {}))).sort((a, b) => a.name > b.name ? 1 : -1)
     }
   },
   methods: {

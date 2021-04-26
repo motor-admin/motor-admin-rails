@@ -18,16 +18,16 @@ module Motor
       Motor::Admin.routes.url_helpers.motor_asset_path(manifest[path])
     end
 
-    def load_asset(filename)
+    def load_asset(filename, gzip: false)
       if Motor.development?
         load_from_dev_server(filename)
       else
-        load_from_disk(filename)
+        load_from_disk(filename, gzip: gzip)
       end
     end
 
-    def load_from_disk(filename)
-      filename += '.gz' if filename.match?(/\.(?:js|css)\z/)
+    def load_from_disk(filename, gzip:)
+      filename += '.gz' if gzip
 
       path = ASSETS_PATH.join(filename)
 

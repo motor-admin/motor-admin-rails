@@ -34,7 +34,7 @@ export default {
       required: true
     }
   },
-  emits: ['submit', 'success', 'error'],
+  emits: ['submit', 'success', 'error', 'loaded'],
   data () {
     return {
       form: null,
@@ -51,6 +51,8 @@ export default {
         this.form = result.data.data
       }).catch((error) => {
         console.error(error)
+      }).finally(() => {
+        this.$emit('loaded')
       })
     }
   }

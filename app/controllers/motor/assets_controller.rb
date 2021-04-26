@@ -9,19 +9,31 @@ module Motor
       'text/css'
     ].freeze
 
+    MIME_TYPES = {
+      '.js' => 'application/javascript',
+      '.css' => 'text/css',
+      '.woff2' => 'font/woff2'
+    }.freeze
+
     def show
       filename = params[:filename]
 
       return [404, {}, ''] unless Motor::Assets.manifest.values.include?(filename)
 
+      assign_headers(filename)
+
       self.response_body = CACHE_STORE.fetch(filename) do
-        Motor::Assets.load_asset(filename)
+        Motor::Assets.load_asset(filename, gzip: headers['Content-Encoding'] == 'gzip')
       end
+    end
 
-      headers['Content-Type'] = Marcel::MimeType.for(name: filename)
+    private
 
-      headers['Content-Encoding'] = 'gzip' if !Motor.development? && GZIP_TYPES.include?(headers['Content-Type'])
+    def assign_headers(filename)
+      content_type = MIME_TYPES[File.extname(filename)]
 
+      headers['Content-Type'] = content_type
+      headers['Content-Encoding'] = 'gzip' if !Motor.development? && GZIP_TYPES.include?(content_type)
       headers['Cache-Control'] = 'max-age=31536000'
     end
   end

@@ -82,7 +82,7 @@
         type="primary"
         @click="submit"
       >
-        Save
+        {{ okText }}
       </VButton>
     </div>
   </div>
@@ -103,6 +103,11 @@ export default {
     field: {
       type: Object,
       required: true
+    },
+    okText: {
+      type: String,
+      required: false,
+      default: 'Submit'
     },
     withRemove: {
       type: Boolean,

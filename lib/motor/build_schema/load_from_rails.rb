@@ -58,7 +58,11 @@ module Motor
       def call
         models.map do |model|
           build_model_schema(model)
-        end
+        rescue StandardError => e
+          Rails.logger.error(e)
+
+          next
+        end.compact
       end
 
       def models
@@ -69,7 +73,8 @@ module Motor
 
         models -= Motor::ApplicationRecord.descendants
         models -= [ActiveRecord::SchemaMigration] if defined?(ActiveRecord::SchemaMigration)
-        models -= [ActiveStorage::Blob, ActiveStorage::VariantRecord] if defined?(ActiveStorage::Blob)
+        models -= [ActiveStorage::Blob] if defined?(ActiveStorage::Blob)
+        models -= [ActiveStorage::VariantRecord] if defined?(ActiveStorage::VariantRecord)
 
         models
       end

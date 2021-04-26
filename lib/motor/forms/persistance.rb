@@ -30,9 +30,9 @@ module Motor
       end
 
       def update_from_params!(form, params)
-        raise NameAlreadyExists if name_already_exists?(form)
-
         form = assign_attributes(form, params)
+
+        raise NameAlreadyExists if name_already_exists?(form)
 
         ApplicationRecord.transaction do
           form.save!

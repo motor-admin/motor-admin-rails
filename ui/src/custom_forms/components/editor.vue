@@ -19,6 +19,7 @@
       <Card v-if="newField">
         <FieldForm
           :field="newField"
+          ok-text="Add"
           @submit="addField"
           @cancel="newField = null"
         />

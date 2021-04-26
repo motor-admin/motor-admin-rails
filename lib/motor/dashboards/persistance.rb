@@ -30,9 +30,9 @@ module Motor
       end
 
       def update_from_params!(dashboard, params)
-        raise TitleAlreadyExists if title_already_exists?(dashboard)
-
         dashboard = assign_attributes(dashboard, params)
+
+        raise TitleAlreadyExists if title_already_exists?(dashboard)
 
         ApplicationRecord.transaction do
           dashboard.save!

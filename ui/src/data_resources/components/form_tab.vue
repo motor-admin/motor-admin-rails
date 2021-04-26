@@ -2,12 +2,18 @@
   <div
     class="p-3"
   >
+    <Spin
+      v-if="isLoading"
+      fix
+    />
     <Card
+      v-show="!isLoading"
       style="max-width: 600px; margin: 0 auto"
     >
       <CustomFormModal
         :form-id="tab.preferences.form_id"
         :data="data"
+        @loaded="isLoading = false"
       />
     </Card>
   </div>
@@ -30,6 +36,11 @@ export default {
     tab: {
       type: Object,
       required: true
+    }
+  },
+  data () {
+    return {
+      isLoading: true
     }
   }
 }

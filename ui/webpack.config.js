@@ -101,7 +101,7 @@ module.exports = (env = {}) => ({
       publicPath: true
     }),
     new VueLoaderPlugin(),
-    new CleanWebpackPlugin({
+    env.production && new CleanWebpackPlugin({
       dangerouslyAllowCleanPatternsOutsideProject: true,
       dry: false,
       verbose: true

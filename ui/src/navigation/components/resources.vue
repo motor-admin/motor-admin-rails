@@ -66,5 +66,9 @@ export default {
 <style lang="scss" scoped>
 .ivu-menu-item {
   padding: 14px 18px;
+
+  &.ivu-menu-item-active {
+    font-weight: 500;
+  }
 }
 </style>
