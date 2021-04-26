@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Motor
-  class Config < ApplicationRecord
+  class Config < ::Motor::ApplicationRecord
     serialize :value, HashSerializer
   end
 end

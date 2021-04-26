@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Motor
-  class Alert < ApplicationRecord
+  class Alert < ::Motor::ApplicationRecord
     belongs_to :query
     belongs_to :author, polymorphic: true, optional: true
 

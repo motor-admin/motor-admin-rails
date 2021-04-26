@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Motor
-  class Query < ApplicationRecord
+  class Query < ::Motor::ApplicationRecord
     belongs_to :author, polymorphic: true, optional: true
 
     has_many :taggable_tags, as: :taggable

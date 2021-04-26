@@ -58,7 +58,7 @@ module Motor
       def call
         models.map do |model|
           build_model_schema(model)
-        rescue StandardError => e
+        rescue StandardError, NotImplementedError => e
           Rails.logger.error(e)
 
           next
@@ -66,7 +66,7 @@ module Motor
       end
 
       def models
-        Rails.application.eager_load!
+        eager_load_models!
 
         models = load_descendants(ActiveRecord::Base).uniq
         models = models.reject(&:abstract_class)
@@ -175,6 +175,14 @@ module Motor
             next
           end
         end.compact
+      end
+
+      def eager_load_models!
+        if Rails::VERSION::MAJOR > 5 && defined?(Zeitwerk::Loader)
+          Zeitwerk::Loader.eager_load_all
+        else
+          Rails.application.eager_load!
+        end
       end
     end
   end
