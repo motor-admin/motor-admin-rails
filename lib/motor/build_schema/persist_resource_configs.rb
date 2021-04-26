@@ -6,6 +6,7 @@ module Motor
       RESOURCE_ATTRS = %w[display_name visible].freeze
       COLUMN_ATTRS = %w[name display_name column_type access_type default_value virtual].freeze
       ASSOCIATION_ATTRS = %w[name display_name visible].freeze
+      SCOPE_ATTRS = %w[name display_name scope_type preferences visible].freeze
       ACTION_ATTRS = %w[name display_name action_type preferences visible].freeze
       TAB_ATTRS = %w[name display_name tab_type preferences visible].freeze
 
@@ -22,6 +23,12 @@ module Motor
 
       TAB_DEFAULTS = {
         visible: true,
+        preferences: {}
+      }.with_indifferent_access
+
+      SCOPE_DEFAULTS = {
+        visible: true,
+        scope_type: 'default',
         preferences: {}
       }.with_indifferent_access
 
@@ -99,6 +106,14 @@ module Motor
           )
         end
 
+        if new_prefs[:scopes].present?
+          normalized_preferences[:scopes] = normalize_scopes(
+            default_prefs[:scopes],
+            existing_prefs.fetch(:scopes, []),
+            new_prefs.fetch(:scopes, [])
+          )
+        end
+
         normalized_preferences.compact
       end
 
@@ -138,7 +153,7 @@ module Motor
           action_attrs = new_action.slice(*ACTION_ATTRS)
 
           normalized_action = existing_action.merge(action_attrs)
-          normalized_action = reject_default(default_action.presence || TAB_DEFAULTS, normalized_action)
+          normalized_action = reject_default(default_action.presence || ACTION_DEFAULTS, normalized_action)
 
           normalized_action.merge(name: name) if normalized_action.present?
         end.compact.presence
@@ -162,6 +177,27 @@ module Motor
           normalized_tab = reject_default(default_tab.presence || TAB_DEFAULTS, normalized_tab)
 
           normalized_tab.merge(name: name) if normalized_tab.present?
+        end.compact.presence
+      end
+
+      # @param default_scopes [Array<HashWithIndifferentAccess>]
+      # @param existing_scopes [Array<HashWithIndifferentAccess>]
+      # @param new_scopes [Array<HashWithIndifferentAccess>]
+      # @return [Array<HashWithIndifferentAccess>]
+      def normalize_scopes(default_scopes, existing_scopes, new_scopes)
+        (existing_scopes.pluck(:name) + new_scopes.pluck(:name)).uniq.map do |name|
+          new_scope = safe_fetch_by_name(new_scopes, name)
+
+          next if new_scope[:_remove]
+
+          existing_scope = safe_fetch_by_name(existing_scopes, name)
+          default_scope = safe_fetch_by_name(default_scopes, name)
+          scope_attrs = new_scope.slice(*SCOPE_ATTRS)
+
+          normalized_scope = existing_scope.merge(scope_attrs)
+          normalized_scope = reject_default(default_scope.presence || SCOPE_DEFAULTS, normalized_scope)
+
+          normalized_scope.merge(name: name) if normalized_scope.present?
         end.compact.presence
       end
 

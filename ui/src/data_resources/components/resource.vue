@@ -8,6 +8,7 @@
       <ResourcesMenu
         :resources="associations"
         :size="'small'"
+        :with-scopes="false"
         :path-fragments="pathFragments"
         :active-name="associationName"
         :style="{ minHeight: '100%' }"

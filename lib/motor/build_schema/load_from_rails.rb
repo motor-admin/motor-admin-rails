@@ -19,6 +19,8 @@ module Motor
         deleted_at: ColumnAccessTypes::READ_ONLY
       }.with_indifferent_access.freeze
 
+      DEFAULT_SCOPE_TYPE = 'default'
+
       DEFAULT_ACTIONS = [
         {
           name: 'create',
@@ -95,10 +97,27 @@ module Motor
           display_column: FindDisplayColumn.call(model),
           columns: fetch_columns(model),
           associations: fetch_associations(model),
+          scopes: fetch_scopes(model),
           actions: DEFAULT_ACTIONS,
           tabs: DEFAULT_TABS,
           visible: true
         }.with_indifferent_access
+      end
+
+      def fetch_scopes(model)
+        model.defined_scopes.map do |scope_name|
+          scope_name = scope_name.to_s
+
+          next if scope_name.starts_with?('with_attached')
+
+          {
+            name: scope_name,
+            display_name: scope_name.humanize,
+            scope_type: DEFAULT_SCOPE_TYPE,
+            visible: true,
+            preferences: {}
+          }
+        end.compact
       end
 
       def fetch_columns(model)

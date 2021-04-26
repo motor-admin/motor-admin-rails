@@ -7,6 +7,7 @@ module Motor
       COLUMN_DEFAULTS = PersistResourceConfigs::COLUMN_DEFAULTS
       ACTION_DEFAULTS = PersistResourceConfigs::ACTION_DEFAULTS
       TAB_DEFAULTS = PersistResourceConfigs::TAB_DEFAULTS
+      SCOPE_DEFAULTS = PersistResourceConfigs::SCOPE_DEFAULTS
 
       module_function
 
@@ -26,15 +27,15 @@ module Motor
       def merge_model(model, configs)
         updated_model = model.merge(configs.slice(*RESOURCE_ATTRS))
 
+        updated_model[:associations] = merge_by_name(
+          model[:associations],
+          configs[:associations]
+        )
+
         updated_model[:columns] = merge_by_name(
           model[:columns],
           configs[:columns],
           COLUMN_DEFAULTS
-        )
-
-        updated_model[:associations] = merge_by_name(
-          model[:associations],
-          configs[:associations]
         )
 
         updated_model[:actions] = merge_by_name(
@@ -46,7 +47,13 @@ module Motor
         updated_model[:tabs] = merge_by_name(
           model[:tabs],
           configs[:tabs],
-          ACTION_DEFAULTS
+          TAB_DEFAULTS
+        )
+
+        updated_model[:scopes] = merge_by_name(
+          model[:scopes],
+          configs[:scopes],
+          SCOPE_DEFAULTS
         )
 
         updated_model

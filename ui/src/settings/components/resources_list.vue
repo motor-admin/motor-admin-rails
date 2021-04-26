@@ -8,6 +8,7 @@
     v-else
     :list="schema"
     ghost-class="ghost"
+    handle=".handle"
     @change="updateOrder"
   >
     <ResourceItem

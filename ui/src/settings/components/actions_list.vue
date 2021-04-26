@@ -1,6 +1,7 @@
 <template>
   <VueDraggableNext
     :list="resource.actions"
+    handle=".handle"
     @change="onActionMove"
   >
     <Action

@@ -8,7 +8,7 @@
     >
       <ResourcesMenu
         :resources="visibleResources"
-        :active-name="fragments[0]"
+        :active-name="activeNavigationName"
         :style="{ minHeight: '100%' }"
       />
     </Sider>
@@ -78,6 +78,13 @@ export default {
     ResourcesMenu
   },
   computed: {
+    activeNavigationName () {
+      if (this.$route.query?.scope) {
+        return this.fragments[0] + '.' + this.$route.query.scope
+      } else {
+        return this.fragments[0]
+      }
+    },
     visibleResources () {
       return schema.filter((model) => model.visible)
     },

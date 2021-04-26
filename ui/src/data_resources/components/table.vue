@@ -16,7 +16,11 @@
         <span
           v-if="withTitle && !selectedRows.length"
           class="fs-4 fw-bold nowrap"
-        >{{ title }}</span>
+        >{{ title }}
+          <template v-if="currentScope">
+            ({{ currentScope.display_name }})
+          </template>
+        </span>
         <ResourceActions
           v-if="selectedRows.length"
           :resources="selectedRows"
@@ -99,7 +103,7 @@ import DataTable from 'data_tables/components/table'
 import ResourceSearch from './search'
 import ResourceActions from './actions'
 import NewResourceButton from './new_button'
-import Filters from './filters'
+import FiltersModal from './filters_modal'
 
 import { truncate } from 'utils/scripts/string'
 
@@ -166,6 +170,9 @@ export default {
     }
   },
   computed: {
+    currentScope () {
+      return this.model.scopes.find((scope) => scope.name === this.$route.query?.scope)
+    },
     routeQueryParams () {
       const query = {}
 
@@ -181,6 +188,10 @@ export default {
 
       if (this.searchQuery) {
         query.q = this.searchQuery
+      }
+
+      if (this.$route.query?.scope) {
+        query.scope = this.$route.query?.scope
       }
 
       if (this.paginationParams.pageSize !== defaultPaginationParams.pageSize) {
@@ -242,6 +253,10 @@ export default {
 
       if (this.searchQuery) {
         params.q = this.searchQuery
+      }
+
+      if (this.$route.query?.scope) {
+        params.scope = this.$route.query?.scope
       }
 
       return params
@@ -313,7 +328,7 @@ export default {
   },
   methods: {
     openFiltersModal () {
-      this.$Drawer.open(Filters, {
+      this.$Drawer.open(FiltersModal, {
         filters: this.filterParams,
         model: this.model,
         onCancel: () => {

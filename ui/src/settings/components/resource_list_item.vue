@@ -7,7 +7,7 @@
       <div class="d-flex align-items-center">
         <Icon
           type="ios-menu"
-          class="me-3 cursor-grab"
+          class="me-3 cursor-grab handle"
         />
         <Checkbox
           v-model="resource.visible"

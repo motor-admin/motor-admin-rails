@@ -6,47 +6,47 @@
       <div class="ivu-card-body py-0">
         <div
           class="cursor-pointer d-flex align-items-center justify-content-between py-2"
-          :style="{ opacity: !isForm && !tab.visible ? 0.5 : 1 }"
+          :style="{ opacity: !isForm && scope.access_type === 'hidden' ? 0.5 : 1 }"
           @click="toggleForm"
         >
           <div class="d-flex align-items-center">
             <Icon
-              v-if="movable"
               type="ios-menu"
               class="me-3 cursor-grab handle"
             />
             <Checkbox
-              v-if="'summary' !== tab.name"
-              :model-value="tab.visible"
+              :model-value="scope.visible"
               @click.stop
               @on-change="toggleVisible"
             />
             <p
               ref="contenteditable"
               class="fs-5 fw-bold cursor-text"
-              :contenteditable="'summary' !== tab.name"
+              contenteditable
               @input="updateName"
-              @click="onTextClick"
+              @click.stop
               @blur="onNameFocusLost"
               @keydown.enter.prevent="$refs.contenteditable.blur()"
             >
               {{ displayName }}
             </p>
           </div>
-          <div class="d-flex align-items-center">
+          <div
+            v-if="scope.scope_type === 'filter'"
+            class="d-flex align-items-center"
+          >
             <Icon :type="isForm ? 'ios-arrow-up' : 'ios-arrow-down'" />
           </div>
         </div>
-        <TabForm
+        <ScopeForm
           v-if="isForm"
-          :tab="tab"
-          class="py-3"
-          :with-remove="'summary' !== tab.name"
-          :with-name="'summary' !== tab.name"
+          :scope="scope"
           :resource="resource"
+          class="py-3"
+          :with-remove="true"
           @cancel="toggleForm"
-          @remove="removeTab"
-          @submit="updateTab"
+          @remove="removeScope"
+          @submit="updateScope"
         />
       </div>
     </div>
@@ -55,24 +55,19 @@
 
 <script>
 import api from 'api'
-import TabForm from './resource_tab_form'
+import ScopeForm from './resource_scope_form'
 
 export default {
-  name: 'ResourceTab',
+  name: 'ResourceScope',
   components: {
-    TabForm
+    ScopeForm
   },
   props: {
     resource: {
       type: Object,
       required: true
     },
-    movable: {
-      type: Boolean,
-      required: false,
-      default: true
-    },
-    tab: {
+    scope: {
       type: Object,
       required: true
     }
@@ -80,46 +75,44 @@ export default {
   data () {
     return {
       isForm: false,
-      displayName: this.tab.display_name
+      displayName: this.scope.display_name
     }
   },
   watch: {
-    'tab.display_name' (value) {
+    'scope.display_name' (value) {
       if (value.trim() !== this.displayName.trim() &&
         value.trim() !== this.$refs.contenteditable.innerText.trim()) {
-        this.displayName = this.tab.display_name
+        this.displayName = this.scope.display_name
       }
     }
   },
   methods: {
-    removeTab () {
+    removeScope () {
       this.$Dialog.confirm({
         title: 'Are you sure?',
         closable: true,
         onOk: () => {
-          const index = this.resource.tabs.findIndex((tab) => tab.name === this.tab.name)
+          const index = this.resource.scopes.findIndex((scope) => scope.name === this.scope.name)
 
-          this.removeRequest()
-          this.resource.tabs.splice(index, 1)
-        }
-      })
-    },
-    removeRequest () {
-      return api.post('resources', {
-        data: {
-          name: this.resource.name,
-          preferences: {
-            tabs: [
-              {
-                name: this.tab.name,
-                _remove: true
+          this.resource.scopes.splice(index, 1)
+
+          api.post('resources', {
+            data: {
+              name: this.resource.name,
+              preferences: {
+                scopes: [
+                  {
+                    name: this.scope.name,
+                    _remove: true
+                  }
+                ]
               }
-            ]
-          }
+            }
+          }).then((result) => {
+          }).catch((error) => {
+            console.error(error)
+          })
         }
-      }).then((result) => {
-      }).catch((error) => {
-        console.error(error)
       })
     },
     persistChanges () {
@@ -127,8 +120,8 @@ export default {
         data: {
           name: this.resource.name,
           preferences: {
-            tabs: [
-              this.tab
+            scopes: [
+              this.scope
             ]
           }
         }
@@ -138,36 +131,33 @@ export default {
       })
     },
     toggleVisible (value) {
-      this.tab.visible = value
+      this.scope.visible = value
 
       this.persistChanges()
     },
     toggleForm () {
-      this.isForm = !this.isForm
-    },
-    updateName (event) {
-      this.tab.display_name = event.target.innerText
-    },
-    onTextClick (event) {
-      if (this.tab.name === 'summary') {
-        event.stopPropagation()
+      if (this.scope.scope_type === 'filter') {
+        this.isForm = !this.isForm
       }
     },
-    updateTab (tab) {
-      this.isForm = false
-
-      Object.assign(this.tab, tab)
+    updateName (event) {
+      this.scope.display_name = event.target.innerText
+    },
+    updateScope (scope) {
+      Object.assign(this.scope, scope)
 
       this.persistChanges()
+
+      this.isForm = false
     },
     onNameFocusLost () {
-      if (!this.tab.display_name || this.tab.display_name.match(/^\s+$/)) {
-        this.tab.display_name = this.displayName
+      if (!this.scope.display_name || this.scope.display_name.match(/^\s+$/)) {
+        this.scope.display_name = this.displayName
         this.displayName = this.displayName + ' '
       } else {
         this.persistChanges()
 
-        this.displayName = this.tab.display_name
+        this.displayName = this.scope.display_name
       }
     }
   }

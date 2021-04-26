@@ -7,6 +7,7 @@
         { label: 'Columns', value: 'columns' },
         { label: 'Actions', value: 'actions' },
         { label: 'Tabs', value: 'tabs' },
+        { label: 'Scopes', value: 'scopes' },
         { label: 'Associations', value: 'associations' }
       ]"
     />
@@ -15,15 +16,19 @@
       :resource="resource"
     />
     <AssociationsList
-      v-if="selectedTab === 'associations'"
+      v-else-if="selectedTab === 'associations'"
+      :resource="resource"
+    />
+    <ScopesList
+      v-else-if="selectedTab === 'scopes'"
       :resource="resource"
     />
     <ActionsList
-      v-if="selectedTab === 'actions'"
+      v-else-if="selectedTab === 'actions'"
       :resource="resource"
     />
     <TabsList
-      v-if="selectedTab === 'tabs'"
+      v-else-if="selectedTab === 'tabs'"
       :resource="resource"
     />
   </div>
@@ -44,6 +49,7 @@ import ResourceColumnsList from './columns_list'
 import AssociationsList from './associations_list'
 import ActionsList from './actions_list'
 import TabsList from './tabs_list'
+import ScopesList from './scopes_list'
 import Tabs from 'utils/components/tabs'
 
 export default {
@@ -52,6 +58,7 @@ export default {
     AssociationsList,
     ResourceColumnsList,
     ActionsList,
+    ScopesList,
     TabsList,
     Tabs
   },

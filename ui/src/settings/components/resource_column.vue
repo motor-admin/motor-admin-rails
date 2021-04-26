@@ -12,7 +12,7 @@
           <div class="d-flex align-items-center">
             <Icon
               type="ios-menu"
-              class="me-3 cursor-grab"
+              class="me-3 cursor-grab handle"
             />
             <Checkbox
               :model-value="['read_only', 'read_write'].includes(column.access_type)"

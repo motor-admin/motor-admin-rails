@@ -1,6 +1,7 @@
 <template>
   <VueDraggableNext
     :list="resource.associations"
+    handle=".handle"
     @change="onAssociationMove"
   >
     <Association

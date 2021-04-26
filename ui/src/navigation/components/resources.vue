@@ -5,21 +5,25 @@
     width="auto"
     :open-names="openNames"
   >
-    <MenuItem
+    <ResourceMenuItem
       v-for="resource in resources"
       :key="resource.slug"
-      :name="resource.slug"
+      :with-scopes="withScopes"
+      :fragments="pathFragments"
+      :resource="resource"
       :class="itemClass"
-      :to="{ name: 'resources', params: { fragments: [...pathFragments, resource.slug] }, query }"
-    >
-      {{ resource.display_name }}
-    </MenuItem>
+    />
   </Menu>
 </template>
 
 <script>
+import ResourceMenuItem from './resource_menu_item'
+
 export default {
   name: 'ResourcesNavigation',
+  components: {
+    ResourceMenuItem
+  },
   props: {
     resources: {
       type: Array,
@@ -30,15 +34,15 @@ export default {
       required: false,
       default: 'default'
     },
+    withScopes: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     pathFragments: {
       type: Array,
       required: false,
       default: () => []
-    },
-    query: {
-      type: Object,
-      required: false,
-      default: () => ({})
     },
     activeName: {
       type: String,
@@ -64,11 +68,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ivu-menu-item {
+.ivu-menu-item, :deep(.ivu-menu-submenu-title) {
   padding: 14px 18px;
+}
 
-  &.ivu-menu-item-active {
+.ivu-menu.ivu-menu-light.ivu-menu-vertical {
+  & > .ivu-menu-item-active:not(.ivu-menu-submenu) {
     font-weight: 500;
+  }
+}
+
+.ivu-menu.ivu-menu-light.ivu-menu-vertical {
+  .ivu-menu-submenu {
+    :deep(.ivu-menu-item) {
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-left: 20px;
+    }
+
+    :deep(.ivu-menu-item.ivu-menu-item-active) {
+      font-weight: 500;
+    }
+
+    &.ivu-menu-item-active {
+      :deep(.ivu-menu-submenu-title) {
+        font-weight: 500;
+      }
+    }
   }
 }
 </style>

@@ -13,7 +13,7 @@
             <Icon
               v-if="movable"
               type="ios-menu"
-              class="me-3 cursor-grab"
+              class="me-3 cursor-grab handle"
             />
             <Checkbox
               :model-value="action.visible"

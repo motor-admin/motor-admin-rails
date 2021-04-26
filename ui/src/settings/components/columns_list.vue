@@ -1,6 +1,7 @@
 <template>
   <VueDraggableNext
     :list="resource.columns"
+    handle=".handle"
     @change="onColumnMove"
   >
     <ResourceColumn

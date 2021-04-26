@@ -1,71 +1,45 @@
 <template>
   <div
-    style="min-height: calc(100% - 53px)"
-    @keydown.enter="$emit('apply', clearedFilters)"
+    class="pt-2"
   >
-    <div
-      :key="dataFilters.length"
-      class="pt-2"
+    <template
+      v-for="([filter, key], index) in filtersWithKeys"
+      :key="key"
     >
-      <template
-        v-for="(filter, index) in dataFilters"
-        :key="index"
+      <FilterItem
+        v-if="filter !== 'OR'"
+        :filter="filter"
+        :model="model"
+        style="margin: -4px 0"
+        @remove="removeFilter"
+        @update:filter="updateFilter(key, $event)"
+      />
+      <Tag
+        v-if="filter === 'OR'"
+        color="volcano"
+        class="ms-1 my-0"
+        @click="toggleOr(index)"
       >
-        <FilterItem
-          v-if="filter !== 'OR'"
-          :filter="filter"
-          :model="model"
-          style="margin: -4px 0"
-          @remove="removeFilter"
-          @update:filter="updateFilter(filter, $event)"
-        />
-        <Tag
-          v-if="filter === 'OR'"
-          color="volcano"
-          class="ms-1 my-0"
-          @click="toggleOr(index)"
-        >
-          {{ filter }}
-        </Tag>
-        <Tag
-          v-else-if="index !== dataFilters.length - 1 && dataFilters[index + 1] !== 'OR'"
-          color="blue"
-          class="m-0"
-          @click="toggleOr(index)"
-        >
-          AND
-        </Tag>
-      </template>
-      <div class="pb-2 pt-3 text-center">
-        <VButton
-          icon="md-add"
-          type="text"
-          @click="addFilter"
-        >
-          Add Filter
-        </VButton>
-      </div>
+        {{ filter }}
+      </Tag>
+      <Tag
+        v-else-if="index !== filters.length - 1 && filters[index + 1] !== 'OR'"
+        color="blue"
+        class="m-0"
+        @click="toggleOr(index)"
+      >
+        AND
+      </Tag>
+    </template>
+    <div class="pb-2 pt-3 text-center">
+      <VButton
+        icon="md-add"
+        type="text"
+        @click="addFilter"
+      >
+        Add Filter
+      </VButton>
     </div>
-  </div>
-  <div class="drawer-footer">
-    <VButton
-      class="float-left"
-      @click="$emit('cancel')"
-    >
-      Cancel
-    </VButton>
-    <VButton
-      @click="$emit('apply', [])"
-    >
-      Clear All
-    </VButton>
-    <VButton
-      class="ms-2"
-      type="primary"
-      @click="$emit('apply', clearedFilters)"
-    >
-      Apply
-    </VButton>
   </div>
 </template>
 
@@ -91,67 +65,69 @@ export default {
     filters: {
       type: [Array, Object],
       required: false,
-      default: () => ({})
+      default: () => []
     }
   },
-  emits: ['apply', 'cancel'],
+  emits: ['update:filters'],
   data () {
     return {
-      count: 0,
-      dataFilters: []
+      filtersWithKeys: []
     }
   },
-  computed: {
-    clearedFilters () {
-      return this.dataFilters.filter((f) => {
-        return f === 'OR' || !!Object.keys(f)[0]
-      })
-    }
-  },
-  mounted () {
-    this.dataFilters = [...this.filters]
+  created () {
+    this.filtersWithKeys = this.filters.map((e) => [e, Math.random()])
 
-    if (!this.dataFilters.length) {
+    if (!this.filters.length) {
       this.addFilter()
     }
   },
   methods: {
+    updateFilters () {
+      this.$emit('update:filters', this.filtersWithKeys.map((e) => e[0]))
+    },
     addFilter () {
-      this.dataFilters.push({ ...defaultFilterValues })
+      this.filtersWithKeys.push([{ ...defaultFilterValues }, Math.random()])
+
+      this.updateFilters()
     },
     toggleOr (index) {
-      if (this.dataFilters[index] === 'OR') {
-        this.dataFilters.splice(index, 1)
+      if (this.filtersWithKeys[index][0] === 'OR') {
+        this.filtersWithKeys.splice(index, 1)
       } else {
-        this.dataFilters.splice(index + 1, 0, 'OR')
+        this.filtersWithKeys.splice(index + 1, 0, ['OR', Math.random()])
       }
-    },
-    updateFilter (filter, newFilter) {
-      const index = this.dataFilters.indexOf(filter)
 
-      this.dataFilters.splice(index, 1, newFilter)
+      this.updateFilters()
+    },
+    updateFilter (key, newFilter) {
+      const index = this.filtersWithKeys.findIndex(([_, filterKey]) => filterKey === key)
+
+      this.filtersWithKeys.splice(index, 1, [newFilter, key])
+
+      this.updateFilters()
     },
     removeFilter (filter) {
-      const index = this.dataFilters.indexOf(filter)
+      const index = this.filters.indexOf(filter)
 
-      this.dataFilters.splice(index, 1)
+      this.filtersWithKeys.splice(index, 1)
 
-      if (this.dataFilters[index] === 'OR') {
-        this.dataFilters.splice(index, 1)
+      if (this.filtersWithKeys[index]?.[0] === 'OR') {
+        this.filtersWithKeys.splice(index, 1)
       }
 
-      if (this.dataFilters[0] === 'OR') {
-        this.dataFilters.splice(0, 1)
+      if (this.filtersWithKeys[0]?.[0] === 'OR') {
+        this.filtersWithKeys.splice(0, 1)
       }
 
-      if (this.dataFilters[this.dataFilters.length - 1] === 'OR') {
-        this.dataFilters.splice(this.dataFilters.length - 1, 1)
+      if (this.filtersWithKeys[this.filtersWithKeys.length - 1]?.[0] === 'OR') {
+        this.filtersWithKeys.splice(this.filtersWithKeys.length - 1, 1)
       }
+
+      this.updateFilters()
     }
   }
 }
 </script>
 
 <style lang="scss">
-
 </style>

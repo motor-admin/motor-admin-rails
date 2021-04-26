@@ -1,6 +1,7 @@
 <template>
   <VueDraggableNext
     :list="resource.tabs"
+    handle=".handle"
     @change="onTabMove"
   >
     <TabItem
