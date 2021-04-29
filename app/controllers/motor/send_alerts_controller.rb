@@ -2,6 +2,8 @@
 
 module Motor
   class SendAlertsController < ApiBaseController
+    wrap_parameters :data
+
     before_action :build_alert, only: :create
     authorize_resource :alert, only: :create
 

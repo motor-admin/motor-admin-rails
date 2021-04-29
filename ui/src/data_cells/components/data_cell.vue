@@ -8,7 +8,7 @@
     :value="stringValue"
   />
   <DataUrl
-    v-else-if="isUrl"
+    v-else-if="isUrl || isPath"
     :truncate="textTruncate"
     :value="stringValue"
   />
@@ -104,11 +104,13 @@ export default {
       return typeof this.value === 'boolean'
     },
     isImage () {
-      return false
-      // return this.isUrl && !!this.stringValue.match(/\.(jpg|png|jpeg|wepb|svg)$/)
+      return this.isPath && !!this.stringValue.match(/\.(jpg|png|jpeg|wepb|svg)$/)
     },
     isUrl () {
       return !!this.stringValue.match(/^https?:\/\//i)
+    },
+    isPath () {
+      return !!this.stringValue.match(/^\/[^\s]+$/i)
     }
   },
   mounted () {

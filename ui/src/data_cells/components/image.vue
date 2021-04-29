@@ -20,5 +20,6 @@ export default {
 <style lang="scss">
 .table-image {
   max-height: 120px;
+  vertical-align: top;
 }
 </style>

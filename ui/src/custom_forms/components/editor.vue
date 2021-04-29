@@ -6,6 +6,7 @@
     <div style="min-height: calc(100vh - 195px); overflow-y: scroll">
       <VueDraggableNext
         :list="form.preferences.fields"
+        handle=".handle"
       >
         <FieldItem
           v-for="field in form.preferences.fields"

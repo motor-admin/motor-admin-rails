@@ -36,7 +36,7 @@
           v-model="searchQuery"
           style="max-width: 400px"
           class="mx-1"
-          :placeholder="`Search ${(associationModel?.display_name || model.display_name).toLowerCase()}...`"
+          :placeholder="`Search ${(association?.display_name || model.display_name).toLowerCase()}...`"
           @search="applySearch"
         />
         <Badge
@@ -51,7 +51,8 @@
         </Badge>
         <NewResourceButton
           class="mx-1"
-          :resource-name="model.name"
+          :model="model"
+          :association="association"
           :parent-resource="associationParams ? { name: resourceName, id: associationParams.id } : null"
           @success="loadDataAndCount"
         />
@@ -208,7 +209,7 @@ export default {
       return this.filterParams.filter((f) => f !== 'OR').length
     },
     title () {
-      return truncate(this.associationModel?.display_name || this.model.display_name, 60)
+      return truncate(this.association?.display_name || this.model.display_name, 60)
     },
     itemsCountCacheKey () {
       return JSON.stringify({
@@ -266,7 +267,7 @@ export default {
         return column.reference?.name
       }).filter(Boolean).join(',')
     },
-    associationModel () {
+    association () {
       if (this.associationParams?.name) {
         return modelNameMap[this.resourceName].associations.find((assoc) => {
           return assoc.slug === this.associationParams.name
@@ -276,8 +277,8 @@ export default {
       }
     },
     model () {
-      if (this.associationModel) {
-        const assocSchemaName = this.associationModel.model_name
+      if (this.association) {
+        const assocSchemaName = this.association.model_name
 
         return modelNameMap[assocSchemaName]
       } else {

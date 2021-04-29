@@ -5,6 +5,11 @@
     :resource-name="column.reference.name"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
+  <input
+    v-else-if="isFile"
+    type="file"
+    @change="onFile"
+  >
   <MSelect
     v-else-if="isTagSelect"
     :model-value="modelValue"
@@ -71,7 +76,7 @@ export default {
   },
   props: {
     modelValue: {
-      type: [String, Number, Boolean, Date],
+      type: [String, Number, Boolean, Date, Object],
       required: false,
       default: ''
     },
@@ -105,6 +110,9 @@ export default {
     isDate () {
       return this.type === 'date'
     },
+    isFile () {
+      return this.type === 'file'
+    },
     isNumber () {
       return ['integer', 'bigint', 'int', 'float', 'demical', 'double', 'number'].includes(this.type)
     },
@@ -130,6 +138,19 @@ export default {
   },
   methods: {
     titleize,
+    onFile (event) {
+      const file = event.target.files[0]
+      const reader = new FileReader()
+
+      reader.readAsBinaryString(file)
+
+      reader.onload = () => {
+        this.$emit('update:modelValue', {
+          filename: file.name,
+          io: reader.result
+        })
+      }
+    },
     updateDateTime (datetime) {
       if (datetime) {
         this.$emit('update:modelValue', new Date(datetime.getTime() - datetime.getTimezoneOffset() * 60000))

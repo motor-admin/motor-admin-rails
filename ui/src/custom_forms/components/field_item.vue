@@ -11,7 +11,7 @@
           <div class="d-flex align-items-center">
             <Icon
               type="ios-menu"
-              class="me-3 cursor-grab"
+              class="me-3 cursor-grab handle"
             />
             <p
               class="fs-5 fw-bold"

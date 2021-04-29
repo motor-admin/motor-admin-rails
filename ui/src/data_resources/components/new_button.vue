@@ -18,9 +18,14 @@ import { titleize } from 'utils/scripts/string'
 export default {
   name: 'NewResourceButton',
   props: {
-    resourceName: {
-      type: String,
+    model: {
+      type: Object,
       required: true
+    },
+    association: {
+      type: Object,
+      required: false,
+      default: null
     },
     parentResource: {
       type: Object,
@@ -30,11 +35,8 @@ export default {
   },
   emits: ['success'],
   computed: {
-    model () {
-      return modelNameMap[this.resourceName]
-    },
     resourceTitle () {
-      return titleize(this.resourceName)
+      return titleize(this.model.name)
     },
     defaultValues () {
       return this.model.columns.reduce((acc, column) => {
@@ -53,8 +55,15 @@ export default {
     resource () {
       const resource = JSON.parse(JSON.stringify(this.defaultValues))
 
-      if (this.parentResource) {
-        resource[`${this.parentResource.name}_id`] = this.parentResource.id
+      if (this.association?.polymorphic) {
+        resource[this.association.foreign_key] = parseInt(this.parentResource.id)
+        resource[this.association.foreign_key.replace('_id', '_type')] = modelNameMap[this.parentResource.name].class_name
+
+        if (this.association.model_name === 'active_storage/attachment') {
+          resource.name = this.association.name.replace(/_attachments?$/, '')
+        }
+      } else if (this.parentResource) {
+        resource[`${this.parentResource.name}_id`] = parseInt(this.parentResource.id)
       }
 
       return resource
@@ -73,7 +82,7 @@ export default {
       return {
         action: 'new',
         resource: this.resource,
-        resourceName: this.resourceName,
+        resourceName: this.model.name,
         onClose: () => {
           this.$Drawer.remove()
         },

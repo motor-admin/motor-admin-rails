@@ -2,6 +2,8 @@
 
 module Motor
   class FormsController < ApiBaseController
+    wrap_parameters :data, except: %i[include fields]
+
     load_and_authorize_resource :form, only: %i[index show update destroy]
 
     before_action :build_form, only: :create

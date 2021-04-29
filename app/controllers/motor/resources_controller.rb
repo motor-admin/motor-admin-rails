@@ -2,6 +2,8 @@
 
 module Motor
   class ResourcesController < ApiBaseController
+    wrap_parameters :data, except: %i[include fields]
+
     load_and_authorize_resource
 
     def index

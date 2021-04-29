@@ -121,9 +121,7 @@ export default {
   watch: {
     '$route' (to, from) {
       if (to.name === from.name && JSON.stringify(to.params.fragments) === JSON.stringify(from.params.fragments)) {
-        if (to.query?.tab) {
-          this.selectedTabName = to.query.tab
-        }
+        this.selectedTabName = to.query?.tab || this.tabs[0].name
       }
     }
   },

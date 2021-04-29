@@ -2,6 +2,8 @@
 
 module Motor
   class DashboardsController < ApiBaseController
+    wrap_parameters :data, except: %i[include fields]
+
     load_and_authorize_resource :dashboard, only: %i[index show update destroy]
 
     before_action :build_dashboard, only: :create

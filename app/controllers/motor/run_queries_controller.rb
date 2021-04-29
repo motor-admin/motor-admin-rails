@@ -2,6 +2,8 @@
 
 module Motor
   class RunQueriesController < ApiBaseController
+    wrap_parameters :data
+
     load_and_authorize_resource :query, only: :show, parent: false
 
     before_action :build_query, only: :create

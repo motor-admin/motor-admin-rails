@@ -4,6 +4,8 @@ module Motor
   class DataController < ApiBaseController
     INSTANCE_VARIABLE_NAME = 'resource'
 
+    wrap_parameters :data, except: %i[include fields]
+
     before_action :load_and_authorize_resource
     before_action :load_and_authorize_association
 
@@ -96,7 +98,7 @@ module Motor
     end
 
     def resource_params
-      params.fetch(:data, {}).except(resource_class.primary_key).permit!
+      params.require(:data).except(resource_class.primary_key).permit!
     end
   end
 end

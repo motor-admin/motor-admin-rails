@@ -3,58 +3,6 @@
 module Motor
   module BuildSchema
     module LoadFromRails
-      module ColumnAccessTypes
-        ALL = [
-          READ_ONLY = 'read_only',
-          WRITE_ONLY = 'write_only',
-          READ_WRITE = 'read_write',
-          HIDDEN = 'hidden'
-        ].freeze
-      end
-
-      COLUMN_NAME_ACCESS_TYPES = {
-        id: ColumnAccessTypes::READ_ONLY,
-        created_at: ColumnAccessTypes::READ_ONLY,
-        updated_at: ColumnAccessTypes::READ_ONLY,
-        deleted_at: ColumnAccessTypes::READ_ONLY
-      }.with_indifferent_access.freeze
-
-      DEFAULT_SCOPE_TYPE = 'default'
-
-      DEFAULT_ACTIONS = [
-        {
-          name: 'create',
-          display_name: 'Create',
-          action_type: 'default',
-          preferences: {},
-          visible: true
-        },
-        {
-          name: 'edit',
-          display_name: 'Edit',
-          action_type: 'default',
-          preferences: {},
-          visible: true
-        },
-        {
-          name: 'remove',
-          display_name: 'Remove',
-          action_type: 'default',
-          preferences: {},
-          visible: true
-        }
-      ].freeze
-
-      DEFAULT_TABS = [
-        {
-          name: 'summary',
-          display_name: 'Summary',
-          tab_type: 'default',
-          preferences: {},
-          visible: true
-        }
-      ].freeze
-
       module_function
 
       def call
@@ -88,12 +36,17 @@ module Motor
       end
 
       def build_model_schema(model)
+        model_name = model.name
+
+        return Motor::BuildSchema::ACTIVE_STORAGE_ATTACHMENT_SCHEMA if model_name == 'ActiveStorage::Attachment'
+
         {
-          name: model.name.underscore,
+          name: model_name.underscore,
           slug: Utils.slugify(model),
           table_name: model.table_name,
+          class_name: model.name,
           primary_key: model.primary_key,
-          display_name: model.name.titleize.pluralize,
+          display_name: model_name.titleize.pluralize,
           display_column: FindDisplayColumn.call(model),
           columns: fetch_columns(model),
           associations: fetch_associations(model),
@@ -146,17 +99,19 @@ module Motor
             next
           end
 
-          next if defined?(ActiveStorage::Blob) && ref.klass == ActiveStorage::Blob
+          model_class = ref.klass
+
+          next if model_class.name == 'ActiveStorage::Blob'
 
           {
             name: name,
             display_name: name.humanize,
             slug: name.underscore,
-            model_name: ref.klass.name.underscore,
-            model_slug: Utils.slugify(ref.klass),
+            model_name: model_class.name.underscore,
+            model_slug: Utils.slugify(model_class),
             association_type: fetch_association_type(ref),
             foreign_key: ref.foreign_key,
-            polymorphic: ref.polymorphic?,
+            polymorphic: ref.polymorphic? || model_class.name == 'ActiveStorage::Attachment',
             visible: true
           }
         end.compact

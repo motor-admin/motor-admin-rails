@@ -30,7 +30,7 @@
         </DropdownItem>
         <DropdownItem
           v-if="removeAction"
-          divided
+          :divided="editAction"
           class="text-danger"
           @click="applyAction(removeAction)"
         >

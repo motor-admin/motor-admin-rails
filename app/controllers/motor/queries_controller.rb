@@ -2,6 +2,8 @@
 
 module Motor
   class QueriesController < ApiBaseController
+    wrap_parameters :data, except: %i[include fields]
+
     load_and_authorize_resource :query, only: %i[index show update destroy]
 
     before_action :build_query, only: :create
