@@ -81,7 +81,7 @@
       <Split
         v-model="split"
         mode="vertical"
-        :style="{ height: isSettingsOpened ? 'calc(100% - 88px)' : '100%' }"
+        :style="{ height: isSettingsOpened && isVariablesForm ? 'calc(100% - 88px)' : '100%' }"
       >
         <template #top>
           <SqlEditor

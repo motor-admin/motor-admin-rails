@@ -8,10 +8,9 @@ module Motor
 
     initializer 'motor.alerts.scheduler' do
       config.after_initialize do |_app|
-        next if defined?(Sidekiq) && Sidekiq.server?
+        next unless defined?(Rails::Server)
 
         Motor::Alerts::Scheduler::SCHEDULER_TASK.execute
-        Motor::Alerts::ScheduledAlertsCache::UPDATE_ALERTS_TASK.execute
       end
     end
 

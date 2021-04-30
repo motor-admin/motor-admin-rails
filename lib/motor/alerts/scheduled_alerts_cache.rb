@@ -3,10 +3,6 @@
 module Motor
   module Alerts
     module ScheduledAlertsCache
-      UPDATE_ALERTS_TASK = Concurrent::TimerTask.new(
-        execution_interval: 2.minutes
-      ) { Motor::Alerts::ScheduledAlertsCache.load_alerts }
-
       CACHE_STORE = ActiveSupport::Cache::MemoryStore.new(size: 5.megabytes)
 
       module_function
