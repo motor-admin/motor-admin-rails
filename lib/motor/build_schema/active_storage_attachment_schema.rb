@@ -26,7 +26,7 @@ module Motor
           access_type: 'read_only',
           default_value: nil,
           validators: [],
-          virtual: false
+          virtual: true
         },
         {
           name: 'name',

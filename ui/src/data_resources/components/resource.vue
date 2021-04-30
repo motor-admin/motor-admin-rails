@@ -94,9 +94,7 @@ export default {
       return modelNameMap[this.resourceName]
     },
     associations () {
-      return this.model.associations.filter((assoc) => {
-        return assoc.association_type === 'has_many' && assoc.visible
-      })
+      return this.model.associations.filter((assoc) => assoc.visible)
     }
   },
   methods: {

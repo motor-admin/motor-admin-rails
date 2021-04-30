@@ -141,6 +141,14 @@ export default {
         if (column.column_type === 'json') {
           data[column.name] = JSON.parse(data[column.name])
         }
+
+        if (this.action === 'edit' && JSON.stringify(this.resource[column.name]) === JSON.stringify(data[column.name])) {
+          delete data[column.name]
+        } else if (column.reference?.model_name === 'active_storage/attachment') {
+          data[column.name.replace(/_attachment$/, '')] = data[column.name]
+
+          delete data[column.name]
+        }
       })
 
       return { data }
@@ -189,7 +197,8 @@ export default {
 
       this.columns.forEach((column) => {
         const value = resource[column.name]
-        if (column.column_type === 'json' || (value && typeof value === 'object')) {
+
+        if (column.column_type === 'json') {
           data[column.name] = JSON.stringify(value || {}, null, '  ')
         } else {
           data[column.name] = resource[column.name]

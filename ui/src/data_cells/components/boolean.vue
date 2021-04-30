@@ -1,13 +1,13 @@
 <template>
   <Icon
     v-if="value === 'true' || value === true"
-    type="md-checkmark"
-    class="text-success"
+    type="md-checkmark-circle"
+    class="text-success fs-2"
   />
   <Icon
     v-else
-    type="md-close"
-    class="text-danger"
+    type="md-close-circle"
+    class="text-danger fs-2"
   />
 </template>
 

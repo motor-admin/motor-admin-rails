@@ -40,9 +40,14 @@
                 {{ column.display_name }}:
               </b>
               <br>
+              <DataCell
+                v-if="column.reference?.model_name === 'active_storage/attachment'"
+                :value="resource[column.name]?.path"
+                :type="'string'"
+              />
               <Reference
-                v-if="column.reference"
-                :resource-id="resource[column.name]"
+                v-else-if="column.reference"
+                :resource-id="getReferenceId(column)"
                 :reference-name="column.reference.model_name"
                 :show-popover="referencePopover"
                 :reference-data="resource[column.reference.name]"
@@ -86,6 +91,7 @@ import ResourceActions from './actions'
 
 import { assignBreadcrumbLabel } from 'navigation/scripts/breadcrumb_store'
 import { titleize, truncate } from 'utils/scripts/string'
+import { includeParams, fieldsParams } from '../scripts/query_utils'
 
 import DataTypes from 'data_cells/scripts/data_types'
 
@@ -138,15 +144,14 @@ export default {
       return this.model.columns.filter((column) => column.name !== 'id' && ['read_only', 'read_write'].includes(column.access_type))
     },
     includeParams () {
-      return this.columns.map((column) => {
-        return column.reference?.name
-      }).filter(Boolean).join(',')
+      return includeParams(this.model)
+    },
+    fieldsParams () {
+      return fieldsParams(this.model)
     },
     queryParams () {
       const params = {
-        fields: {
-          [this.model.name]: ['id', ...this.columns.map((e) => e.name)]
-        }
+        fields: this.fieldsParams
       }
 
       if (this.includeParams) {
@@ -171,6 +176,15 @@ export default {
   },
   methods: {
     titleize,
+    getReferenceId (column) {
+      if (column.reference.reference_type === 'belongs_to') {
+        return this.resource[column.name]
+      } else {
+        const referenceModel = modelNameMap[column.reference.model_name]
+
+        return this.resource[column.name][referenceModel.primary_key]
+      }
+    },
     onFinisAction (action) {
       if (action === 'remove') {
         this.$emit('remove', this.resource)

@@ -76,22 +76,80 @@ module Motor
       def fetch_columns(model)
         default_attrs = model.new.attributes
 
-        model.columns.map do |column|
+        reference_columns = fetch_reference_columns(model)
+
+        table_columns =
+          model.columns.map do |column|
+            next if reference_columns.find { |c| c[:name] == column.name }
+
+            {
+              name: column.name,
+              display_name: column.name.humanize,
+              column_type: ActiveRecordUtils::Types::UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
+              access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
+              default_value: default_attrs[column.name],
+              validators: fetch_validators(model, column.name),
+              reference: nil,
+              virtual: false
+            }
+          end.compact
+
+        reference_columns + table_columns
+      end
+
+      def build_column(model, column)
+        {
+          name: column.name,
+          display_name: column.name.humanize,
+          column_type: ActiveRecordUtils::Types::UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
+          access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
+          default_value: default_attrs[column.name],
+          validators: fetch_validators(model, column.name),
+          reference: fetch_reference(model, column.name),
+          virtual: false
+        }
+      end
+
+      def fetch_reference_columns(model)
+        default_attrs = model.new.attributes
+
+        model.reflections.map do |name, ref|
+          next if !ref.has_one? && !ref.belongs_to?
+
+          begin
+            ref.klass
+          rescue StandardError
+            next
+          end
+
+          column_name = ref.belongs_to? ? ref.foreign_key : name
+
+          next if ref.klass.name == 'ActiveStorage::Blob'
+
+          is_attachment = ref.klass.name == 'ActiveStorage::Attachment'
+
           {
-            name: column.name,
-            display_name: column.name.humanize,
-            column_type: ActiveRecordUtils::Types::UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
-            access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
-            default_value: default_attrs[column.name],
-            validators: fetch_validators(model, column.name),
+            name: column_name,
+            display_name: column_name.humanize,
+            column_type: is_attachment ? 'file' : 'integer',
+            access_type: ref.belongs_to? || is_attachment ? ColumnAccessTypes::READ_WRITE : ColumnAccessTypes::READ_ONLY,
+            default_value: default_attrs[column_name],
+            validators: fetch_validators(model, column_name),
+            reference: {
+              name: name,
+              model_name: ref.klass.name.underscore,
+              reference_type: ref.belongs_to? ? 'belongs_to' : 'has_one',
+              foreign_key: ref.foreign_key,
+              polymorphic: ref.polymorphic? || is_attachment
+            },
             virtual: false
           }
-        end
+        end.compact
       end
 
       def fetch_associations(model)
         model.reflections.map do |name, ref|
-          next if ref.polymorphic? && !ref.belongs_to?
+          next if ref.has_one? || ref.belongs_to?
 
           begin
             ref.klass
@@ -108,28 +166,11 @@ module Motor
             display_name: name.humanize,
             slug: name.underscore,
             model_name: model_class.name.underscore,
-            model_slug: Utils.slugify(model_class),
-            association_type: fetch_association_type(ref),
             foreign_key: ref.foreign_key,
             polymorphic: ref.polymorphic? || model_class.name == 'ActiveStorage::Attachment',
             visible: true
           }
         end.compact
-      end
-
-      def fetch_association_type(association)
-        case association.association_class.to_s
-        when 'ActiveRecord::Associations::HasManyAssociation',
-             'ActiveRecord::Associations::HasManyThroughAssociation'
-          'has_many'
-        when 'ActiveRecord::Associations::HasOneAssociation',
-             'ActiveRecord::Associations::HasOneThroughAssociation'
-          'has_one'
-        when 'ActiveRecord::Associations::BelongsToAssociation'
-          'belongs_to'
-        else
-          raise ArgumentError, 'Unknown association type'
-        end
       end
 
       def fetch_validators(model, column_name)

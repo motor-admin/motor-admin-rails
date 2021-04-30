@@ -49,7 +49,8 @@ module Motor
 
         params[:fields].each do |key, fields|
           fields = fields.split(',') if fields.is_a?(String)
-          fields_hash = build_fields_hash(model, fields)
+          reflection_class = model.reflections[key]&.klass
+          fields_hash = build_fields_hash(reflection_class || model, fields)
 
           if key == model_name || model_name.split('/').last == key
             json_params.merge!(fields_hash)
@@ -68,7 +69,7 @@ module Motor
         fields.each_with_object(fields_hash) do |field, acc|
           if field.in?(columns)
             acc['only'] << field
-          else
+          elsif model.instance_methods.include?(field.to_sym)
             acc['methods'] << field
           end
         end

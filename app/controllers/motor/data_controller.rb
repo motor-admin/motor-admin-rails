@@ -8,6 +8,7 @@ module Motor
 
     before_action :load_and_authorize_resource
     before_action :load_and_authorize_association
+    before_action :wrap_io_params
 
     def index
       @resources = Motor::ApiQuery.call(@resources, params)
@@ -98,7 +99,23 @@ module Motor
     end
 
     def resource_params
-      params.require(:data).except(resource_class.primary_key).permit!
+      if params[:data].present?
+        params.require(:data).except(resource_class.primary_key).permit!
+      else
+        {}
+      end
+    end
+
+    def wrap_io_params(hash = params)
+      hash.each do |key, value|
+        if key == 'io'
+          hash[key] = StringIO.new(value.encode('ISO-8859-1'))
+        elsif value.is_a?(ActionController::Parameters)
+          wrap_io_params(value)
+        end
+      end
+
+      hash
     end
   end
 end

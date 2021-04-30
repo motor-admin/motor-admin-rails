@@ -13,6 +13,7 @@ module Motor
       COLUMN_DEFAULTS = {
         access_type: 'read_write',
         default_value: nil,
+        reference: nil,
         validators: []
       }.with_indifferent_access
 

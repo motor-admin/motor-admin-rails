@@ -107,6 +107,7 @@ import NewResourceButton from './new_button'
 import FiltersModal from './filters_modal'
 
 import { truncate } from 'utils/scripts/string'
+import { includeParams, fieldsParams } from '../scripts/query_utils'
 
 import DataTypes from 'data_cells/scripts/data_types'
 
@@ -235,9 +236,7 @@ export default {
     queryParams () {
       const params = {
         filter: this.filterParams,
-        fields: {
-          [this.model.name]: this.columns.map((e) => e.key)
-        },
+        fields: this.fieldsParams,
         page: {
           limit: this.paginationParams.pageSize,
           offset: this.paginationParams.pageSize * (this.paginationParams.current - 1)
@@ -263,9 +262,10 @@ export default {
       return params
     },
     includeParams () {
-      return this.model.columns.map((column) => {
-        return column.reference?.name
-      }).filter(Boolean).join(',')
+      return includeParams(this.model)
+    },
+    fieldsParams () {
+      return fieldsParams(this.model)
     },
     association () {
       if (this.associationParams?.name) {
@@ -295,6 +295,7 @@ export default {
             key: column.name,
             title: column.display_name,
             reference: column.reference,
+            sortable: !column.virtual,
             type
           }
         } else {

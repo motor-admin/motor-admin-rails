@@ -1,15 +1,15 @@
 <template>
+  <input
+    v-if="isFile"
+    type="file"
+    @change="onFile"
+  >
   <ResourceSelect
-    v-if="column.reference && column.reference.name"
+    v-else-if="column.reference && column.reference.name"
     :model-value="modelValue"
     :resource-name="column.reference.name"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
-  <input
-    v-else-if="isFile"
-    type="file"
-    @change="onFile"
-  >
   <MSelect
     v-else-if="isTagSelect"
     :model-value="modelValue"

@@ -57,11 +57,16 @@ module Motor
             "$#{index}"
           end
 
-        [
-          format(WITH_STATEMENT_TEMPLATE, sql_body: sql.strip.gsub(/;\z/, ''), limit: limit),
-          'SQL',
-          variables.map { |variable_name, default_value| variables_hash[variable_name] || default_value }
-        ]
+        attributes =
+          variables.map do |variable_name, default_value|
+            ActiveRecord::Relation::QueryAttribute.new(
+              variable_name,
+              variables_hash[variable_name] || default_value,
+              ActiveRecord::Type::Value.new
+            )
+          end
+
+        [format(WITH_STATEMENT_TEMPLATE, sql_body: sql.strip.gsub(/;\z/, ''), limit: limit), 'SQL', attributes]
       end
     end
   end

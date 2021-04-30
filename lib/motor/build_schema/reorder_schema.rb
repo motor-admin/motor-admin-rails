@@ -2,6 +2,18 @@
 
 module Motor
   module ReorderSchema
+    COLUMNS_DEFAULT_ORDER_WEIGHTS = {
+      id: 0,
+      updated_at: 2,
+      edited_at: 2,
+      created_at: 3,
+      inserted_at: 3,
+      deleted_at: 4,
+      archived_at: 4
+    }.with_indifferent_access
+
+    COLUMNS_DEFAULT_ORDER_WEIGHT = 1
+
     module_function
 
     # @param schema [Array<HashWithIndifferentAccess>]
@@ -19,7 +31,7 @@ module Motor
         scopes_order = configs["resources.#{model[:name]}.scopes.order"]
 
         model.merge(
-          columns: sort_by_name(model[:columns], columns_order, sort_alphabetically: false),
+          columns: sort_by_name(sort_columns(model[:columns]), columns_order, sort_alphabetically: false),
           associations: sort_by_name(model[:associations], associations_order),
           actions: sort_by_name(model[:actions], actions_order, sort_alphabetically: false),
           tabs: sort_by_name(model[:tabs], tabs_order, sort_alphabetically: false),
@@ -42,6 +54,14 @@ module Motor
           item[:display_name]
         end
       end
+    end
+
+    def sort_columns(columns)
+      columns.each_with_object([]) do |column, acc|
+        weight = COLUMNS_DEFAULT_ORDER_WEIGHTS.fetch(column[:name], COLUMNS_DEFAULT_ORDER_WEIGHT)
+
+        (acc[weight] ||= []) << column
+      end.flatten.compact
     end
 
     # @return [Hash<String, HashWithIndifferentAccess>]

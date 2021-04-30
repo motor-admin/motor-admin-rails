@@ -130,7 +130,7 @@
 import Search from './search'
 import ResourcesSettings from 'settings/components/resources_list'
 import HeaderEdit from './header_edit'
-import { modelSlugMap } from 'data_resources/scripts/schema'
+import { modelSlugMap, modelNameMap } from 'data_resources/scripts/schema'
 import { basePath } from 'utils/scripts/configs'
 
 export default {
@@ -164,7 +164,7 @@ export default {
       return this.$route.params.fragments.reduce((acc, slug, index) => {
         if (index % 2 === 0) {
           return (
-            modelSlugMap[acc.associations?.find((assoc) => assoc.slug === slug)?.model_slug] ||
+            modelNameMap[acc.associations?.find((assoc) => assoc.slug === slug)?.model_name] ||
             modelSlugMap[slug]
           )
         } else {

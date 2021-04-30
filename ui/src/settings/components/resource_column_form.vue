@@ -33,7 +33,7 @@
         />
       </FormItem>
       <FormItem
-        v-if="['read_write', 'write_only'].includes(dataColumn.access_type)"
+        v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && dataColumn.column_type !== 'file'"
         label="Default value"
         prop="default_value"
       >

@@ -74,7 +74,7 @@ export default {
     columns () {
       return [
         ...this.model.columns.map((column) => {
-          if (!column.virtual && ['read_write', 'read_only'].includes(column.access_type)) {
+          if (!column.virtual && !column.reference && ['read_write', 'read_only'].includes(column.access_type)) {
             return {
               ...column,
               value: column.name,
@@ -84,6 +84,25 @@ export default {
             return null
           }
         }).filter(Boolean),
+        ...this.model.columns.map((column) => {
+          if (column.reference && ['read_write', 'read_only'].includes(column.access_type)) {
+            const referenceModel = modelNameMap[column.reference.model_name]
+
+            return referenceModel.columns.map((refColumn) => {
+              if (!refColumn.virtual && ['read_write', 'read_only'].includes(refColumn.access_type)) {
+                return {
+                  ...refColumn,
+                  value: `${column.name}.${refColumn.name}`,
+                  label: `${column.display_name} - ${refColumn.display_name}`
+                }
+              } else {
+                return null
+              }
+            }).filter(Boolean)
+          } else {
+            return []
+          }
+        }).flat(),
         ...this.model.associations.map((assoc) => {
           if (assoc.visible) {
             const assocModel = modelNameMap[assoc.model_name]

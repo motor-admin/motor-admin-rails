@@ -7,19 +7,39 @@ module Motor
 
       module_function
 
-      def call(rel, params)
-        return rel if params.blank?
+      def call(rel, param)
+        return rel if param.blank?
 
-        normalized_params = build_params(params)
+        arel_order = build_arel_order(rel.klass, param)
+        join_params = build_join_params(rel.klass, param)
 
-        rel.order(normalized_params)
+        rel.order(arel_order).left_joins(join_params)
       end
 
-      def build_params(param)
-        param.split(',').each_with_object({}) do |field, hash|
-          direction, name = field.match(FIELD_PARSE_REGEXP).captures
+      def build_join_params(_model, param)
+        param.split(',').each_with_object({}) do |field, result|
+          key = field[FIELD_PARSE_REGEXP, 2]
+          *path, _ = key.split('.')
 
-          hash[name] = direction.present? ? :desc : :asc
+          path.reduce(result) do |acc, fragment|
+            acc[fragment] = {}
+          end
+        end
+      end
+
+      def build_arel_order(model, param)
+        param.split(',').map do |field|
+          direction, key = field.match(FIELD_PARSE_REGEXP).captures
+          *path, field = key.split('.')
+
+          reflection_model =
+            path.reduce(model) do |acc, fragment|
+              acc.reflections[fragment].klass
+            end
+
+          arel_column = reflection_model.arel_table[field]
+
+          direction.present? ? arel_column.desc : arel_column.asc
         end
       end
     end

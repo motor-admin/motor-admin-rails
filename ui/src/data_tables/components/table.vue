@@ -28,36 +28,16 @@
               />
             </div>
           </th>
-          <th
+          <HeaderCell
             v-for="column in columns"
             :key="column.key"
+            :sort-params="dataSort"
+            :column="column"
             class="ivu-table-column"
+            :with-sorting="withSorting"
             :class="{ 'border-top' : !borderless && headerBorder }"
-            :style="{ position: 'sticky', top: 0 }"
-          >
-            <div class="ivu-table-cell">
-              <span
-                :class="{ 'ivu-table-cell-sort': withSorting }"
-                @click.prevent="toggleSort(column.key)"
-              >{{ column.title }}</span>
-              {{ ' ' }}
-              <span
-                v-if="withSorting"
-                class="ivu-table-sort"
-              >
-                <i
-                  class="ion ion-md-arrow-dropup"
-                  :class="{ on: dataSort.key === column.key && dataSort.order === 'asc' }"
-                  @click.prevent="applySort({ key: column.key, order: 'asc' })"
-                />
-                <i
-                  class="ion ion-md-arrow-dropdown"
-                  :class="{ on: dataSort.key === column.key && dataSort.order === 'desc' }"
-                  @click.prevent="applySort({ key: column.key, order: 'desc' })"
-                />
-              </span>
-            </div>
-          </th>
+            @update:sort-params="applySort"
+          />
         </tr>
       </thead>
       <tbody
@@ -91,9 +71,14 @@
             class="ivu-table-column"
           >
             <div class="ivu-table-cell">
+              <DataCell
+                v-if="column.reference?.model_name === 'active_storage/attachment'"
+                :value="row[column.key]?.path"
+                :type="'string'"
+              />
               <Reference
-                v-if="column.reference && row[column.key]"
-                :resource-id="row[column.key]"
+                v-else-if="column.reference && row[column.key]"
+                :resource-id="getReferenceId(column, row)"
                 :show-popover="!!column.reference.polymorphic"
                 :reference-name="column.reference.model_name"
                 :reference-data="row[column.reference.name]"
@@ -127,11 +112,14 @@
 <script>
 import DataCell from 'data_cells/components/data_cell'
 import Reference from 'data_cells/components/reference'
+import HeaderCell from './header_cell'
+import { modelNameMap } from 'data_resources/scripts/schema'
 
 export default {
   name: 'DataTable',
   components: {
     DataCell,
+    HeaderCell,
     Reference
   },
   props: {
@@ -215,6 +203,15 @@ export default {
     this.dataSort = this.sortParams
   },
   methods: {
+    getReferenceId (column, row) {
+      if (column.reference.reference_type === 'belongs_to') {
+        return row[column.key]
+      } else {
+        const referenceModel = modelNameMap[column.reference.model_name]
+
+        return row[column.key][referenceModel.primary_key]
+      }
+    },
     onRowClick (row) {
       setTimeout(() => {
         if (window.getSelection().toString().length === 0) {
@@ -222,30 +219,13 @@ export default {
         }
       }, 0)
     },
-    toggleSort (key) {
-      if (this.dataSort.key === key) {
-        if (this.dataSort.order === '') {
-          this.applySort({ key: key, order: 'asc' })
-        } else if (this.dataSort.order === 'asc') {
-          this.applySort({ key: key, order: 'desc' })
-        } else if (this.dataSort.order === 'desc') {
-          this.applySort({})
-        }
-      } else {
-        this.applySort({ key: key, order: 'asc' })
-      }
-    },
     toggleSelectAll (value) {
       this.data.forEach((row) => {
         row._selected = value
       })
     },
     applySort (value) {
-      if (value.key === this.dataSort.key && value.order === this.dataSort.order) {
-        this.dataSort = {}
-      } else {
-        this.dataSort = value
-      }
+      this.dataSort = value
 
       this.$emit('update:sortParams', this.dataSort)
       this.$emit('sort-change', this.dataSort)

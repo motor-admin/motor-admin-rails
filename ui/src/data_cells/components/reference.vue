@@ -31,7 +31,7 @@ export default {
     referenceData: {
       type: [String, Object],
       required: false,
-      default: ''
+      default: () => ({})
     },
     polymorphicName: {
       type: String,

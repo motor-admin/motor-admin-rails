@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { schema, modelSlugMap } from '../scripts/schema'
+import { schema, modelSlugMap, modelNameMap } from '../scripts/schema'
 import Resource from '../components/resource'
 import ResourceTable from '../components/table'
 import Breadcrumbs from 'navigation/components/breadcrumbs'
@@ -100,7 +100,7 @@ export default {
           normalizeFragments[i - 2]?.model?.associations?.find((assoc) => assoc.slug === this.fragments[i])
         )
 
-        const model = modelSlugMap[this.fragments[i]] || modelSlugMap[association?.model_slug]
+        const model = modelSlugMap[this.fragments[i]] || modelNameMap[association?.model_name]
 
         const crumb = {
           fragment: this.fragments[i],
