@@ -1,14 +1,19 @@
 <template>
   <VButton
     v-popover="popoverParams"
-    :to="{ name: 'resources', params: { fragments: [resourceSlug, resourceId] }}"
+    :to="{ name: 'resources', params: { fragments: [resourceSlug, referenceId].filter(Boolean) }}"
     type="primary"
     ghost
     shape="circle"
     @click.stop
   >
-    #{{ resourceId }} <template v-if="!polymorphicName">
-      {{ truncate(displayText, 20) }}
+    <template v-if="isNumberId">
+      #{{ resourceId }} <template v-if="!polymorphicName">
+        {{ truncate(displayText, 20) }}
+      </template>
+    </template>
+    <template v-else>
+      {{ truncate(resourceId.toString(), 20) }}
     </template>
   </VButton>
 </template>
@@ -45,6 +50,12 @@ export default {
     }
   },
   computed: {
+    isNumberId () {
+      return !!this.resourceId.toString().match(/^\d+$/)
+    },
+    referenceId () {
+      return this.referenceData[this.model.primary_key]
+    },
     displayText () {
       if (this.referenceData.first_name && this.referenceData.last_name) {
         return [this.referenceData.first_name, this.referenceData.last_name].join(' ')
@@ -58,12 +69,12 @@ export default {
         render: (h) => {
           return h(require('data_resources/components/info').default, {
             resourceName: this.model.name,
-            resourceId: this.resourceId,
+            resourceId: this.referenceId,
             oneColumn: true,
             referencePopover: false
           })
         },
-        disabled: !this.showPopover,
+        disabled: !this.showPopover || !this.referenceId,
         placement: 'right',
         bodyStyle: {
           whiteSpace: 'break-spaces',

@@ -60,7 +60,10 @@ export default {
   methods: {
     onResourceSelect () {
       this.$emit('update:data', this.dataValue)
-      this.$emit('submit')
+
+      this.$nextTick(() => {
+        this.$emit('submit')
+      })
     },
     isReference (name) {
       return !!modelNameMap[name.replace(/_id$/, '')]

@@ -204,12 +204,12 @@ export default {
   },
   methods: {
     getReferenceId (column, row) {
-      if (column.reference.reference_type === 'belongs_to') {
-        return row[column.key]
-      } else {
+      if (column.reference.reference_type === 'has_one') {
         const referenceModel = modelNameMap[column.reference.model_name]
 
         return row[column.key][referenceModel.primary_key]
+      } else {
+        return row[column.key]
       }
     },
     onRowClick (row) {

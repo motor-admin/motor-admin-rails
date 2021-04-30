@@ -97,19 +97,6 @@ module Motor
         reference_columns + table_columns
       end
 
-      def build_column(model, column)
-        {
-          name: column.name,
-          display_name: column.name.humanize,
-          column_type: ActiveRecordUtils::Types::UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
-          access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
-          default_value: default_attrs[column.name],
-          validators: fetch_validators(model, column.name),
-          reference: fetch_reference(model, column.name),
-          virtual: false
-        }
-      end
-
       def fetch_reference_columns(model)
         default_attrs = model.new.attributes
 
@@ -122,7 +109,7 @@ module Motor
             next
           end
 
-          column_name = ref.belongs_to? ? ref.foreign_key : name
+          column_name = ref.belongs_to? ? ref.foreign_key.to_s : name
 
           next if ref.klass.name == 'ActiveStorage::Blob'
 

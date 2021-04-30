@@ -49,13 +49,13 @@ module Motor
 
         params[:fields].each do |key, fields|
           fields = fields.split(',') if fields.is_a?(String)
-          reflection_class = model.reflections[key]&.klass
-          fields_hash = build_fields_hash(reflection_class || model, fields)
 
           if key == model_name || model_name.split('/').last == key
-            json_params.merge!(fields_hash)
+            json_params.merge!(build_fields_hash(model, fields))
           else
             hash = find_key_in_params(json_params, key)
+
+            fields_hash = build_fields_hash(model.reflections[key]&.klass, fields)
 
             hash.merge!(fields_hash)
           end
@@ -63,13 +63,13 @@ module Motor
       end
 
       def build_fields_hash(model, fields)
-        columns = model.columns.map(&:name)
+        columns = model ? model.columns.map(&:name) : []
         fields_hash = { 'only' => [], 'methods' => [] }
 
         fields.each_with_object(fields_hash) do |field, acc|
           if field.in?(columns)
             acc['only'] << field
-          elsif model.instance_methods.include?(field.to_sym)
+          elsif model.nil? || model.instance_methods.include?(field.to_sym)
             acc['methods'] << field
           end
         end

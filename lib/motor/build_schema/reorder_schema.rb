@@ -51,7 +51,7 @@ module Motor
         if order.present?
           order.index(item[:name]) || Float::MAX
         else
-          item[:display_name]
+          item[:display_name].to_s
         end
       end
     end
