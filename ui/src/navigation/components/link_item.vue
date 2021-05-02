@@ -12,7 +12,7 @@
           <div class="d-flex align-items-center">
             <Icon
               type="ios-menu"
-              class="me-3 cursor-grab"
+              class="me-3 cursor-grab handle"
             />
             <p
               ref="contenteditable"
@@ -45,10 +45,10 @@
 </template>
 
 <script>
-import LinkForm from './header_link_form'
+import LinkForm from './link_form'
 
 export default {
-  name: 'HeaderLink',
+  name: 'LinkItem',
   components: {
     LinkForm
   },

@@ -12,8 +12,16 @@
       :class="selectedTabName === 'summary' && selectedTab.tab_type === 'default' ? 'bg-white' : 'bg-body'"
     >
       <KeepAlive>
+        <ResourcesMenu
+          v-if="selectedTabName === 'assiciations'"
+          :resources="associations"
+          :size="'small'"
+          :with-scopes="false"
+          :path-fragments="$route.params.fragments"
+          :style="{ minHeight: '100%' }"
+        />
         <ResourceInfo
-          v-if="selectedTabName === 'summary' && selectedTab.tab_type === 'default'"
+          v-else-if="selectedTabName === 'summary' && selectedTab.tab_type === 'default'"
           class="px-3 pb-3 pt-3"
           :style="{ height: '100%' }"
           :resource-name="resourceName"
@@ -52,6 +60,9 @@ import { modelNameMap } from '../scripts/schema'
 import QueryTab from './query_tab'
 import FormTab from './form_tab'
 import DashboardTab from './dashboard_tab'
+import ResourcesMenu from 'navigation/components/resources'
+
+import { widthLessThan } from 'utils/scripts/dimensions'
 
 export default {
   name: 'ResourceTabs',
@@ -60,7 +71,8 @@ export default {
     ResourceInfo,
     QueryTab,
     FormTab,
-    DashboardTab
+    DashboardTab,
+    ResourcesMenu
   },
   props: {
     resourceName: {
@@ -87,6 +99,9 @@ export default {
     model () {
       return modelNameMap[this.resourceName]
     },
+    associations () {
+      return this.model.associations.filter((assoc) => assoc.visible)
+    },
     resourceData () {
       return {
         id: this.resourceId,
@@ -97,17 +112,26 @@ export default {
       return this.tabs.length > 1
     },
     style () {
-      const vh = this.minimized ? 50 : 100
+      const vh = this.minimized ? '(var(--vh) / 2)' : 'var(--vh)'
       let subtract = this.minimized ? 92 : 113
 
       if (this.withTabs) {
         subtract += 44
       }
 
-      return { height: `calc(${vh}vh - ${subtract}px)`, overflowY: 'scroll' }
+      return { height: `calc(${vh} - ${subtract}px)`, overflowY: 'scroll' }
     },
     tabs () {
-      return this.model.tabs.filter((tab) => tab.visible)
+      const tabs = this.model.tabs.filter((tab) => tab.visible)
+
+      if (this.associations.length && widthLessThan('sm')) {
+        tabs.splice(1, 0, {
+          name: 'assiciations',
+          display_name: 'Assiciations'
+        })
+      }
+
+      return tabs
     },
     selectedTab () {
       return this.tabs.find((tab) => tab.name === this.selectedTabName)

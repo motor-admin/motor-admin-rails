@@ -46,6 +46,7 @@
         v-if="withSettings"
         icon="md-settings"
         size="small"
+        class="md-icon-only"
         style="height: 24px"
         @click="$emit('settings')"
       >
@@ -53,7 +54,7 @@
       </VButton>
     </div>
     <div
-      :style="{ width: '70%' }"
+      :style="{ width: '70%', whiteSpace: 'nowrap' }"
     >
       <Pagination
         v-if="data.length && isTable"

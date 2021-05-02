@@ -3,6 +3,7 @@
     <BreadcrumbItem
       v-for="(crumb, index) in crumbs"
       :key="index"
+      :class="index < crumbs.length - 2 ? 'd-none d-md-inline' : ''"
       :to="crumb.to"
       class="fs-4"
     >

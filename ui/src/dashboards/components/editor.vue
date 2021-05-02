@@ -12,22 +12,19 @@
       <VueDraggableNext
         v-else
         :list="layout"
+        handle=".handle"
       >
         <div
           v-for="item in layout"
           :key="item.query_id"
-          class="ivu-card ivu-card-bordered cursor-grab mb-2"
+          class="ivu-card ivu-card-bordered cursor-default mb-2"
         >
           <div class="ivu-card-body d-flex align-items-center justify-content-between py-2">
             <div class="d-flex align-items-center">
               <div class="d-flex flex-column me-2">
-                <i
-                  class="ion ion-md-arrow-dropup"
-                  @click.prevent="moveItem(item, -1)"
-                />
-                <i
-                  class="ion ion-md-arrow-dropdown"
-                  @click.prevent="moveItem(item, 1)"
+                <Icon
+                  type="ios-menu"
+                  class="cursor-grab handle"
                 />
               </div>
               <p class="fs-4 fw-bold">

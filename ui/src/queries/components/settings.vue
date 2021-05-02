@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white p-2">
     <div
-      style="height: calc(100vh - 192px); overflow-y: scroll"
+      style="height: calc(var(--vh, 100vh) - 192px); overflow-y: scroll"
       class="pb-2"
     >
       <template v-if="preferences.variables?.length">

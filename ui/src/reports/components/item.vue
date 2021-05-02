@@ -81,15 +81,19 @@ export default {
 </script>
 
 <style lang="scss">
+@import 'utils/styles/variables';
+
 .report-item {
   button {
     display: none
   }
 }
 
-.report-item:hover {
-  button {
-    display: block
+@media screen and (min-width: $breakpoint-md) {
+  .report-item:hover {
+    button {
+      display: block
+    }
   }
 }
 </style>

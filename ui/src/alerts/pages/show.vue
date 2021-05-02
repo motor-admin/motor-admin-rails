@@ -1,21 +1,21 @@
 <template>
   <div
-    class="row mx-2"
+    class="row mx-0 mx-md-2"
     style="min-height: 74px"
   >
-    <div class="col-8">
+    <div class="col-7 col-md-8 d-flex align-items-center">
       <h1
         v-if="Object.keys(alert).length"
-        class="my-3"
+        class="my-3 overflow-hidden text-truncate"
       >
         {{ alert.name || 'New alert' }}
       </h1>
     </div>
-    <div class="col-4 d-flex align-items-center justify-content-end">
+    <div class="col-5 col-md-4 d-flex align-items-center justify-content-end">
       <VButton
         v-if="alert.id"
         size="large"
-        class="bg-white ms-2"
+        class="bg-white ms-2 md-icon-only"
         :loading="isEnabledToggleLoading"
         :icon="alert.is_enabled ? 'md-close' : 'md-checkmark'"
         @click="toggleEnabled"
@@ -27,7 +27,7 @@
         size="large"
         icon="md-send"
         :loading="isSendingLoading"
-        class="bg-white ms-2"
+        class="bg-white ms-2 md-icon-only"
         @click="sendNow"
       >
         Send Now
@@ -45,7 +45,7 @@
   </div>
   <div
     class="row border-top m-0"
-    :style="{ height: 'calc(100vh - 134px)' }"
+    :style="{ height: 'calc(var(--vh, 100vh) - 134px)' }"
   >
     <div
       class="col-6 col-lg-7 d-none d-md-block p-0 text-center"

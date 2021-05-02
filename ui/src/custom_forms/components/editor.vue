@@ -3,7 +3,7 @@
     class="bg-white p-2"
     style="height: 100%"
   >
-    <div style="min-height: calc(100vh - 195px); overflow-y: scroll">
+    <div style="min-height: calc(var(--vh, 100vh) - 195px); overflow-y: scroll">
       <VueDraggableNext
         :list="form.preferences.fields"
         handle=".handle"

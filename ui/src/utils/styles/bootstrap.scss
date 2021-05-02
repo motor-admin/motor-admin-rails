@@ -19,6 +19,7 @@ $font-sizes: (
 @import '~bootstrap/scss/containers';
 @import '~bootstrap/scss/utilities';
 @import '~bootstrap/scss/utilities/api';
+@import '~bootstrap/scss/helpers';
 
 @each $breakpoint in map-keys($grid-breakpoints) {
   @include media-breakpoint-up($breakpoint) {

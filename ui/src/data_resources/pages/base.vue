@@ -1,10 +1,11 @@
 <template>
   <Layout
     :has-sider="true"
-    :style="{ height: 'calc(100vh - 60px)' }"
+    :style="{ height: 'calc(var(--vh, 100vh) - 60px)' }"
   >
     <Sider
-      :style="{ background: '#fff', maxHeight: 'calc(100vh - 60px)', overflowY: 'scroll' }"
+      class="d-none d-md-block"
+      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 60px)', overflowY: 'scroll' }"
     >
       <ResourcesMenu
         :resources="visibleResources"
@@ -12,12 +13,12 @@
         :style="{ minHeight: '100%' }"
       />
     </Sider>
-    <Layout>
+    <Layout class="d-block">
       <template v-if="fragments && fragments.length">
         <template v-if="fragments.length > 1">
           <Breadcrumbs
             :crumbs="crumbs"
-            :style="{ margin: '14px 10px' }"
+            :style="{ padding: '14px 10px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }"
           />
           <Resource
             :resource-name="resourceName"
@@ -28,14 +29,32 @@
         <ResourceTable
           v-if="fragments.length === 1"
           :key="resourceName"
-          :height="'calc(100vh - 146px)'"
+          :height="'calc(var(--vh, 100vh) - 146px)'"
           :with-title="true"
           :resource-name="resourceName"
         />
       </template>
       <template v-else>
-        <div class="row mx-2">
+        <div
+          v-if="widthLessThan('sm')"
+          class="row mx-0 mx-md-2"
+        >
           <h1 class="mt-3 mb-2">
+            Hello Admin 👋
+          </h1>
+          <LinksSection />
+        </div>
+        <div class="row mx-0 mx-md-2">
+          <h1
+            v-if="widthLessThan('sm')"
+            class="mt-3 mb-2"
+          >
+            Resources
+          </h1>
+          <h1
+            v-else
+            class="mt-3 mb-2"
+          >
             Hello Admin 👋
           </h1>
           <div
@@ -66,6 +85,8 @@ import Resource from '../components/resource'
 import ResourceTable from '../components/table'
 import Breadcrumbs from 'navigation/components/breadcrumbs'
 import ResourcesMenu from 'navigation/components/resources'
+import LinksSection from 'navigation/components/links_section'
+import { widthLessThan } from 'utils/scripts/dimensions'
 
 import { breadcrumbStore } from 'navigation/scripts/breadcrumb_store'
 
@@ -75,7 +96,8 @@ export default {
     ResourceTable,
     Resource,
     Breadcrumbs,
-    ResourcesMenu
+    ResourcesMenu,
+    LinksSection
   },
   computed: {
     activeNavigationName () {
@@ -174,6 +196,9 @@ export default {
         return null
       }
     }
+  },
+  methods: {
+    widthLessThan
   }
 }
 </script>

@@ -1,11 +1,11 @@
 <template>
   <div
-    class="row mx-2"
+    class="row mx-0 mx-md-2"
     style="min-height: 74px"
   >
-    <div class="col-8">
+    <div class="col-8 d-flex align-items-center">
       <h1
-        class="my-3"
+        class="my-3 overflow-hidden text-truncate"
       >
         {{ form.name || (isExisting ? '' : 'New form') }}
       </h1>
@@ -13,7 +13,7 @@
     <div class="col-4 d-flex align-items-center justify-content-end">
       <VButton
         size="large"
-        class="bg-white me-2"
+        class="bg-white md-icon-only"
         :icon="isEditorOpened ? 'md-close' : 'md-create'"
         @click="toggleEditor"
       >
@@ -22,7 +22,7 @@
       <VButton
         v-if="form.preferences.fields.length"
         size="large"
-        class="bg-white me-2"
+        class="bg-white ms-2"
         ghost
         type="primary"
         @click="save"
@@ -32,6 +32,7 @@
       <VButton
         size="large"
         type="primary"
+        class="ms-2 d-none d-md-block"
         @click="submit"
       >
         Submit
@@ -42,7 +43,7 @@
     class="row border-top m-0"
   >
     <div
-      :style="{ height: 'calc(100vh - 138px)', overflow: 'scroll' }"
+      :style="{ height: 'calc(var(--vh, 100vh) - 138px)', overflow: 'scroll' }"
       :class="isEditorOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
       class="pt-4 position-relative"
     >

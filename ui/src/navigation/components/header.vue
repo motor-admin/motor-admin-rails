@@ -32,40 +32,42 @@
           </svg>
         </div>
       </VButton>
-      <VButton
-        type="primary"
-        :to="{ name: 'reports' }"
-        class="header-btn ms-2"
-        size="large"
-      >
-        Reports
-      </VButton>
-      <VButton
-        type="primary"
-        class="header-btn ms-2"
-        size="large"
-        :to="{ name: 'forms' }"
-      >
-        Forms
-      </VButton>
-      <VButton
-        :is="link.component"
-        v-for="link in linksToRender"
-        :key="link.name"
-        type="primary"
-        class="header-btn ms-2"
-        :target="link.target"
-        size="large"
-        :to="link.to"
-      >
-        {{ link.name }}
-      </VButton>
-      <VButton
-        type="primary"
-        class="ms-2 add-item-btn"
-        icon="md-add"
-        @click="openEditModal"
-      />
+      <template v-if="!widthLessThan('sm')">
+        <VButton
+          type="primary"
+          :to="{ name: 'reports' }"
+          class="header-btn ms-2"
+          size="large"
+        >
+          Reports
+        </VButton>
+        <VButton
+          type="primary"
+          class="header-btn ms-2"
+          size="large"
+          :to="{ name: 'forms' }"
+        >
+          Forms
+        </VButton>
+        <VButton
+          :is="link.component"
+          v-for="link in linksToRender"
+          :key="link.name"
+          type="primary"
+          class="header-btn ms-2"
+          :target="link.target"
+          size="large"
+          :to="link.to"
+        >
+          {{ link.name }}
+        </VButton>
+        <VButton
+          type="primary"
+          class="ms-2 add-item-btn"
+          icon="md-add"
+          @click="openEditModal"
+        />
+      </template>
     </div>
     <div class="col-2 d-flex justify-content-end align-items-center">
       <VButton
@@ -129,18 +131,18 @@
 <script>
 import Search from './search'
 import ResourcesSettings from 'settings/components/resources_list'
-import HeaderEdit from './header_edit'
+import LinksEdit from './links_edit'
 import { modelSlugMap, modelNameMap } from 'data_resources/scripts/schema'
+import { linksStore } from '../scripts/links_store'
 import { basePath } from 'utils/scripts/configs'
+import { widthLessThan } from 'utils/scripts/dimensions'
 
 export default {
   name: 'AppHeader',
-  data () {
-    return {
-      links: JSON.parse(document.getElementById('app').getAttribute('data-header-links'))
-    }
-  },
   computed: {
+    links () {
+      return linksStore
+    },
     linksToRender () {
       return this.links.map((link) => {
         const params = { name: link.name }
@@ -174,6 +176,7 @@ export default {
     }
   },
   methods: {
+    widthLessThan,
     openSearch () {
       this.$Modal.open(Search, {
         placeholder: 'Search...',
@@ -193,10 +196,9 @@ export default {
       }
     },
     openEditModal () {
-      this.$Drawer.open(HeaderEdit, {
-        links: this.links
+      this.$Drawer.open(LinksEdit, {
       }, {
-        title: 'Header',
+        title: 'Links',
         closable: true
       })
     },

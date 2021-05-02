@@ -1,9 +1,10 @@
 <template>
   <VueDraggableNext
     :list="links"
+    handle=".handle"
     @change="persistChanges"
   >
-    <HeaderLink
+    <LinkItem
       v-for="link in links"
       :key="link.path"
       :link="link"
@@ -15,7 +16,7 @@
   <Card
     v-if="newLink"
   >
-    <HeaderLinkForm
+    <LinkForm
       :link="newLink"
       @cancel="newLink = null"
       @submit="pushNewLink"
@@ -37,8 +38,9 @@
 
 <script>
 import api from 'api'
-import HeaderLink from './header_link_item.vue'
-import HeaderLinkForm from './header_link_form.vue'
+import LinkItem from './link_item.vue'
+import LinkForm from './link_form.vue'
+import { linksStore } from '../scripts/links_store'
 
 const defaultLinkParams = {
   name: '',
@@ -48,18 +50,17 @@ const defaultLinkParams = {
 export default {
   name: 'HeaderEdit',
   components: {
-    HeaderLink,
-    HeaderLinkForm
-  },
-  props: {
-    links: {
-      type: Array,
-      required: true
-    }
+    LinkItem,
+    LinkForm
   },
   data () {
     return {
       newLink: null
+    }
+  },
+  computed: {
+    links () {
+      return linksStore
     }
   },
   mounted () {

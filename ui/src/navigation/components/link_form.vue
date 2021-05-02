@@ -58,7 +58,7 @@
 
 <script>
 export default {
-  name: 'HeaderLinkForm',
+  name: 'LinkForm',
   props: {
     link: {
       type: Object,

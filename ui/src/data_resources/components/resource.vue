@@ -1,9 +1,9 @@
 <template>
   <Layout :has-sider="!!associations.length">
     <Sider
-      v-if="associations.length"
+      v-if="associations.length && !widthLessThan('sm')"
       class="border-top"
-      :style="{ background: '#fff', maxHeight: 'calc(100vh - 112px)', overflowY: 'scroll' }"
+      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 112px)', overflowY: 'scroll' }"
     >
       <ResourcesMenu
         :resources="associations"
@@ -28,7 +28,7 @@
         <ResourceTable
           v-if="showTable"
           :key="resourceName + resourceId + associationName"
-          :height="isFullscreenTable ? 'calc(100vh - 199px)' : 'calc(50vh - 108px)'"
+          :height="isFullscreenTable ? 'calc(var(--vh, 100vh) - 199px)' : 'calc((var(--vh) / 2) - 108px)'"
           :with-resize="true"
           :resource-name="resourceName"
           :with-title="true"
@@ -47,6 +47,8 @@ import { modelNameMap } from '../scripts/schema'
 import ResourcesMenu from 'navigation/components/resources'
 import ResourceTable from './table'
 import ResourceTabs from './tabs'
+
+import { widthLessThan } from 'utils/scripts/dimensions'
 
 const fullscreenTableKey = 'resources:fullscreenAssociationTable'
 
@@ -74,7 +76,7 @@ export default {
   },
   data () {
     return {
-      isFullscreenTable: localStorage.getItem(fullscreenTableKey) === 'true'
+      isFullscreenTable: false
     }
   },
   computed: {
@@ -97,7 +99,15 @@ export default {
       return this.model.associations.filter((assoc) => assoc.visible)
     }
   },
+  created () {
+    if (widthLessThan('sm')) {
+      this.isFullscreenTable = true
+    } else {
+      this.isFullscreenTable = localStorage.getItem(fullscreenTableKey) === 'true'
+    }
+  },
   methods: {
+    widthLessThan,
     toggleSize () {
       this.isFullscreenTable = !this.isFullscreenTable
 

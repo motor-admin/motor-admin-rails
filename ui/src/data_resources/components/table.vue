@@ -4,18 +4,18 @@
       class="row"
       :style="{ margin: '10px 0' }"
     >
-      <div class="col-6 d-flex align-items-center">
+      <div class="col-4 col-md-6 d-flex align-items-center pe-0">
         <VButton
           v-if="withResize"
           icon="md-resize"
           size="small"
           type="dashed"
-          class="me-2 bg-transparent"
+          class="me-2 bg-transparent d-none d-md-block"
           @click="$emit('click-resize')"
         />
         <span
           v-if="withTitle && !selectedRows.length"
-          class="fs-4 fw-bold nowrap"
+          class="fs-4 fw-bold nowrap overflow-hidden text-truncate"
         >{{ title }}
           <template v-if="currentScope">
             ({{ currentScope.display_name }})
@@ -31,7 +31,7 @@
           @finish-action="loadDataAndCount"
         />
       </div>
-      <div class="col-6 d-flex justify-content-end">
+      <div class="col-8 col-md-6 d-flex justify-content-end">
         <ResourceSearch
           v-model="searchQuery"
           style="max-width: 400px"
@@ -50,7 +50,7 @@
           />
         </Badge>
         <NewResourceButton
-          class="mx-1"
+          class="ms-1"
           :model="model"
           :association="association"
           :parent-resource="associationParams ? { name: resourceName, id: associationParams.id } : null"

@@ -1,11 +1,11 @@
 <template>
   <div
-    class="row mx-2"
+    class="row mx-0 mx-md-2"
     style="min-height: 74px"
   >
-    <div class="col-8">
+    <div class="col-8 d-flex align-items-center">
       <h1
-        class="my-3"
+        class="my-3 overflow-hidden text-truncate"
       >
         {{ query.name || (isExisting ? '' : 'New query') }}
       </h1>
@@ -14,7 +14,7 @@
       <VButton
         v-if="!isEdit"
         size="large"
-        class="bg-white me-2"
+        class="bg-white me-2 md-icon-only"
         icon="md-create"
         @click="openEditor"
       >
@@ -23,7 +23,7 @@
       <VButton
         v-if="canSaveNew"
         size="large"
-        class="bg-white me-2"
+        class="bg-white me-2 d-none d-md-block"
         @click="saveAsNew"
       >
         Save as new
@@ -48,7 +48,7 @@
     </div>
   </div>
   <div
-    :style="{ height: isVariablesForm ? 'calc(100vh - 222px)' : 'calc(100vh - 134px)' }"
+    :style="{ height: isVariablesForm ? 'calc(var(--vh, 100vh) - 222px)' : 'calc(var(--vh, 100vh) - 134px)' }"
     class="row border-top m-0"
   >
     <div

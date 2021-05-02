@@ -48,6 +48,12 @@ body {
   height: 100%;
 }
 
+h1 {
+  @media screen and (max-width: $breakpoint-md) {
+    font-size: 26px;
+  }
+}
+
 h3 {
   font-size: 18px;
   font-weight: normal;
@@ -117,6 +123,10 @@ h5 {
   cursor: text;
 }
 
+.cursor-default {
+  cursor: default;
+}
+
 *[contenteditable]:focus {
   outline-color: transparent;
   outline-style: none;
@@ -154,5 +164,20 @@ h5 {
 .ivu-tag {
   .ion {
     vertical-align: middle;
+  }
+}
+
+@media screen and (max-width: $breakpoint-md) {
+  .ivu-page-options {
+    display: none;
+  }
+  .ivu-modal {
+    top: 10px
+  }
+}
+
+@media screen and (max-width: $breakpoint-md) {
+  .ivu-btn.md-icon-only > span {
+    display: none;
   }
 }

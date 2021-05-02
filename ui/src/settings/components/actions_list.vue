@@ -25,7 +25,7 @@
   </Card>
   <div
     v-else
-    class="pt-2 border-top"
+    class="py-2 border-top"
   >
     <VButton
       long

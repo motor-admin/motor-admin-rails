@@ -1,11 +1,11 @@
 <template>
-  <div class="row mx-2 mt-3 mb-2">
+  <div class="row mx-0 mx-md-2 mt-3 mb-2">
     <div class="col-2">
-      <h1 class="">
+      <h1>
         Reports
       </h1>
     </div>
-    <div class="col-10 col-lg-10 text-end">
+    <div class="col-10 col-lg-10 text-end d-none d-md-block">
       <VButton
         icon="md-add"
         size="large"
@@ -34,7 +34,7 @@
       </VButton>
     </div>
   </div>
-  <div class="row mx-2">
+  <div class="row mx-0 mx-md-2">
     <div class="d-none d-lg-block col-lg-2">
       <TagsNav
         v-model:selected-tags="selectedTags"
@@ -55,7 +55,7 @@
         size="large"
         class="mb-2"
       />
-      <div :style="{ height: 'calc(100vh - 274px)', overflow: 'scroll', position: 'relative', margin: '0 -12px', padding: '0 12px' }">
+      <div :style="{ height: 'calc(var(--vh, 100vh) - 274px)', overflow: 'scroll', position: 'relative', margin: '0 -12px', padding: '0 12px' }">
         <Spin
           v-if="isLoading"
           fix

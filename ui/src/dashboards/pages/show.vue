@@ -1,19 +1,19 @@
 <template>
   <div
-    class="row mx-2"
+    class="row mx-0 mx-md-2"
     style="min-height: 74px"
   >
-    <div class="col-8">
+    <div class="col-7 col-md-8 d-flex align-items-center">
       <h1
-        class="my-3"
+        class="my-3 overflow-hidden text-truncate"
       >
         {{ dashboard.title || (isExisting ? '' : 'New dashboard') }}
       </h1>
     </div>
-    <div class="col-4 d-flex align-items-center justify-content-end">
+    <div class="col-5 col-md-4 d-flex align-items-center justify-content-end">
       <VButton
         size="large"
-        class="bg-white me-2"
+        class="bg-white me-2 md-icon-only"
         :icon="isEditorOpened ? 'md-close' : 'md-create'"
         @click="toggleEditor"
       >
@@ -38,11 +38,12 @@
     </div>
   </div>
   <div
-    :style="{ height: isEditorOpened ? 'calc(100vh - 134px)' : '100%' }"
+    :style="{ height: isEditorOpened ? 'calc(var(--vh, 100vh) - 134px)' : '100%' }"
     class="row border-top m-0"
   >
     <div
       :class="isEditorOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
+      class="position-relative"
       :style="{ height: '100%', overflow: isEditorOpened ? 'scroll' : 'unset' }"
     >
       <div
@@ -55,6 +56,11 @@
           @submit="refresh"
         />
       </div>
+      <Spin
+        v-if="isDashboardLoading"
+        fix
+        style="height: calc(var(--vh, 100vh) - 134px)"
+      />
       <DashboardLayout
         ref="layout"
         class="pt-1"
@@ -93,6 +99,7 @@ export default {
   data () {
     return {
       isLoading: false,
+      isDashboardLoading: false,
       isEditorOpened: false,
       variablesData: {},
       dashboard: {
@@ -177,6 +184,8 @@ export default {
       })
     },
     loadDashboard () {
+      this.isDashboardLoading = true
+
       return api.get(`dashboards/${this.$route.params.id}`, {
         params: {
           include: 'tags,queries',
@@ -189,6 +198,8 @@ export default {
         this.assignDefaultVariables()
       }).catch((error) => {
         console.error(error)
+      }).finally(() => {
+        this.isDashboardLoading = false
       })
     },
     save () {
