@@ -16,6 +16,7 @@
           v-if="selectedTabName === 'assiciations'"
           :resources="associations"
           :size="'small'"
+          :key="'associations'"
           :with-scopes="false"
           :path-fragments="$route.params.fragments"
           :style="{ minHeight: '100%' }"
@@ -24,6 +25,7 @@
           v-else-if="selectedTabName === 'summary' && selectedTab.tab_type === 'default'"
           class="px-3 pb-3 pt-3"
           :style="{ height: '100%' }"
+          :key="'summary'"
           :resource-name="resourceName"
           :resource-id="resourceId"
           :with-actions="true"
@@ -32,19 +34,19 @@
         />
         <FormTab
           v-else-if="selectedTab.tab_type === 'form'"
-          :key="selectedTab.preferences.form_id"
+          :key="selectedTab.tab_type + selectedTab.preferences.form_id"
           :tab="selectedTab"
           :data="resourceData"
         />
         <QueryTab
           v-else-if="selectedTab.tab_type === 'query'"
-          :key="selectedTab.preferences.query_id"
+          :key="selectedTab.tab_type + selectedTab.preferences.query_id"
           :tab="selectedTab"
           :variables="resourceData"
         />
         <DashboardTab
           v-else-if="selectedTab.tab_type === 'dashboard'"
-          :key="selectedTab.preferences.dashboard_id"
+          :key="selectedTab.tab_type + selectedTab.preferences.dashboard_id"
           :tab="selectedTab"
           :variables="resourceData"
         />
