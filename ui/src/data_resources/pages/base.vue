@@ -4,23 +4,30 @@
     :style="{ height: 'calc(var(--vh, 100vh) - 60px)' }"
   >
     <Sider
-      class="d-none d-md-block"
+      v-if="!isShowSiderScreen || fragments[0]"
+      :model-value="isShowSiderScreen && isMenuSider"
+      :collapsible="true"
+      :collapsed-width="0"
       :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 60px)', overflowY: 'scroll' }"
     >
       <ResourcesMenu
         :resources="visibleResources"
         :active-name="activeNavigationName"
         :style="{ minHeight: '100%' }"
+        @select="onMenuSelect"
       />
     </Sider>
     <Layout class="d-block">
       <template v-if="fragments && fragments.length">
-        <template v-if="fragments.length > 1">
+        <template v-if="fragments.length > 1 || (isShowSiderScreen && fragments.length > 1) || widthLessThan('sm')">
           <Breadcrumbs
             :crumbs="crumbs"
-            :style="{ padding: '14px 10px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }"
+            :with-menu="isShowSiderScreen"
+            :style="{ padding: '14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }"
+            @click-menu="toggleResourcesMenu"
           />
           <Resource
+            v-if="fragments.length > 1"
             :resource-name="resourceName"
             :resource-id="resourceId"
             :association-name="associationName"
@@ -29,9 +36,12 @@
         <ResourceTable
           v-if="fragments.length === 1"
           :key="resourceName"
-          :height="'calc(var(--vh, 100vh) - 146px)'"
-          :with-title="true"
+          :height="`calc(var(--vh, 100vh) - ${widthLessThan('sm') ? '200px' : '148px'})`"
+          :with-title="!widthLessThan('sm')"
+          :with-menu="isShowSiderScreen && !widthLessThan('sm')"
+          class="border-top border-md-0"
           :resource-name="resourceName"
+          @click-menu="toggleResourcesMenu"
         />
       </template>
       <template v-else>
@@ -99,7 +109,15 @@ export default {
     ResourcesMenu,
     LinksSection
   },
+  data () {
+    return {
+      isMenuSider: false
+    }
+  },
   computed: {
+    isShowSiderScreen () {
+      return widthLessThan('xl')
+    },
     activeNavigationName () {
       if (this.$route.query?.scope) {
         return this.fragments[0] + '.' + this.$route.query.scope
@@ -172,13 +190,20 @@ export default {
           label: (
             fragments[i].association?.display_name ||
             fragments[i].model?.display_name ||
-            (breadcrumbStore[fragments[i - 1]?.model.name] || {})[this.fragments[i]] ||
+            ((!widthLessThan('sm') && breadcrumbStore[fragments[i - 1]?.model.name]) || {})[this.fragments[i]] ||
             `#${this.fragments[i]}`
           )
         }
 
         if ((i - 1) !== fragments.length) {
           crumb.to = { name: 'resources', params: { fragments: this.fragments.slice(0, i + 1) } }
+        }
+
+        if (fragments.length === 1 && this.$route.query?.scope) {
+          const scope = fragments[0].model.scopes.find((s) => s.name === this.$route.query.scope)
+          crumb.label = `${crumb.label} (${scope.display_name})`
+          crumb.to.query ||= {}
+          crumb.to.query.scope = scope.name
         }
 
         crumbs.push(crumb)
@@ -197,8 +222,34 @@ export default {
       }
     }
   },
+  watch: {
+    isShowSiderScreen () {
+      this.isMenuSider = this.isShowSiderScreen
+    }
+  },
+  created () {
+    this.isMenuSider = this.isShowSiderScreen
+  },
   methods: {
-    widthLessThan
+    widthLessThan,
+    onMenuSelect (value) {
+      if (modelSlugMap[value]?.scopes?.find((s) => s.visible)) {
+        if (this.fragments[0] === value) {
+          this.toggleResourcesMenu()
+        }
+      } else {
+        this.toggleResourcesMenu()
+      }
+    },
+    toggleResourcesMenu () {
+      this.isMenuSider = !this.isMenuSider
+    }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+:deep(.ivu-layout-sider-trigger) {
+  display: none;
+}
+</style>

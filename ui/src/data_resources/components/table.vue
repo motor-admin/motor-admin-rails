@@ -4,7 +4,18 @@
       class="row"
       :style="{ margin: '10px 0' }"
     >
-      <div class="col-4 col-md-6 d-flex align-items-center pe-0">
+      <div
+        v-if="withTitle || selectedRows.length"
+        class="col-6 d-flex align-items-center pe-0"
+      >
+        <VButton
+          v-if="withMenu"
+          icon="md-menu"
+          size="small"
+          type="dashed"
+          class="me-2 bg-transparent align-bottom"
+          @click="$emit('click-menu')"
+        />
         <VButton
           v-if="withResize"
           icon="md-resize"
@@ -31,11 +42,14 @@
           @finish-action="loadDataAndCount"
         />
       </div>
-      <div class="col-8 col-md-6 d-flex justify-content-end">
+      <div
+        class="d-flex justify-content-end"
+        :class="withTitle || selectedRows.length ? 'col-6' : 'col-12'"
+      >
         <ResourceSearch
           v-model="searchQuery"
-          style="max-width: 400px"
-          class="mx-1"
+          style="max-width: 470px"
+          class="me-1"
           :placeholder="`Search ${(association?.display_name || model.display_name).toLowerCase()}...`"
           @search="applySearch"
         />
@@ -153,13 +167,18 @@ export default {
       required: false,
       default: false
     },
+    withMenu: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     associationParams: {
       type: Object,
       require: false,
       default: null
     }
   },
-  emits: ['click-resize'],
+  emits: ['click-resize', 'click-menu'],
   data () {
     return {
       isLoading: true,

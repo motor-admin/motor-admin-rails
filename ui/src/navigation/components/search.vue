@@ -81,6 +81,7 @@ export default {
         new_query: 'md-create',
         new_dashboard: 'md-create',
         new_alert: 'md-create',
+        new_form: 'md-create',
         alert: 'md-notifications',
         form: 'md-list-box'
       }
@@ -143,7 +144,8 @@ export default {
       return [
         { value: 'New Query', type: 'new_query' },
         { value: 'New Dashboard', type: 'new_dashboard' },
-        { value: 'New Alert', type: 'new_alert' }
+        { value: 'New Alert', type: 'new_alert' },
+        { value: 'New Form', type: 'new_form' }
       ]
     },
     foundPages () {
@@ -238,6 +240,8 @@ export default {
         this.$router.push({ name: 'new_dashboard' })
       } else if (option.type === 'new_alert') {
         this.$router.push({ name: 'new_alert' })
+      } else if (option.type === 'new_form') {
+        this.$router.push({ name: 'new_form' })
       }
 
       recentlySelectedStore.push(option)

@@ -45,6 +45,10 @@ export default {
   mounted () {
     this.dataValue = this.modelValue
 
+    if (!this.dataValue) {
+      this.focusEditor()
+    }
+
     this.$el.querySelector('textarea').addEventListener('keydown', this.onCmdEnter)
   },
   beforeUnmount () {

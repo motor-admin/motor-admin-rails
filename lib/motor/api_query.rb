@@ -1,13 +1,5 @@
 # frozen_string_literal: true
 
-require_relative './api_query/sort'
-require_relative './api_query/paginate'
-require_relative './api_query/filter'
-require_relative './api_query/search'
-require_relative './api_query/apply_scope'
-require_relative './api_query/build_meta'
-require_relative './api_query/build_json'
-
 module Motor
   module ApiQuery
     module_function
@@ -22,3 +14,11 @@ module Motor
     end
   end
 end
+
+require_relative './api_query/sort'
+require_relative './api_query/paginate'
+require_relative './api_query/filter'
+require_relative './api_query/search'
+require_relative './api_query/apply_scope'
+require_relative './api_query/build_meta'
+require_relative './api_query/build_json'

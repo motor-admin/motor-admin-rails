@@ -157,7 +157,13 @@ export default {
                 }
 
                 if (context.parsed[key] !== null) {
-                  label += this.formatValue(context.parsed[key] || context.parsed)
+                  const value = this.formatValue(context.parsed[key] || context.parsed)
+
+                  if (this.chartType === 'pie') {
+                    label = context.label + ': ' + value
+                  } else {
+                    label += value
+                  }
                 }
 
                 return label
@@ -306,7 +312,13 @@ export default {
       const labels = this.transposedData[0]
 
       if (['date', 'datetime'].includes(labelColumn.type)) {
-        return labels.map((label) => formatDate(label, { year: 'numeric', month: 'short', day: 'numeric' }))
+        const formatOptions = { year: 'numeric', month: 'short' }
+
+        if (!labels.every((string) => string.includes('-01T00:00:00') || string.match(/-01$/))) {
+          formatOptions.day = 'numeric'
+        }
+
+        return labels.map((label) => formatDate(label, formatOptions))
       } else {
         return labels
       }

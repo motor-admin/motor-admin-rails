@@ -16,6 +16,12 @@ export default {
   },
   computed: {
   },
+  mounted () {
+    document.addEventListener('keydown', this.processKey)
+
+    window.addEventListener('load', this.setVh)
+    window.addEventListener('resize', this.setVh)
+  },
   methods: {
     setVh () {
       const vh = window.innerHeight
@@ -31,12 +37,6 @@ export default {
         return false
       }
     }
-  },
-  mounted () {
-    document.addEventListener('keydown', this.processKey)
-
-    window.addEventListener('load', this.setVh)
-    window.addEventListener('resize', this.setVh)
   }
 }
 </script>

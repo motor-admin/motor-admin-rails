@@ -6,7 +6,6 @@ require 'js_regex'
 require 'fugit'
 require 'csv'
 require 'active_record/filter'
-require 'base64'
 
 module Motor
   PATH = Pathname.new(__dir__)
@@ -25,6 +24,18 @@ module Motor
     end
 
     true
+  end
+
+  def server?
+    defined?(::Rails::Server) ||
+      defined?(::Thin::Server) ||
+      defined?(::PhusionPassenger) ||
+      (defined?(::Puma) && File.basename($PROGRAM_NAME) == 'puma') ||
+      defined?(::Unicorn::HttpServer) ||
+      defined?(::Mongrel::HttpServer) ||
+      defined?(::WEBrick::VERSION) ||
+      defined?(JRuby::Rack::VERSION) ||
+      defined?(::Trinidad::Server)
   end
 
   def development?

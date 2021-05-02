@@ -8,7 +8,7 @@ module Motor
 
     initializer 'motor.alerts.scheduler' do
       config.after_initialize do |_app|
-        next unless defined?(Rails::Server)
+        next unless Motor.server?
 
         Motor::Alerts::Scheduler::SCHEDULER_TASK.execute
       end

@@ -4,6 +4,7 @@
     theme="light"
     width="auto"
     :open-names="openNames"
+    @on-select="$emit('select', $event)"
   >
     <ResourceMenuItem
       v-for="resource in resources"
@@ -50,6 +51,7 @@ export default {
       default: ''
     }
   },
+  emits: ['select'],
   data () {
     return {
       openNames: []

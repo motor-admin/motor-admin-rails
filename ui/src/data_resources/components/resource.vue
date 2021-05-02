@@ -31,7 +31,7 @@
           :height="isFullscreenTable ? 'calc(var(--vh, 100vh) - 199px)' : 'calc((var(--vh) / 2) - 108px)'"
           :with-resize="true"
           :resource-name="resourceName"
-          :with-title="true"
+          :with-title="!widthLessThan('sm')"
           class="border-top"
           :association-params="{ name: associationName, id: resourceId }"
           @click-resize="toggleSize"

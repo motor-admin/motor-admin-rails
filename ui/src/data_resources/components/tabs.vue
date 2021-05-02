@@ -14,18 +14,18 @@
       <KeepAlive>
         <ResourcesMenu
           v-if="selectedTabName === 'assiciations'"
+          :key="'associations'"
           :resources="associations"
           :size="'small'"
-          :key="'associations'"
           :with-scopes="false"
           :path-fragments="$route.params.fragments"
           :style="{ minHeight: '100%' }"
         />
         <ResourceInfo
           v-else-if="selectedTabName === 'summary' && selectedTab.tab_type === 'default'"
+          :key="'summary'"
           class="px-3 pb-3 pt-3"
           :style="{ height: '100%' }"
-          :key="'summary'"
           :resource-name="resourceName"
           :resource-id="resourceId"
           :with-actions="true"
