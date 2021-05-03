@@ -194,7 +194,7 @@ export default {
     },
     isOpen (value) {
       if (value) {
-        this.$refs.dropdown.style.width = getStyle(this.$el, 'width')
+        this.$refs.dropdown.style.minWidth = getStyle(this.$el, 'width')
       }
     }
   },
@@ -288,6 +288,7 @@ export default {
       this.isOpen = !this.isOpen
 
       this.popper ||= new Popper(this.$el, this.$refs.dropdown, {
+        placement: 'bottom-start',
         modifiers: {
           computeStyle: {
             gpuAcceleration: false

@@ -15,40 +15,49 @@
         <VInput v-model="dataAction.display_name" />
       </FormItem>
 
-      <FormItem
-        label="Action type"
-        prop="action_type"
-      >
-        <MSelect
-          v-model="dataAction.action_type"
-          :options="actionTypes"
-          @update:modelValue="dataAction.preferences = {}"
-        />
-      </FormItem>
-      <FormItem
-        v-if="dataAction.action_type === 'form'"
-        label="Form"
-        prop="preferences.form_id"
-      >
-        <FormSelect v-model="dataAction.preferences.form_id" />
-      </FormItem>
-      <FormItem
-        v-if="dataAction.action_type === 'method'"
-        label="Method"
-        prop="preferences.method_name"
-      >
-        <MethodSelect
-          v-model="dataAction.preferences.method_name"
-          :resource-slug="resource.slug"
-        />
-      </FormItem>
-      <FormItem
-        v-if="dataAction.action_type === 'api'"
-        label="API path"
-        prop="preferences.api_path"
-      >
-        <VInput v-model="dataAction.preferences.api_path" />
-      </FormItem>
+      <div class="row">
+        <div :class="dataAction.action_type && dataAction.action_type !== 'default' ? 'col-sm-4 pe-sm-1' : 'col-12'">
+          <FormItem
+            label="Action type"
+            prop="action_type"
+          >
+            <MSelect
+              v-model="dataAction.action_type"
+              :options="actionTypes"
+              @update:modelValue="dataAction.preferences = {}"
+            />
+          </FormItem>
+        </div>
+        <div
+          v-if="dataAction.action_type && dataAction.action_type !== 'default'"
+          class="col-sm-8 ps-sm-1"
+        >
+          <FormItem
+            v-if="dataAction.action_type === 'form'"
+            label="Form"
+            prop="preferences.form_id"
+          >
+            <FormSelect v-model="dataAction.preferences.form_id" />
+          </FormItem>
+          <FormItem
+            v-if="dataAction.action_type === 'method'"
+            label="Method"
+            prop="preferences.method_name"
+          >
+            <MethodSelect
+              v-model="dataAction.preferences.method_name"
+              :resource-slug="resource.slug"
+            />
+          </FormItem>
+          <FormItem
+            v-if="dataAction.action_type === 'api'"
+            label="API path"
+            prop="preferences.api_path"
+          >
+            <VInput v-model="dataAction.preferences.api_path" />
+          </FormItem>
+        </div>
+      </div>
     </VForm>
     <div class="d-flex justify-content-between">
       <div>
@@ -79,7 +88,6 @@
 </template>
 
 <script>
-import { underscore } from 'utils/scripts/string'
 import MethodSelect from './resource_method_select'
 import FormSelect from 'custom_forms/components/select'
 
@@ -170,10 +178,6 @@ export default {
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          if (!this.isCrudAction) {
-            this.dataAction.name = underscore(this.dataAction.display_name)
-          }
-
           this.$emit('submit', this.dataAction)
         }
       })

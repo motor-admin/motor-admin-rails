@@ -10,6 +10,7 @@
       :resource="resource"
       :tab="tab"
       class="pb-2"
+      @reorder="onTabMove"
     />
   </VueDraggableNext>
   <Card
@@ -41,6 +42,7 @@
 import TabItem from './resource_tab'
 import TabForm from './resource_tab_form'
 import api from 'api'
+import { underscore } from 'utils/scripts/string'
 
 const defaultTabAttributes = {
   display_name: '',
@@ -72,6 +74,8 @@ export default {
       this.newTab = { ...defaultTabAttributes }
     },
     onTabSubmit (tab) {
+      tab.name = underscore(tab.display_name)
+
       this.resource.tabs.push(tab)
       this.newTab = null
 

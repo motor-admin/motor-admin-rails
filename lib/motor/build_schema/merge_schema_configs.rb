@@ -29,13 +29,16 @@ module Motor
 
         updated_model[:associations] = merge_by_name(
           model[:associations],
-          configs[:associations]
+          configs[:associations],
+          {},
+          ->(_action) { true }
         )
 
         updated_model[:columns] = merge_by_name(
           model[:columns],
           configs[:columns],
-          COLUMN_DEFAULTS
+          COLUMN_DEFAULTS,
+          ->(scope) { !scope[:virtual] }
         )
 
         updated_model[:actions] = merge_by_name(
@@ -53,7 +56,8 @@ module Motor
         updated_model[:scopes] = merge_by_name(
           model[:scopes],
           configs[:scopes],
-          SCOPE_DEFAULTS
+          SCOPE_DEFAULTS,
+          ->(scope) { scope[:scope_type] != 'filter' }
         )
 
         updated_model
@@ -62,15 +66,17 @@ module Motor
       # @param defaults [Array<HashWithIndifferentAccess>]
       # @param configs [Array<HashWithIndifferentAccess>]
       # @return [Array<HashWithIndifferentAccess>]
-      def merge_by_name(defaults, configs, default_attrs = {})
+      def merge_by_name(defaults, configs, default_attrs = {}, default_item_check = nil)
         return defaults if configs.blank?
 
         (defaults.pluck(:name) + configs.pluck(:name)).uniq.map do |name|
-          config_item = configs.find { |e| e[:name] == name } || {}
-          default_item = defaults.find { |e| e[:name] == name } || default_attrs
+          config_item = configs.find { |e| e[:name] == name }
+          default_item = defaults.find { |e| e[:name] == name }
 
-          default_item.merge(config_item)
-        end
+          next if default_item.nil? && default_item_check&.call(config_item)
+
+          (default_item || default_attrs).merge(config_item || {})
+        end.compact
       end
 
       # @return [HashWithIndifferentAccess<String, HashWithIndifferentAccess>]

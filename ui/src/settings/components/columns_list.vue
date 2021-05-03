@@ -10,6 +10,7 @@
       :resource-name="resource.name"
       :column="column"
       class="pb-2"
+      @reorder="onColumnMove"
     />
   </VueDraggableNext>
   <Card
@@ -39,6 +40,7 @@
 import ResourceColumn from './resource_column'
 import ResourceColumnForm from './resource_column_form'
 import api from 'api'
+import { underscore } from 'utils/scripts/string'
 
 const defaultColumnAttributes = {
   display_name: '',
@@ -70,6 +72,8 @@ export default {
       this.newColumn = { ...defaultColumnAttributes, virtual: true }
     },
     onColumnSubmit (column) {
+      column.name = underscore(column.display_name)
+
       this.resource.columns.push(column)
       this.newColumn = null
 

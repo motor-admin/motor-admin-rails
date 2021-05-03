@@ -54,6 +54,7 @@
 import api from 'api'
 import ColumnForm from './resource_column_form'
 import { modelNameMap } from 'data_resources/scripts/schema'
+import { underscore } from 'utils/scripts/string'
 
 export default {
   name: 'ResourceColumn',
@@ -70,6 +71,7 @@ export default {
       required: true
     }
   },
+  emits: ['reorder'],
   data () {
     return {
       isForm: false,
@@ -119,16 +121,29 @@ export default {
       })
     },
     persistChanges () {
+      const dataColumn = { ...this.column }
+
+      if (dataColumn.name) {
+        dataColumn._update = dataColumn.name
+      }
+
+      if (dataColumn.virtual) {
+        dataColumn.name = underscore(dataColumn.display_name)
+      }
+
       return api.post('resources', {
         data: {
           name: this.resourceName,
           preferences: {
-            columns: [
-              this.column
-            ]
+            columns: [dataColumn]
           }
         }
       }).then((result) => {
+        if (this.column.name !== dataColumn.name) {
+          this.column.name = dataColumn.name
+
+          this.$emit('reorder')
+        }
       }).catch((error) => {
         console.error(error)
       })

@@ -10,6 +10,7 @@
       :resource="resource"
       :action="action"
       class="pb-2"
+      @reorder="onActionMove"
     />
   </VueDraggableNext>
   <Card
@@ -41,6 +42,7 @@
 import Action from './resource_action'
 import ActionForm from './resource_action_form'
 import api from 'api'
+import { underscore } from 'utils/scripts/string'
 
 const defaultActionAttributes = {
   display_name: '',
@@ -72,6 +74,8 @@ export default {
       this.newAction = { ...defaultActionAttributes }
     },
     onActionSubmit (action) {
+      action.name = underscore(action.display_name)
+
       this.resource.actions.push(action)
       this.newAction = null
 

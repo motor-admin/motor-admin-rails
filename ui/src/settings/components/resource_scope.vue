@@ -56,6 +56,7 @@
 <script>
 import api from 'api'
 import ScopeForm from './resource_scope_form'
+import { underscore } from 'utils/scripts/string'
 
 export default {
   name: 'ResourceScope',
@@ -72,6 +73,7 @@ export default {
       required: true
     }
   },
+  emits: ['reorder'],
   data () {
     return {
       isForm: false,
@@ -116,16 +118,28 @@ export default {
       })
     },
     persistChanges () {
+      const dataScope = { ...this.scope }
+
+      if (dataScope.name) {
+        dataScope._update = dataScope.name
+      }
+
+      if (dataScope.scope_type === 'filter') {
+        dataScope.name = underscore(dataScope.display_name)
+      }
+
       return api.post('resources', {
         data: {
           name: this.resource.name,
           preferences: {
-            scopes: [
-              this.scope
-            ]
+            scopes: [dataScope]
           }
         }
       }).then((result) => {
+        if (this.scope.name !== dataScope.name) {
+          this.scope.name = dataScope.name
+          this.$emit('reorder')
+        }
       }).catch((error) => {
         console.error(error)
       })

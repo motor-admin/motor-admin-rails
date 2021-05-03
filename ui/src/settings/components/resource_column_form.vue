@@ -13,25 +13,33 @@
         <VInput v-model="dataColumn.display_name" />
       </FormItem>
 
-      <FormItem
-        label="Visibility"
-        prop="access_type"
-      >
-        <MSelect
-          v-model="dataColumn.access_type"
-          :options="accessTypes"
-        />
-      </FormItem>
-      <FormItem
-        v-if="dataColumn.access_type !== 'hidden'"
-        label="Type"
-        prop="column_type"
-      >
-        <MSelect
-          v-model="dataColumn.column_type"
-          :options="columnTypes"
-        />
-      </FormItem>
+      <div class="row">
+        <div :class="dataColumn.access_type !== 'hidden' ? 'col-sm-6 pe-sm-1' : 'col-12'">
+          <FormItem
+            label="Visibility"
+            prop="access_type"
+          >
+            <MSelect
+              v-model="dataColumn.access_type"
+              :options="accessTypes"
+            />
+          </FormItem>
+        </div>
+        <div
+          v-if="dataColumn.access_type !== 'hidden'"
+          class="col-sm-6 ps-sm-1"
+        >
+          <FormItem
+            label="Type"
+            prop="column_type"
+          >
+            <MSelect
+              v-model="dataColumn.column_type"
+              :options="columnTypes"
+            />
+          </FormItem>
+        </div>
+      </div>
       <FormItem
         v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && dataColumn.column_type !== 'file'"
         label="Default value"
@@ -74,7 +82,6 @@
 <script>
 import FormInput from 'data_forms/components/input'
 import Validators from 'utils/scripts/validators'
-import { underscore } from 'utils/scripts/string'
 
 export default {
   name: 'ResourceColumnForm',
@@ -161,10 +168,6 @@ export default {
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          if (!this.dataColumn.name) {
-            this.dataColumn.name = underscore(this.dataColumn.display_name)
-          }
-
           this.$emit('submit', this.dataColumn)
         }
       })

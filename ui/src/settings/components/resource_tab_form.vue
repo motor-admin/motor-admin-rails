@@ -15,34 +15,43 @@
         <VInput v-model="dataTab.display_name" />
       </FormItem>
 
-      <FormItem
-        label="Tab type"
-        prop="tab_type"
-      >
-        <MSelect
-          v-model="dataTab.tab_type"
-          :options="tabTypes"
-          @update:modelValue="dataTab.preferences = {}"
-        />
-      </FormItem>
-      <FormItem
-        v-if="dataTab.tab_type && dataTab.tab_type !== 'default'"
-        :label="titleize(dataTab.tab_type)"
-        :prop="`preferences.${dataTab.tab_type}_id`"
-      >
-        <FormSelect
-          v-if="dataTab.tab_type === 'form'"
-          v-model="dataTab.preferences.form_id"
-        />
-        <QuerySelect
-          v-if="dataTab.tab_type === 'query'"
-          v-model="dataTab.preferences.query_id"
-        />
-        <DashboardSelect
-          v-if="dataTab.tab_type === 'dashboard'"
-          v-model="dataTab.preferences.dashboard_id"
-        />
-      </FormItem>
+      <div class="row">
+        <div :class="dataTab.tab_type && dataTab.tab_type !== 'default' ? 'col-sm-4 pe-sm-1' : 'col-12'">
+          <FormItem
+            label="Tab type"
+            prop="tab_type"
+          >
+            <MSelect
+              v-model="dataTab.tab_type"
+              :options="tabTypes"
+              @update:modelValue="dataTab.preferences = {}"
+            />
+          </FormItem>
+        </div>
+        <div
+          v-if="dataTab.tab_type && dataTab.tab_type !== 'default'"
+          class="col-sm-8 ps-sm-1"
+        >
+          <FormItem
+            v-if="dataTab.tab_type && dataTab.tab_type !== 'default'"
+            :label="titleize(dataTab.tab_type)"
+            :prop="`preferences.${dataTab.tab_type}_id`"
+          >
+            <FormSelect
+              v-if="dataTab.tab_type === 'form'"
+              v-model="dataTab.preferences.form_id"
+            />
+            <QuerySelect
+              v-if="dataTab.tab_type === 'query'"
+              v-model="dataTab.preferences.query_id"
+            />
+            <DashboardSelect
+              v-if="dataTab.tab_type === 'dashboard'"
+              v-model="dataTab.preferences.dashboard_id"
+            />
+          </FormItem>
+        </div>
+      </div>
     </VForm>
     <div class="d-flex justify-content-between">
       <div>
@@ -73,7 +82,7 @@
 </template>
 
 <script>
-import { underscore, titleize } from 'utils/scripts/string'
+import { titleize } from 'utils/scripts/string'
 import FormSelect from 'custom_forms/components/select'
 import QuerySelect from 'queries/components/select'
 import DashboardSelect from 'dashboards/components/select'
@@ -159,10 +168,6 @@ export default {
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          if (this.dataTab.name !== 'summary') {
-            this.dataTab.name = underscore(this.dataTab.display_name)
-          }
-
           this.$emit('submit', this.dataTab)
         }
       })

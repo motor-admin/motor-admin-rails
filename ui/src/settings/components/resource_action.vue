@@ -56,6 +56,7 @@
 <script>
 import api from 'api'
 import ActionForm from './resource_action_form'
+import { underscore } from 'utils/scripts/string'
 
 export default {
   name: 'ResourceAction',
@@ -77,6 +78,7 @@ export default {
       required: true
     }
   },
+  emits: ['reorder'],
   data () {
     return {
       isForm: false,
@@ -128,16 +130,28 @@ export default {
       })
     },
     persistChanges () {
+      const dataAction = { ...this.action }
+
+      if (dataAction.name) {
+        dataAction._update = dataAction.name
+      }
+
+      if (!this.isCrudAction) {
+        dataAction.name = underscore(dataAction.display_name)
+      }
+
       return api.post('resources', {
         data: {
           name: this.resource.name,
           preferences: {
-            actions: [
-              this.action
-            ]
+            actions: [dataAction]
           }
         }
       }).then((result) => {
+        if (this.action.name !== dataAction.name) {
+          this.action.name = dataAction.name
+          this.$emit('reorder')
+        }
       }).catch((error) => {
         console.error(error)
       })

@@ -56,6 +56,7 @@
 <script>
 import api from 'api'
 import TabForm from './resource_tab_form'
+import { underscore } from 'utils/scripts/string'
 
 export default {
   name: 'ResourceTab',
@@ -77,6 +78,7 @@ export default {
       required: true
     }
   },
+  emits: ['reorder'],
   data () {
     return {
       isForm: false,
@@ -123,16 +125,28 @@ export default {
       })
     },
     persistChanges () {
+      const dataTab = { ...this.tab }
+
+      if (dataTab.name) {
+        dataTab._update = dataTab.name
+      }
+
+      if (dataTab.name !== 'summary') {
+        dataTab.name = underscore(dataTab.display_name)
+      }
+
       return api.post('resources', {
         data: {
           name: this.resource.name,
           preferences: {
-            tabs: [
-              this.tab
-            ]
+            tabs: [dataTab]
           }
         }
       }).then((result) => {
+        if (this.tab.name !== dataTab.name) {
+          this.tab.name = dataTab.name
+          this.$emit('reorder')
+        }
       }).catch((error) => {
         console.error(error)
       })

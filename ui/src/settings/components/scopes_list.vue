@@ -10,6 +10,7 @@
       :resource="resource"
       :scope="scope"
       class="pb-2"
+      @reorder="onScopeMove"
     />
   </VueDraggableNext>
   <Card
@@ -40,6 +41,7 @@
 import ResourceScope from './resource_scope'
 import ResourceScopeForm from './resource_scope_form'
 import api from 'api'
+import { underscore } from 'utils/scripts/string'
 
 const defaultScopeAttributes = {
   display_name: '',
@@ -71,6 +73,8 @@ export default {
       this.newScope = { ...defaultScopeAttributes, virtual: true }
     },
     onScopeSubmit (scope) {
+      scope.name = underscore(scope.display_name)
+
       this.resource.scopes.push(scope)
       this.newScope = null
 

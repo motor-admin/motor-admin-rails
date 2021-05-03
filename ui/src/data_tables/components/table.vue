@@ -2,7 +2,7 @@
   <div
     ref="wrapper"
     class="table-wrapper"
-    :style="{ overflow: 'auto', height: '100%' }"
+    :style="{ overflowX: 'auto', overflowY: compact ? 'hidden' : 'auto', height: '100%' }"
   >
     <table
       cellspacing="0"
@@ -258,18 +258,36 @@ export default {
 }
 
 .ivu-table.ivu-table-compact {
+  overflow-y: hidden;
+
   .ivu-table-column {
     height: 32px;
+    padding: 0;
   }
 
   .ivu-btn {
     line-height: 20px;
-    padding-top: 0.1px;
     height: 22px;
+    padding: 0 10px;
   }
 }
 
 .ivu-table-cell-sort {
   user-select: none;
+}
+
+.table-wrapper::-webkit-scrollbar {
+  width: 4px;
+  border-top: 1px solid #dee2e6;
+  height: 4px;
+  z-index: 12;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  box-shadow: none;
+  border-top: 1px solid #dee2e6;
+  background-color: #d3d3d3;
+  background-clip: padding-box;
 }
 </style>

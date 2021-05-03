@@ -24,6 +24,7 @@ module Motor
 
       TAB_DEFAULTS = {
         visible: true,
+        tab_type: 'default',
         preferences: {}
       }.with_indifferent_access
 
@@ -123,7 +124,7 @@ module Motor
       # @param new_columns [Array<HashWithIndifferentAccess>]
       # @return [Array<HashWithIndifferentAccess>]
       def normalize_columns(default_columns, existing_columns, new_columns)
-        (existing_columns.pluck(:name) + new_columns.pluck(:name)).uniq.map do |name|
+        fetch_update_names(existing_columns, new_columns).uniq.map do |name|
           new_column = safe_fetch_by_name(new_columns, name)
 
           next if new_column[:_remove]
@@ -135,7 +136,11 @@ module Motor
           normalized_column = existing_column.merge(column_attrs)
           normalized_column = reject_default(default_column, normalized_column)
 
-          normalized_column.merge(name: name) if normalized_column.present?
+          next if normalized_column.blank?
+
+          normalized_column[:name] ||= name
+
+          normalized_column
         end.compact.presence
       end
 
@@ -144,7 +149,7 @@ module Motor
       # @param new_actions [Array<HashWithIndifferentAccess>]
       # @return [Array<HashWithIndifferentAccess>]
       def normalize_actions(default_actions, existing_actions, new_actions)
-        (existing_actions.pluck(:name) + new_actions.pluck(:name)).uniq.map do |name|
+        fetch_update_names(existing_actions, new_actions).map do |name|
           new_action = safe_fetch_by_name(new_actions, name)
 
           next if new_action[:_remove]
@@ -156,7 +161,11 @@ module Motor
           normalized_action = existing_action.merge(action_attrs)
           normalized_action = reject_default(default_action.presence || ACTION_DEFAULTS, normalized_action)
 
-          normalized_action.merge(name: name) if normalized_action.present?
+          next if normalized_action.blank?
+
+          normalized_action[:name] ||= name
+
+          normalized_action
         end.compact.presence
       end
 
@@ -165,7 +174,7 @@ module Motor
       # @param new_tabs [Array<HashWithIndifferentAccess>]
       # @return [Array<HashWithIndifferentAccess>]
       def normalize_tabs(default_tabs, existing_tabs, new_tabs)
-        (existing_tabs.pluck(:name) + new_tabs.pluck(:name)).uniq.map do |name|
+        fetch_update_names(existing_tabs, new_tabs).uniq.map do |name|
           new_tab = safe_fetch_by_name(new_tabs, name)
 
           next if new_tab[:_remove]
@@ -177,7 +186,11 @@ module Motor
           normalized_tab = existing_tab.merge(tab_attrs)
           normalized_tab = reject_default(default_tab.presence || TAB_DEFAULTS, normalized_tab)
 
-          normalized_tab.merge(name: name) if normalized_tab.present?
+          next if normalized_tab.blank?
+
+          normalized_tab[:name] ||= name
+
+          normalized_tab
         end.compact.presence
       end
 
@@ -186,7 +199,7 @@ module Motor
       # @param new_scopes [Array<HashWithIndifferentAccess>]
       # @return [Array<HashWithIndifferentAccess>]
       def normalize_scopes(default_scopes, existing_scopes, new_scopes)
-        (existing_scopes.pluck(:name) + new_scopes.pluck(:name)).uniq.map do |name|
+        fetch_update_names(existing_scopes, new_scopes).uniq.map do |name|
           new_scope = safe_fetch_by_name(new_scopes, name)
 
           next if new_scope[:_remove]
@@ -198,7 +211,11 @@ module Motor
           normalized_scope = existing_scope.merge(scope_attrs)
           normalized_scope = reject_default(default_scope.presence || SCOPE_DEFAULTS, normalized_scope)
 
-          normalized_scope.merge(name: name) if normalized_scope.present?
+          next if normalized_scope.blank?
+
+          normalized_scope[:name] ||= name
+
+          normalized_scope
         end.compact.presence
       end
 
@@ -220,8 +237,14 @@ module Motor
         end.compact.presence
       end
 
+      def fetch_update_names(existing_items, new_items)
+        new_names = new_items.map { |e| e[:_update] || e[:name] }
+
+        (existing_items.pluck(:name) + new_names).uniq
+      end
+
       def safe_fetch_by_name(list, name)
-        list.find { |e| e[:name] == name } || {}
+        list.find { |e| e[:_update] == name || e[:name] == name } || {}
       end
 
       # @param resource_name [String]

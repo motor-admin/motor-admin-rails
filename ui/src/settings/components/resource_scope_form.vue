@@ -47,7 +47,6 @@
 
 <script>
 import Filters from 'data_resources/components/filters'
-import { underscore } from 'utils/scripts/string'
 
 export default {
   name: 'ResourceScopeForm',
@@ -92,10 +91,6 @@ export default {
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          if (!this.dataScope.name) {
-            this.dataScope.name = underscore(this.dataScope.display_name)
-          }
-
           if (this.dataScope.preferences.filter) {
             this.dataScope.preferences.filter = this.dataScope.preferences.filter.filter((f) => {
               return f === 'OR' || !!Object.keys(f)[0]

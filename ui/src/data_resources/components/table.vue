@@ -77,7 +77,7 @@
         :data="rows"
         :loading="isLoading"
         :columns="columns"
-        :style="{ height: height, paddingBottom: '1px' }"
+        :style="{ height: height }"
         :sort-params="sortParams"
         @sort-change="applySort"
         @row-click="onRowClick"
