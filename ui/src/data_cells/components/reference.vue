@@ -1,7 +1,7 @@
 <template>
   <VButton
     v-popover="popoverParams"
-    :to="{ name: 'resources', params: { fragments: [resourceSlug, referenceId].filter(Boolean) }}"
+    :to="{ name: 'resources', params: { fragments: [resourceSlug, referenceId || resourceId].filter(Boolean) }}"
     type="primary"
     ghost
     shape="circle"

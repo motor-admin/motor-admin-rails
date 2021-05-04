@@ -33,16 +33,17 @@
           border
           size="large"
           class="my-1 me-0"
+          @update:modelValue="maybeSetLabelFormat"
         >
           {{ option.label }}
         </Radio>
       </RadioGroup>
-      <template v-if="preferences.visualization !== 'table'">
+      <template v-if="!['table', 'markdown'].includes(preferences.visualization)">
         <p class="fs-4 fw-bold my-1">
           Format
         </p>
         <RadioGroup
-          v-model="preferences.format.style"
+          v-model="preferences.visualization_options.label_format"
           class="d-flex flex-column"
           @update:modelValue="maybeSetCurrency"
         >
@@ -58,13 +59,13 @@
           </Radio>
         </RadioGroup>
       </template>
-      <template v-if="preferences.visualization !== 'table' && preferences.format.style === 'currency'">
+      <template v-if="!['table', 'markdown'].includes(preferences.visualization) && preferences.visualization_options.label_format === 'currency'">
         <p class="fs-4 fw-bold my-1">
           Currency
         </p>
 
         <MSelect
-          v-model="preferences.format.options.currency"
+          v-model="preferences.visualization_options.label_format_options.currency"
           filterable
           :options="currencyOptions"
         />
@@ -103,6 +104,7 @@ export default {
     visualizationOptions () {
       return [
         { label: 'Table', value: 'table' },
+        { label: 'Markdown', value: 'markdown' },
         { label: 'Line chart', value: 'line_chart' },
         { label: 'Bar chart', value: 'bar_chart' },
         { label: 'Row chart', value: 'row_chart' },
@@ -121,14 +123,17 @@ export default {
       ]
     }
   },
-  created () {
-    this.preferences.visualization ||= 'table'
-    this.preferences.format ||= { style: 'decimal', options: {} }
-  },
   methods: {
+    maybeSetLabelFormat (value) {
+      if (!['table', 'markdown'].includes(value)) {
+        this.preferences.visualization_options.label_format ||= 'decimal'
+        this.preferences.visualization_options.label_format_options ||= {}
+      }
+    },
     maybeSetCurrency (value) {
       if (value === 'currency') {
-        this.preferences.format.options.currency ||= 'USD'
+        this.preferences.visualization_options.label_format_options ||= {}
+        this.preferences.visualization_options.label_format_options.currency ||= 'USD'
       }
     }
   }

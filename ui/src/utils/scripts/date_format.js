@@ -1,5 +1,17 @@
-function formatDate (date, options) {
+function formatDate (date, options, displayTime) {
   const dateTime = new Date(date)
+
+  options ||= {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  }
+
+  if (displayTime) {
+    options.hour = 'numeric'
+    options.minute = 'numeric'
+    options.hour12 = true
+  }
 
   if (dateTime.toLocaleString) {
     return new Date(dateTime.getTime() + dateTime.getTimezoneOffset() * 60000).toLocaleString('en-US', options)

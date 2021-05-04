@@ -67,6 +67,7 @@
 import FormInput from 'data_forms/components/input'
 import { interpolate } from 'utils/scripts/string'
 import axios from 'axios'
+import DOMPurify from 'dompurify'
 
 export default {
   name: 'DataForm',
@@ -95,7 +96,7 @@ export default {
   },
   computed: {
     safeSuccessData () {
-      return this.successData.replace(/<\/?script>/g, '')
+      return DOMPurify.sanitize(this.successData)
     },
     isSubmitDisabled () {
       return !this.form.api_path

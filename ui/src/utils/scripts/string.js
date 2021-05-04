@@ -19,9 +19,13 @@ function titleize (string) {
 }
 
 function interpolate (string, params) {
-  return string.replace(/\{\w+?\}/g, (e) => {
-    return params[e.slice(1, e.length - 1)]
+  return string.replace(/{(\w+)}/g, (expr, key) => {
+    return params[key]
   })
 }
 
-export { truncate, underscore, titleize, interpolate }
+function naiveMustache (string, data) {
+  return string.replace(/{{(\w+)}}/g, (expresion, key) => data[key] || expresion)
+}
+
+export { truncate, underscore, titleize, interpolate, naiveMustache }

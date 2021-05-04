@@ -30,7 +30,7 @@
             :border="false"
             class="border-0"
             placeholder="Search..."
-            @keydown.enter="searchQuery = searchInput"
+            @keydown.enter="applySearch"
           />
         </div>
       </div>
@@ -57,6 +57,7 @@
         :data="filteredData"
         :title="query.name"
         :minimal-pagination="true"
+        :loading="isLoading"
         :errors="errors"
         :preferences="query.preferences"
         :columns="columns"
@@ -139,7 +140,8 @@ export default {
       }
     },
     withSearch () {
-      return (!this.query.preferences.visualization || this.query.preferences.visualization === 'table') && this.data.length > 10
+      const visualization = this.query.preferences.visualization
+      return (!visualization || ['table', 'markdown'].includes(visualization)) && this.data.length > (visualization === 'markdown' ? 1 : 10)
     }
   },
   watch: {
@@ -155,6 +157,9 @@ export default {
     }
   },
   methods: {
+    applySearch () {
+      this.searchQuery = this.searchInput
+    },
     loadData () {
       if (!this.isLoading) {
         this.isLoading = true

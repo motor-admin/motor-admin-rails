@@ -12,6 +12,15 @@
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
       <VButton
+        v-if="isEdit && dataQuery.preferences.visualization === 'markdown'"
+        size="large"
+        class="bg-white me-2 md-icon-only"
+        :icon="isMarkdownEditor ? 'md-code-working' : 'logo-markdown'"
+        @click="isMarkdownEditor = !isMarkdownEditor"
+      >
+        {{ isMarkdownEditor ? 'Edit SQL' : 'Edit Markdown' }}
+      </VButton>
+      <VButton
         v-if="!isEdit"
         size="large"
         class="bg-white me-2 md-icon-only"
@@ -79,16 +88,25 @@
       </div>
 
       <Split
-        v-model="split"
+        v-model="vSplit"
         mode="vertical"
         :style="{ height: isSettingsOpened && isVariablesForm ? 'calc(100% - 88px)' : '100%' }"
       >
         <template #top>
-          <SqlEditor
-            v-if="isEdit"
-            v-model="dataQuery.sql_body"
-            @run="runQuery"
-          />
+          <template v-if="isEdit">
+            <CodeEditor
+              v-if="dataQuery.preferences.visualization === 'markdown' && isMarkdownEditor"
+              v-model="dataQuery.preferences.visualization_options.markdown"
+              language="markdown"
+              @run="runQuery"
+            />
+            <CodeEditor
+              v-else
+              v-model="dataQuery.sql_body"
+              language="sql"
+              @run="runQuery"
+            />
+          </template>
         </template>
         <template #bottom>
           <Spin
@@ -102,6 +120,7 @@
             :columns="columns"
             :query-id="query.id"
             :with-alert="!!query.id"
+            :show-markdown-table="!widthLessThan('md') && isEdit"
             :preferences="dataQuery.preferences"
             @settings="toggleSettings"
           />
@@ -112,13 +131,14 @@
 </template>
 
 <script>
-import SqlEditor from '../components/sql_editor'
+import CodeEditor from '../components/code_editor'
 import QueryResult from '../components/result'
 import QueryForm from '../components/form'
 import Settings from '../components/settings'
 import throttle from 'view3/src/utils/throttle'
 import VariablesForm from '../components/variables_form'
 import { titleize } from 'utils/scripts/string'
+import { widthLessThan } from 'utils/scripts/dimensions'
 
 import api from 'api'
 
@@ -126,22 +146,27 @@ const defaultQueryParams = {
   name: '',
   sql_body: '',
   tags: [],
-  preferences: {}
+  preferences: {
+    visualization: 'table',
+    visualization_options: {},
+    variables: []
+  }
 }
 
 export default {
   name: 'QueriesShow',
   components: {
-    SqlEditor,
+    CodeEditor,
     QueryResult,
     Settings,
     VariablesForm
   },
   data () {
     return {
-      split: 0,
+      vSplit: 0,
       isLoading: false,
       isLoadingQuery: false,
+      isMarkdownEditor: false,
       query: { ...defaultQueryParams },
       dataQuery: {
         sql_body: '',
@@ -162,10 +187,10 @@ export default {
       return JSON.parse(window.atob(location.hash.replace(/^#/, '')) || 'null')
     },
     isEdit () {
-      return this.split !== 0 || this.isSettingsOpened || this.isEdited
+      return this.vSplit !== 0 || this.isSettingsOpened || this.isEdited
     },
     isEdited () {
-      return JSON.stringify(this.dataQuery) !== JSON.stringify({ sql_body: this.query.sql_body, preferences: this.query.preferences })
+      return JSON.stringify(this.dataQuery.preferences) !== JSON.stringify(this.query.preferences) || this.dataQuery.sql_body !== this.query.sql_body
     },
     isExisting () {
       return this.$route.params.id
@@ -194,7 +219,7 @@ export default {
         const isNewQuery = to.params.id !== this.query.id?.toString()
 
         if (isNewQuery) {
-          this.dataQuery = { sql_body: '', preferences: {} }
+          this.dataQuery = { ...defaultQueryParams }
           this.query = { ...defaultQueryParams }
 
           this.onMounted()
@@ -204,10 +229,15 @@ export default {
     'dataQuery.sql_body': throttle(async function (value) {
       this.dataQuery.preferences.variables = this.extractVariablesFromSql(value)
     }, 500),
+    'dataQuery.preferences.visualization'(value) {
+      if (value === 'markdown') {
+        this.isMarkdownEditor = true
+      }
+    },
     dataQuery: {
       deep: true,
       handler: throttle(async function (value) {
-        const stringValue = JSON.stringify(value)
+        const stringValue = JSON.stringify({ sql_body: value.sql_body, preferences: value.preferences })
 
         if (stringValue !== JSON.stringify({ sql_body: this.query.sql_body, preferences: this.query.preferences })) {
           location.replace('#' + window.btoa(stringValue))
@@ -218,11 +248,13 @@ export default {
     }
   },
   created () {
-    this.dataQuery = JSON.parse(JSON.stringify(this.locationHashParams)) || { sql_body: '', preferences: {} }
+    this.dataQuery = JSON.parse(JSON.stringify(this.locationHashParams)) || { ...defaultQueryParams }
+    this.dataQuery.preferences = { ...defaultQueryParams.preferences, ...this.dataQuery.preferences }
 
     this.onMounted()
   },
   methods: {
+    widthLessThan,
     assignVariablesData () {
       this.variablesData = (this.dataQuery.preferences.variables || []).reduce((acc, variable) => {
         acc[variable.name] = variable.default_value
@@ -252,7 +284,7 @@ export default {
       }
     },
     openEditor () {
-      this.split = 0.35
+      this.vSplit = 0.35
     },
     loadQuery () {
       this.isLoadingQuery = true
@@ -264,13 +296,20 @@ export default {
       }).then((result) => {
         this.query = {
           ...result.data.data,
+          preferences: {
+            ...defaultQueryParams.preferences,
+            ...result.data.data.preferences
+          },
           tags: result.data.data.tags.map((t) => t.name)
         }
 
         if (!this.locationHashParams) {
           Object.assign(this.dataQuery, JSON.parse(JSON.stringify({
             sql_body: this.query.sql_body,
-            preferences: this.query.preferences
+            preferences: {
+              ...defaultQueryParams.preferences,
+              ...this.query.preferences
+            }
           })))
         }
 

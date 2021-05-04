@@ -12,18 +12,40 @@
       {{ error.detail }}
     </p>
   </div>
-  <DataTable
-    v-else-if="isTable"
+  <div
+    v-if="isTable || isMarkdown"
+    class="d-flex"
     :style="{ height: 'calc(100% - 34px)' }"
-    :data="paginatedData"
-    :with-select="false"
-    :click-rows="false"
-    :borderless="borderless"
-    :header-border="headerBorder"
-    :compact="compact"
-    :columns="normalizedColumns"
-    @sort-change="assignSortParams"
-  />
+  >
+    <div
+      v-if="isMarkdown"
+      :style="{ width: showMarkdownTable ? '50%' : '100%' }"
+      class="bg-white"
+    >
+      <Markdown
+        v-if="!loading"
+        :style="{ height: '100%', overflow: 'scroll', padding: '10px 13px' }"
+        :class="{ 'border-right': showMarkdownTable }"
+        :markdown="preferences.visualization_options.markdown"
+        :data="markdownData"
+      />
+    </div>
+    <div
+      v-if="isTable || showMarkdownTable"
+      :style="{ width: isTable ? '100%' : '50%' }"
+    >
+      <DataTable
+        :data="paginatedData"
+        :with-select="false"
+        :click-rows="false"
+        :borderless="borderless"
+        :header-border="headerBorder"
+        :compact="compact"
+        :columns="normalizedColumns"
+        @sort-change="assignSortParams"
+      />
+    </div>
+  </div>
   <div
     v-else
     :style="{ height: 'calc(100% - 34px)' }"
@@ -32,7 +54,10 @@
       v-if="data.length"
       ref="chart"
       :data="data"
-      :labels-format="preferences.format"
+      :labels-format="{
+        style: preferences.visualization_options?.label_format || 'decimal',
+        options: preferences.visualization_options?.label_format_options || {}
+      }"
       :columns="normalizedColumns"
       :chart-type="chartType"
     />
@@ -57,13 +82,13 @@
       :style="{ width: '70%', whiteSpace: 'nowrap' }"
     >
       <Pagination
-        v-if="data.length && isTable"
+        v-if="data.length && (isTable || isMarkdown)"
         :current="paginationParams.current"
         :total="total"
-        :page-size="paginationParams.pageSize"
+        :page-size="pageSize"
         :page-size-opts="pageSizeOpts"
         size="small"
-        :show-sizer="!minimalPagination"
+        :show-sizer="!minimalPagination && !isMarkdown"
         :show-elevator="!minimalPagination"
         :show-total="true"
         @update:current="paginationParams.current = $event"
@@ -96,6 +121,7 @@
 <script>
 import DataTable from 'data_tables/components/table'
 import Chart from './chart'
+import Markdown from './markdown'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import csv from 'view3/src/utils/csv'
 import { underscore } from 'utils/scripts/string'
@@ -105,7 +131,8 @@ export default {
   name: 'QueryTable',
   components: {
     DataTable,
-    Chart
+    Chart,
+    Markdown
   },
   props: {
     data: {
@@ -145,6 +172,16 @@ export default {
       required: false,
       default: false
     },
+    showMarkdownTable: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     borderless: {
       type: Boolean,
       required: false,
@@ -180,6 +217,7 @@ export default {
   data () {
     return {
       sortParams: {},
+      hSplit: 0.5,
       paginationParams: {
         current: 1,
         pageSize: this.defaultPageSize
@@ -187,6 +225,23 @@ export default {
     }
   },
   computed: {
+    markdownData () {
+      if (this.data.length) {
+        return this.columns.reduce((acc, column, index) => {
+          if (['datetime', 'date'].includes(column.column_type)) {
+            acc[column.name] = formatDate(this.paginatedData[0][index], null, column.column_type === 'datetime')
+          } else if (column.column_type === 'json') {
+            acc[column.name] = JSON.parse(this.paginatedData[0][index])
+          } else {
+            acc[column.name] = this.paginatedData[0][index]
+          }
+
+          return acc
+        }, {})
+      } else {
+        return {}
+      }
+    },
     sortedData () {
       const { key, order } = this.sortParams
       const orderMultiplier = order === 'desc' ? -1 : 1
@@ -203,6 +258,9 @@ export default {
     isTable () {
       return !this.preferences.visualization || this.preferences.visualization === 'table'
     },
+    isMarkdown () {
+      return this.preferences.visualization === 'markdown'
+    },
     pageSizeOpts () {
       return [20, 50, 100, 250, 500, 1000]
     },
@@ -213,10 +271,13 @@ export default {
         return this.preferences.visualization.replace(/_chart$/, '')
       }
     },
+    pageSize () {
+      return this.isMarkdown ? 1 : this.paginationParams.pageSize
+    },
     paginatedData () {
-      const fromIndex = (this.paginationParams.current - 1) * this.paginationParams.pageSize
+      const fromIndex = (this.paginationParams.current - 1) * this.pageSize
 
-      return this.sortedData.slice(fromIndex, fromIndex + this.paginationParams.pageSize)
+      return this.sortedData.slice(fromIndex, fromIndex + this.pageSize)
     },
     normalizedColumns () {
       return this.columns.map((column, index) => {
@@ -239,6 +300,9 @@ export default {
   watch: {
     defaultPageSize (value) {
       this.paginationParams.pageSize = value
+    },
+    data () {
+      this.paginationParams.current = 1
     }
   },
   methods: {

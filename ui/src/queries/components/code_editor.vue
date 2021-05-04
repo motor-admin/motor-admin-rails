@@ -1,7 +1,7 @@
 <template>
   <PrismEditor
     v-model="dataValue"
-    class="sql-editor"
+    class="code-editor"
     :highlight="highlighter"
     line-numbers
     @click="focusEditor"
@@ -12,12 +12,15 @@
 import { PrismEditor } from 'vue-prism-editor/packages/vue-prism-editor/src/Editor'
 import { highlight, languages } from 'prismjs/components/prism-core'
 import 'prismjs/components/prism-sql'
+import 'prismjs/components/prism-markup'
+import 'prismjs/components/prism-markdown'
+import throttle from 'view3/src/utils/throttle'
 
 import 'vue-prism-editor/packages/vue-prism-editor/src/styles.css'
 import 'prismjs/themes/prism.css'
 
 export default {
-  name: 'SqlEditor',
+  name: 'CodeEditor',
   components: {
     PrismEditor
   },
@@ -26,6 +29,10 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    language: {
+      type: String,
+      required: true
     }
   },
   emits: ['update:modelValue', 'run'],
@@ -64,14 +71,14 @@ export default {
       }
     },
     highlighter (code) {
-      return highlight(code, languages.sql)
+      return highlight(code, languages[this.language])
     }
   }
 }
 </script>
 
 <style lang="scss">
-.sql-editor {
+.code-editor {
   background-color: rgb(237, 242, 245);
   font-family: Fira code, Fira Mono, Consolas, Menlo, Courier, monospace;
   font-size: 14px;
