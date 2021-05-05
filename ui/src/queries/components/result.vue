@@ -12,8 +12,13 @@
       {{ error.detail }}
     </p>
   </div>
+  <ValueResult
+    v-if="isValue && !loading"
+    :style="{ height: 'calc(100% - 34px)' }"
+    :data="paginatedData"
+  />
   <div
-    v-if="isTable || isMarkdown"
+    v-else-if="isTable || isMarkdown"
     class="d-flex"
     :style="{ height: 'calc(100% - 34px)' }"
   >
@@ -54,10 +59,7 @@
       v-if="data.length"
       ref="chart"
       :data="data"
-      :labels-format="{
-        style: preferences.visualization_options?.label_format || 'decimal',
-        options: preferences.visualization_options?.label_format_options || {}
-      }"
+      :options="preferences.visualization_options"
       :columns="normalizedColumns"
       :chart-type="chartType"
     />
@@ -82,13 +84,13 @@
       :style="{ width: '70%', whiteSpace: 'nowrap' }"
     >
       <Pagination
-        v-if="data.length && (isTable || isMarkdown)"
+        v-if="data.length && (isTable || isMarkdown || (isValue && data.length > 1))"
         :current="paginationParams.current"
         :total="total"
         :page-size="pageSize"
         :page-size-opts="pageSizeOpts"
         size="small"
-        :show-sizer="!minimalPagination && !isMarkdown"
+        :show-sizer="!minimalPagination && !isMarkdown && !isValue"
         :show-elevator="!minimalPagination"
         :show-total="true"
         @update:current="paginationParams.current = $event"
@@ -122,6 +124,7 @@
 import DataTable from 'data_tables/components/table'
 import Chart from './chart'
 import Markdown from './markdown'
+import ValueResult from './value'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import csv from 'view3/src/utils/csv'
 import { underscore } from 'utils/scripts/string'
@@ -132,7 +135,8 @@ export default {
   components: {
     DataTable,
     Chart,
-    Markdown
+    Markdown,
+    ValueResult
   },
   props: {
     data: {
@@ -261,6 +265,9 @@ export default {
     isMarkdown () {
       return this.preferences.visualization === 'markdown'
     },
+    isValue () {
+      return this.preferences.visualization === 'value'
+    },
     pageSizeOpts () {
       return [20, 50, 100, 250, 500, 1000]
     },
@@ -272,7 +279,7 @@ export default {
       }
     },
     pageSize () {
-      return this.isMarkdown ? 1 : this.paginationParams.pageSize
+      return (this.isMarkdown || this.isValue) ? 1 : this.paginationParams.pageSize
     },
     paginatedData () {
       const fromIndex = (this.paginationParams.current - 1) * this.pageSize

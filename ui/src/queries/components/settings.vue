@@ -38,7 +38,22 @@
           {{ option.label }}
         </Radio>
       </RadioGroup>
-      <template v-if="!['table', 'markdown'].includes(preferences.visualization)">
+      <template v-if="['bar_chart', 'row_chart', 'line_chart', 'funnel'].includes(preferences.visualization)">
+        <Checkbox
+          v-model="preferences.visualization_options.chart_values_axis"
+          class="d-block"
+        >
+          Values axis
+        </Checkbox>
+        <Checkbox
+          v-if="['bar_chart', 'row_chart'].includes(preferences.visualization)"
+          v-model="preferences.visualization_options.chart_stacked"
+          class="d-block"
+        >
+          Stacked bars
+        </Checkbox>
+      </template>
+      <template v-if="!['table', 'markdown', 'value'].includes(preferences.visualization)">
         <p class="fs-4 fw-bold my-1">
           Format
         </p>
@@ -104,6 +119,7 @@ export default {
     visualizationOptions () {
       return [
         { label: 'Table', value: 'table' },
+        { label: 'Value', value: 'value' },
         { label: 'Markdown', value: 'markdown' },
         { label: 'Line chart', value: 'line_chart' },
         { label: 'Bar chart', value: 'bar_chart' },

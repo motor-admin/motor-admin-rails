@@ -83,7 +83,7 @@ export default {
       required: false,
       default: () => []
     },
-    labelsFormat: {
+    options: {
       type: Object,
       required: false,
       default: () => ({})
@@ -99,6 +99,12 @@ export default {
     }
   },
   computed: {
+    labelsFormat () {
+      return {
+        style: this.options.label_format || 'decimal',
+        options: this.options.label_format_options || {}
+      }
+    },
     chartTypeOption () {
       return {
         funnel: 'line',
@@ -131,10 +137,10 @@ export default {
           labels: this.labels,
           datasets: this.datasets
         },
-        options: this.options
+        options: this.chartOptions
       }
     },
-    options () {
+    chartOptions () {
       const options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -172,7 +178,16 @@ export default {
           }
         },
         scales: {
+          x: {
+            display: this.chartType !== 'pie',
+            stacked: this.options.chart_stacked,
+            grid: {
+              display: false
+            }
+          },
           y: {
+            stacked: this.options.chart_stacked,
+            display: this.options.chart_values_axis || this.chartType === 'row',
             grid: {
               display: false
             },
@@ -227,8 +242,8 @@ export default {
       options.plugins = deepmerge(options.plugins, {
         datalabels: {
           display: 'auto',
-          anchor: 'end',
-          align: ['pie', 'row'].includes(this.chartType) ? 'end' : 'top',
+          anchor: this.options.chart_stacked ? 'center' : 'end',
+          align: this.options.chart_stacked ? 'center' : (['pie', 'row'].includes(this.chartType) ? 'end' : 'top'),
           formatter: (value) => {
             return this.formatValue(value)
           },
@@ -294,6 +309,8 @@ export default {
       if (this.chartType === 'row') {
         options.scales = {
           x: {
+            stacked: this.options.chart_stacked,
+            display: this.options.chart_values_axis,
             grid: { display: false },
             ticks: {
               callback: (value) => {
@@ -301,7 +318,10 @@ export default {
               }
             }
           },
-          y: { grid: { display: false } }
+          y: {
+            stacked: this.options.chart_stacked,
+            grid: { display: false }
+          }
         }
       }
 
@@ -328,7 +348,7 @@ export default {
     chartType () {
       this.update()
     },
-    labelsFormat: {
+    options: {
       deep: true,
       handler () {
         this.update()

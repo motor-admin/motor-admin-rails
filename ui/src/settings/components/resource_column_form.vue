@@ -68,7 +68,7 @@
         </div>
       </div>
       <FormItem
-        v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && dataColumn.column_type !== 'file'"
+        v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !['image', 'file'].includes(dataColumn.column_type)"
         label="Default value"
         prop="default_value"
       >

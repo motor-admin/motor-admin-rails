@@ -43,15 +43,6 @@
         v-if="isLoading"
         fix
       />
-      <div
-        v-if="data.length === 1 && data[0].length === 1"
-        class="d-flex align-items-center justify-content-center flex-column"
-        style="height: 100%"
-      >
-        <h1 style="font-size: 60px">
-          {{ data[0][0] }}
-        </h1>
-      </div>
       <QueryResult
         v-else
         :data="filteredData"
@@ -141,7 +132,8 @@ export default {
     },
     withSearch () {
       const visualization = this.query.preferences.visualization
-      return (!visualization || ['table', 'markdown'].includes(visualization)) && this.data.length > (visualization === 'markdown' ? 1 : 10)
+
+      return (!visualization || ['table', 'markdown', 'value'].includes(visualization)) && this.data.length > (['markdown', 'value'].includes(visualization) ? 1 : 10)
     }
   },
   watch: {
