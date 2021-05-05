@@ -14,7 +14,6 @@ import { highlight, languages } from 'prismjs/components/prism-core'
 import 'prismjs/components/prism-sql'
 import 'prismjs/components/prism-markup'
 import 'prismjs/components/prism-markdown'
-import throttle from 'view3/src/utils/throttle'
 
 import 'vue-prism-editor/packages/vue-prism-editor/src/styles.css'
 import 'prismjs/themes/prism.css'

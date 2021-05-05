@@ -63,11 +63,8 @@
         <p class="fs-4 fw-bold my-1">
           Currency
         </p>
-
-        <MSelect
+        <CurrencySelect
           v-model="preferences.visualization_options.label_format_options.currency"
-          filterable
-          :options="currencyOptions"
         />
       </template>
     </div>
@@ -84,10 +81,13 @@
 </template>
 
 <script>
-import { ISO_CODES } from 'utils/scripts/currencies'
+import CurrencySelect from 'utils/components/currency_select'
 
 export default {
   name: 'QuerySettings',
+  components: {
+    CurrencySelect
+  },
   props: {
     preferences: {
       type: Object,
@@ -111,9 +111,6 @@ export default {
         { label: 'Pie chart', value: 'pie_chart' },
         { label: 'Funnel', value: 'funnel' }
       ]
-    },
-    currencyOptions () {
-      return ISO_CODES
     },
     formatOptions () {
       return [

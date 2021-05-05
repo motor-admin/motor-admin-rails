@@ -90,6 +90,7 @@ module Motor
               default_value: default_attrs[column.name],
               validators: fetch_validators(model, column.name),
               reference: nil,
+              format: {},
               virtual: false
             }
           end.compact
@@ -122,6 +123,7 @@ module Motor
             access_type: ref.belongs_to? || is_attachment ? ColumnAccessTypes::READ_WRITE : ColumnAccessTypes::READ_ONLY,
             default_value: default_attrs[column_name],
             validators: fetch_validators(model, column_name),
+            format: {},
             reference: {
               name: name,
               model_name: ref.klass.name.underscore,

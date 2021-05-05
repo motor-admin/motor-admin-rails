@@ -7,6 +7,11 @@
     v-else-if="isImage"
     :value="stringValue"
   />
+  <DataCurrency
+    v-else-if="isCurrency"
+    :value="value"
+    :format="format"
+  />
   <DataUrl
     v-else-if="isUrl || isPath"
     :truncate="textTruncate"
@@ -46,6 +51,7 @@ import DataImage from './image'
 import DataBoolean from './boolean'
 import DataEmail from './email'
 import DataPhone from './phone'
+import DataCurrency from './currency'
 
 import DataTypes from '../scripts/data_types'
 
@@ -59,7 +65,8 @@ export default {
     DataImage,
     DataBoolean,
     DataEmail,
-    DataPhone
+    DataPhone,
+    DataCurrency
   },
   props: {
     value: {
@@ -71,6 +78,11 @@ export default {
       type: String,
       required: false,
       default: DataTypes.TEXT
+    },
+    format: {
+      type: Object,
+      required: false,
+      default: () => ({})
     },
     textTruncate: {
       type: Boolean,
@@ -104,7 +116,10 @@ export default {
       return typeof this.value === 'boolean'
     },
     isImage () {
-      return this.isPath && !!this.stringValue.match(/\.(jpg|png|jpeg|wepb|svg)$/)
+      return (this.isPath && !!this.stringValue.match(/\.(jpg|png|jpeg|wepb|svg)$/)) || this.type === 'image'
+    },
+    isCurrency () {
+      return this.type === 'currency'
     },
     isUrl () {
       return !!this.stringValue.match(/^https?:\/\//i)

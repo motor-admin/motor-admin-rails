@@ -111,10 +111,10 @@ export default {
       return this.type === 'date'
     },
     isFile () {
-      return this.type === 'file'
+      return this.type === 'file' || this.type === 'image'
     },
     isNumber () {
-      return ['integer', 'bigint', 'int', 'float', 'demical', 'double', 'number'].includes(this.type)
+      return ['integer', 'bigint', 'int', 'float', 'demical', 'double', 'number', 'currency'].includes(this.type)
     },
     isTextArea () {
       if (this.column.field_type === 'input') {

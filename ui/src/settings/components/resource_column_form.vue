@@ -36,6 +36,33 @@
             <MSelect
               v-model="dataColumn.column_type"
               :options="columnTypes"
+              @update:modelValue="assignDefaultFormat"
+            />
+          </FormItem>
+        </div>
+      </div>
+      <div
+        v-if="dataColumn.access_type !== 'hidden' && ['currency'].includes(dataColumn.column_type)"
+        class="row"
+      >
+        <div class="col-sm-6 pe-sm-1">
+          <FormItem
+            label="Currency"
+            prop="format.currency"
+          >
+            <CurrencySelect
+              v-model="dataColumn.format.currency"
+            />
+          </FormItem>
+        </div>
+        <div class="col-sm-6 ps-sm-1">
+          <FormItem
+            label="Base"
+            prop="format.currency_base"
+          >
+            <MSelect
+              v-model="dataColumn.format.currency_base"
+              :options="currencyBaseOptions"
             />
           </FormItem>
         </div>
@@ -82,10 +109,14 @@
 <script>
 import FormInput from 'data_forms/components/input'
 import Validators from 'utils/scripts/validators'
+import CurrencySelect from 'utils/components/currency_select'
 
 export default {
   name: 'ResourceColumnForm',
-  components: { FormInput },
+  components: {
+    FormInput,
+    CurrencySelect
+  },
   props: {
     column: {
       type: Object,
@@ -116,14 +147,22 @@ export default {
 
       return rules
     },
+    currencyBaseOptions () {
+      return [
+        { label: 'Unit', value: 'unit' },
+        { label: 'Cents', value: 'cents' }
+      ]
+    },
     columnTypes () {
       return [
         { label: 'Text', value: 'string' },
         { label: 'Integer', value: 'integer' },
         { label: 'Decimal', value: 'float' },
+        { label: 'Currency', value: 'currency' },
         { label: 'Date and Time', value: 'datetime' },
         { label: 'Date', value: 'date' },
         { label: 'Boolean', value: 'boolean' },
+        { label: 'Image', value: 'image' },
         { label: 'File', value: 'file' },
         { label: 'JSON', value: 'json' }
       ]
@@ -152,6 +191,12 @@ export default {
     this.dataColumn = this.normalizeDataColumn()
   },
   methods: {
+    assignDefaultFormat () {
+      if (this.dataColumn.column_type === 'currency') {
+        this.dataColumn.format.currency ||= 'USD'
+        this.dataColumn.format.currency_base ||= 'unit'
+      }
+    },
     normalizeDataColumn (column) {
       const dataColumn = JSON.parse(JSON.stringify(this.column))
 

@@ -229,7 +229,7 @@ export default {
     'dataQuery.sql_body': throttle(async function (value) {
       this.dataQuery.preferences.variables = this.extractVariablesFromSql(value)
     }, 500),
-    'dataQuery.preferences.visualization'(value) {
+    'dataQuery.preferences.visualization' (value) {
       if (value === 'markdown') {
         this.isMarkdownEditor = true
       }

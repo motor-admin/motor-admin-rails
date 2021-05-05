@@ -21,7 +21,8 @@ module Motor
         'text' => 'string',
         'citext' => 'string',
         'jsonb' => 'json',
-        'timestamp' => 'datetime'
+        'timestamp' => 'datetime',
+        'money' => 'currency'
       }.freeze
 
       module_function

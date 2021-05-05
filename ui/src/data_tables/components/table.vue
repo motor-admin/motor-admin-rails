@@ -87,6 +87,7 @@
               <DataCell
                 v-else
                 :value="row[column.key]"
+                :format="column.format"
                 :type="column.type"
               />
             </div>

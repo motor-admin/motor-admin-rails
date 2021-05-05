@@ -1,8 +1,8 @@
 <template>
   <div
     v-popover="popoverParams"
-    :style="textStyle"
     class="text-cell"
+    :class="{ 'pre-wrap': !truncate }"
   >
     {{ truncatedValue }}
   </div>
@@ -22,15 +22,6 @@ export default {
     }
   },
   computed: {
-    textStyle () {
-      const style = {}
-
-      if (!this.truncate) {
-        style.whiteSpace = 'pre-wrap'
-      }
-
-      return style
-    },
     popoverParams () {
       return {
         content: this.value,

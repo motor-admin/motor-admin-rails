@@ -314,6 +314,7 @@ export default {
             key: column.name,
             title: column.display_name,
             reference: column.reference,
+            format: column.format,
             sortable: !column.virtual,
             type
           }

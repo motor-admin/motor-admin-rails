@@ -56,6 +56,7 @@
               <DataCell
                 v-else
                 :value="resource[column.name]"
+                :format="column.format"
                 :text-truncate="false"
                 :type="columnType(column)"
               />

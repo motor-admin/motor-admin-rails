@@ -31,7 +31,7 @@ module Motor
           model[:associations],
           configs[:associations],
           {},
-          ->(_action) { true }
+          ->(_) { true }
         )
 
         updated_model[:columns] = merge_by_name(

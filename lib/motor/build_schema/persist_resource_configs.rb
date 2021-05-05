@@ -4,7 +4,7 @@ module Motor
   module BuildSchema
     module PersistResourceConfigs
       RESOURCE_ATTRS = %w[display_name visible].freeze
-      COLUMN_ATTRS = %w[name display_name column_type access_type default_value virtual].freeze
+      COLUMN_ATTRS = %w[name display_name column_type access_type default_value virtual format].freeze
       ASSOCIATION_ATTRS = %w[name display_name visible].freeze
       SCOPE_ATTRS = %w[name display_name scope_type preferences visible].freeze
       ACTION_ATTRS = %w[name display_name action_type preferences visible].freeze
@@ -14,6 +14,7 @@ module Motor
         access_type: 'read_write',
         default_value: nil,
         reference: nil,
+        format: {},
         validators: []
       }.with_indifferent_access
 
