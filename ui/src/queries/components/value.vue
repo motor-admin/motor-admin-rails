@@ -4,9 +4,9 @@
   >
     <div
       v-if="change"
-      :class="change > 0 ? 'text-success' : 'text-danger'"
+      :class="isPositiveChange ? 'text-success' : 'text-danger'"
     >
-      <Icon type="md-arrow-round-up" />
+      <Icon :type="isPositiveChange ? 'md-arrow-round-up' : 'md-arrow-round-down'" />
       {{ change }}
     </div>
     <p
@@ -43,6 +43,9 @@ export default {
   computed: {
     dataRow () {
       return this.data[0] || []
+    },
+    isPositiveChange () {
+      return !this.change.toString().match(/^-/)
     },
     value () {
       return this.label ? this.dataRow[1] : this.dataRow[0]

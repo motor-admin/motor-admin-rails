@@ -13,8 +13,8 @@
     </p>
   </div>
   <ValueResult
-    v-if="isValue && !loading"
-    :style="{ height: 'calc(100% - 34px)' }"
+    v-else-if="isValue && !loading"
+    :style="{ height: showFooter || !data.length ? 'calc(100% - 34px)' : '100%' }"
     :data="paginatedData"
   />
   <div
@@ -64,7 +64,10 @@
       :chart-type="chartType"
     />
   </div>
-  <div class="d-flex justify-content-center text-center border-top bg-white p-1">
+  <div
+    v-if="showFooter"
+    class="d-flex justify-content-center text-center border-top bg-white p-1"
+  >
     <div
       class="d-flex justify-content-start"
       style="width: 15%"
@@ -84,7 +87,7 @@
       :style="{ width: '70%', whiteSpace: 'nowrap' }"
     >
       <Pagination
-        v-if="data.length && (isTable || isMarkdown || (isValue && data.length > 1))"
+        v-if="showPagination"
         :current="paginationParams.current"
         :total="total"
         :page-size="pageSize"
@@ -229,6 +232,12 @@ export default {
     }
   },
   computed: {
+    showFooter () {
+      return !this.isValue || this.withSettings || this.withAlert || this.showPagination
+    },
+    showPagination () {
+      return this.data.length && (this.isTable || this.isMarkdown || (this.isValue && this.data.length > 1))
+    },
     markdownData () {
       if (this.data.length) {
         return this.columns.reduce((acc, column, index) => {

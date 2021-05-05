@@ -339,8 +339,7 @@ export default {
     },
     extractVariablesFromSql (sql) {
       if (sql) {
-        const mached = sql.match(/{{\w+}}/g)
-        const variables = mached?.map((matched) => matched.replace(/[{}]/g, '')) || []
+        const variables = sql.match(/{{[#/^]?\s*(\w+)\s*}}/g)?.map(e => e.replace(/\W/g, '')) || []
 
         return Object.values(variables.reduce((acc, variableName) => {
           acc[variableName] ||= { name: variableName, display_name: titleize(variableName) }

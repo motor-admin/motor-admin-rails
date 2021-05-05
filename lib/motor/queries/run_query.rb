@@ -4,7 +4,6 @@ module Motor
   module Queries
     module RunQuery
       DEFAULT_LIMIT = 1_000_000
-      INTERPOLATION_REGEXP = /{{(\w+)}}/.freeze
 
       QueryResult = Struct.new(:data, :columns, keyword_init: true)
 
@@ -48,25 +47,29 @@ module Motor
       end
 
       def prepare_sql_statement(query, limit, variables_hash)
-        variables = query.preferences.fetch(:variables, []).pluck(:name, :default_value)
+        variables = merge_variable_default_values(query.preferences.fetch(:variables, []), variables_hash)
 
-        sql =
-          query.sql_body.gsub(INTERPOLATION_REGEXP) do
-            index = variables.index { |name, _| name == (Regexp.last_match[1]) } + 1
+        sql, query_variables = RenderSqlTemplate.call(query.sql_body, variables)
 
-            "$#{index}"
-          end
-
-        attributes =
-          variables.map do |variable_name, default_value|
-            ActiveRecord::Relation::QueryAttribute.new(
-              variable_name,
-              variables_hash[variable_name] || default_value,
-              ActiveRecord::Type::Value.new
-            )
-          end
+        attributes = build_statement_attributes(query_variables)
 
         [format(WITH_STATEMENT_TEMPLATE, sql_body: sql.strip.gsub(/;\z/, ''), limit: limit), 'SQL', attributes]
+      end
+
+      def build_statement_attributes(variables)
+        variables.map do |variable_name, value|
+          ActiveRecord::Relation::QueryAttribute.new(
+            variable_name,
+            value,
+            ActiveRecord::Type::Value.new
+          )
+        end
+      end
+
+      def merge_variable_default_values(variable_configs, variables_hash)
+        variable_configs.each_with_object({}) do |variable, acc|
+          acc[variable[:name]] = variables_hash[variable[:name]] || variable[:default_value]
+        end
       end
     end
   end

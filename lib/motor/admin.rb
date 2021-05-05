@@ -22,10 +22,10 @@ module Motor
           ::Digest::SHA256.hexdigest(username),
           ::Digest::SHA256.hexdigest(ENV['MOTOR_AUTH_USERNAME'].to_s)
         ) &
-        ActiveSupport::SecurityUtils.secure_compare(
-          ::Digest::SHA256.hexdigest(password),
-          ::Digest::SHA256.hexdigest(ENV['MOTOR_AUTH_PASSWORD'].to_s)
-        )
+          ActiveSupport::SecurityUtils.secure_compare(
+            ::Digest::SHA256.hexdigest(password),
+            ::Digest::SHA256.hexdigest(ENV['MOTOR_AUTH_PASSWORD'].to_s)
+          )
       end
     end
 
