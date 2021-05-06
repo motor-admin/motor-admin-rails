@@ -88,12 +88,6 @@ export default {
   computed: {
     rules () {
       return this.columns.reduce((acc, column) => {
-        if (column.reference) {
-          acc[column.name] = { required: true }
-
-          return acc
-        }
-
         acc[column.name] = column.validators.map((validator) => {
           if (validator.required) {
             return { required: true }
@@ -119,11 +113,11 @@ export default {
         }).filter(Boolean).flat()
 
         if (column.name === 'email') {
-          acc[column.name].unshift({ type: 'email' })
+          acc[column.name].push({ type: 'email' })
         }
 
-        if (['integer', 'bigint', 'int', 'float', 'demical', 'double'].includes(column.column_type)) {
-          acc[column.name].unshift({ type: 'number' })
+        if (!column.reference && ['integer', 'float'].includes(column.column_type)) {
+          acc[column.name].push({ type: 'number' })
         }
 
         return acc
@@ -211,9 +205,7 @@ export default {
       this.apiRequest.then((result) => {
         this.$emit('success', eventData)
       }).catch((error) => {
-        console.error(error)
-
-        if (error.response?.data?.errors?.length) {
+        if (error.response?.data?.errors) {
           this.$refs.form.setErrors(error.response.data.errors)
         }
       }).finally(() => {

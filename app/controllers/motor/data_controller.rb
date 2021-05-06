@@ -2,13 +2,14 @@
 
 module Motor
   class DataController < ApiBaseController
+    include Motor::WrapIoParams
+
     INSTANCE_VARIABLE_NAME = 'resource'
 
     wrap_parameters :data, except: %i[include fields]
 
     before_action :load_and_authorize_resource
     before_action :load_and_authorize_association
-    before_action :wrap_io_params
 
     def index
       @resources = Motor::ApiQuery.call(@resources, params)
@@ -27,12 +28,20 @@ module Motor
       @resource.save!
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params) }
+    rescue ActiveRecord::RecordInvalid
+      render json: { errors: @resource.errors }, status: :unprocessable_entity
+    rescue StandardError => e
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
 
     def update
       @resource.update!(resource_params)
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params) }
+    rescue ActiveRecord::RecordInvalid
+      render json: { errors: @resource.errors }, status: :unprocessable_entity
+    rescue StandardError => e
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
 
     def destroy
@@ -77,6 +86,8 @@ module Motor
         self,
         options
       ).load_and_authorize_resource
+    rescue StandardError => e
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
 
     def load_and_authorize_association
@@ -96,6 +107,8 @@ module Motor
       else
         render json: { message: 'Unknown association' }, status: :not_found
       end
+    rescue StandardError => e
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
 
     def resource_params
@@ -104,18 +117,6 @@ module Motor
       else
         {}
       end
-    end
-
-    def wrap_io_params(hash = params)
-      hash.each do |key, value|
-        if key == 'io'
-          hash[key] = StringIO.new(value.encode('ISO-8859-1'))
-        elsif value.is_a?(ActionController::Parameters)
-          wrap_io_params(value)
-        end
-      end
-
-      hash
     end
   end
 end

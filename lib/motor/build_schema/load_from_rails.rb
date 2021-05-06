@@ -133,7 +133,7 @@ module Motor
           column_type: is_attachment ? 'file' : 'integer',
           access_type: access_type,
           default_value: default_attrs[column_name],
-          validators: fetch_validators(model, column_name),
+          validators: fetch_validators(model, column_name, ref),
           format: {},
           reference: {
             name: name,
@@ -172,23 +172,34 @@ module Motor
         end.compact
       end
 
-      def fetch_validators(model, column_name)
-        model.validators_on(column_name).map do |validator|
-          case validator
-          when ActiveModel::Validations::InclusionValidator
-            { includes: validator.send(:delimiter) }
-          when ActiveRecord::Validations::PresenceValidator
-            { required: true }
-          when ActiveModel::Validations::FormatValidator
-            { format: JsRegex.new(validator.options[:with]).to_h.slice(:source, :options) }
-          when ActiveRecord::Validations::LengthValidator
-            { length: validator.options }
-          when ActiveModel::Validations::NumericalityValidator
-            { numeric: validator.options }
+      def fetch_validators(model, column_name, reflection = nil)
+        validators =
+          if reflection&.belongs_to? && !reflection.options[:optional]
+            [{ required: true }]
           else
-            next
+            []
           end
+
+        validators += model.validators_on(column_name).map do |validator|
+          build_validator_hash(validator)
         end.compact
+
+        validators.uniq
+      end
+
+      def build_validator_hash(validator)
+        case validator
+        when ActiveModel::Validations::InclusionValidator
+          { includes: validator.send(:delimiter) }
+        when ActiveRecord::Validations::PresenceValidator
+          { required: true }
+        when ActiveModel::Validations::FormatValidator
+          { format: JsRegex.new(validator.options[:with]).to_h.slice(:source, :options) }
+        when ActiveRecord::Validations::LengthValidator
+          { length: validator.options }
+        when ActiveModel::Validations::NumericalityValidator
+          { numeric: validator.options }
+        end
       end
 
       def eager_load_models!

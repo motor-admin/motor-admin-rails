@@ -10,7 +10,7 @@
       {{ change }}
     </div>
     <p
-      v-if="value"
+      v-if="value || value === 0"
       style="font-size: 60px"
       class="fw-bold"
     >
