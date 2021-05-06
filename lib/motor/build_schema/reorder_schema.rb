@@ -23,21 +23,29 @@ module Motor
 
       schema = sort_by_name(schema, configs['resources.order'])
 
-      schema.map do |model|
-        columns_order = configs["resources.#{model[:name]}.columns.order"]
-        associations_order = configs["resources.#{model[:name]}.associations.order"]
-        actions_order = configs["resources.#{model[:name]}.actions.order"]
-        tabs_order = configs["resources.#{model[:name]}.tabs.order"]
-        scopes_order = configs["resources.#{model[:name]}.scopes.order"]
+      schema.map { |model| reorder_model(model, configs) }
+    end
 
-        model.merge(
-          columns: sort_by_name(sort_columns(model[:columns]), columns_order, sort_alphabetically: false),
-          associations: sort_by_name(model[:associations], associations_order),
-          actions: sort_by_name(model[:actions], actions_order, sort_alphabetically: false),
-          tabs: sort_by_name(model[:tabs], tabs_order, sort_alphabetically: false),
-          scopes: sort_by_name(model[:scopes], scopes_order)
-        )
-      end
+    def reorder_model(model, configs)
+      order_configs = build_order_configs(model[:name], configs)
+
+      model.merge(
+        columns: sort_by_name(sort_columns(model[:columns]), order_configs[:columns], sort_alphabetically: false),
+        associations: sort_by_name(model[:associations], order_configs[:associations]),
+        actions: sort_by_name(model[:actions], order_configs[:actions], sort_alphabetically: false),
+        tabs: sort_by_name(model[:tabs], order_configs[:tabs], sort_alphabetically: false),
+        scopes: sort_by_name(model[:scopes], order_configs[:scopes])
+      )
+    end
+
+    def build_order_configs(model_name, configs)
+      {
+        columns: configs["resources.#{model_name}.columns.order"],
+        associations: configs["resources.#{model_name}.associations.order"],
+        actions: configs["resources.#{model_name}.actions.order"],
+        tabs: configs["resources.#{model_name}.tabs.order"],
+        scopes: configs["resources.#{model_name}.scopes.order"]
+      }
     end
 
     # @param list [Array<HashWithIndifferentAccess>]

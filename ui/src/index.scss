@@ -148,14 +148,14 @@ h5 {
 }
 
 .drawer-footer {
-  width: 100%;
-  position: sticky;
+  background: #fff;
+  border-top: 1px solid #e8e8e8;
   bottom: 0;
   left: 0;
-  border-top: 1px solid #e8e8e8;
-  padding: 10px 0px;
+  padding: 10px 0;
+  position: sticky;
   text-align: right;
-  background: #fff;
+  width: 100%;
 }
 
 .ivu-badge-count {
@@ -174,8 +174,9 @@ h5 {
   .ivu-page-options {
     display: none;
   }
+
   .ivu-modal {
-    top: 10px
+    top: 10px;
   }
 }
 

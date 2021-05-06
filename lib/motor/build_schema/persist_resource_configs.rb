@@ -77,47 +77,26 @@ module Motor
         normalized_preferences = existing_prefs.merge(normalized_preferences)
         normalized_preferences = reject_default(default_prefs, normalized_preferences)
 
-        if new_prefs[:columns].present?
-          normalized_preferences[:columns] = normalize_columns(
-            default_prefs[:columns],
-            existing_prefs.fetch(:columns, []),
-            new_prefs.fetch(:columns, [])
-          )
-        end
-
-        if new_prefs[:associations].present?
-          normalized_preferences[:associations] = normalize_associations(
-            default_prefs[:associations],
-            existing_prefs.fetch(:associations, []),
-            new_prefs.fetch(:associations, [])
-          )
-        end
-
-        if new_prefs[:actions].present?
-          normalized_preferences[:actions] = normalize_actions(
-            default_prefs[:actions],
-            existing_prefs.fetch(:actions, []),
-            new_prefs.fetch(:actions, [])
-          )
-        end
-
-        if new_prefs[:tabs].present?
-          normalized_preferences[:tabs] = normalize_tabs(
-            default_prefs[:tabs],
-            existing_prefs.fetch(:tabs, []),
-            new_prefs.fetch(:tabs, [])
-          )
-        end
-
-        if new_prefs[:scopes].present?
-          normalized_preferences[:scopes] = normalize_scopes(
-            default_prefs[:scopes],
-            existing_prefs.fetch(:scopes, []),
-            new_prefs.fetch(:scopes, [])
-          )
-        end
+        normalize_configs!(normalized_preferences, :columns, default_prefs, existing_prefs, new_prefs)
+        normalize_configs!(normalized_preferences, :associations, default_prefs, existing_prefs, new_prefs)
+        normalize_configs!(normalized_preferences, :actions, default_prefs, existing_prefs, new_prefs)
+        normalize_configs!(normalized_preferences, :tabs, default_prefs, existing_prefs, new_prefs)
+        normalize_configs!(normalized_preferences, :scopes, default_prefs, existing_prefs, new_prefs)
 
         normalized_preferences.compact
+      end
+
+      def normalize_configs!(preferences, configs_name, default_prefs, existing_prefs, new_prefs)
+        return preferences if new_prefs[configs_name].blank?
+
+        normalized_configs = public_send("normalize_#{configs_name}",
+                                         default_prefs[configs_name],
+                                         existing_prefs.fetch(configs_name, []),
+                                         new_prefs.fetch(configs_name, []))
+
+        preferences[configs_name] = normalized_configs
+
+        preferences
       end
 
       # @param default_columns [Array<HashWithIndifferentAccess>]

@@ -3,7 +3,7 @@
     class="d-flex align-items-center justify-content-center flex-column bg-white"
   >
     <div
-      v-if="change"
+      v-if="change || change === 0"
       :class="isPositiveChange ? 'text-success' : 'text-danger'"
     >
       <Icon :type="isPositiveChange ? 'md-arrow-round-up' : 'md-arrow-round-down'" />

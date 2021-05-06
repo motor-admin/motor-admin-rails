@@ -7,7 +7,7 @@ module Motor
     load_and_authorize_resource :attachment, class: 'ActiveStorage::Attachment', parent: false
 
     def create
-      if @attachment.record.respond_to?("#{@attachment.name}_attachment=") || @attachment.record.respond_to?("#{@attachment.name}_attachments=")
+      if attachable?(@attachment.record)
         @attachment.record.public_send(@attachment.name).attach(
           io: StringIO.new(params.dig(:data, :file, :io).to_s.encode('ISO-8859-1')),
           filename: params.dig(:data, :file, :filename)
@@ -20,6 +20,11 @@ module Motor
     end
 
     private
+
+    def attachable?(record)
+      record.respond_to?("#{@attachment.name}_attachment=") ||
+        record.respond_to?("#{@attachment.name}_attachments=")
+    end
 
     def attachment_params
       params.require(:data).except(:file).permit!

@@ -29,9 +29,11 @@ module Motor
               hash = {}
 
               path.split('.').reduce(hash) do |acc, part|
-                acc[part] = {}
+                acc_hash = {}
 
-                acc[part]
+                acc[part] = acc_hash
+
+                acc_hash
               end
 
               accumulator.deep_merge(hash)
@@ -45,20 +47,25 @@ module Motor
         return if params[:fields].blank?
 
         model = rel.is_a?(ActiveRecord::Relation) ? rel.klass : rel.class
-        model_name = model.name.underscore
 
         params[:fields].each do |key, fields|
           fields = fields.split(',') if fields.is_a?(String)
 
-          if key == model_name || model_name.split('/').last == key
-            json_params.merge!(build_fields_hash(model, fields))
-          else
-            hash = find_key_in_params(json_params, key)
+          merge_fields_params!(key, fields, json_params, model)
+        end
+      end
 
-            fields_hash = build_fields_hash(model.reflections[key]&.klass, fields)
+      def merge_fields_params!(key, fields, json_params, model)
+        model_name = model.name.underscore
 
-            hash.merge!(fields_hash)
-          end
+        if key == model_name || model_name.split('/').last == key
+          json_params.merge!(build_fields_hash(model, fields))
+        else
+          hash = find_key_in_params(json_params, key)
+
+          fields_hash = build_fields_hash(model.reflections[key]&.klass, fields)
+
+          hash.merge!(fields_hash)
         end
       end
 

@@ -22,7 +22,11 @@ module Motor
           *path, _ = key.split('.')
 
           path.reduce(result) do |acc, fragment|
-            acc[fragment] = {}
+            hash = {}
+
+            acc[fragment] = hash
+
+            hash
           end
         end
       end

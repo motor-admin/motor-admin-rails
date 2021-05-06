@@ -27,40 +27,81 @@ module Motor
       def merge_model(model, configs)
         updated_model = model.merge(configs.slice(*RESOURCE_ATTRS))
 
-        updated_model[:associations] = merge_by_name(
+        merge_actions!(updated_model, configs)
+        merge_assiciations!(updated_model, configs)
+        merge_columns!(updated_model, configs)
+        merge_tabs!(updated_model, configs)
+        merge_scopes!(updated_model, configs)
+
+        updated_model
+      end
+
+      # @param model [HashWithIndifferentAccess]
+      # @param configs [HashWithIndifferentAccess]
+      # @return [HashWithIndifferentAccess]
+      def merge_assiciations!(model, configs)
+        model[:associations] = merge_by_name(
           model[:associations],
           configs[:associations],
           {},
           ->(_) { true }
         )
 
-        updated_model[:columns] = merge_by_name(
+        model
+      end
+
+      # @param model [HashWithIndifferentAccess]
+      # @param configs [HashWithIndifferentAccess]
+      # @return [HashWithIndifferentAccess]
+      def merge_columns!(model, configs)
+        model[:columns] = merge_by_name(
           model[:columns],
           configs[:columns],
           COLUMN_DEFAULTS,
           ->(scope) { !scope[:virtual] }
         )
 
-        updated_model[:actions] = merge_by_name(
+        model
+      end
+
+      # @param model [HashWithIndifferentAccess]
+      # @param configs [HashWithIndifferentAccess]
+      # @return [HashWithIndifferentAccess]
+      def merge_actions!(model, configs)
+        model[:actions] = merge_by_name(
           model[:actions],
           configs[:actions],
           ACTION_DEFAULTS
         )
 
-        updated_model[:tabs] = merge_by_name(
+        model
+      end
+
+      # @param model [HashWithIndifferentAccess]
+      # @param configs [HashWithIndifferentAccess]
+      # @return [HashWithIndifferentAccess]
+      def merge_tabs!(model, configs)
+        model[:tabs] = merge_by_name(
           model[:tabs],
           configs[:tabs],
           TAB_DEFAULTS
         )
 
-        updated_model[:scopes] = merge_by_name(
+        model
+      end
+
+      # @param model [HashWithIndifferentAccess]
+      # @param configs [HashWithIndifferentAccess]
+      # @return [HashWithIndifferentAccess]
+      def merge_scopes!(model, configs)
+        model[:scopes] = merge_by_name(
           model[:scopes],
           configs[:scopes],
           SCOPE_DEFAULTS,
           ->(scope) { scope[:scope_type] != 'filter' }
         )
 
-        updated_model
+        model
       end
 
       # @param defaults [Array<HashWithIndifferentAccess>]

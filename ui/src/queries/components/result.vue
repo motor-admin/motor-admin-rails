@@ -236,7 +236,7 @@ export default {
       return !this.isValue || this.withSettings || this.withAlert || this.showPagination
     },
     showPagination () {
-      return this.data.length && (this.isTable || this.isMarkdown || (this.isValue && this.data.length > 1))
+      return (this.data.length && this.isTable) || ((this.isMarkdown || this.isValue) && this.data.length > 1)
     },
     markdownData () {
       if (this.data.length) {

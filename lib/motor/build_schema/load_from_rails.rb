@@ -3,6 +3,8 @@
 module Motor
   module BuildSchema
     module LoadFromRails
+      MUTEX = Mutex.new
+
       module_function
 
       def call
@@ -82,20 +84,24 @@ module Motor
           model.columns.map do |column|
             next if reference_columns.find { |c| c[:name] == column.name }
 
-            {
-              name: column.name,
-              display_name: column.name.humanize,
-              column_type: ActiveRecordUtils::Types::UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
-              access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
-              default_value: default_attrs[column.name],
-              validators: fetch_validators(model, column.name),
-              reference: nil,
-              format: {},
-              virtual: false
-            }
+            build_table_column(column, model, default_attrs)
           end.compact
 
         reference_columns + table_columns
+      end
+
+      def build_table_column(column, model, default_attrs)
+        {
+          name: column.name,
+          display_name: column.name.humanize,
+          column_type: ActiveRecordUtils::Types::UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
+          access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
+          default_value: default_attrs[column.name],
+          validators: fetch_validators(model, column.name),
+          reference: nil,
+          format: {},
+          virtual: false
+        }
       end
 
       def fetch_reference_columns(model)
@@ -110,30 +116,34 @@ module Motor
             next
           end
 
-          column_name = ref.belongs_to? ? ref.foreign_key.to_s : name
-
           next if ref.klass.name == 'ActiveStorage::Blob'
 
-          is_attachment = ref.klass.name == 'ActiveStorage::Attachment'
-
-          {
-            name: column_name,
-            display_name: column_name.humanize,
-            column_type: is_attachment ? 'file' : 'integer',
-            access_type: ref.belongs_to? || is_attachment ? ColumnAccessTypes::READ_WRITE : ColumnAccessTypes::READ_ONLY,
-            default_value: default_attrs[column_name],
-            validators: fetch_validators(model, column_name),
-            format: {},
-            reference: {
-              name: name,
-              model_name: ref.klass.name.underscore,
-              reference_type: ref.belongs_to? ? 'belongs_to' : 'has_one',
-              foreign_key: ref.foreign_key,
-              polymorphic: ref.polymorphic? || is_attachment
-            },
-            virtual: false
-          }
+          build_reflection_column(name, model, ref, default_attrs)
         end.compact
+      end
+
+      def build_reflection_column(name, model, ref, default_attrs)
+        column_name = ref.belongs_to? ? ref.foreign_key.to_s : name
+        is_attachment = ref.klass.name == 'ActiveStorage::Attachment'
+        access_type = ref.belongs_to? || is_attachment ? ColumnAccessTypes::READ_WRITE : ColumnAccessTypes::READ_ONLY
+
+        {
+          name: column_name,
+          display_name: column_name.humanize,
+          column_type: is_attachment ? 'file' : 'integer',
+          access_type: access_type,
+          default_value: default_attrs[column_name],
+          validators: fetch_validators(model, column_name),
+          format: {},
+          reference: {
+            name: name,
+            model_name: ref.klass.name.underscore,
+            reference_type: ref.belongs_to? ? 'belongs_to' : 'has_one',
+            foreign_key: ref.foreign_key,
+            polymorphic: ref.polymorphic? || is_attachment
+          },
+          virtual: false
+        }
       end
 
       def fetch_associations(model)
@@ -182,10 +192,12 @@ module Motor
       end
 
       def eager_load_models!
-        if Rails::VERSION::MAJOR > 5 && defined?(Zeitwerk::Loader)
-          Zeitwerk::Loader.eager_load_all
-        else
-          Rails.application.eager_load!
+        MUTEX.synchronize do
+          if Rails::VERSION::MAJOR > 5 && defined?(Zeitwerk::Loader)
+            Zeitwerk::Loader.eager_load_all
+          else
+            Rails.application.eager_load!
+          end
         end
       end
     end
