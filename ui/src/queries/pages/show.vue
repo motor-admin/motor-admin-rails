@@ -138,6 +138,7 @@ import Settings from '../components/settings'
 import throttle from 'view3/src/utils/throttle'
 import VariablesForm from '../components/variables_form'
 import { titleize } from 'utils/scripts/string'
+import singularize from 'inflected/src/singularize'
 import { widthLessThan } from 'utils/scripts/dimensions'
 import { modelNameMap } from 'data_resources/scripts/schema'
 
@@ -368,7 +369,7 @@ export default {
 
             if (model) {
               Object.assign(variable, {
-                display_name: titleize(model.name),
+                display_name: singularize(model.display_name),
                 reference_resource: model.name,
                 variable_type: 'reference'
               })

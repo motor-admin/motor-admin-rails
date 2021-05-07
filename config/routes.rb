@@ -47,15 +47,4 @@ Motor::Admin.routes.draw do
   end
 end
 
-Motor::Api.routes.draw do
-  namespace :motor, path: '' do
-    resources :resources, path: '/:resource',
-                          only: %i[index show update create destroy],
-                          controller: 'data' do
-      put '/:method', to: 'data#execute'
-      resources :association, path: '/:association',
-                              only: %i[index create],
-                              controller: 'data'
-    end
-  end
-end
+ActiveSupport::Notifications.instrument('motor.routes.loaded')

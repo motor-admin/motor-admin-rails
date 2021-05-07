@@ -16,6 +16,8 @@ module Motor
 
       def copy_migration
         migration_template 'install.rb', 'db/migrate/install_motor_admin.rb'
+
+        route "mount Motor::Admin => '/motor_admin'"
       end
     end
   end

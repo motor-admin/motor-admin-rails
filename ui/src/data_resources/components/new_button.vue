@@ -13,7 +13,7 @@ import { modelNameMap } from '../scripts/schema'
 import ResourceForm from './form'
 import CustomFormModal from 'custom_forms/components/form_modal'
 
-import { titleize } from 'utils/scripts/string'
+import singularize from 'inflected/src/singularize'
 
 export default {
   name: 'NewResourceButton',
@@ -36,7 +36,7 @@ export default {
   emits: ['success'],
   computed: {
     resourceTitle () {
-      return titleize(this.model.name)
+      return singularize(this.model.display_name)
     },
     defaultValues () {
       return this.model.columns.reduce((acc, column) => {

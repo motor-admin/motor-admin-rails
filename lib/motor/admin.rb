@@ -2,6 +2,25 @@
 
 module Motor
   class Admin < ::Rails::Engine
+    initializer 'motor.startup_message' do
+      ActiveSupport::Notifications.subscribe('motor.routes.loaded') do
+        next unless Motor.server?
+
+        if Rails.application.routes.url_helpers.respond_to?(:motor_admin_path)
+          url =
+            begin
+              Rails.application.routes.url_helpers.motor_admin_url
+            rescue ArgumentError
+              Rails.application.routes.url_helpers.motor_admin_path
+            end
+
+          puts
+          puts "⚡ Motor Admin is starting under #{url}"
+          puts
+        end
+      end
+    end
+
     initializer 'motor.filter_params' do
       Rails.application.config.filter_parameters += %i[io]
     end

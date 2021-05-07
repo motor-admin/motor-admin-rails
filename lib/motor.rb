@@ -45,7 +45,7 @@ end
 
 require 'motor/version'
 require 'motor/admin'
-require 'motor/api'
+# require 'motor/api'
 require 'motor/assets'
 require 'motor/build_schema'
 require 'motor/api_query'

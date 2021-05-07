@@ -8,6 +8,7 @@
     "chartjs-plugin-datalabels": "^2.0.0-beta.1",
     "color-hash": "^1.0.3",
     "dompurify": "^2.2.8",
+    "inflected": "^2.1.0",
     "marked": "^2.0.3",
     "mustache": "^4.2.0",
     "prismjs": "^1.23.0",

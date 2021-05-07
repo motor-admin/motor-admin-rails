@@ -53,8 +53,9 @@ import api from 'api'
 import axios from 'axios'
 import { modelNameMap } from '../scripts/schema'
 import ResourceForm from './form'
-import { titleize, interpolate } from 'utils/scripts/string'
+import { interpolate } from 'utils/scripts/string'
 import CustomFormModal from 'custom_forms/components/form_modal'
+import singularize from 'inflected/src/singularize'
 
 export default {
   name: 'ResourceActions',
@@ -192,7 +193,7 @@ export default {
         return
       }
 
-      const resourceTitle = `${titleize(this.resourceName)} #${this.resource.id}`
+      const resourceTitle = `${singularize(this.model.display_name)} #${this.resource.id}`
 
       this.$Drawer.open(ResourceForm, {
         resource: this.resource,

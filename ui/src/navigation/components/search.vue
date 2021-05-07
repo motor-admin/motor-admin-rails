@@ -25,8 +25,8 @@
 import { schema } from 'data_resources/scripts/schema'
 import { itemsStore, loadItems } from 'reports/scripts/store'
 import { formsStore, loadForms } from 'custom_forms/scripts/store'
-import { titleize } from 'utils/scripts/string'
 import throttle from 'view3/src/utils/throttle'
+import singularize from 'inflected/src/singularize'
 
 const recentlySelectedStore = {
   get KEY () {
@@ -206,7 +206,7 @@ export default {
         type: 'resource_id',
         slug: model.slug,
         id: this.cleanedValue,
-        value: `${titleize(model.name)} #${this.cleanedValue}`
+        value: `${singularize(model.display_name)} #${this.cleanedValue}`
       }
     },
     buildResourceSearchOptions (model) {
@@ -214,7 +214,7 @@ export default {
         type: 'resource_search',
         slug: model.slug,
         query: this.cleanedValue,
-        value: `${titleize(model.name)} "${this.cleanedValue}"`
+        value: `${singularize(model.display_name)} "${this.cleanedValue}"`
       }
     },
     onSelect (selectedValue) {

@@ -25,7 +25,7 @@
             Not Found
           </p>
           <h2 class="mb-3">
-            {{ titleize(model.name) }} #{{ resource.id }}
+            {{ title }}
           </h2>
           <template
             v-for="column in columns"
@@ -85,13 +85,14 @@
 <script>
 import api from 'api'
 import { modelNameMap } from '../scripts/schema'
+import singularize from 'inflected/src/singularize'
 
 import DataCell from 'data_cells/components/data_cell'
 import Reference from 'data_cells/components/reference'
 import ResourceActions from './actions'
 
 import { assignBreadcrumbLabel } from 'navigation/scripts/breadcrumb_store'
-import { titleize, truncate } from 'utils/scripts/string'
+import { truncate } from 'utils/scripts/string'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
 
 import DataTypes from 'data_cells/scripts/data_types'
@@ -138,6 +139,9 @@ export default {
     }
   },
   computed: {
+    title () {
+      return `${singularize(this.model.display_name)} #${this.resource.id}`
+    },
     model () {
       return modelNameMap[this.resourceName]
     },
@@ -176,7 +180,6 @@ export default {
     this.loadData()
   },
   methods: {
-    titleize,
     getReferenceId (column) {
       if (column.reference.reference_type === 'belongs_to') {
         return this.resource[column.name]
