@@ -103,7 +103,7 @@
             <CodeEditor
               v-else
               v-model="dataQuery.sql_body"
-              language="sql"
+              language="pgsql"
               @run="runQuery"
             />
           </template>
@@ -205,6 +205,15 @@ export default {
     },
     isVariablesForm () {
       return !!this.dataQuery.preferences.variables?.length
+    },
+    queryDataLocationHashString () {
+      return '#' + window.btoa(this.dataQueryString)
+    },
+    queryString () {
+      return JSON.stringify({ sql_body: this.query.sql_body, preferences: this.query.preferences })
+    },
+    dataQueryString () {
+      return JSON.stringify({ sql_body: this.dataQuery.sql_body, preferences: this.dataQuery.preferences })
     }
   },
   watch: {
@@ -225,6 +234,9 @@ export default {
           this.query = { ...defaultQueryParams }
 
           this.onMounted()
+        } else if (to.hash !== this.queryDataLocationHashString) {
+          this.dataQuery = JSON.parse(JSON.stringify(JSON.parse(window.atob(location.hash.replace(/^#/, '')) || 'null'))) || { ...defaultQueryParams }
+          this.dataQuery.preferences = { ...defaultQueryParams.preferences, ...this.dataQuery.preferences }
         }
       }
     },
@@ -239,10 +251,8 @@ export default {
     dataQuery: {
       deep: true,
       handler: throttle(async function (value) {
-        const stringValue = JSON.stringify({ sql_body: value.sql_body, preferences: value.preferences })
-
-        if (stringValue !== JSON.stringify({ sql_body: this.query.sql_body, preferences: this.query.preferences })) {
-          location.replace('#' + window.btoa(stringValue))
+        if (this.dataQueryString !== this.queryString) {
+          location.replace(this.queryDataLocationHashString)
         } else {
           location.hash = ''
         }
@@ -250,13 +260,15 @@ export default {
     }
   },
   created () {
-    this.dataQuery = JSON.parse(JSON.stringify(this.locationHashParams)) || { ...defaultQueryParams }
-    this.dataQuery.preferences = { ...defaultQueryParams.preferences, ...this.dataQuery.preferences }
-
+    this.assignDataFromLocationHash()
     this.onMounted()
   },
   methods: {
     widthLessThan,
+    assignDataFromLocationHash () {
+      this.dataQuery = JSON.parse(JSON.stringify(this.locationHashParams)) || { ...defaultQueryParams }
+      this.dataQuery.preferences = { ...defaultQueryParams.preferences, ...this.dataQuery.preferences }
+    },
     assignVariablesData () {
       this.variablesData = (this.dataQuery.preferences.variables || []).reduce((acc, variable) => {
         acc[variable.name] = variable.default_value

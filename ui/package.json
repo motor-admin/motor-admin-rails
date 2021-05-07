@@ -11,13 +11,12 @@
     "inflected": "^2.1.0",
     "marked": "^2.0.3",
     "mustache": "^4.2.0",
-    "prismjs": "^1.23.0",
     "qs": "^6.9.3",
     "view3": "https://github.com/omohokcoj/view3",
     "vue": "^3.0.0",
     "vue-draggable-next": "^2.0.1",
-    "vue-prism-editor": "https://github.com/koca/vue-prism-editor#feature/next",
-    "vue-router": "^4.0.0"
+    "vue-router": "^4.0.0",
+    "vue3-ace-editor": "^2.0.2"
   },
   "scripts": {
     "serve": "webpack serve",
