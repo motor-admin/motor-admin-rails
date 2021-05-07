@@ -10,16 +10,11 @@
       :label="variable.display_name"
       class="col-6 col-lg-2 col-md-4 col-sm-4 mb-0 px-1"
     >
-      <ResourceSelect
-        v-if="isReference(variable.name)"
+      <VariableInput
         v-model="dataValue[variable.name]"
-        :resource-name="variable.name.replace(/_id$/, '')"
-        @update:model-value="onResourceSelect"
-      />
-      <VInput
-        v-else
-        v-model="dataValue[variable.name]"
-        @keydown.enter="$emit('submit')"
+        :variable="variable"
+        @select="$emit('submit')"
+        @enter="$emit('submit')"
         @update:model-value="$emit('update:data', dataValue)"
       />
     </FormItem>
@@ -27,13 +22,12 @@
 </template>
 
 <script>
-import { modelNameMap } from 'data_resources/scripts/schema'
-import ResourceSelect from 'data_resources/components/select'
+import VariableInput from './variable_input'
 
 export default {
   name: 'VariablesForm',
   components: {
-    ResourceSelect
+    VariableInput
   },
   props: {
     data: {
@@ -56,18 +50,12 @@ export default {
     data (value) {
       this.dataValue = { ...value }
     }
-  },
-  methods: {
-    onResourceSelect () {
-      this.$emit('update:data', this.dataValue)
-
-      this.$nextTick(() => {
-        this.$emit('submit')
-      })
-    },
-    isReference (name) {
-      return !!modelNameMap[name.replace(/_id$/, '')]
-    }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+:deep(.ivu-form-item-label) {
+  padding-bottom: 5px;
+}
+</style>

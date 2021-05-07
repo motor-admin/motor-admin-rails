@@ -20,6 +20,15 @@
         {{ isEditorOpened ? 'Close editor' : 'Edit' }}
       </VButton>
       <VButton
+        v-if="variables.length"
+        size="large"
+        class="me-2 md-icon-only"
+        :icon="isVariableSettingsOpened ? 'md-close' : 'md-flask'"
+        @click="toggleVariablesSettings"
+      >
+        {{ isVariableSettingsOpened ? 'Close Variables' : 'Variables' }}
+      </VButton>
+      <VButton
         size="large"
         class="bg-white me-2"
         ghost
@@ -38,13 +47,13 @@
     </div>
   </div>
   <div
-    :style="{ height: isEditorOpened ? 'calc(var(--vh, 100vh) - 134px)' : '100%' }"
+    :style="{ height: isSettingsOpened ? 'calc(var(--vh, 100vh) - 134px)' : '100%' }"
     class="row border-top m-0"
   >
     <div
-      :class="isEditorOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
+      :class="isSettingsOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
       class="position-relative"
-      :style="{ height: '100%', overflow: isEditorOpened ? 'scroll' : 'unset' }"
+      :style="{ height: '100%', overflow: isSettingsOpened ? 'scroll' : 'unset' }"
     >
       <div
         v-if="variables.length"
@@ -69,15 +78,43 @@
       />
     </div>
     <div
-      v-if="isEditorOpened"
+      v-if="isSettingsOpened"
       class="col-12 col-md-6 col-lg-3 border-left bg-white p-0"
       style="height: 100%; overflow: scroll"
     >
       <Editor
+        v-if="isEditorOpened"
         :dashboard="dashboard"
         @remove-query="removeQuery"
         @add-query="addQuery"
       />
+      <div v-if="isVariableSettingsOpened">
+        <div :style="{ minHeight: 'calc(var(--vh, 100vh) - 203px)' }">
+          <Card
+            v-for="variable in variables"
+            :key="variable.name"
+            class="m-2"
+          >
+            <div class="fw-bold mb-3">
+              {{ variable.display_name }}
+            </div>
+            <VariableSettings
+              :variable="variable"
+              @update:variable="assignVariablePreferences"
+            />
+          </Card>
+        </div>
+        <div class="footer p-2">
+          <VButton
+            long
+            type="default"
+            icon="md-close"
+            @click="toggleVariablesSettings"
+          >
+            Close
+          </VButton>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -87,6 +124,7 @@ import Editor from '../components/editor'
 import DashboardLayout from '../components/layout'
 import DashboardForm from '../components/form'
 import VariablesForm from 'queries/components/variables_form'
+import VariableSettings from 'queries/components/variable_settings'
 import api from 'api'
 
 export default {
@@ -94,18 +132,21 @@ export default {
   components: {
     Editor,
     DashboardLayout,
-    VariablesForm
+    VariablesForm,
+    VariableSettings
   },
   data () {
     return {
       isLoading: false,
       isDashboardLoading: false,
+      isVariableSettingsOpened: false,
       isEditorOpened: false,
       variablesData: {},
       dashboard: {
         tags: [],
         preferences: {
-          layout: []
+          layout: [],
+          variables: []
         },
         queries: []
       }
@@ -115,14 +156,19 @@ export default {
     isExisting () {
       return this.$route.params.id
     },
+    isSettingsOpened () {
+      return this.isEditorOpened || this.isVariableSettingsOpened
+    },
     variables () {
-      return Object.values(this.dashboard.queries.reduce((acc, query) => {
+      return this.dashboard.queries.reduce((acc, query) => {
         query.preferences.variables?.forEach((variable) => {
-          acc[variable.name] ||= variable
+          if (!acc.find((v) => v.name === variable.name)) {
+            acc.push(variable)
+          }
         })
 
         return acc
-      }, {}))
+      }, [...(this.dashboard.preferences.variables || [])])
     }
   },
   watch: {
@@ -131,11 +177,12 @@ export default {
         const isChanged = to.params.id !== this.dashboard.id?.toString()
 
         if (isChanged) {
+          this.dashboard = { tags: [], preferences: { layout: [], variables: [] }, queries: [] }
+
           if (to.params.id) {
             this.loadDashboard()
             this.isEditorOpened = false
           } else {
-            this.dashboard = { tags: [], preferences: { layout: [] }, queries: [] }
             this.isEditorOpened = true
           }
         }
@@ -151,7 +198,18 @@ export default {
   },
   methods: {
     toggleEditor () {
+      this.isVariableSettingsOpened = false
       this.isEditorOpened = !this.isEditorOpened
+    },
+    toggleVariablesSettings () {
+      this.isEditorOpened = false
+      this.isVariableSettingsOpened = !this.isVariableSettingsOpened
+    },
+    assignVariablePreferences (variable) {
+      if (!this.dashboard.preferences.variables?.find((v) => v.name === variable.name)) {
+        this.dashboard.preferences.variables ||= []
+        this.dashboard.preferences.variables.push(variable)
+      }
     },
     removeQuery (queryId) {
       const index = this.dashboard.queries.findIndex((query) => query.id === queryId)
@@ -177,10 +235,12 @@ export default {
       })
     },
     refresh () {
-      this.isLoading = true
+      this.$nextTick(() => {
+        this.isLoading = true
 
-      this.$refs.layout.reload().then(() => {
-        this.isLoading = false
+        this.$refs.layout.reload().then(() => {
+          this.isLoading = false
+        })
       })
     },
     loadDashboard () {
@@ -230,5 +290,15 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.footer {
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #e8e8e8;
+  padding-top: 8px;
+  text-align: right;
+  background: #fff;
+}
 </style>

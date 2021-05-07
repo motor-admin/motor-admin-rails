@@ -31,10 +31,10 @@
       <FormItem
         v-if="dataField.field_type === 'reference'"
         label="Reference"
-        prop="reference.name"
+        prop="reference.model_name"
       >
         <MSelect
-          v-model="dataField.reference.name"
+          v-model="dataField.reference.model_name"
           :value-key="'name'"
           :label-key="'display_name'"
           :options="referenceModels"
@@ -166,7 +166,7 @@ export default {
       this.dataField.default_value = ''
 
       if (value === 'reference') {
-        this.dataField.reference = { name: '' }
+        this.dataField.reference = { model_name: '' }
       } else {
         delete this.dataField.reference
       }
@@ -176,7 +176,7 @@ export default {
         if (valid) {
           this.dataField.name = underscore(this.dataField.display_name)
 
-          if (this.dataField.name === this.dataField.reference?.name) {
+          if (this.dataField.name === this.dataField.reference?.model_name) {
             this.dataField.name = this.dataField.name + '_id'
           }
 

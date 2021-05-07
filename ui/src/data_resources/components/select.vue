@@ -14,6 +14,7 @@
 import api from 'api'
 import { modelNameMap } from '../scripts/schema'
 import throttle from 'view3/src/utils/throttle'
+import { truncate } from 'utils/scripts/string'
 
 export default {
   name: 'ResourceSelect',
@@ -45,6 +46,10 @@ export default {
     modelValue (value) {
       this.value = (value || '').toString()
     },
+    resourceName () {
+      this.value = ''
+      this.loadResources('')
+    },
     value (value) {
       this.$emit('update:modelValue', value)
     }
@@ -57,7 +62,7 @@ export default {
       const displayValue = option[this.model.display_column]
 
       if (displayValue) {
-        return `#${option[this.model.primary_key]} ${displayValue}`
+        return truncate(`#${option[this.model.primary_key]} ${displayValue}`, 50)
       } else {
         return `#${option[this.model.primary_key]}`
       }

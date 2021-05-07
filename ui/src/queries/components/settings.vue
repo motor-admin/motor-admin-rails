@@ -1,89 +1,100 @@
 <template>
-  <div class="bg-white p-2">
+  <div class="bg-white">
+    <Tabs
+      v-if="preferences.variables.length"
+      v-model="selectedTab"
+      :position="'center'"
+      :tabs="[
+        { label: 'Visualization', value: 'visualization' },
+        { label: 'Variables', value: 'variables' },
+      ]"
+    />
     <div
-      style="height: calc(var(--vh, 100vh) - 192px); overflow-y: scroll"
-      class="pb-2"
+      :style="{
+        height: `calc(var(--vh, 100vh) - ${preferences.variables.length ? '224px' : '185px' })`,
+        overflowY: 'scroll'
+      }"
+      class="p-2"
     >
-      <template v-if="preferences.variables?.length">
-        <p class="fs-4 fw-bold my-1">
-          Default values
-        </p>
-        <div
+      <template v-if="selectedTab === 'variables'">
+        <Card
           v-for="variable in preferences.variables"
           :key="variable.name"
-          class="mb-2"
+          class="my-2"
         >
-          <label>{{ variable.display_name }}</label>
-          <VInput
-            v-model="variable.default_value"
-          />
-        </div>
+          <div class="fw-bold mb-3">
+            {{ variable.display_name }}
+          </div>
+          <VariableSettings :variable="variable" />
+        </Card>
       </template>
-      <p class="fs-4 fw-bold my-1">
-        Visualize
-      </p>
-      <RadioGroup
-        v-model="preferences.visualization"
-        class="d-flex flex-column"
-      >
-        <Radio
-          v-for="option in visualizationOptions"
-          :key="option.value"
-          :label="option.value"
-          border
-          size="large"
-          class="my-1 me-0"
-          @update:modelValue="maybeSetLabelFormat"
-        >
-          {{ option.label }}
-        </Radio>
-      </RadioGroup>
-      <template v-if="['bar_chart', 'row_chart', 'line_chart', 'funnel'].includes(preferences.visualization)">
-        <Checkbox
-          v-model="preferences.visualization_options.chart_values_axis"
-          class="d-block"
-        >
-          Values axis
-        </Checkbox>
-        <Checkbox
-          v-if="['bar_chart', 'row_chart'].includes(preferences.visualization)"
-          v-model="preferences.visualization_options.chart_stacked"
-          class="d-block"
-        >
-          Stacked bars
-        </Checkbox>
-      </template>
-      <template v-if="!['table', 'markdown', 'value'].includes(preferences.visualization)">
+      <template v-else>
         <p class="fs-4 fw-bold my-1">
-          Format
+          Display as
         </p>
         <RadioGroup
-          v-model="preferences.visualization_options.label_format"
+          v-model="preferences.visualization"
           class="d-flex flex-column"
-          @update:modelValue="maybeSetCurrency"
         >
           <Radio
-            v-for="option in formatOptions"
+            v-for="option in visualizationOptions"
             :key="option.value"
             :label="option.value"
             border
             size="large"
             class="my-1 me-0"
+            @update:modelValue="maybeSetLabelFormat"
           >
             {{ option.label }}
           </Radio>
         </RadioGroup>
-      </template>
-      <template v-if="!['table', 'markdown'].includes(preferences.visualization) && preferences.visualization_options.label_format === 'currency'">
-        <p class="fs-4 fw-bold my-1">
-          Currency
-        </p>
-        <CurrencySelect
-          v-model="preferences.visualization_options.label_format_options.currency"
-        />
+        <template v-if="['bar_chart', 'row_chart', 'line_chart', 'funnel'].includes(preferences.visualization)">
+          <Checkbox
+            v-model="preferences.visualization_options.chart_values_axis"
+            class="d-block"
+          >
+            Values axis
+          </Checkbox>
+          <Checkbox
+            v-if="['bar_chart', 'row_chart'].includes(preferences.visualization)"
+            v-model="preferences.visualization_options.chart_stacked"
+            class="d-block"
+          >
+            Stacked bars
+          </Checkbox>
+        </template>
+        <template v-if="!['table', 'markdown', 'value'].includes(preferences.visualization)">
+          <p class="fs-4 fw-bold my-1">
+            Format
+          </p>
+          <RadioGroup
+            v-model="preferences.visualization_options.label_format"
+            class="d-flex flex-column"
+            @update:modelValue="maybeSetCurrency"
+          >
+            <Radio
+              v-for="option in formatOptions"
+              :key="option.value"
+              :label="option.value"
+              border
+              size="large"
+              class="my-1 me-0"
+            >
+              {{ option.label }}
+            </Radio>
+          </RadioGroup>
+        </template>
+        <template v-if="!['table', 'markdown'].includes(preferences.visualization) && preferences.visualization_options.label_format === 'currency'">
+          <p class="fs-4 fw-bold my-1">
+            Currency
+          </p>
+          <CurrencySelect
+            v-model="preferences.visualization_options.label_format_options.currency"
+          />
+        </template>
       </template>
     </div>
-    <div class="footer">
+    <div class="footer p-2">
       <VButton
         long
         type="default"
@@ -97,11 +108,15 @@
 
 <script>
 import CurrencySelect from 'utils/components/currency_select'
+import Tabs from 'utils/components/tabs'
+import VariableSettings from '../components/variable_settings'
 
 export default {
   name: 'QuerySettings',
   components: {
-    CurrencySelect
+    CurrencySelect,
+    Tabs,
+    VariableSettings
   },
   props: {
     preferences: {
@@ -115,6 +130,11 @@ export default {
     }
   },
   emits: ['close'],
+  data () {
+    return {
+      selectedTab: 'visualization'
+    }
+  },
   computed: {
     visualizationOptions () {
       return [
@@ -154,6 +174,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.ivu-tabs-bar) {
+  margin-bottom: 0px
+}
+
 .footer {
   width: 100%;
   position: sticky;

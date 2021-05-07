@@ -363,7 +363,6 @@ export default {
   },
   methods: {
     update () {
-      this.chart?.destroy()
       this.render()
     },
     formatValue (value) {
@@ -372,6 +371,7 @@ export default {
     render () {
       if (this.data.length) {
         this.$nextTick(() => {
+          this.chart?.destroy()
           this.chart = new Chart(this.$refs.canvas.getContext('2d'), this.chartParams)
         })
       }

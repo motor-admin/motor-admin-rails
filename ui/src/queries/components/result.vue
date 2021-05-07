@@ -13,7 +13,7 @@
     </p>
   </div>
   <ValueResult
-    v-else-if="isValue && !loading"
+    v-else-if="isValue"
     :style="{ height: showFooter || !data.length ? 'calc(100% - 34px)' : '100%' }"
     :data="paginatedData"
   />
@@ -28,7 +28,6 @@
       class="bg-white"
     >
       <Markdown
-        v-if="!loading"
         :style="{ height: '100%', overflow: 'scroll', padding: '10px 13px' }"
         :class="{ 'border-right': showMarkdownTable }"
         :markdown="preferences.visualization_options.markdown"
@@ -180,11 +179,6 @@ export default {
       default: false
     },
     showMarkdownTable: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    loading: {
       type: Boolean,
       required: false,
       default: false

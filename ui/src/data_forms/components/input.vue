@@ -5,17 +5,17 @@
     @change="onFile"
   >
   <ResourceSelect
-    v-else-if="column.reference && column.reference.name"
+    v-else-if="column.reference && column.reference.model_name"
     :model-value="modelValue"
-    :resource-name="column.reference.name"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    :resource-name="column.reference.model_name"
+    @update:modelValue="onSelect"
   />
   <MSelect
     v-else-if="isTagSelect"
     :model-value="modelValue"
     :options="tagOptions"
     :label-function="(option) => titleize(option.value)"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:modelValue="onSelect"
   />
   <Checkbox
     v-else-if="isBoolean"
@@ -26,6 +26,7 @@
     v-else-if="isNumber"
     :model-value="modelValue"
     :style="{ width: '100%' }"
+    @keydown.enter="$emit('enter')"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
   <DatePicker
@@ -45,6 +46,7 @@
   <VInput
     v-else
     :model-value="modelValue"
+    @keydown.enter="$emit('enter')"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
 </template>
@@ -85,7 +87,7 @@ export default {
       required: true
     }
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'select', 'enter'],
   data () {
     return {
       dataValue: this.modelValue
@@ -99,7 +101,7 @@ export default {
       return !!this.tagOptions
     },
     tagOptions () {
-      return this.column.validators.find((validator) => validator.includes?.length)?.includes
+      return this.column.validators?.find((validator) => validator.includes?.length)?.includes
     },
     isBoolean () {
       return this.type === 'boolean' || this.type === 'checkbox'
@@ -117,7 +119,7 @@ export default {
       return ['integer', 'bigint', 'int', 'float', 'demical', 'double', 'number', 'currency'].includes(this.type)
     },
     isTextArea () {
-      if (this.column.field_type === 'input') {
+      if (this.type === 'input') {
         return false
       }
 
@@ -131,7 +133,7 @@ export default {
     }
   },
   watch: {
-    column () {
+    type () {
       this.dataValue = ''
       this.$emit('update:modelValue', '')
     }
@@ -151,9 +153,16 @@ export default {
         })
       }
     },
+    onSelect (value) {
+      if (value) {
+        this.$emit('update:modelValue', value)
+        this.$emit('select')
+      }
+    },
     updateDateTime (datetime) {
       if (datetime) {
         this.$emit('update:modelValue', new Date(datetime.getTime() - datetime.getTimezoneOffset() * 60000))
+        this.$emit('select')
       }
     }
   }

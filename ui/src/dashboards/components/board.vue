@@ -44,11 +44,9 @@
         fix
       />
       <QueryResult
-        v-else
         :data="filteredData"
         :title="query.name"
         :minimal-pagination="true"
-        :loading="isLoading"
         :errors="errors"
         :preferences="query.preferences"
         :columns="columns"
@@ -116,7 +114,9 @@ export default {
     },
     queryVariables () {
       return (this.query.preferences.variables || []).reduce((acc, variable) => {
-        acc[variable.name] = this.variables[variable.name] || variable.default_value
+        acc[variable.name] = !this.variables[variable.name] && this.variables[variable.name] !== 0
+          ? variable.default_value
+          : this.variables[variable.name]
 
         return acc
       }, {})

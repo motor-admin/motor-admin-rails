@@ -9,7 +9,7 @@
     <VOption
       v-for="(option, index) in options"
       :key="index"
-      :value="option.value"
+      :value="[option.value, option.type].join('::')"
       :label="option.value"
     >
       <Icon
@@ -217,8 +217,10 @@ export default {
         value: `${titleize(model.name)} "${this.cleanedValue}"`
       }
     },
-    onSelect (value) {
-      const option = this.options.find((e) => e.value === value)
+    onSelect (selectedValue) {
+      const [value, type] = selectedValue.split('::')
+
+      const option = this.options.find((e) => e.value === value && e.type === type)
 
       if (option.type === 'query') {
         this.$router.push({ name: 'query', params: { id: option.id } })

@@ -12,16 +12,16 @@
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
       <VButton
-        v-if="isEdit && dataQuery.preferences.visualization === 'markdown'"
+        v-if="vSplit !== 0 && dataQuery.preferences.visualization === 'markdown'"
         size="large"
-        class="bg-white me-2 md-icon-only"
+        class="me-2 md-icon-only"
         :icon="isMarkdownEditor ? 'md-code-working' : 'logo-markdown'"
         @click="isMarkdownEditor = !isMarkdownEditor"
       >
         {{ isMarkdownEditor ? 'Edit SQL' : 'Edit Markdown' }}
       </VButton>
       <VButton
-        v-if="!isEdit"
+        v-if="vSplit === 0"
         size="large"
         class="bg-white me-2 md-icon-only"
         icon="md-create"
@@ -57,7 +57,7 @@
     </div>
   </div>
   <div
-    :style="{ height: isVariablesForm ? 'calc(var(--vh, 100vh) - 222px)' : 'calc(var(--vh, 100vh) - 134px)' }"
+    :style="{ height: isVariablesForm ? 'calc(var(--vh, 100vh) - 217px)' : 'calc(var(--vh, 100vh) - 134px)' }"
     class="row border-top m-0"
   >
     <div
@@ -78,7 +78,7 @@
     >
       <div
         v-if="isVariablesForm"
-        class="pb-3 pt-1 px-4 border-bottom"
+        class="pb-3 pt-1 px-3 px-md-4 border-bottom"
       >
         <VariablesForm
           v-model:data="variablesData"
@@ -90,10 +90,10 @@
       <Split
         v-model="vSplit"
         mode="vertical"
-        :style="{ height: isSettingsOpened && isVariablesForm ? 'calc(100% - 88px)' : '100%' }"
+        :style="{ height: isSettingsOpened && isVariablesForm ? 'calc(100% - 82px)' : '100%' }"
       >
         <template #top>
-          <template v-if="isEdit">
+          <template v-if="vSplit > 0">
             <CodeEditor
               v-if="dataQuery.preferences.visualization === 'markdown' && isMarkdownEditor"
               v-model="dataQuery.preferences.visualization_options.markdown"
@@ -139,6 +139,7 @@ import throttle from 'view3/src/utils/throttle'
 import VariablesForm from '../components/variables_form'
 import { titleize } from 'utils/scripts/string'
 import { widthLessThan } from 'utils/scripts/dimensions'
+import { modelNameMap } from 'data_resources/scripts/schema'
 
 import api from 'api'
 
@@ -227,7 +228,7 @@ export default {
       }
     },
     'dataQuery.sql_body': throttle(async function (value) {
-      this.dataQuery.preferences.variables = this.extractVariablesFromSql(value)
+      this.assignVariablesFromSql(value)
     }, 500),
     'dataQuery.preferences.visualization' (value) {
       if (value === 'markdown') {
@@ -279,6 +280,7 @@ export default {
         this.openEditor()
 
         if (this.dataQuery.sql_body) {
+          this.assignVariablesData()
           this.runQuery()
         }
       }
@@ -337,21 +339,48 @@ export default {
         })
       }
     },
-    extractVariablesFromSql (sql) {
+    assignVariablesFromSql (sql) {
       if (sql) {
-        const variables = sql.match(/{{[#/^]?\s*(\w+)\s*}}/g)?.map(e => e.replace(/\W/g, '')) || []
+        const variablesCaptures = sql.match(/{{[#/^]?\s*(\w+)\s*}}/g)
 
-        return Object.values(variables.reduce((acc, variableName) => {
-          acc[variableName] ||= { name: variableName, display_name: titleize(variableName) }
+        if (variablesCaptures) {
+          const variables =
+            variablesCaptures.map(e => e.replace(/\W/g, '')).filter((el, i, a) => i === a.indexOf(el))
 
-          acc[variableName].default_value ||= this.dataQuery.preferences.variables?.find((variable) => {
-            return variable.name === variableName
-          })?.default_value || ''
+          this.dataQuery.preferences.variables.forEach((variable, index, arr) => {
+            const variableIndex = variables.indexOf(variable.name)
 
-          return acc
-        }, {}))
+            if (variableIndex === -1) {
+              arr.splice(index, 1)
+            } else {
+              variables.splice(variableIndex, 1)
+            }
+          })
+
+          variables.forEach((variableName) => {
+            const variable = {
+              name: variableName,
+              display_name: titleize(variableName),
+              variable_type: 'text'
+            }
+
+            const model = modelNameMap[variableName.replace(/_id$/, '')]
+
+            if (model) {
+              Object.assign(variable, {
+                display_name: titleize(model.name),
+                reference_resource: model.name,
+                variable_type: 'reference'
+              })
+            }
+
+            this.dataQuery.preferences.variables.push(variable)
+          })
+        } else {
+          this.dataQuery.preferences.variables = []
+        }
       } else {
-        return []
+        this.dataQuery.preferences.variables = []
       }
     },
     save () {
@@ -397,20 +426,22 @@ export default {
       })
     },
     runQuery () {
-      this.isLoading = true
+      if (!this.isLoading) {
+        this.isLoading = true
 
-      api.post('run_queries', {
-        data: this.dataQuery,
-        variables: this.variablesData
-      }).then((result) => {
-        this.errors = []
-        this.data = result.data.data
-        this.columns = result.data.meta.columns
-      }).catch((error) => {
-        this.errors = error.response.data?.errors
-      }).finally(() => {
-        this.isLoading = false
-      })
+        api.post('run_queries', {
+          data: this.dataQuery,
+          variables: this.variablesData
+        }).then((result) => {
+          this.errors = []
+          this.data = result.data.data
+          this.columns = result.data.meta.columns
+        }).catch((error) => {
+          this.errors = error.response.data?.errors
+        }).finally(() => {
+          this.isLoading = false
+        })
+      }
     }
   }
 }
