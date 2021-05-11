@@ -30,24 +30,15 @@
       label="Send to"
       prop="to_emails"
     >
-      <VSelect
+      <MSelect
         v-model="dataAlert.to_emails"
         filterable
         allow-create
         multiple
+        :options="dataAlert.to_emails"
         placeholder="Emails"
         :size="'large'"
-        @on-change="$emit('change-emails', dataAlert.to_emails)"
-      >
-        <VOption
-          v-for="email in dataAlert.to_emails"
-          :key="email"
-          :value="email"
-          :label="email"
-        >
-          {{ email }}
-        </VOption>
-      </VSelect>
+      />
     </FormItem>
     <div class="row">
       <div class="col-7">

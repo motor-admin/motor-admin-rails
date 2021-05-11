@@ -1,8 +1,13 @@
 <template>
   <div
     v-click-outside="closeDropdown"
-    class="ivu-select ivu-select-single"
-    :class="{ 'ivu-select-visible': isOpen, [`ivu-select-${size}`]: true }"
+    class="ivu-select"
+    :class="{
+      'ivu-select-visible': isOpen,
+      [`ivu-select-${size}`]: true,
+      'ivu-select-multiple': multiple,
+      'ivu-select-single': !multiple
+    }"
     @keydown.enter.stop="applyFocused"
     @keydown.up.prevent="moveFocus(-1)"
     @keydown.down.prevent="moveFocus(1)"
@@ -10,38 +15,52 @@
     <div
       ref="selection"
       tabindex="-1"
-      class="ivu-select-selection"
+      :class="border ? 'ivu-select-selection' : 'ivu-select-no-border'"
+      @click="toggleDropdown"
     >
       <div class="">
+        <div
+          v-for="option in selectedOptions"
+          :key="getValue(option)"
+          class="ivu-tag ivu-tag-checked"
+        >
+          <span class="ivu-tag-text">{{ getLabel(option) }}</span>
+          <i
+            class="ion ion-ios-close"
+            @click.stop="removeOption(option)"
+          />
+        </div>
         <input
           v-if="remoteFunction || filterable"
+          ref="input"
           v-model="searchInput"
           type="text"
-          :placeholder="placeholder"
+          :placeholder="selectedOptions.length ? '' : placeholder"
           autocomplete="off"
           spellcheck="false"
           class="ivu-select-input"
+          :class="{ 'ivu-input-no-border': !border }"
           @keydown.down="isOpen = true"
           @keydown.up="isOpen = true"
-          @click="toggleDropdown"
+          @keydown.tab.prevent="onTabKey"
+          @keydown.backspace="maybeRemoveOption"
           @input="onSearch"
         >
         <span
           v-else
           class="ivu-select-selected-value"
-          @click="toggleDropdown"
         >
           {{ getLabel(selectedOption) }}
         </span>
         <i
-          :class="`ion ion-ios-arrow-down ivu-select-arrow`"
-          @click="toggleDropdown"
+          class="ivu-select-icon"
+          :class="icon ? `ion ion-${icon} ivu-select-custom-icon` : `ion ion-ios-arrow-down ivu-select-arrow`"
         />
       </div>
     </div>
     <transition name="transition-drop">
       <div
-        v-show="isOpen"
+        v-show="isOpen && (optionsData.length || displayCreate || notFound)"
         ref="dropdown"
         class="ivu-select-dropdown"
       >
@@ -53,14 +72,30 @@
         </ul>
         <ul class="ivu-select-dropdown-list">
           <li
+            v-if="displayCreate"
+            class="ivu-select-item"
+            :class="{'ivu-select-item-focus': focusIndex === 0}"
+            @click.stop="createOption(searchInput)"
+          >
+            {{ searchInput }}
+            <i class="ion ion-md-return-left ivu-select-item-enter" />
+          </li>
+          <li
             v-for="(option, index) in optionsToRender"
-            :key="option[valueKey]"
+            :key="index"
             :ref="setOptionRef"
             class="ivu-select-item"
-            :class="[isSelected(option) ? 'ivu-select-item-selected ivu-select-item-focus' : '', focusIndex === index ? 'ivu-select-item-focus' : '']"
+            :class="[isSelected(option) ? 'ivu-select-item-selected ivu-select-item-focus' : '', focusIndex === (displayCreate ? index + 1 : index) ? 'ivu-select-item-focus' : '']"
             @click.stop="selectOption(option)"
           >
-            {{ getLabel(option) }}
+            <component
+              :is="optionComponent"
+              v-if="optionComponent"
+              :option="option"
+            />
+            <template v-else>
+              {{ getLabel(option) }}
+            </template>
           </li>
         </ul>
         <ul
@@ -77,6 +112,7 @@
 <script>
 import { directive as clickOutside } from 'view3/src/directives/v-click-outside-x'
 import { getStyle } from 'view3/src/utils/assist'
+import throttle from 'view3/src/utils/throttle'
 import Popper from 'popper.js/dist/umd/popper.js'
 
 export default {
@@ -84,7 +120,7 @@ export default {
   directives: { clickOutside },
   props: {
     modelValue: {
-      type: [String, Number],
+      type: [String, Number, Array],
       reqired: false,
       default: ''
     },
@@ -98,10 +134,37 @@ export default {
       reqired: false,
       default: 'default'
     },
+    icon: {
+      type: String,
+      reqired: false,
+      default: null
+    },
     filterable: {
       type: Boolean,
       required: false,
       default: false
+    },
+    multiple: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    allowCreate: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    createFunction: {
+      type: Function,
+      required: false,
+      default: (value) => {
+        return Promise.resolve({ value, label: value })
+      }
+    },
+    border: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     placeholder: {
       type: String,
@@ -118,6 +181,21 @@ export default {
       required: false,
       default: null
     },
+    valueFunction: {
+      type: Function,
+      required: false,
+      default: null
+    },
+    focusFirst: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    optionComponent: {
+      type: Object,
+      required: false,
+      default: null
+    },
     valueKey: {
       type: String,
       reqired: false,
@@ -129,7 +207,7 @@ export default {
       default: null
     }
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'search', 'select'],
   data () {
     return {
       isLoading: false,
@@ -137,12 +215,16 @@ export default {
       optionRefs: [],
       popper: null,
       selectedOption: null,
+      selectedOptions: [],
       focusIndex: -1,
       searchInput: '',
       isOpen: false
     }
   },
   computed: {
+    displayCreate () {
+      return this.searchInput && this.allowCreate && !this.optionsToRender.find((opt) => this.getValue(opt) === this.searchInput)
+    },
     withFilter () {
       return this.remoteFunction || this.filterable
     },
@@ -165,7 +247,7 @@ export default {
       }
     },
     notFound () {
-      return this.withFilter && ((!this.remoteFunction && this.filteredOptions.length === 0) || this.optionsData.length === 0)
+      return !this.allowCreate && this.withFilter && ((this.remoteFunction ? !!this.searchInput : true) && this.optionsToRender.length === 0)
     }
   },
   watch: {
@@ -208,7 +290,10 @@ export default {
     } else {
       this.optionsData = this.normalizeOptions(this.options)
       this.assignSelectedFromValue(this.modelValue)
-      this.searchInput = this.getLabel(this.selectedOption) || this.modelValue
+
+      if (!this.multiple) {
+        this.searchInput = this.getLabel(this.selectedOption) || this.modelValue
+      }
     }
   },
   beforeUpdate () {
@@ -218,6 +303,24 @@ export default {
     setOptionRef (el) {
       if (el) {
         this.optionRefs.push(el)
+      }
+    },
+    createOption (value) {
+      this.createFunction(value).then((option) => {
+        this.optionsData.unshift(option)
+        this.selectOption(option)
+      })
+    },
+    onTabKey () {
+      if (this.displayCreate && this.focusIndex === 0) {
+        this.createOption(this.searchInput)
+      } else {
+        const label = this.getLabel(this.optionsToRender[this.focusIndex])
+
+        if (label) {
+          this.searchInput = label
+          this.onSearch()
+        }
       }
     },
     normalizeOptions () {
@@ -238,18 +341,28 @@ export default {
         return ''
       }
     },
+    getValue (option) {
+      if (option) {
+        return this.valueFunction ? this.valueFunction(option) : option[this.valueKey]
+      } else {
+        return ''
+      }
+    },
     onSearch () {
       this.remoteFunction && this.remoteFunction(this.searchInput)
-      this.focusIndex = this.optionsToRender.findIndex((option) => option.value === this.selectedOption?.value)
+      const index = this.optionsToRender.indexOf(this.selectedOption)
+      this.focusIndex = index === -1 ? 0 : index
       this.isOpen = true
       this.popper?.update()
+      this.$emit('search', this.searchInput)
     },
-    moveFocus (index) {
+    moveFocus: throttle(function (index) {
+      const maxLength = this.displayCreate ? (this.optionsToRender.length + 1) : this.optionsToRender.length
       const nextIndex = this.focusIndex + index
-      if (nextIndex >= this.optionsData.length) {
+      if (nextIndex >= maxLength) {
         this.focusIndex = 0
       } else if (nextIndex < 0) {
-        this.focusIndex = this.optionsData.length - 1
+        this.focusIndex = maxLength - 1
       } else {
         this.focusIndex += index
       }
@@ -257,25 +370,80 @@ export default {
       this.$nextTick(() => {
         this.optionRefs[this.focusIndex]?.scrollIntoView({ block: 'nearest' })
       })
-    },
+    }, 80),
     applyFocused () {
-      this.selectOption(this.optionsToRender[this.focusIndex])
+      if (this.displayCreate && this.focusIndex === 0) {
+        this.createOption(this.searchInput)
+      } else {
+        const index = this.displayCreate ? this.focusIndex + 1 : this.focusIndex
+        const option = this.optionsToRender[index]
+
+        if (option) {
+          this.selectOption(option)
+        }
+      }
     },
     assignSelectedFromValue (value) {
-      this.selectedOption = this.optionsData.find((option) => (option[this.valueKey] || '').toString() === (value || '').toString())
+      if (this.multiple) {
+        this.selectedOptions = this.optionsData.filter((option) => {
+          return !!value.find((val) => this.getValue(option).toString() === (val || '').toString())
+        })
+      } else {
+        this.selectedOption = this.optionsData.find((option) => this.getValue(option).toString() === (value || '').toString())
 
-      this.focusIndex = this.optionsToRender.indexOf(this.selectedOption)
+        const index = this.optionsToRender.indexOf(this.selectedOption)
+
+        this.focusIndex = this.focusFirst && index === -1 ? 0 : index
+      }
     },
     isSelected (option) {
-      return option[this.valueKey] && this.selectedOption && option[this.valueKey] === this.selectedOption[this.valueKey]
+      const hasSelected = this.getValue(option) && (this.selectedOption || this.selectedOptions.length)
+
+      if (hasSelected) {
+        return (this.multiple ? this.selectedOptions : [this.selectedOption]).find((opt) => this.getValue(opt) === this.getValue(option))
+      } else {
+        return false
+      }
     },
     selectOption (option) {
-      this.selectedOption = option
-      this.searchInput = this.getLabel(option)
-      this.focusIndex = this.optionsData.indexOf(option)
-      this.$emit('update:modelValue', option[this.valueKey])
+      if (this.multiple) {
+        const existingOption = this.selectedOptions.find((opt) => this.getValue(opt) === this.getValue(option))
 
-      this.closeDropdown()
+        if (existingOption) {
+          this.selectedOptions.splice(this.selectedOptions.indexOf(existingOption), 1)
+        } else {
+          this.selectedOptions.push(option)
+        }
+
+        this.searchInput = ''
+
+        this.$emit('update:modelValue', this.selectedOptions.map(this.getValue))
+        this.$emit('select', this.selectedOptions)
+
+        this.focusIndex = this.optionsToRender.indexOf(option)
+
+        this.popper?.update()
+        this.$refs.input?.focus()
+      } else {
+        this.selectedOption = option
+        this.searchInput = this.getLabel(option)
+        this.focusIndex = this.optionsToRender.indexOf(option)
+        this.$emit('update:modelValue', this.getValue(option))
+        this.$emit('select', this.selectedOption)
+
+        this.closeDropdown()
+      }
+    },
+    removeOption (option) {
+      this.selectedOptions.splice(this.selectedOptions.indexOf(option), 1)
+
+      this.$emit('update:modelValue', this.selectedOptions.map(this.getValue))
+      this.$emit('select', this.selectedOptions)
+    },
+    maybeRemoveOption () {
+      if (this.multiple && this.searchInput === '') {
+        this.removeOption(this.selectedOptions[this.selectedOptions.length - 1])
+      }
     },
     closeDropdown () {
       this.isOpen = false
@@ -300,7 +468,29 @@ export default {
       })
 
       this.popper.update()
+      this.$refs.input?.focus()
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.ivu-select-custom-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  color: #808695;
+  font-size: 18px;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+.ivu-select-no-border {
+  position: relative;
+  height: 40px;
+}
+
+.ivu-select-input {
+  cursor: initial;
+}
+</style>

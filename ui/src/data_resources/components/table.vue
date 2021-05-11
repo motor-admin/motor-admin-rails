@@ -72,10 +72,16 @@
         />
       </div>
     </div>
-    <template v-if="!isReloading">
+    <div
+      v-if="!isReloading"
+      class="position-relative"
+    >
+      <Spin
+        v-if="isLoading"
+        fix
+      />
       <DataTable
         :data="rows"
-        :loading="isLoading"
         :columns="columns"
         :style="{ height: height }"
         :sort-params="sortParams"
@@ -98,9 +104,9 @@
           @on-page-size-change="onPageSizeChange"
         />
       </div>
-    </template>
+    </div>
     <div
-      v-if="isReloading"
+      v-else
       :style="{ height: height, paddingBottom: '1px', position: 'relative' }"
     >
       <Spin

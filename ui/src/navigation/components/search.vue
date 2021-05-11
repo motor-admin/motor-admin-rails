@@ -1,24 +1,17 @@
 <template>
-  <AutoComplete
+  <MSelect
     icon="ios-search"
     size="large"
     :border="false"
-    @on-change="onSearch"
-    @on-select="onSelect"
-  >
-    <VOption
-      v-for="(option, index) in options"
-      :key="index"
-      :value="[option.value, option.type].join('::')"
-      :label="option.value"
-    >
-      <Icon
-        :type="iconClasses[option.type]"
-        style="width: 20px"
-      />
-      {{ option.value }}
-    </VOption>
-  </AutoComplete>
+    :options="options"
+    :focus-first="true"
+    :value-function="(option) => [option.value, option.type].join('::')"
+    filterable
+    label-key="value"
+    :option-component="optionComponent"
+    :remote-function="onSearch"
+    @select="onSelect"
+  />
 </template>
 
 <script>
@@ -27,6 +20,7 @@ import { itemsStore, loadItems } from 'reports/scripts/store'
 import { formsStore, loadForms } from 'custom_forms/scripts/store'
 import throttle from 'view3/src/utils/throttle'
 import singularize from 'inflected/src/singularize'
+import SearchOption from './search_option'
 
 const recentlySelectedStore = {
   get KEY () {
@@ -46,7 +40,7 @@ const recentlySelectedStore = {
 
     localStorage.setItem(this.KEY, JSON.stringify([item, ...items].slice(0, 20)))
   },
-  display () {
+  displayOptions () {
     return this.all().slice(0, this.DISPLAY_LIMIT)
   },
   all () {
@@ -68,23 +62,11 @@ export default {
     }
   },
   computed: {
+    optionComponent () {
+      return SearchOption
+    },
     visibleModels () {
       return schema.filter((model) => model.visible)
-    },
-    iconClasses () {
-      return {
-        resource: 'md-grid',
-        query: 'md-list',
-        dashboard: 'md-analytics',
-        resource_search: 'md-search',
-        resource_id: 'md-open',
-        new_query: 'md-create',
-        new_dashboard: 'md-create',
-        new_alert: 'md-create',
-        new_form: 'md-create',
-        alert: 'md-notifications',
-        form: 'md-list-box'
-      }
     },
     normalizedValue () {
       return this.value.toLowerCase().trim()
@@ -153,12 +135,12 @@ export default {
     }
   },
   mounted () {
-    this.options = recentlySelectedStore.display()
+    this.options = recentlySelectedStore.displayOptions()
 
-    this.$nextTick(() => {
+    setTimeout(() => {
       this.$el.querySelector('input').focus()
       this.$el.querySelector('input').click()
-    })
+    }, 200)
   },
   methods: {
     buildItems () {
@@ -217,11 +199,7 @@ export default {
         value: `${singularize(model.display_name)} "${this.cleanedValue}"`
       }
     },
-    onSelect (selectedValue) {
-      const [value, type] = selectedValue.split('::')
-
-      const option = this.options.find((e) => e.value === value && e.type === type)
-
+    onSelect (option) {
       if (option.type === 'query') {
         this.$router.push({ name: 'query', params: { id: option.id } })
       } else if (option.type === 'dashboard') {
@@ -261,8 +239,10 @@ export default {
       if (this.value.length > 1) {
         this.options = this.buildItems()
       } else {
-        this.options = recentlySelectedStore.display()
+        this.options = recentlySelectedStore.displayOptions()
       }
+
+      return Promise.resolve()
     }, 200)
   }
 }

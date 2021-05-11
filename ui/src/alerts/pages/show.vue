@@ -5,10 +5,9 @@
   >
     <div class="col-7 col-md-8 d-flex align-items-center">
       <h1
-        v-if="Object.keys(alert).length"
         class="my-3 overflow-hidden text-truncate"
       >
-        {{ alert.name || 'New alert' }}
+        {{ alert.name || cachedAlertName || 'New alert' }}
       </h1>
     </div>
     <div class="col-5 col-md-4 d-flex align-items-center justify-content-end">
@@ -55,8 +54,15 @@
         v-if="isLoadingQuery || isLoadingAlert"
         fix
       />
+      <div
+        v-else-if="!data.length"
+        class="d-flex justify-content-center align-items-center"
+        style="height: 100%"
+      >
+        No data
+      </div>
       <QueryResult
-        v-if="alert.query_id"
+        v-else-if="alert.query_id"
         :data="data"
         :errors="errors"
         :borderless="true"
@@ -94,6 +100,7 @@
 <script>
 import AlertForm from '../components/form'
 import QueryResult from 'queries/components/result'
+import { alertsStore } from 'reports/scripts/store'
 import api from 'api'
 
 const defaultAlertParams = {
@@ -121,6 +128,11 @@ export default {
       columns: [],
       errors: [],
       alert: {}
+    }
+  },
+  computed: {
+    cachedAlertName () {
+      return alertsStore.find((q) => q.id.toString() === this.$route.params?.id)?.name
     }
   },
   watch: {

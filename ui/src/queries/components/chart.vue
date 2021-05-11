@@ -5,7 +5,7 @@
     class="bg-white p-2"
   />
   <div
-    v-else
+    v-else-if="!loading"
     class="d-flex justify-content-center align-items-center"
     style="height: 100%"
   >
@@ -87,6 +87,11 @@ export default {
       type: Object,
       required: false,
       default: () => ({})
+    },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     chartType: {
       type: String,

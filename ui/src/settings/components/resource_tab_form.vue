@@ -56,7 +56,7 @@
     <div class="d-flex justify-content-between">
       <div>
         <VButton
-          v-if="withRemove && dataTab.name !== 'summary'"
+          v-if="withRemove && dataTab.name !== 'details'"
           type="error"
           ghost
           class="me-2"
@@ -153,7 +153,7 @@ export default {
         { label: 'Form', value: 'form' }
       ]
 
-      if (this.dataTab.name === 'summary') {
+      if (this.dataTab.name === 'details') {
         tabs.unshift({ label: 'Default', value: 'default' })
       }
 

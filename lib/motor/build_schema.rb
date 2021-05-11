@@ -48,8 +48,8 @@ module Motor
 
     DEFAULT_TABS = [
       {
-        name: 'summary',
-        display_name: 'Summary',
+        name: 'details',
+        display_name: 'Details',
         tab_type: 'default',
         preferences: {},
         visible: true

@@ -7,7 +7,7 @@
       <h1
         class="my-3 overflow-hidden text-truncate"
       >
-        {{ dashboard.title || (isExisting ? '' : 'New dashboard') }}
+        {{ dashboard.title || cachedDashboardTitle || (isExisting ? '' : 'New dashboard') }}
       </h1>
     </div>
     <div class="col-5 col-md-4 d-flex align-items-center justify-content-end">
@@ -22,7 +22,7 @@
       <VButton
         v-if="variables.length"
         size="large"
-        class="me-2 md-icon-only"
+        class="me-2 md-icon-only d-none d-sm-block"
         :icon="isVariableSettingsOpened ? 'md-close' : 'md-flask'"
         @click="toggleVariablesSettings"
       >
@@ -125,6 +125,7 @@ import DashboardLayout from '../components/layout'
 import DashboardForm from '../components/form'
 import VariablesForm from 'queries/components/variables_form'
 import VariableSettings from 'queries/components/variable_settings'
+import { dashboardsStore } from 'reports/scripts/store'
 import api from 'api'
 
 export default {
@@ -159,16 +160,17 @@ export default {
     isSettingsOpened () {
       return this.isEditorOpened || this.isVariableSettingsOpened
     },
+    cachedDashboardTitle () {
+      return dashboardsStore.find((e) => e.id.toString() === this.$route.params?.id)?.title
+    },
     variables () {
-      return this.dashboard.queries.reduce((acc, query) => {
-        query.preferences.variables?.forEach((variable) => {
-          if (!acc.find((v) => v.name === variable.name)) {
-            acc.push(variable)
-          }
+      return Object.values(this.dashboard.queries.reduce((acc, q) => {
+        q.preferences.variables?.forEach((variable) => {
+          acc[variable.name] ||= this.dashboard.preferences.variables?.find((v) => v.name === variable.name) || variable
         })
 
         return acc
-      }, [...(this.dashboard.preferences.variables || [])])
+      }, {}))
     }
   },
   watch: {

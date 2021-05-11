@@ -21,7 +21,8 @@ module Motor
     end
 
     def remove_missing_tags(taggable, tags)
-      tags_to_remove = taggable.tags.reject { |tt| tt.name.downcase.in?(tags) }
+      downcase_tags = tags.map(&:downcase)
+      tags_to_remove = taggable.tags.reject { |tt| tt.name.downcase.in?(downcase_tags) }
 
       taggable.tags -= tags_to_remove
 

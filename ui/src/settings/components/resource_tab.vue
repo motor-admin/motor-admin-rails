@@ -16,7 +16,7 @@
               class="me-3 cursor-grab handle"
             />
             <Checkbox
-              v-if="'summary' !== tab.name"
+              v-if="'details' !== tab.name"
               :model-value="tab.visible"
               @click.stop
               @on-change="toggleVisible"
@@ -24,7 +24,7 @@
             <p
               ref="contenteditable"
               class="fs-5 fw-bold cursor-text"
-              :contenteditable="'summary' !== tab.name"
+              :contenteditable="'details' !== tab.name"
               @input="updateName"
               @click="onTextClick"
               @blur="onNameFocusLost"
@@ -41,8 +41,8 @@
           v-if="isForm"
           :tab="tab"
           class="py-3"
-          :with-remove="'summary' !== tab.name"
-          :with-name="'summary' !== tab.name"
+          :with-remove="'details' !== tab.name"
+          :with-name="'details' !== tab.name"
           :resource="resource"
           @cancel="toggleForm"
           @remove="removeTab"
@@ -131,7 +131,7 @@ export default {
         dataTab._update = dataTab.name
       }
 
-      if (dataTab.name !== 'summary') {
+      if (dataTab.name !== 'details') {
         dataTab.name = underscore(dataTab.display_name)
       }
 
@@ -163,7 +163,7 @@ export default {
       this.tab.display_name = event.target.innerText
     },
     onTextClick (event) {
-      if (this.tab.name === 'summary') {
+      if (this.tab.name === 'details') {
         event.stopPropagation()
       }
     },

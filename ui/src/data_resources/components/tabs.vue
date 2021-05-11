@@ -9,7 +9,7 @@
     <div
       :style="style"
       class="position-relative"
-      :class="selectedTabName === 'summary' && selectedTab.tab_type === 'default' ? 'bg-white' : 'bg-body'"
+      :class="selectedTabName === 'details' && selectedTab.tab_type === 'default' ? 'bg-white' : 'bg-body'"
     >
       <KeepAlive>
         <ResourcesMenu
@@ -22,8 +22,8 @@
           :style="{ minHeight: '100%' }"
         />
         <ResourceInfo
-          v-else-if="selectedTabName === 'summary' && selectedTab.tab_type === 'default'"
-          :key="'summary'"
+          v-else-if="selectedTabName === 'details' && selectedTab.tab_type === 'default'"
+          :key="'details'"
           class="px-3 pb-3 pt-3"
           :style="{ height: '100%' }"
           :resource-name="resourceName"

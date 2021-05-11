@@ -6,7 +6,7 @@
     :model="variable"
   >
     <FormItem
-      label="Variable type"
+      label="Input type"
       prop="variable_type"
     >
       <MSelect

@@ -9,11 +9,11 @@
   >
     <template v-if="isNumberId">
       #{{ resourceId }} <template v-if="!polymorphicName">
-        {{ truncate(displayText, 20) }}
+        {{ truncate(displayText, maxLength) }}
       </template>
     </template>
     <template v-else>
-      {{ truncate(resourceId.toString(), 20) }}
+      {{ truncate(resourceId.toString(), maxLength) }}
     </template>
   </VButton>
 </template>
@@ -42,6 +42,11 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    maxLength: {
+      type: Number,
+      required: false,
+      default: 20
     },
     showPopover: {
       type: Boolean,

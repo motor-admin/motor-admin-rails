@@ -1,21 +1,16 @@
 <template>
-  <VSelect
+  <MSelect
     v-model="dataValue"
     filterable
     allow-create
     multiple
     placeholder="Set tags"
-    :loading="isLoading"
     :size="size"
-  >
-    <VOption
-      v-for="tag in tags"
-      :key="tag.id"
-      :value="tag.name"
-    >
-      {{ tag.name }}
-    </VOption>
-  </VSelect>
+    :options="tags"
+    :create-function="createFunction"
+    label-key="name"
+    value-key="name"
+  />
 </template>
 
 <script>
@@ -57,6 +52,9 @@ export default {
     this.loadTags()
   },
   methods: {
+    createFunction (value) {
+      return Promise.resolve({ name: value })
+    },
     loadTags () {
       this.isLoading = true
 

@@ -8,15 +8,12 @@
     />
     <div
       v-if="!isLoading"
-      class="row"
     >
       <div
-        class="pe-4"
-        :class="withActions ? 'col-11' : 'col-12'"
+        class="row"
       >
         <div
-          class="row"
-          :style="oneColumn && !notFound ? 'max-width: 500px' : ''"
+          :class="withActions && !notFound ? 'col-8 pe-1' : 'col-12'"
         >
           <p
             v-if="notFound"
@@ -24,59 +21,68 @@
           >
             Not Found
           </p>
-          <h2 class="mb-3">
+          <h2
+            v-else
+            class="mb-3"
+          >
             {{ title }}
           </h2>
-          <template
-            v-for="column in columns"
-            :key="column.name"
-          >
-            <div
-              v-if="![null, undefined, ''].includes(resource[column.name])"
-              :class="oneColumn ? 'col-12' : 'col-xxl-3 col-xl-6 col-md-12 col-12'"
-              class="mb-3"
-            >
-              <b>
-                {{ column.display_name }}:
-              </b>
-              <br>
-              <DataCell
-                v-if="column.reference?.model_name === 'active_storage/attachment'"
-                :value="resource[column.name]?.path"
-                :type="'string'"
-              />
-              <Reference
-                v-else-if="column.reference"
-                :resource-id="getReferenceId(column)"
-                :reference-name="column.reference.model_name"
-                :show-popover="referencePopover"
-                :reference-data="resource[column.reference.name]"
-                :polymorphic-name="resource[column.reference.name + '_type']"
-              />
-              <DataCell
-                v-else
-                :value="resource[column.name]"
-                :format="column.format"
-                :text-truncate="false"
-                :type="columnType(column)"
-              />
-            </div>
-          </template>
+        </div>
+        <div
+          v-if="withActions && !notFound"
+          class="col-4 ps-1 d-flex justify-content-end"
+        >
+          <ResourceActions
+            :resources="[resource]"
+            :resource-name="model.name"
+            :button-type="'primary'"
+            :button-ghost="false"
+            :label="'Actions'"
+            @start-action="isReloading = true"
+            @finish-action="onFinisAction"
+          />
         </div>
       </div>
       <div
-        v-if="withActions && !notFound"
-        class="col-1 d-flex justify-content-end"
+        class="row"
+        :style="oneColumn && !notFound ? 'max-width: 500px' : ''"
       >
-        <ResourceActions
-          :resources="[resource]"
-          :resource-name="model.name"
-          :button-type="'primary'"
-          :button-ghost="false"
-          :label="'Actions'"
-          @start-action="isReloading = true"
-          @finish-action="onFinisAction"
-        />
+        <template
+          v-for="column in columns"
+          :key="column.name"
+        >
+          <div
+            v-if="![null, undefined, ''].includes(resource[column.name])"
+            :class="oneColumn ? 'col-12' : 'col-xxl-3 col-xl-6 col-md-12 col-12'"
+            class="mb-3"
+          >
+            <b>
+              {{ column.display_name }}:
+            </b>
+            <br>
+            <DataCell
+              v-if="column.reference?.model_name === 'active_storage/attachment'"
+              :value="resource[column.name]?.path"
+              :type="'string'"
+            />
+            <Reference
+              v-else-if="column.reference"
+              :resource-id="getReferenceId(column)"
+              :reference-name="column.reference.model_name"
+              :max-length="oneColumn ? 30 : 20"
+              :show-popover="referencePopover"
+              :reference-data="resource[column.reference.name]"
+              :polymorphic-name="resource[column.reference.name + '_type']"
+            />
+            <DataCell
+              v-else
+              :value="resource[column.name]"
+              :format="column.format"
+              :text-truncate="false"
+              :type="columnType(column)"
+            />
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -140,7 +146,7 @@ export default {
   },
   computed: {
     title () {
-      return `${singularize(this.model.display_name)} #${this.resource.id}`
+      return `${singularize(this.model.display_name)} #${this.resource[this.model.primary_key]}`
     },
     model () {
       return modelNameMap[this.resourceName]

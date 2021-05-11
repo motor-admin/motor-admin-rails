@@ -228,6 +228,8 @@ export default {
           callback(null, schemaCompletions)
         }
       })
+
+      editor.focus()
     },
     onCmdEnter (e) {
       if (e.keyCode === 13 && e.metaKey) {

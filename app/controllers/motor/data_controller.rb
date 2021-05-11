@@ -86,6 +86,8 @@ module Motor
         self,
         options
       ).load_and_authorize_resource
+    rescue ActiveRecord::RecordNotFound
+      head :not_found
     rescue StandardError => e
       render json: { errors: [e.message] }, status: :unprocessable_entity
     end
@@ -107,6 +109,8 @@ module Motor
       else
         render json: { message: 'Unknown association' }, status: :not_found
       end
+    rescue ActiveRecord::RecordNotFound
+      head :not_found
     rescue StandardError => e
       render json: { errors: [e.message] }, status: :unprocessable_entity
     end

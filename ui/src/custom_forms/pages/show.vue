@@ -7,7 +7,7 @@
       <h1
         class="my-3 overflow-hidden text-truncate"
       >
-        {{ form.name || (isExisting ? '' : 'New form') }}
+        {{ form.name || cachedFormName || (isExisting ? '' : 'New form') }}
       </h1>
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
@@ -76,6 +76,7 @@
 import Editor from '../components/editor'
 import CustomForm from '../components/custom_form'
 import SaveForm from '../components/save_form'
+import { formsStore } from '../scripts/store'
 import api from 'api'
 
 const defaultFormParams = {
@@ -103,6 +104,9 @@ export default {
   computed: {
     isExisting () {
       return this.$route.params.id
+    },
+    cachedFormName () {
+      return formsStore.find((f) => f.id.toString() === this.$route.params?.id)?.name
     }
   },
   watch: {

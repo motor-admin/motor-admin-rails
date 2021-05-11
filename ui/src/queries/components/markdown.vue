@@ -21,6 +21,11 @@ export default {
       required: false,
       default: ''
     },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     data: {
       type: Object,
       required: false,
@@ -47,7 +52,7 @@ export default {
       if (!this.isNoData) {
         return DOMPurify.sanitize(marked(this.mustacheRendered))
       } else {
-        return 'No data'
+        return this.loading ? '' : 'No data'
       }
     }
   },

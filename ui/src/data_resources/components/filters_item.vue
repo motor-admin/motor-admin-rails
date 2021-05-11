@@ -18,7 +18,7 @@
     </div>
     <div class="d-flex col-5 ps-2 pe-0">
       <FormInput
-        v-if="selectedColumn"
+        v-if="selectedColumn && !['contains', 'starts_with', 'ends_with'].includes(dataFilter.action)"
         v-model="dataFilter.value"
         :column="selectedColumn"
       />
@@ -40,7 +40,7 @@
 import FormInput from 'data_forms/components/input'
 import { modelNameMap } from '../scripts/schema'
 
-const ACTIONS = ['eq', 'neq', 'ilike', 'like', 'gt', 'gte', 'lt', 'lte']
+const ACTIONS = ['eq', 'neq', 'contains', 'gt', 'gte', 'lt', 'lte', 'starts_with', 'ends_with']
 
 export default {
   name: 'FilterItem',
@@ -135,7 +135,11 @@ export default {
       }
 
       if (this.selectedColumn.column_type === 'string') {
-        actions.push({ value: 'ilike', label: 'contains' })
+        actions.push(
+          { value: 'contains', label: 'contains' },
+          { value: 'starts_with', label: 'starts with' },
+          { value: 'ends_with', label: 'ends with' }
+        )
       } else if (['integer', 'float', 'date', 'datetime'].includes(this.selectedColumn.column_type)) {
         actions.push(
           { value: 'gt', label: 'greater than' },

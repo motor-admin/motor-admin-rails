@@ -103,7 +103,10 @@
         v-if="loading"
         fix
       />
-      <div style="margin: auto;">
+      <div
+        v-else
+        style="margin: auto;"
+      >
         No Data
       </div>
     </div>

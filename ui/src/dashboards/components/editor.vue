@@ -118,7 +118,7 @@ export default {
 
       this.layout.splice(index, 1)
 
-      this.$emit('remove-query', item.id)
+      this.$emit('remove-query', item.query_id)
     },
     onSelectQuery (query) {
       this.isQueriesListOpened = false

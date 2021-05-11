@@ -7,7 +7,7 @@
       <h1
         class="my-3 overflow-hidden text-truncate"
       >
-        {{ query.name || (isExisting ? '' : 'New query') }}
+        {{ query.name || cachedQueryName || (isExisting ? '' : 'New query') }}
       </h1>
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
@@ -113,7 +113,15 @@
             v-if="isLoading || isLoadingQuery"
             fix
           />
+          <div
+            v-else-if="!data.length"
+            class="d-flex justify-content-center align-items-center"
+            style="height: 100%"
+          >
+            No data
+          </div>
           <QueryResult
+            v-if="data.length"
             :data="data"
             :errors="errors"
             :title="query.name"
@@ -141,6 +149,7 @@ import { titleize } from 'utils/scripts/string'
 import singularize from 'inflected/src/singularize'
 import { widthLessThan } from 'utils/scripts/dimensions'
 import { modelNameMap } from 'data_resources/scripts/schema'
+import { queriesStore } from 'reports/scripts/store'
 
 import api from 'api'
 
@@ -184,6 +193,9 @@ export default {
   computed: {
     defaultSplit () {
       return 0.35
+    },
+    cachedQueryName () {
+      return queriesStore.find((q) => q.id.toString() === this.$route.params?.id)?.name
     },
     locationHashParams () {
       return JSON.parse(window.atob(location.hash.replace(/^#/, '')) || 'null')
@@ -280,9 +292,7 @@ export default {
       this.isSettingsOpened = !this.isSettingsOpened
     },
     onMounted () {
-      if (this.dataQuery.sql_body) {
-        this.openEditor()
-      }
+      this.vSplit = 0
 
       if (this.$route.params.id) {
         this.loadQuery()

@@ -15,9 +15,16 @@ module Motor
             end
 
           puts
-          puts "⚡ Motor Admin is starting under #{url}"
+          puts "⚡ Motor::Admin is starting under #{url}"
+        else
           puts
+          puts '⚠️  Motor::Admin is not mounted.'
+          puts 'Add the following line to your config/routes.rb:'
+          puts
+          puts "    mount Motor::Admin => '/admin'"
         end
+
+        puts
       end
     end
 

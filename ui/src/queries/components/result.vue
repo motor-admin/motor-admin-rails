@@ -15,6 +15,7 @@
   <ValueResult
     v-else-if="isValue"
     :style="{ height: showFooter || !data.length ? 'calc(100% - 34px)' : '100%' }"
+    :loading="loading"
     :data="paginatedData"
   />
   <div
@@ -30,6 +31,7 @@
       <Markdown
         :style="{ height: '100%', overflow: 'scroll', padding: '10px 13px' }"
         :class="{ 'border-right': showMarkdownTable }"
+        :loading="loading"
         :markdown="preferences.visualization_options.markdown"
         :data="markdownData"
       />
@@ -43,6 +45,7 @@
         :with-select="false"
         :click-rows="false"
         :borderless="borderless"
+        :loading="loading"
         :header-border="headerBorder"
         :compact="compact"
         :columns="normalizedColumns"
@@ -55,9 +58,9 @@
     :style="{ height: 'calc(100% - 34px)' }"
   >
     <Chart
-      v-if="data.length"
       ref="chart"
       :data="data"
+      :loading="loading"
       :options="preferences.visualization_options"
       :columns="normalizedColumns"
       :chart-type="chartType"
@@ -112,6 +115,7 @@
         @click="$router.push({ name: 'new_alert', query: { query_id: queryId } })"
       />
       <VButton
+        v-if="!!data.length"
         icon="md-download"
         type="text"
         size="small"
@@ -183,6 +187,11 @@ export default {
       required: false,
       default: false
     },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     borderless: {
       type: Boolean,
       required: false,
@@ -227,7 +236,7 @@ export default {
   },
   computed: {
     showFooter () {
-      return !this.isValue || this.withSettings || this.withAlert || this.showPagination
+      return !!this.data.length && (!this.isValue || this.withSettings || this.withAlert || this.showPagination)
     },
     showPagination () {
       return (this.data.length && this.isTable) || ((this.isMarkdown || this.isValue) && this.data.length > 1)

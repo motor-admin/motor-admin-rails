@@ -5,18 +5,26 @@
       fix
     />
     <template v-else>
-      <Spin
-        v-if="isLoading"
-        fix
-      />
       <VariablesForm
-        v-if="showVariablesForm"
+        v-if="!isLoading && showVariablesForm"
         v-model:data="dataVariables"
         :variables="variablesToRender"
         class="mx-2 pb-3"
         @submit="runQuery"
       />
+      <Spin
+        v-if="isLoading"
+        fix
+      />
+      <div
+        v-else-if="!data.length"
+        class="d-flex justify-content-center align-items-center"
+        style="height: 100%"
+      >
+        No data
+      </div>
       <QueryResult
+        v-else
         :data="data"
         :errors="errors"
         :title="query.name"

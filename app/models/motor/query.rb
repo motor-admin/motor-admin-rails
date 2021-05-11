@@ -10,5 +10,13 @@ module Motor
     serialize :preferences, HashSerializer
 
     scope :active, -> { where(deleted_at: nil) }
+
+    def result(variables_hash = {})
+      result = Motor::Queries::RunQuery.call(self, variables_hash: variables_hash)
+      column_names = result.columns.pluck(:name)
+
+      result.data.map { |row| column_names.zip(row).to_h }
+    end
+    alias run result
   end
 end

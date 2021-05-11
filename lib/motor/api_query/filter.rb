@@ -34,20 +34,29 @@ module Motor
 
       def normalize_filter_hash(hash)
         hash.each_with_object({}) do |(action, value), acc|
-          acc[action] =
+          new_action, new_value =
             if value.is_a?(Hash)
-              normalize_filter_hash(value)
+              [action, normalize_filter_hash(value)]
             else
-              normalize_action_value(action, value)
+              normalize_action(action, value)
             end
+
+          acc[new_action] = new_value
+
+          acc
         end
       end
 
-      def normalize_action_value(action, value)
-        if %w[like ilike].include?(action)
-          value.sub(LIKE_FILTER_VALUE_REGEXP, '%\1%')
+      def normalize_action(action, value)
+        case action
+        when 'contains'
+          ['ilike', value.sub(LIKE_FILTER_VALUE_REGEXP, '%\1%')]
+        when 'starts_with'
+          ['ilike', value.sub(LIKE_FILTER_VALUE_REGEXP, '\1%')]
+        when 'ends_with'
+          ['ilike', value.sub(LIKE_FILTER_VALUE_REGEXP, '%\1')]
         else
-          value
+          [action, value]
         end
       end
     end

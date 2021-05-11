@@ -16,7 +16,7 @@
     >
       {{ value }}
     </p>
-    <p v-else>
+    <p v-else-if="!loading">
       No data
     </p>
     <div v-if="label">
@@ -33,6 +33,11 @@ export default {
       type: Array,
       required: false,
       default: () => ([])
+    },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     valueFormat: {
       type: Object,
