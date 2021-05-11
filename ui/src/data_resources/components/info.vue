@@ -10,10 +10,11 @@
       v-if="!isLoading"
     >
       <div
-        class="row"
+        class="d-flex"
       >
         <div
-          :class="withActions && !notFound ? 'col-8 pe-1' : 'col-12'"
+          style="min-width: 250px"
+          :style="withActions && !notFound ? 'width: calc(100% - 100px)' : 'width: 100%'"
         >
           <p
             v-if="notFound"
@@ -30,7 +31,8 @@
         </div>
         <div
           v-if="withActions && !notFound"
-          class="col-4 ps-1 d-flex justify-content-end"
+          class="d-flex justify-content-end"
+          style="width: 100px"
         >
           <ResourceActions
             :resources="[resource]"

@@ -30,14 +30,14 @@
       ghost
       class="bg-white me-2"
       :loading="isSaveAndNewLoading"
-      @click.stop="onIsSaveAndCreateClick"
+      @click.stop="onSaveAndCreateClick"
     >
       Save and Create New
     </VButton>
     <VButton
       type="primary"
       :loading="isSaveLoading"
-      @click.stop="onIsSaveClick"
+      @click.stop="onSaveClick"
     >
       Save
     </VButton>
@@ -116,6 +116,10 @@ export default {
           acc[column.name].push({ type: 'email' })
         }
 
+        if (column.column_type === 'json') {
+          acc[column.name].push({ validator: Validators.json })
+        }
+
         if (!column.reference && ['integer', 'float'].includes(column.column_type)) {
           acc[column.name].push({ type: 'number' })
         }
@@ -168,7 +172,7 @@ export default {
     this.resourceData = this.normalizeResourceData(this.resource)
   },
   methods: {
-    onIsSaveClick () {
+    onSaveClick () {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.isSaveLoading = true
@@ -177,7 +181,7 @@ export default {
         }
       })
     },
-    onIsSaveAndCreateClick () {
+    onSaveAndCreateClick () {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.isSaveAndNewLoading = true
@@ -201,21 +205,25 @@ export default {
 
       return data
     },
-    handleSubmit (eventData = {}) {
-      this.apiRequest.then((result) => {
+    async handleSubmit (eventData = {}) {
+      try {
+        await this.apiRequest
+
         this.$emit('success', eventData)
-      }).catch((error) => {
+      } catch (error) {
         if (error.response?.data?.errors) {
           this.$refs.form.setErrors(error.response.data.errors)
+        } else if (error.message) {
+          this.$refs.form.setErrors([error.message])
         }
-      }).finally(() => {
+      } finally {
         this.isSaveAndNewLoading = false
         this.isSaveLoading = false
 
         if (eventData.button === 'save_and_create') {
           this.resourceData = this.normalizeResourceData(this.resource)
         }
-      })
+      }
     }
   }
 }
