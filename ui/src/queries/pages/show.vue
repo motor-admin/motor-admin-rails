@@ -91,6 +91,7 @@
         v-model="vSplit"
         mode="vertical"
         :style="{ height: isSettingsOpened && isVariablesForm ? 'calc(100% - 82px)' : '100%' }"
+        @update:model-value="saveSplitPosition"
       >
         <template #top>
           <template v-if="vSplit > 0">
@@ -152,6 +153,8 @@ import { modelNameMap } from 'data_resources/scripts/schema'
 import { queriesStore } from 'reports/scripts/store'
 
 import api from 'api'
+
+const SPLIT_POSITION_KEY = 'motor:queries:vsplit'
 
 const defaultQueryParams = {
   name: '',
@@ -309,7 +312,7 @@ export default {
       }
     },
     openEditor () {
-      this.vSplit = 0.35
+      this.vSplit = JSON.parse(localStorage.getItem(SPLIT_POSITION_KEY)) || 0.35
     },
     loadQuery () {
       this.isLoadingQuery = true
@@ -425,6 +428,9 @@ export default {
         title: 'Save query',
         closable: true
       })
+    },
+    saveSplitPosition () {
+      localStorage.setItem(SPLIT_POSITION_KEY, JSON.stringify(this.vSplit))
     },
     saveAsNew () {
       this.$Modal.open(QueryForm, {

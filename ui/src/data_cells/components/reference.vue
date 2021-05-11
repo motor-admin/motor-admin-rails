@@ -111,3 +111,9 @@ export default {
   top: 7%;
 }
 </style>
+
+<style lang="scss" scoped>
+.ivu-btn {
+  user-select: initial
+}
+</style>

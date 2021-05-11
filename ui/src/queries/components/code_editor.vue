@@ -229,7 +229,9 @@ export default {
         }
       })
 
-      editor.focus()
+      setTimeout(() => {
+        editor.focus()
+      }, 100)
     },
     onCmdEnter (e) {
       if (e.keyCode === 13 && e.metaKey) {
