@@ -15,6 +15,7 @@ Motor::Admin.routes.draw do
       resources :alerts, only: %i[index show create update destroy]
       resources :active_storage_attachments, only: %i[create], path: 'data/active_storage__attachments'
       resource :schema, only: %i[show update]
+      resources :audits, only: %i[index]
       resources :resources, path: '/data/:resource',
                             only: %i[index show update create destroy],
                             controller: 'data' do

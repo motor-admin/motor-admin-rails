@@ -21,6 +21,15 @@
         {{ isMarkdownEditor ? 'Edit SQL' : 'Edit Markdown' }}
       </VButton>
       <VButton
+        v-if="query.id && query.updated_at !== query.created_at"
+        size="large"
+        class="bg-white me-2 md-icon-only d-none d-sm-block"
+        icon="md-time"
+        @click="openRevisionsModal"
+      >
+        Revisions
+      </VButton>
+      <VButton
         v-if="vSplit === 0"
         size="large"
         class="bg-white me-2 md-icon-only"
@@ -30,9 +39,9 @@
         Edit
       </VButton>
       <VButton
-        v-if="canSaveNew"
+        v-if="canSaveNew && vSplit !== 0"
         size="large"
-        class="bg-white me-2 d-none d-md-block"
+        class="bg-white me-2 d-none d-sm-block"
         @click="saveAsNew"
       >
         Save as new
@@ -151,6 +160,7 @@ import singularize from 'inflected/src/singularize'
 import { widthLessThan } from 'utils/scripts/dimensions'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import { queriesStore } from 'reports/scripts/store'
+import RevisionsModal from 'utils/components/revisions_modal'
 
 import api from 'api'
 
@@ -280,6 +290,26 @@ export default {
   },
   methods: {
     widthLessThan,
+    openRevisionsModal () {
+      this.$Drawer.open(RevisionsModal, {
+        auditableName: 'query',
+        auditableId: this.query.id,
+        onRevert: (data) => {
+          Object.assign(this.dataQuery, {
+            sql_body: data.sql_body,
+            preferences: data.preferences
+          })
+
+          this.query.name = data.name
+
+          this.openEditor()
+          this.$Drawer.remove()
+        }
+      }, {
+        closable: true,
+        title: 'Query Revisions'
+      })
+    },
     assignDataFromLocationHash () {
       this.dataQuery = JSON.parse(JSON.stringify(this.locationHashParams)) || { ...defaultQueryParams }
       this.dataQuery.preferences = { ...defaultQueryParams.preferences, ...this.dataQuery.preferences }

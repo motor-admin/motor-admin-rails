@@ -2,6 +2,8 @@
 
 module Motor
   class Query < ::Motor::ApplicationRecord
+    audited
+
     belongs_to :author, polymorphic: true, optional: true
 
     has_many :taggable_tags, as: :taggable

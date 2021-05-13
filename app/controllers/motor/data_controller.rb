@@ -2,14 +2,10 @@
 
 module Motor
   class DataController < ApiBaseController
-    include Motor::WrapIoParams
-
-    INSTANCE_VARIABLE_NAME = 'resource'
-
     wrap_parameters :data, except: %i[include fields]
 
-    before_action :load_and_authorize_resource
-    before_action :load_and_authorize_association
+    include Motor::WrapIoParams
+    include Motor::LoadAndAuthorizeDynamicResource
 
     def index
       @resources = Motor::ApiQuery.call(@resources, params)
@@ -63,57 +59,6 @@ module Motor
     end
 
     private
-
-    def resource_class
-      @resource_class ||= Motor::BuildSchema::Utils.classify_slug(params[:resource])
-    end
-
-    def load_and_authorize_resource
-      options = {
-        class: resource_class,
-        parent: false,
-        instance_name: INSTANCE_VARIABLE_NAME
-      }
-
-      if params[:resource_id].present?
-        options = options.merge(
-          parent: true,
-          id_param: :resource_id
-        )
-      end
-
-      CanCan::ControllerResource.new(
-        self,
-        options
-      ).load_and_authorize_resource
-    rescue ActiveRecord::RecordNotFound
-      head :not_found
-    rescue StandardError => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
-    end
-
-    def load_and_authorize_association
-      return if params[:association].blank?
-
-      association = resource_class.reflections[params[:association]]
-
-      if association
-        CanCan::ControllerResource.new(
-          self,
-          class: association.klass,
-          parent: false,
-          through: :resource,
-          through_association: params[:association].to_sym,
-          instance_name: INSTANCE_VARIABLE_NAME
-        ).load_and_authorize_resource
-      else
-        render json: { message: 'Unknown association' }, status: :not_found
-      end
-    rescue ActiveRecord::RecordNotFound
-      head :not_found
-    rescue StandardError => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
-    end
 
     def resource_params
       if params[:data].present?

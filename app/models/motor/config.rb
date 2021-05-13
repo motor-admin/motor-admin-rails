@@ -2,6 +2,8 @@
 
 module Motor
   class Config < ::Motor::ApplicationRecord
+    audited
+
     serialize :value, HashSerializer
   end
 end

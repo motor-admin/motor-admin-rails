@@ -12,14 +12,6 @@
     </div>
     <div class="col-5 col-md-4 d-flex align-items-center justify-content-end">
       <VButton
-        size="large"
-        class="bg-white me-2 md-icon-only"
-        :icon="isEditorOpened ? 'md-close' : 'md-create'"
-        @click="toggleEditor"
-      >
-        {{ isEditorOpened ? 'Close editor' : 'Edit' }}
-      </VButton>
-      <VButton
         v-if="variables.length"
         size="large"
         class="me-2 md-icon-only d-none d-sm-block"
@@ -27,6 +19,14 @@
         @click="toggleVariablesSettings"
       >
         {{ isVariableSettingsOpened ? 'Close Variables' : 'Variables' }}
+      </VButton>
+      <VButton
+        size="large"
+        class="bg-white me-2 md-icon-only"
+        :icon="isEditorOpened ? 'md-close' : 'md-create'"
+        @click="toggleEditor"
+      >
+        {{ isEditorOpened ? 'Close editor' : 'Edit' }}
       </VButton>
       <VButton
         size="large"

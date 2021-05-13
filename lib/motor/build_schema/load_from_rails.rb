@@ -11,7 +11,7 @@ module Motor
         models.map do |model|
           build_model_schema(model)
         rescue StandardError, NotImplementedError => e
-          Rails.logger.error(e)
+          Rails.logger.error(e) if model.name != 'Audited::Audit'
 
           next
         end.compact
@@ -24,6 +24,7 @@ module Motor
         models = models.reject(&:abstract_class)
 
         models -= Motor::ApplicationRecord.descendants
+        models -= [Motor::Audit]
         models -= [ActiveRecord::SchemaMigration] if defined?(ActiveRecord::SchemaMigration)
         models -= [ActiveStorage::Blob] if defined?(ActiveStorage::Blob)
         models -= [ActiveStorage::VariantRecord] if defined?(ActiveStorage::VariantRecord)

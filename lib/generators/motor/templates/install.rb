@@ -13,9 +13,9 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
 
       t.index :updated_at
       t.index 'lower(name)',
-        name: 'motor_queries_lower_name_unique_index',
-        unique: true,
-        where: 'deleted_at IS NULL'
+              name: 'motor_queries_lower_name_unique_index',
+              unique: true,
+              where: 'deleted_at IS NULL'
     end
 
     create_table :motor_dashboards, force: true do |t|
@@ -30,9 +30,9 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
 
       t.index :updated_at
       t.index 'lower(title)',
-        name: 'motor_dashboards_lower_title_unique_index',
-        unique: true,
-        where: 'deleted_at IS NULL'
+              name: 'motor_dashboards_lower_title_unique_index',
+              unique: true,
+              where: 'deleted_at IS NULL'
     end
 
     create_table :motor_forms, force: true do |t|
@@ -49,9 +49,9 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
 
       t.index :updated_at
       t.index 'lower(name)',
-        name: 'motor_forms_lower_name_unique_index',
-        unique: true,
-        where: 'deleted_at IS NULL'
+              name: 'motor_forms_lower_name_unique_index',
+              unique: true,
+              where: 'deleted_at IS NULL'
     end
 
     create_table :motor_resources, force: true do |t|
@@ -87,9 +87,9 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
 
       t.index :updated_at
       t.index 'lower(name)',
-        name: 'motor_alerts_lower_name_unique_index',
-        unique: true,
-        where: 'deleted_at IS NULL'
+              name: 'motor_alerts_lower_name_unique_index',
+              unique: true,
+              where: 'deleted_at IS NULL'
     end
 
     create_table :motor_alert_locks, force: true do |t|
@@ -107,8 +107,8 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       t.timestamps
 
       t.index 'lower(name)',
-        name: 'motor_tags_lower_name_unique_index',
-        unique: true
+              name: 'motor_tags_lower_name_unique_index',
+              unique: true
     end
 
     create_table :motor_taggable_tags, force: true do |t|
@@ -117,12 +117,36 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       t.column :taggable_type, :string, null: false
 
       t.index %i[taggable_id taggable_type tag_id],
-        name: 'motor_polymorphic_association_tag_index',
-        unique: true
+              name: 'motor_polymorphic_association_tag_index',
+              unique: true
     end
+
+    create_table :motor_audits, force: true do |t|
+      t.column :auditable_id, :integer
+      t.column :auditable_type, :string
+      t.column :associated_id, :integer
+      t.column :associated_type, :string
+      t.column :user_id, :integer
+      t.column :user_type, :string
+      t.column :username, :string
+      t.column :action, :string
+      t.column :audited_changes, :text
+      t.column :version, :integer, default: 0
+      t.column :comment, :string
+      t.column :remote_address, :string
+      t.column :request_uuid, :string
+      t.column :created_at, :datetime
+    end
+
+    add_index :motor_audits, %i[auditable_type auditable_id version], name: 'motor_auditable_index'
+    add_index :motor_audits, %i[associated_type associated_id], name: 'motor_auditable_associated_index'
+    add_index :motor_audits, %i[user_id user_type], name: 'motor_auditable_user_index'
+    add_index :motor_audits, :request_uuid
+    add_index :motor_audits, :created_at
   end
 
   def self.down
+    drop_table :motor_audits
     drop_table :motor_alert_locks
     drop_table :motor_alerts
     drop_table :motor_taggable_tags

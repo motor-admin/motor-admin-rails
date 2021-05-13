@@ -2,6 +2,8 @@
 
 module Motor
   class Alert < ::Motor::ApplicationRecord
+    audited
+
     belongs_to :query
     belongs_to :author, polymorphic: true, optional: true
 

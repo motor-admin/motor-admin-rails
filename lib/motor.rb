@@ -6,6 +6,7 @@ require 'js_regex'
 require 'fugit'
 require 'csv'
 require 'active_record/filter'
+require 'audited'
 
 module Motor
   PATH = Pathname.new(__dir__)
