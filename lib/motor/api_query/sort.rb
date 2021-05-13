@@ -13,7 +13,7 @@ module Motor
         arel_order = build_arel_order(rel.klass, param)
         join_params = build_join_params(rel.klass, param)
 
-        rel.order(arel_order).left_joins(join_params)
+        rel.reorder(arel_order).left_joins(join_params)
       end
 
       def build_join_params(_model, param)

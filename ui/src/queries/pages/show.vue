@@ -302,6 +302,7 @@ export default {
 
           this.query.name = data.name
 
+          this.$Message.info('Revision has been applied')
           this.openEditor()
           this.$Drawer.remove()
         }
