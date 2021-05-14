@@ -32,7 +32,7 @@
   </div>
   <div
     class="ivu-card-body p-0"
-    :style="{ height: heightsMap[item.size[1]] }"
+    :style="{ height: heightsMap[item.size[2]] }"
   >
     <Spin
       v-if="isLoading"

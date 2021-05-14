@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'concurrent/executor/fixed_thread_pool'
+require 'concurrent/timer_task'
 require 'cancancan'
 require 'ar_lazy_preload'
 require 'js_regex'
@@ -18,7 +20,7 @@ module Motor
       Dir[PATH.join('./motor/**/*.rb')].each do |f|
         next if f.ends_with?('alerts/scheduler.rb')
         next if f.ends_with?('alerts/scheduled_alerts_cache.rb')
-        next if f.ends_with?('ui_configs.rb')
+        next if f.ends_with?('configs/load_from_cache.rb')
 
         load f
       end
@@ -50,7 +52,7 @@ require 'motor/assets'
 require 'motor/build_schema'
 require 'motor/api_query'
 require 'motor/tags'
-require 'motor/ui_configs'
+require 'motor/configs'
 require 'motor/queries'
 require 'motor/dashboards'
 require 'motor/forms'

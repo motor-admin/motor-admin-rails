@@ -137,8 +137,11 @@ export default {
   mounted () {
     this.options = recentlySelectedStore.displayOptions()
 
-    setTimeout(() => {
+    this.$nextTick(() => {
       this.$el.querySelector('input').focus()
+    })
+
+    setTimeout(() => {
       this.$el.querySelector('input').click()
     }, 200)
   },

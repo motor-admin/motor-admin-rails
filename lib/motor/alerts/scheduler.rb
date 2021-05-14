@@ -22,7 +22,7 @@ module Motor
             Motor::AlertSendingJob.perform_later(alert).job_id
           end
         rescue StandardError => e
-          Rials.logger.error(e)
+          Rails.logger.error(e)
         end
       end
     end

@@ -30,6 +30,8 @@ module Motor
       end
 
       def update_from_params!(form, params)
+        tag_ids = form.tags.ids
+
         form = assign_attributes(form, params)
 
         raise NameAlreadyExists if name_already_exists?(form)
@@ -38,7 +40,7 @@ module Motor
           form.save!
         end
 
-        form.tags.reload
+        form.touch if tag_ids.sort != form.tags.reload.ids.sort
 
         form
       rescue ActiveRecord::RecordNotUnique

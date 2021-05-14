@@ -123,7 +123,7 @@ export default {
     onSelectQuery (query) {
       this.isQueriesListOpened = false
 
-      this.layout.push({ query_id: query.id, size: [3, 2] })
+      this.layout.push({ query_id: query.id, size: '3x2' })
 
       this.$emit('add-query', query.id)
     },

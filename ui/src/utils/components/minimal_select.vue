@@ -18,7 +18,7 @@
       :class="border ? 'ivu-select-selection' : 'ivu-select-no-border'"
       @click="toggleDropdown"
     >
-      <div class="">
+      <div>
         <div
           v-for="option in selectedOptions"
           :key="getValue(option)"

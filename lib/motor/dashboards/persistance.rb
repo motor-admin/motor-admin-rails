@@ -30,6 +30,8 @@ module Motor
       end
 
       def update_from_params!(dashboard, params)
+        tag_ids = dashboard.tags.ids
+
         dashboard = assign_attributes(dashboard, params)
 
         raise TitleAlreadyExists if title_already_exists?(dashboard)
@@ -38,7 +40,7 @@ module Motor
           dashboard.save!
         end
 
-        dashboard.tags.reload
+        dashboard.touch if tag_ids.sort != dashboard.tags.reload.ids.sort
 
         dashboard
       rescue ActiveRecord::RecordNotUnique

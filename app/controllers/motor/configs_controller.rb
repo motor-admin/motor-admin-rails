@@ -17,6 +17,7 @@ module Motor
         end
 
       @config.save!
+      Motor::Configs::WriteToFile.call
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@config, params) }
     rescue ActiveRecord::RecordNotUnique

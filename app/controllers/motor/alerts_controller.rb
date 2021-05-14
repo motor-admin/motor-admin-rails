@@ -20,6 +20,7 @@ module Motor
     def create
       ApplicationRecord.transaction { @alert.save! }
       Motor::Alerts::ScheduledAlertsCache.clear
+      Motor::Configs::WriteToFile.call
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params) }
     rescue Motor::Alerts::Persistance::NameAlreadyExists
@@ -31,6 +32,7 @@ module Motor
     def update
       Motor::Alerts::Persistance.update_from_params!(@alert, alert_params)
       Motor::Alerts::ScheduledAlertsCache.clear
+      Motor::Configs::WriteToFile.call
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params) }
     rescue Motor::Alerts::Persistance::NameAlreadyExists
@@ -41,6 +43,8 @@ module Motor
 
     def destroy
       @alert.update!(deleted_at: Time.current)
+
+      Motor::Configs::WriteToFile.call
 
       head :ok
     end

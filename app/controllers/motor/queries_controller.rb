@@ -22,6 +22,7 @@ module Motor
         render json: { errors: [{ source: 'name', detail: 'Name already exists' }] }, status: :unprocessable_entity
       else
         ApplicationRecord.transaction { @query.save! }
+        Motor::Configs::WriteToFile.call
 
         render json: { data: Motor::ApiQuery::BuildJson.call(@query, params) }
       end
@@ -31,6 +32,7 @@ module Motor
 
     def update
       Motor::Queries::Persistance.update_from_params!(@query, query_params)
+      Motor::Configs::WriteToFile.call
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@query, params) }
     rescue Motor::Queries::Persistance::NameAlreadyExists
@@ -39,6 +41,8 @@ module Motor
 
     def destroy
       @query.update!(deleted_at: Time.current)
+
+      Motor::Configs::WriteToFile.call
 
       head :ok
     end

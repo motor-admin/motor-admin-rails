@@ -16,10 +16,11 @@ module Motor
 
     module_function
 
+    # @param cache_keys [Hash]
     # @param schema [Array<HashWithIndifferentAccess>]
     # @return [Array<HashWithIndifferentAccess>]
-    def call(schema)
-      configs = load_configs
+    def call(schema, cache_keys = {})
+      configs = load_configs(cache_keys)
 
       schema = sort_by_name(schema, configs['resources.order'])
 
@@ -64,6 +65,8 @@ module Motor
       end
     end
 
+    # @param columns [Array<HashWithIndifferentAccess>]
+    # @return [Array<HashWithIndifferentAccess>]
     def sort_columns(columns)
       columns.each_with_object([]) do |column, acc|
         weight = COLUMNS_DEFAULT_ORDER_WEIGHTS.fetch(column[:name], COLUMNS_DEFAULT_ORDER_WEIGHT)
@@ -72,9 +75,12 @@ module Motor
       end.flatten.compact
     end
 
+    # @param cache_keys [Hash]
     # @return [Hash<String, HashWithIndifferentAccess>]
-    def load_configs
-      Motor::Config.all.each_with_object({}) do |config, acc|
+    def load_configs(cache_keys = {})
+      configs = Motor::Configs::LoadFromCache.load_configs(cache_key: cache_keys[:configs])
+
+      configs.each_with_object({}) do |config, acc|
         acc[config.key] = config.value
       end
     end

@@ -44,6 +44,8 @@ module Motor
       end
 
       def update_from_params!(alert, params)
+        tag_ids = alert.tags.ids
+
         alert = assign_attributes(alert, params)
 
         raise NameAlreadyExists if name_already_exists?(alert)
@@ -53,7 +55,7 @@ module Motor
           alert.save!
         end
 
-        alert.tags.reload
+        alert.touch if tag_ids.sort != alert.tags.reload.ids.sort
 
         alert
       rescue ActiveRecord::RecordNotUnique

@@ -22,6 +22,7 @@ module Motor
         render json: { errors: [{ source: 'title', detail: 'Title already exists' }] }, status: :unprocessable_entity
       else
         ApplicationRecord.transaction { @dashboard.save! }
+        Motor::Configs::WriteToFile.call
 
         render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params) }
       end
@@ -31,6 +32,7 @@ module Motor
 
     def update
       Motor::Dashboards::Persistance.update_from_params!(@dashboard, dashboard_params)
+      Motor::Configs::WriteToFile.call
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params) }
     rescue Motor::Dashboards::Persistance::TitleAlreadyExists
@@ -39,6 +41,8 @@ module Motor
 
     def destroy
       @dashboard.update!(deleted_at: Time.current)
+
+      Motor::Configs::WriteToFile.call
 
       head :ok
     end

@@ -12,9 +12,10 @@ module Motor
       module_function
 
       # @param schema [Array<HashWithIndifferentAccess>]
+      # @param cache_keys [Hash]
       # @return [Array<HashWithIndifferentAccess>]
-      def call(schema)
-        configs = load_configs
+      def call(schema, cache_keys = {})
+        configs = load_configs(cache_keys)
 
         schema.map do |model|
           merge_model(model, configs.fetch(model[:name], {}))
@@ -120,9 +121,12 @@ module Motor
         end.compact
       end
 
+      # @param cache_keys [Hash]
       # @return [HashWithIndifferentAccess<String, HashWithIndifferentAccess>]
-      def load_configs
-        Motor::Resource.all.each_with_object(HashWithIndifferentAccess.new) do |resource, acc|
+      def load_configs(cache_keys)
+        resources = Motor::Configs::LoadFromCache.load_resources(cache_key: cache_keys[:resources])
+
+        resources.each_with_object(HashWithIndifferentAccess.new) do |resource, acc|
           acc[resource.name] = resource.preferences
         end
       end

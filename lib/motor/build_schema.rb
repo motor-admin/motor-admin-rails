@@ -58,11 +58,11 @@ module Motor
 
     module_function
 
-    def call
+    def call(cache_keys = {})
       schema = LoadFromRails.call
-      schema = MergeSchemaConfigs.call(schema)
+      schema = MergeSchemaConfigs.call(schema, cache_keys)
 
-      ReorderSchema.call(schema)
+      ReorderSchema.call(schema, cache_keys)
     end
   end
 end

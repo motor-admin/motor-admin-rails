@@ -30,6 +30,8 @@ module Motor
       end
 
       def update_from_params!(query, params)
+        tag_ids = query.tags.ids
+
         query = assign_attributes(query, params)
 
         raise NameAlreadyExists if name_already_exists?(query)
@@ -38,7 +40,7 @@ module Motor
           query.save!
         end
 
-        query.tags.reload
+        query.touch if tag_ids.sort != query.tags.reload.ids.sort
 
         query
       rescue ActiveRecord::RecordNotUnique

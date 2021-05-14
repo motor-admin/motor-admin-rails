@@ -10,7 +10,7 @@
         type="dashed"
         @click="toggle('width', 1)"
       >
-        {{ modelValue[0] }}
+        {{ dataValue[0] }}
       </VButton>
       <i
         class="ion ion-md-arrow-dropdown"
@@ -30,7 +30,7 @@
         type="dashed"
         @click="toggle('height', 1)"
       >
-        {{ modelValue[1] }}
+        {{ dataValue[1] }}
       </VButton>
       <i
         class="ion ion-md-arrow-dropdown"
@@ -45,9 +45,9 @@ export default {
   name: 'DashboardSizeControl',
   props: {
     modelValue: {
-      type: Array,
+      type: String,
       required: false,
-      default: () => [3, 2]
+      default: () => '3x2'
     },
     maxValues: {
       type: Array,
@@ -58,12 +58,12 @@ export default {
   emits: ['update:modelValue'],
   data () {
     return {
-      dataValue: [...this.modelValue]
+      dataValue: this.modelValue.split('x').map((e) => parseInt(e))
     }
   },
   watch: {
     modelValue (value) {
-      this.dataValue = value
+      this.dataValue = value.split('x').map((e) => parseInt(e))
     }
   },
   methods: {
@@ -80,7 +80,7 @@ export default {
 
       this.dataValue[index] = nextValue
 
-      this.$emit('update:modelValue', this.dataValue)
+      this.$emit('update:modelValue', this.dataValue.join('x'))
     }
   }
 }
