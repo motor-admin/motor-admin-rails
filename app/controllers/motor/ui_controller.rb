@@ -7,11 +7,15 @@ module Motor
     def index
       Motor.reload! if Motor.development?
 
+      Motor::Configs::SyncFromFile.call
+
       render :show
     end
 
     def show
       Motor.reload! if Motor.development?
+
+      Motor::Configs::SyncFromFile.call
 
       render :show
     end

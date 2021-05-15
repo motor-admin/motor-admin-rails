@@ -43,30 +43,42 @@ module Motor
         retry
       end
 
-      def update_from_params!(alert, params)
+      def update_from_params!(alert, params, force_replace: false)
         tag_ids = alert.tags.ids
 
         alert = assign_attributes(alert, params)
 
-        raise NameAlreadyExists if name_already_exists?(alert)
+        raise NameAlreadyExists if !force_replace && name_already_exists?(alert)
         raise InvalidInterval unless alert.cron
 
         ApplicationRecord.transaction do
+          archive_with_existing_name(alert) if force_replace
+
           alert.save!
         end
 
-        alert.touch if tag_ids.sort != alert.tags.reload.ids.sort
+        alert.touch if tags_changed?(tag_ids, alert) && params[:updated_at].blank?
 
         alert
       rescue ActiveRecord::RecordNotUnique
         retry
       end
 
+      def tags_changed?(previous_ids, alert)
+        previous_ids.sort != alert.tags.reload.ids.sort
+      end
+
       def assign_attributes(alert, params)
         alert.assign_attributes(params.slice(*ALERT_ATTRIBUTES))
         alert.preferences[:interval] = normalize_interval(alert.preferences[:interval])
+        alert.updated_at = [params[:updated_at], Time.current].min if params[:updated_at].present?
 
         Motor::Tags.assign_tags(alert, params[:tags])
+      end
+
+      def archive_with_existing_name(alert)
+        Motor::Alert.where(['lower(name) = ? AND id != ?', alert.name.to_s.downcase, alert.id])
+                    .update_all(deleted_at: Time.current)
       end
 
       def normalize_interval(interval)

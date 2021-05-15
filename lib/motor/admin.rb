@@ -28,6 +28,14 @@ module Motor
       end
     end
 
+    initializer 'motor.configs.sync_middleware' do
+      next if Motor::Configs::SYNC_ACCESS_KEY.blank?
+
+      require 'motor/configs/sync_middleware'
+
+      Rails.application.config.middleware.insert_after(Rails::Rack::Logger, Motor::Configs::SyncMiddleware)
+    end
+
     initializer 'motor.filter_params' do
       Rails.application.config.filter_parameters += %i[io]
     end

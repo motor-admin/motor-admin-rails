@@ -22,37 +22,37 @@ module Motor
 
       def load_configs(cache_key: nil)
         maybe_fetch_from_cache('configs', cache_key) do
-          Motor::Config.all.to_a
+          Motor::Config.all.load
         end
       end
 
       def load_resources(cache_key: nil)
         maybe_fetch_from_cache('resources', cache_key) do
-          Motor::Resource.all.to_a
+          Motor::Resource.all.load
         end
       end
 
       def load_queries(cache_key: nil)
         maybe_fetch_from_cache('queries', cache_key) do
-          Motor::Query.all.active.preload(:tags).to_a
+          Motor::Query.all.active.preload(:tags).load
         end
       end
 
       def load_dashboards(cache_key: nil)
         maybe_fetch_from_cache('dashboards', cache_key) do
-          Motor::Dashboard.all.active.preload(:tags).to_a
+          Motor::Dashboard.all.active.preload(:tags).load
         end
       end
 
       def load_alerts(cache_key: nil)
         maybe_fetch_from_cache('alerts', cache_key) do
-          Motor::Alert.all.active.preload(:tags).to_a
+          Motor::Alert.all.active.preload(:tags).load
         end
       end
 
       def load_forms(cache_key: nil)
         maybe_fetch_from_cache('forms', cache_key) do
-          Motor::Form.all.active.preload(:tags).to_a
+          Motor::Form.all.active.preload(:tags).load
         end
       end
 

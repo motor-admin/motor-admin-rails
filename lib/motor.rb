@@ -9,6 +9,9 @@ require 'fugit'
 require 'csv'
 require 'active_record/filter'
 require 'audited'
+require 'uri'
+require 'net/http'
+require 'net/https'
 
 module Motor
   PATH = Pathname.new(__dir__)
@@ -21,6 +24,7 @@ module Motor
         next if f.ends_with?('alerts/scheduler.rb')
         next if f.ends_with?('alerts/scheduled_alerts_cache.rb')
         next if f.ends_with?('configs/load_from_cache.rb')
+        next if f.ends_with?('configs/sync_from_file.rb')
 
         load f
       end
@@ -59,3 +63,5 @@ require 'motor/forms'
 require 'motor/alerts'
 require 'motor/hash_serializer'
 require 'motor/active_record_utils'
+require 'motor/net_http_utils'
+require 'motor/railtie'

@@ -1,20 +1,24 @@
 <template>
   <div class="row">
-    <div
+    <template
       v-for="item in dashboard.preferences.layout"
       :key="item.query_id"
-      :class="classForSizeMap[item.size[0]]"
-      class="p-0"
     >
-      <div class="mb-2 mx-1 ivu-card ivu-card-bordered">
-        <Board
-          :ref="pushBoardRef"
-          :item="item"
-          :variables="variables"
-          :query="findQuery(item.query_id)"
-        />
+      <div
+        v-if="findQuery(item.query_id)"
+        :class="classForSizeMap[item.size[0]]"
+        class="p-0"
+      >
+        <div class="mb-2 mx-1 ivu-card ivu-card-bordered">
+          <Board
+            :ref="pushBoardRef"
+            :item="item"
+            :variables="variables"
+            :query="findQuery(item.query_id)"
+          />
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 

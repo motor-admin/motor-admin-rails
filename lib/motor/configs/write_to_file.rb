@@ -4,7 +4,7 @@ module Motor
   module Configs
     module WriteToFile
       THREAD_POOL = Concurrent::FixedThreadPool.new(1)
-      FILE_PATH = 'config/motor.yml'
+      FILE_PATH = Motor::Configs::FILE_PATH
 
       module_function
 

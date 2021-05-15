@@ -6,7 +6,7 @@ module Motor
 
     belongs_to :author, polymorphic: true, optional: true
 
-    has_many :taggable_tags, as: :taggable
+    has_many :taggable_tags, as: :taggable, dependent: :destroy
     has_many :tags, through: :taggable_tags, class_name: 'Motor::Tag'
 
     serialize :preferences, HashSerializer

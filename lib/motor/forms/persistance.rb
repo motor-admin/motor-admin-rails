@@ -29,18 +29,20 @@ module Motor
         retry
       end
 
-      def update_from_params!(form, params)
+      def update_from_params!(form, params, force_replace: false)
         tag_ids = form.tags.ids
 
         form = assign_attributes(form, params)
 
-        raise NameAlreadyExists if name_already_exists?(form)
+        raise NameAlreadyExists if !force_replace && name_already_exists?(form)
 
         ApplicationRecord.transaction do
+          archive_with_existing_name(form) if force_replace
+
           form.save!
         end
 
-        form.touch if tag_ids.sort != form.tags.reload.ids.sort
+        form.touch if tag_ids.sort != form.tags.reload.ids.sort && params[:updated_at].blank?
 
         form
       rescue ActiveRecord::RecordNotUnique
@@ -49,15 +51,21 @@ module Motor
 
       def assign_attributes(form, params)
         form.assign_attributes(params.slice(:name, :description, :api_path, :http_method, :preferences))
+        form.updated_at = [params[:updated_at], Time.current].min if params[:updated_at].present?
 
         Motor::Tags.assign_tags(form, params[:tags])
       end
 
+      def archive_with_existing_name(form)
+        Motor::Form.where(['lower(name) = ? AND id != ?', form.name.to_s.downcase, form.id])
+                   .update_all(deleted_at: Time.current)
+      end
+
       def name_already_exists?(form)
         if form.new_record?
-          Form.exists?(['lower(name) = ?', form.name.to_s.downcase])
+          Motor::Form.exists?(['lower(name) = ?', form.name.to_s.downcase])
         else
-          Form.exists?(['lower(name) = ? AND id != ?', form.name.to_s.downcase, form.id])
+          Motor::Form.exists?(['lower(name) = ? AND id != ?', form.name.to_s.downcase, form.id])
         end
       end
     end

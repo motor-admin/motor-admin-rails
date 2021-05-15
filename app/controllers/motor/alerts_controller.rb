@@ -18,13 +18,15 @@ module Motor
     end
 
     def create
-      ApplicationRecord.transaction { @alert.save! }
-      Motor::Alerts::ScheduledAlertsCache.clear
-      Motor::Configs::WriteToFile.call
+      if Motor::Alerts::Persistance.name_already_exists?(@alert)
+        name_already_exists_response
+      else
+        ApplicationRecord.transaction { @alert.save! }
+        Motor::Alerts::ScheduledAlertsCache.clear
+        Motor::Configs::WriteToFile.call
 
-      render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params) }
-    rescue Motor::Alerts::Persistance::NameAlreadyExists
-      name_already_exists_response
+        render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params) }
+      end
     rescue Motor::Alerts::Persistance::InvalidInterval
       invalid_interval_response
     end

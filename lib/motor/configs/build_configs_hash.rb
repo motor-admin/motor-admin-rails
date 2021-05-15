@@ -10,7 +10,7 @@ module Motor
 
         normalize_hash(
           app_version: Motor::VERSION,
-          file_version: cache_keys.values.max.to_s,
+          file_version: cache_keys.values.max.to_time,
           resources: build_resources_hash(cache_keys[:resources]),
           configs: build_configs_hash(cache_keys[:configs]),
           queries: build_queries_hash(cache_keys[:queries]),
@@ -23,28 +23,28 @@ module Motor
       def build_queries_hash(cache_key = nil)
         Motor::Configs::LoadFromCache.load_queries(cache_key: cache_key).sort_by(&:id).map do |query|
           query.slice(%i[id name sql_body description preferences])
-               .merge(tags: query.tags.map(&:name), updated_at: query.updated_at.to_s)
+               .merge(tags: query.tags.map(&:name), updated_at: query.updated_at.to_time)
         end
       end
 
       def build_dashboards_hash(cache_key = nil)
         Motor::Configs::LoadFromCache.load_dashboards(cache_key: cache_key).sort_by(&:id).map do |dashboard|
           dashboard.slice(%i[id title description preferences])
-                   .merge(tags: dashboard.tags.map(&:name), updated_at: dashboard.updated_at.to_s)
+                   .merge(tags: dashboard.tags.map(&:name), updated_at: dashboard.updated_at.to_time)
         end
       end
 
       def build_alerts_hash(cache_key = nil)
         Motor::Configs::LoadFromCache.load_alerts(cache_key: cache_key).sort_by(&:id).map do |alert|
           alert.slice(%i[id name query_id to_emails is_enabled description preferences])
-               .merge(tags: alert.tags.map(&:name), updated_at: alert.updated_at.to_s)
+               .merge(tags: alert.tags.map(&:name), updated_at: alert.updated_at.to_time)
         end
       end
 
       def build_forms_hash(cache_key = nil)
         Motor::Configs::LoadFromCache.load_forms(cache_key: cache_key).sort_by(&:id).map do |form|
           form.slice(%i[id name http_method api_path description preferences])
-              .merge(tags: form.tags.map(&:name), updated_at: form.updated_at.to_s)
+              .merge(tags: form.tags.map(&:name), updated_at: form.updated_at.to_time)
         end
       end
 
@@ -53,7 +53,7 @@ module Motor
           {
             key: config.key,
             value: config.value,
-            updated_at: config.updated_at.to_s
+            updated_at: config.updated_at.to_time
           }
         end
       end
@@ -63,7 +63,7 @@ module Motor
           {
             name: resource.name,
             preferences: resource.preferences,
-            updated_at: resource.updated_at.to_s
+            updated_at: resource.updated_at.to_time
           }
         end
       end

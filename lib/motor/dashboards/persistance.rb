@@ -29,18 +29,20 @@ module Motor
         retry
       end
 
-      def update_from_params!(dashboard, params)
+      def update_from_params!(dashboard, params, force_replace: false)
         tag_ids = dashboard.tags.ids
 
         dashboard = assign_attributes(dashboard, params)
 
-        raise TitleAlreadyExists if title_already_exists?(dashboard)
+        raise TitleAlreadyExists if !force_replace && title_already_exists?(dashboard)
 
         ApplicationRecord.transaction do
+          archive_with_existing_name(dashboard) if force_replace
+
           dashboard.save!
         end
 
-        dashboard.touch if tag_ids.sort != dashboard.tags.reload.ids.sort
+        dashboard.touch if tag_ids.sort != dashboard.tags.reload.ids.sort && params[:updated_at].blank?
 
         dashboard
       rescue ActiveRecord::RecordNotUnique
@@ -49,15 +51,21 @@ module Motor
 
       def assign_attributes(dashboard, params)
         dashboard.assign_attributes(params.slice(:title, :description, :preferences))
+        dashboard.updated_at = [params[:updated_at], Time.current].min if params[:updated_at].present?
 
         Motor::Tags.assign_tags(dashboard, params[:tags])
       end
 
+      def archive_with_existing_name(dashboard)
+        Motor::Dashboard.where(['lower(title) = ? AND id != ?', dashboard.title.to_s.downcase, dashboard.id])
+                        .update_all(deleted_at: Time.current)
+      end
+
       def title_already_exists?(dashboard)
         if dashboard.new_record?
-          Dashboard.exists?(['lower(title) = ?', dashboard.title.to_s.downcase])
+          Motor::Dashboard.exists?(['lower(title) = ?', dashboard.title.to_s.downcase])
         else
-          Dashboard.exists?(['lower(title) = ? AND id != ?', dashboard.title.to_s.downcase, dashboard.id])
+          Motor::Dashboard.exists?(['lower(title) = ? AND id != ?', dashboard.title.to_s.downcase, dashboard.id])
         end
       end
     end
