@@ -166,12 +166,56 @@ export default {
     language: {
       type: String,
       required: true
+    },
+    columns: {
+      type: Array,
+      required: false,
+      default: () => []
     }
   },
   emits: ['update:modelValue', 'run'],
   data () {
     return {
       dataValue: ''
+    }
+  },
+  computed: {
+    completions () {
+      if (this.language === 'markdown') {
+        return this.columnCompletions
+      } else {
+        return this.schemaCompletions
+      }
+    },
+    columnCompletions () {
+      return this.columns.map((column) => {
+        return {
+          name: column.name,
+          value: column.name,
+          meta: 'column'
+        }
+      })
+    },
+    schemaCompletions () {
+      return schema.reduce((acc, model) => {
+        acc.push({
+          name: model.table_name,
+          value: model.table_name,
+          meta: 'table'
+        })
+
+        model.columns.forEach((column) => {
+          if (!column.virtual && column.reference?.reference_type !== 'has_one') {
+            acc.push({
+              name: column.name,
+              value: column.name,
+              meta: 'column'
+            })
+          }
+        })
+
+        return acc
+      }, [])
     }
   },
   watch: {
@@ -203,29 +247,10 @@ export default {
       })
 
       const languageTools = ace.require('ace/ext/language_tools')
-      const schemaCompletions = schema.reduce((acc, model) => {
-        acc.push({
-          name: model.table_name,
-          value: model.table_name,
-          meta: 'table'
-        })
-
-        model.columns.forEach((column) => {
-          if (!column.virtual && column.reference?.reference_type !== 'has_one') {
-            acc.push({
-              name: column.name,
-              value: column.name,
-              meta: 'column'
-            })
-          }
-        })
-
-        return acc
-      }, [])
 
       languageTools.addCompleter({
-        async getCompletions (editor, session, pos, prefix, callback) {
-          callback(null, schemaCompletions)
+        getCompletions: async (editor, session, pos, prefix, callback) => {
+          callback(null, this.completions)
         }
       })
 

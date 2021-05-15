@@ -12,15 +12,6 @@
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
       <VButton
-        v-if="vSplit !== 0 && dataQuery.preferences.visualization === 'markdown'"
-        size="large"
-        class="me-2 md-icon-only"
-        :icon="isMarkdownEditor ? 'md-code-working' : 'logo-markdown'"
-        @click="isMarkdownEditor = !isMarkdownEditor"
-      >
-        {{ isMarkdownEditor ? 'Edit SQL' : 'Edit Markdown' }}
-      </VButton>
-      <VButton
         v-if="query.id && query.updated_at !== query.created_at"
         size="large"
         class="bg-white me-2 md-icon-only d-none d-sm-block"
@@ -28,6 +19,15 @@
         @click="openRevisionsModal"
       >
         Revisions
+      </VButton>
+      <VButton
+        v-if="vSplit !== 0 && dataQuery.preferences.visualization === 'markdown'"
+        size="large"
+        class="me-2 md-icon-only"
+        :icon="isMarkdownEditor ? 'md-code-working' : 'logo-markdown'"
+        @click="isMarkdownEditor = !isMarkdownEditor"
+      >
+        {{ isMarkdownEditor ? 'Edit SQL' : 'Edit Markdown' }}
       </VButton>
       <VButton
         v-if="vSplit === 0"
@@ -108,6 +108,7 @@
               v-if="dataQuery.preferences.visualization === 'markdown' && isMarkdownEditor"
               v-model="dataQuery.preferences.visualization_options.markdown"
               language="markdown"
+              :columns="columns"
               @run="runQuery"
             />
             <CodeEditor

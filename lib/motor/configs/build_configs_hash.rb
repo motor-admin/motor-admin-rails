@@ -9,7 +9,7 @@ module Motor
         cache_keys = LoadFromCache.load_cache_keys
 
         normalize_hash(
-          app_version: Motor::VERSION,
+          engine_version: Motor::VERSION,
           file_version: cache_keys.values.max.to_time,
           resources: build_resources_hash(cache_keys[:resources]),
           configs: build_configs_hash(cache_keys[:configs]),

@@ -252,4 +252,8 @@ export default {
 :deep(.ivu-layout-sider-trigger) {
   display: none;
 }
+
+.ivu-card-body {
+  line-break: normal;
+}
 </style>

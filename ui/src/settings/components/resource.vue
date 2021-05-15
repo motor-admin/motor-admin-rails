@@ -81,4 +81,17 @@ export default {
 .resource-settings {
   min-height: calc(100% - 62px);
 }
+
+.ivu-tabs {
+  margin-bottom: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding-top: 2px;
+  background: white;
+}
+
+:deep(.ivu-tabs-bar) {
+  margin: 0
+}
 </style>

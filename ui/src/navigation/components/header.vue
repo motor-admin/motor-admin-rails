@@ -208,7 +208,7 @@ export default {
         onChangeResource: this.onChangeResource
       }, {
         title: this.drawerTitle(this.currentResource),
-        className: 'drawer-no-bottom-padding',
+        className: 'drawer-no-bottom-padding drawer-no-top-padding',
         closable: true
       })
     }

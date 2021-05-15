@@ -70,6 +70,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.ivu-menu-item {
+  line-break: normal;
+}
+
 .ivu-menu-item, :deep(.ivu-menu-submenu-title) {
   padding: 14px 18px;
 }

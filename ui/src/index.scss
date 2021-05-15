@@ -78,6 +78,12 @@ h5 {
   }
 }
 
+.drawer-no-top-padding {
+  .ivu-drawer-body {
+    padding-top: 0;
+  }
+}
+
 @media (max-width: 900px) {
   .ivu-drawer {
     width: 100% !important;
