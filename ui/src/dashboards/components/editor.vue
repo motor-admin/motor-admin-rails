@@ -27,9 +27,10 @@
                   class="cursor-grab handle"
                 />
               </div>
-              <p class="fs-4 fw-bold">
-                {{ findQueryName(item.query_id) }}
-              </p>
+              <Contenteditable
+                v-model="item.title"
+                class="fs-4 fw-bold"
+              />
             </div>
             <div class="d-flex align-items-center">
               <SizeControl
@@ -64,12 +65,14 @@
 import QueriesList from 'queries/components/list'
 import SizeControl from './size_control'
 import { queriesStore } from 'reports/scripts/store'
+import Contenteditable from 'utils/components/contenteditable'
 
 export default {
   name: 'DashboardEditor',
   components: {
     QueriesList,
-    SizeControl
+    SizeControl,
+    Contenteditable
   },
   props: {
     dashboard: {
@@ -123,7 +126,7 @@ export default {
     onSelectQuery (query) {
       this.isQueriesListOpened = false
 
-      this.layout.push({ query_id: query.id, size: '3x2' })
+      this.layout.push({ title: query.name, query_id: query.id, size: '3x2' })
 
       this.$emit('add-query', query.id)
     },
