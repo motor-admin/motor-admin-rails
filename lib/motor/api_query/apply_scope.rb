@@ -13,13 +13,20 @@ module Motor
         if rel.klass.defined_scopes.include?(scope_symbol)
           rel.public_send(scope_symbol)
         else
-          configs = Motor::Resource.find_by_name(rel.klass.name.underscore)
-          scope_configs = configs.preferences[:scopes].find { |s| s[:name] == scope }
-
-          return rel unless scope_configs
-
-          ApiQuery::Filter.call(rel, scope_configs[:preferences][:filter])
+          apply_filter_scope(rel, scope)
         end
+      end
+
+      def apply_filter_scope(rel, scope)
+        configs = Motor::Resource.find_by_name(rel.klass.name.underscore)
+
+        return rel unless configs
+
+        scope_configs = configs.preferences[:scopes].find { |s| s[:name] == scope }
+
+        return rel unless scope_configs
+
+        ApiQuery::Filter.call(rel, scope_configs[:preferences][:filter])
       end
     end
   end

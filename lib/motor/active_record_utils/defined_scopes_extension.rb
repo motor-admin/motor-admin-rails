@@ -4,7 +4,7 @@ module Motor
   module ActiveRecordUtils
     module DefinedScopesExtension
       def scope(name, _body)
-        (@__scopes__ ||= []) << name
+        (@__scopes__ ||= []) << name.to_sym
 
         super
       end

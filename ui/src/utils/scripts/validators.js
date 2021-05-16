@@ -23,7 +23,11 @@ export default {
   numeric (rule, value, callbacks) {
     if (![null, undefined, ''].includes(value)) {
       const [error, constraint] = Object.entries(rule.options).find(([key, constraint]) => {
-        return !VALIDATORS[key](constraint, value)
+        if (VALIDATORS[key]) {
+          return !VALIDATORS[key](constraint, value)
+        } else {
+          return false
+        }
       }) || []
 
       if (error) {

@@ -10,7 +10,7 @@ module Motor
 
         normalize_hash(
           engine_version: Motor::VERSION,
-          file_version: cache_keys.values.max.to_time,
+          file_version: cache_keys.values.compact.max.to_time,
           resources: build_resources_hash(cache_keys[:resources]),
           configs: build_configs_hash(cache_keys[:configs]),
           queries: build_queries_hash(cache_keys[:queries]),

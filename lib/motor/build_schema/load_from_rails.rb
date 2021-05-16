@@ -4,6 +4,7 @@ module Motor
   module BuildSchema
     module LoadFromRails
       MUTEX = Mutex.new
+      UNIFIED_TYPES = ActiveRecordUtils::Types::UNIFIED_TYPES
 
       module_function
 
@@ -20,8 +21,7 @@ module Motor
       def models
         eager_load_models!
 
-        models = load_descendants(ActiveRecord::Base).uniq
-        models = models.reject(&:abstract_class)
+        models = ActiveRecord::Base.descendants.reject(&:abstract_class)
 
         models -= Motor::ApplicationRecord.descendants
         models -= [Motor::Audit]
@@ -30,12 +30,6 @@ module Motor
         models -= [ActiveStorage::VariantRecord] if defined?(ActiveStorage::VariantRecord)
 
         models
-      end
-
-      def load_descendants(model)
-        model.descendants + model.descendants.flat_map do |klass|
-          load_descendants(klass)
-        end
       end
 
       def build_model_schema(model)
@@ -92,10 +86,13 @@ module Motor
       end
 
       def build_table_column(column, model, default_attrs)
+        is_enum = model.defined_enums[column.name]
+
         {
           name: column.name,
           display_name: column.name.humanize,
-          column_type: ActiveRecordUtils::Types::UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
+          column_type: is_enum ? 'string' : UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
+          is_array: column.array?,
           access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
           default_value: default_attrs[column.name],
           validators: fetch_validators(model, column.name),
@@ -181,6 +178,10 @@ module Motor
             []
           end
 
+        enum = model.defined_enums[column_name]
+
+        validators += [{ includes: enum.keys }] if enum
+
         validators += model.validators_on(column_name).map do |validator|
           build_validator_hash(validator)
         end.compact
@@ -209,6 +210,14 @@ module Motor
             Zeitwerk::Loader.eager_load_all
           else
             Rails.application.eager_load!
+          end
+
+          ActiveRecord::Base.descendants.each do |model|
+            model.reflections.each do |_, ref|
+              ref.klass
+            rescue StandardError
+              next
+            end
           end
         end
       end

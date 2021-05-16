@@ -120,7 +120,7 @@ export default {
   directives: { clickOutside },
   props: {
     modelValue: {
-      type: [String, Number, Array],
+      type: [String, Number, Array, Boolean],
       reqired: false,
       default: ''
     },
@@ -218,6 +218,7 @@ export default {
       selectedOptions: [],
       focusIndex: -1,
       searchInput: '',
+      isOptionsLoaded: false,
       isOpen: false
     }
   },
@@ -251,6 +252,11 @@ export default {
     }
   },
   watch: {
+    isOptionsLoaded () {
+      this.assignSelectedFromValue(this.modelValue)
+
+      this.searchInput = this.getLabel(this.selectedOption)
+    },
     optionsToRender (newArray, oldArray) {
       if (newArray.length !== oldArray.length) {
         this.popper?.update()
@@ -272,6 +278,10 @@ export default {
       handler (value) {
         this.optionsData = this.normalizeOptions(value)
         this.assignSelectedFromValue(this.modelValue)
+
+        if (this.optionsData.length) {
+          this.isOptionsLoaded = true
+        }
       }
     },
     isOpen (value) {
@@ -282,11 +292,7 @@ export default {
   },
   mounted () {
     if (this.remoteFunction) {
-      this.remoteFunction(this.modelValue).then(() => {
-        this.assignSelectedFromValue(this.modelValue)
-
-        this.searchInput = this.getLabel(this.selectedOption)
-      })
+      this.remoteFunction(this.modelValue)
     } else {
       this.optionsData = this.normalizeOptions(this.options)
       this.assignSelectedFromValue(this.modelValue)
@@ -326,9 +332,9 @@ export default {
     normalizeOptions () {
       if (this.options.length === 0) {
         return []
-      } else if (['string', 'number'].includes(typeof this.options[0])) {
+      } else if (['string', 'number', 'boolean'].includes(typeof this.options[0])) {
         return this.options.map(option => {
-          return { value: option, label: option }
+          return { value: option, label: option.toString() }
         })
       } else {
         return [...this.options]
@@ -386,10 +392,10 @@ export default {
     assignSelectedFromValue (value) {
       if (this.multiple) {
         this.selectedOptions = this.optionsData.filter((option) => {
-          return !!value.find((val) => this.getValue(option).toString() === (val || '').toString())
+          return !!value.find((val) => this.getValue(option).toString() === (val ?? '').toString())
         })
       } else {
-        this.selectedOption = this.optionsData.find((option) => this.getValue(option).toString() === (value || '').toString())
+        this.selectedOption = this.optionsData.find((option) => this.getValue(option).toString() === (value ?? '').toString())
 
         const index = this.optionsToRender.indexOf(this.selectedOption)
 

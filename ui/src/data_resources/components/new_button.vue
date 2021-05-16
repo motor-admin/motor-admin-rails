@@ -40,7 +40,7 @@ export default {
     },
     defaultValues () {
       return this.model.columns.reduce((acc, column) => {
-        if (column.default_value) {
+        if (column.default_value !== null) {
           acc[column.name] = column.default_value
         }
 

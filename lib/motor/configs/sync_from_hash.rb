@@ -6,6 +6,8 @@ module Motor
       module_function
 
       def call(configs_hash)
+        return if configs_hash.blank?
+
         configs_hash = configs_hash.with_indifferent_access
 
         Motor::ApplicationRecord.transaction do

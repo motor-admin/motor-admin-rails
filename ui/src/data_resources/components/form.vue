@@ -11,7 +11,13 @@
       :label="column.display_name"
       :prop="column.name"
     >
+      <FormListInput
+        v-if="column.is_array"
+        v-model="resourceData[column.name]"
+        :column="column"
+      />
       <FormInput
+        v-else
         v-model="resourceData[column.name]"
         :column="column"
       />
@@ -50,11 +56,13 @@ import { modelNameMap } from '../scripts/schema'
 
 import Validators from 'utils/scripts/validators'
 import FormInput from 'data_forms/components/input'
+import FormListInput from 'data_forms/components/list_input'
 
 export default {
   name: 'ResourceForm',
   components: {
-    FormInput
+    FormInput,
+    FormListInput
   },
   props: {
     resource: {
@@ -88,6 +96,10 @@ export default {
   computed: {
     rules () {
       return this.columns.reduce((acc, column) => {
+        if (column.is_array) {
+          return acc
+        }
+
         acc[column.name] = column.validators.map((validator) => {
           if (validator.required) {
             return { required: true }
@@ -116,7 +128,7 @@ export default {
           acc[column.name].push({ type: 'email' })
         }
 
-        if (column.column_type === 'json') {
+        if (this.isJsonColumn(column)) {
           acc[column.name].push({ validator: Validators.json })
         }
 
@@ -136,7 +148,7 @@ export default {
       }
 
       this.columns.forEach((column) => {
-        if (column.column_type === 'json') {
+        if (this.isJsonColumn(column)) {
           data[column.name] = JSON.parse(data[column.name])
         }
 
@@ -172,12 +184,30 @@ export default {
     this.resourceData = this.normalizeResourceData(this.resource)
   },
   methods: {
+    isJsonColumn (column) {
+      return column.column_type === 'json' ||
+        (this.resource[column.name] instanceof Object &&
+        this.resource[column.name].constructor === Object)
+    },
+    scrollToErrors () {
+      this.$nextTick(() => {
+        const errorField = this.$refs.form.$el.querySelector('.ivu-form-item-error')
+
+        if (errorField) {
+          errorField.scrollIntoView()
+        } else {
+          this.$refs.form.$el.querySelector('.ivu-alert-error')?.scrollIntoView()
+        }
+      })
+    },
     onSaveClick () {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.isSaveLoading = true
 
           this.handleSubmit({ button: 'save' })
+        } else {
+          this.scrollToErrors()
         }
       })
     },
@@ -187,6 +217,8 @@ export default {
           this.isSaveAndNewLoading = true
 
           this.handleSubmit({ button: 'save_and_create' })
+        } else {
+          this.scrollToErrors()
         }
       })
     },
@@ -196,10 +228,12 @@ export default {
       this.columns.forEach((column) => {
         const value = resource[column.name]
 
-        if (column.column_type === 'json') {
+        if (this.isJsonColumn(column)) {
           data[column.name] = JSON.stringify(value || {}, null, '  ')
+        } else if (value && typeof value === 'object') {
+          data[column.name] = JSON.parse(JSON.stringify(value))
         } else {
-          data[column.name] = resource[column.name]
+          data[column.name] = value
         }
       })
 
@@ -216,6 +250,8 @@ export default {
         } else if (error.message) {
           this.$refs.form.setErrors([error.message])
         }
+
+        this.scrollToErrors()
       } finally {
         this.isSaveAndNewLoading = false
         this.isSaveLoading = false

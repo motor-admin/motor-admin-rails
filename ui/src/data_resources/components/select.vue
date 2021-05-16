@@ -44,7 +44,7 @@ export default {
   },
   watch: {
     modelValue (value) {
-      this.value = (value || '').toString()
+      this.value = (value ?? '').toString()
     },
     resourceName () {
       this.value = ''
@@ -55,7 +55,7 @@ export default {
     }
   },
   created () {
-    this.value = (this.modelValue || '').toString()
+    this.value = (this.modelValue ?? '').toString()
   },
   methods: {
     labelFunction (option) {

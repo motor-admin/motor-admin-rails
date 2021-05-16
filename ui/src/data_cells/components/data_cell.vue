@@ -17,8 +17,12 @@
     :truncate="textTruncate"
     :value="stringValue"
   />
+  <DataBoolean
+    v-else-if="isBoolean"
+    :value="value"
+  />
   <DataTag
-    v-else-if="isTag"
+    v-else-if="isTag && stringValue"
     :value="stringValue"
   />
   <DataEmail
@@ -29,10 +33,6 @@
   <DataPhone
     v-else-if="isPhone"
     :truncate="textTruncate"
-    :value="value"
-  />
-  <DataBoolean
-    v-else-if="isBoolean"
     :value="value"
   />
   <DataText
@@ -97,7 +97,7 @@ export default {
       } else if (typeof this.value === 'number') {
         return this.value.toString()
       } else {
-        return (this.value || '').toString()
+        return (this.value ?? '').toString()
       }
     },
     isDateTime () {
@@ -113,7 +113,7 @@ export default {
       return !!this.stringValue.match(/^[\w.]+@\w+\.\w{2,3}/)
     },
     isBoolean () {
-      return typeof this.value === 'boolean'
+      return this.type === 'boolean'
     },
     isImage () {
       return (this.isPath && !!this.stringValue.match(/\.(jpg|png|jpeg|wepb|svg)$/)) || this.type === 'image'
@@ -127,8 +127,6 @@ export default {
     isPath () {
       return !!this.stringValue.match(/^\/[^\s]+$/i)
     }
-  },
-  mounted () {
   }
 }
 </script>

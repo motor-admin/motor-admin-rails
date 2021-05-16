@@ -14,15 +14,15 @@ module Motor
         fname
         lname
         sname
+        company
+        domain
+        title
         phone
         phone_number
         email
-        domain
         phone
-        company
         filename
         file_name
-        title
         url
         make
         brand
@@ -42,7 +42,7 @@ module Motor
       end
 
       def select_column_name(column_names)
-        name   = column_names.find { |column_name| column_name.in?(DISPLAY_NAMES) }
+        name   = DISPLAY_NAMES.find { |column_name| column_name.in?(column_names) }
         name ||= column_names.find { |column_name| column_name.match?(DISPLAY_NAME_REGEXP) }
 
         name

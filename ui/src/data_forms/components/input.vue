@@ -14,7 +14,7 @@
     v-else-if="isTagSelect"
     :model-value="modelValue"
     :options="tagOptions"
-    :label-function="(option) => titleize(option.value)"
+    :label-function="(option) => titleize(option.value.toString())"
     @update:modelValue="onSelect"
   />
   <Checkbox
@@ -25,7 +25,6 @@
   <InputNumber
     v-else-if="isNumber"
     :model-value="modelValue"
-    :style="{ width: '100%' }"
     @keydown.enter="$emit('enter')"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
@@ -33,7 +32,6 @@
     v-else-if="isDateTime || isDate"
     :type="type"
     :model-value="dataValue"
-    :style="{ width: '100%' }"
     @update:modelValue="updateDateTime"
   />
   <VInput
@@ -104,7 +102,7 @@ export default {
       return this.column.validators?.find((validator) => validator.includes?.length)?.includes
     },
     isBoolean () {
-      return this.type === 'boolean' || this.type === 'checkbox'
+      return typeof this.modelValue === 'boolean' || this.type === 'boolean' || this.type === 'checkbox'
     },
     isDateTime () {
       return this.type === 'datetime'
@@ -168,3 +166,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.ivu-input-number, .ivu-date-picker {
+  width: 100%
+}
+</style>
