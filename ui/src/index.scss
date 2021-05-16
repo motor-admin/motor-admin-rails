@@ -190,3 +190,7 @@ h5 {
     display: none;
   }
 }
+
+input, textarea {
+  background-clip: padding-box;
+}
