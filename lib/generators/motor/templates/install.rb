@@ -1,6 +1,6 @@
 class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Migration.current_version %>]
   def self.up
-    create_table :motor_queries, force: true do |t|
+    create_table :motor_queries do |t|
       t.column :name, :string, null: false
       t.column :description, :string
       t.column :sql_body, :string, null: false
@@ -18,7 +18,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
               where: 'deleted_at IS NULL'
     end
 
-    create_table :motor_dashboards, force: true do |t|
+    create_table :motor_dashboards do |t|
       t.column :title, :string, null: false
       t.column :description, :string
       t.column :preferences, :string, null: false, default: '{}'
@@ -35,7 +35,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
               where: 'deleted_at IS NULL'
     end
 
-    create_table :motor_forms, force: true do |t|
+    create_table :motor_forms do |t|
       t.column :name, :string, null: false
       t.column :description, :string
       t.column :api_path, :string, null: false
@@ -54,7 +54,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
               where: 'deleted_at IS NULL'
     end
 
-    create_table :motor_resources, force: true do |t|
+    create_table :motor_resources do |t|
       t.column :name, :string, null: false, index: { unique: true }
       t.column :preferences, :string, null: false, default: '{}'
 
@@ -63,7 +63,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       t.index :updated_at
     end
 
-    create_table :motor_configs, force: true do |t|
+    create_table :motor_configs do |t|
       t.column :key, :string, null: false, index: { unique: true }
       t.column :value, :string, null: false, default: '{}'
 
@@ -72,7 +72,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       t.index :updated_at
     end
 
-    create_table :motor_alerts, force: true do |t|
+    create_table :motor_alerts do |t|
       t.references :query, null: false, foreign_key: { to_table: :motor_queries }, index: true
       t.column :name, :string, null: false
       t.column :description, :string
@@ -92,7 +92,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
               where: 'deleted_at IS NULL'
     end
 
-    create_table :motor_alert_locks, force: true do |t|
+    create_table :motor_alert_locks do |t|
       t.references :alert, null: false, foreign_key: { to_table: :motor_alerts }
       t.column :lock_timestamp, :string, null: false
 
@@ -101,7 +101,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       t.index %i[alert_id lock_timestamp], unique: true
     end
 
-    create_table :motor_tags, force: true do |t|
+    create_table :motor_tags do |t|
       t.column :name, :string, null: false
 
       t.timestamps
@@ -111,7 +111,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
               unique: true
     end
 
-    create_table :motor_taggable_tags, force: true do |t|
+    create_table :motor_taggable_tags do |t|
       t.references :tag, null: false, foreign_key: { to_table: :motor_tags }, index: true
       t.column :taggable_id, :integer, null: false
       t.column :taggable_type, :string, null: false
@@ -121,7 +121,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
               unique: true
     end
 
-    create_table :motor_audits, force: true do |t|
+    create_table :motor_audits do |t|
       t.column :auditable_id, :integer
       t.column :auditable_type, :string
       t.column :associated_id, :integer
