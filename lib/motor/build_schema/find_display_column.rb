@@ -3,35 +3,37 @@
 module Motor
   module BuildSchema
     module FindDisplayColumn
-      DISPLAY_NAMES = %w[
-        name
-        full_name
-        fullname
-        last_name
-        lastname
-        first_name
-        firstname
-        fname
-        lname
-        sname
-        company
-        domain
-        title
-        phone
-        phone_number
-        email
-        phone
-        filename
-        file_name
-        url
-        make
-        brand
-        manufacturer
-        model
-        address
-      ].freeze
+      DISPLAY_NAMES = Set.new(
+        %w[
+          name
+          full_name
+          fullname
+          last_name
+          lastname
+          first_name
+          firstname
+          fname
+          lname
+          sname
+          company
+          domain
+          title
+          phone
+          phone_number
+          email
+          phone
+          filename
+          file_name
+          url
+          make
+          brand
+          manufacturer
+          model
+          address
+        ]
+      ).freeze
 
-      DISPLAY_NAME_REGEXP = Regexp.new(Regexp.union(DISPLAY_NAMES).source, Regexp::IGNORECASE)
+      DISPLAY_NAME_REGEXP = Regexp.new(Regexp.union(DISPLAY_NAMES.to_a).source, Regexp::IGNORECASE)
 
       module_function
 
@@ -42,7 +44,7 @@ module Motor
       end
 
       def select_column_name(column_names)
-        name   = DISPLAY_NAMES.find { |column_name| column_name.in?(column_names) }
+        name   = column_names.find { |column_name| column_name.in?(DISPLAY_NAMES) }
         name ||= column_names.find { |column_name| column_name.match?(DISPLAY_NAME_REGEXP) }
 
         name

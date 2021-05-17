@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Motor
-  VERSION = '0.1.41'
+  VERSION = '0.1.42'
 end
