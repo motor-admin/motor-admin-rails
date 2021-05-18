@@ -17,6 +17,7 @@ module Motor
           sname
           company
           domain
+          website
           title
           phone
           phone_number

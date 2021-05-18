@@ -92,8 +92,8 @@ export default {
               if (!refColumn.virtual && ['read_write', 'read_only'].includes(refColumn.access_type)) {
                 return {
                   ...refColumn,
-                  value: `${column.name}.${refColumn.name}`,
-                  label: `${column.display_name} - ${refColumn.display_name}`
+                  value: `${column.reference.name}.${refColumn.name}`,
+                  label: `${column.reference.display_name} - ${refColumn.display_name}`
                 }
               } else {
                 return null

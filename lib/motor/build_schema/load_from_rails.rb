@@ -133,14 +133,21 @@ module Motor
           default_value: default_attrs[column_name],
           validators: fetch_validators(model, column_name, ref),
           format: {},
-          reference: {
-            name: name,
-            model_name: ref.klass.name.underscore,
-            reference_type: ref.belongs_to? ? 'belongs_to' : 'has_one',
-            foreign_key: ref.foreign_key,
-            polymorphic: ref.polymorphic? || is_attachment
-          },
+          reference: build_reference(name, ref),
           virtual: false
+        }
+      end
+
+      def build_reference(name, reflection)
+        is_attachment = reflection.klass.name == 'ActiveStorage::Attachment'
+
+        {
+          name: name,
+          display_name: name.humanize,
+          model_name: reflection.klass.name.underscore,
+          reference_type: reflection.belongs_to? ? 'belongs_to' : 'has_one',
+          foreign_key: reflection.foreign_key,
+          polymorphic: reflection.polymorphic? || is_attachment
         }
       end
 
