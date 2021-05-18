@@ -1,9 +1,9 @@
 <template>
   <div
     class="bg-white p-2"
-    style="height: 100%"
+    style="height: calc(var(--vh, 100vh) - 135px)"
   >
-    <div style="min-height: calc(var(--vh, 100vh) - 195px); overflow-y: scroll">
+    <div>
       <VueDraggableNext
         :list="form.preferences.fields"
         handle=".handle"
@@ -17,7 +17,10 @@
           @replace="replaceField"
         />
       </VueDraggableNext>
-      <Card v-if="newField">
+      <Card
+        v-if="newField"
+        class="mb-2"
+      >
         <FieldForm
           :field="newField"
           ok-text="Add"
@@ -26,14 +29,17 @@
         />
       </Card>
     </div>
-    <div class="footer">
+    <div
+      v-if="!newField"
+      class="footer"
+    >
       <VButton
         long
         type="default"
-        :icon="newField ? 'md-close' : 'md-add'"
+        icon="md-add"
         @click="toggleNewField"
       >
-        {{ newField ? 'Cancel' : 'Add Field' }}
+        Add Field
       </VButton>
     </div>
   </div>
@@ -83,11 +89,6 @@ export default {
       this.dataForm = JSON.parse(JSON.stringify(value))
     }
   },
-  mounted () {
-    if (!this.form.preferences.fields.length) {
-      this.newField = { ...defaultFieldParams }
-    }
-  },
   methods: {
     toggleNewField () {
       if (this.newField) {
@@ -120,9 +121,7 @@ export default {
   width: 100%;
   position: sticky;
   bottom: 0;
-  left: 0;
-  border-top: 1px solid #e8e8e8;
-  padding-top: 10px;
+  padding-bottom: 10px;
   text-align: right;
   background: #fff;
 }

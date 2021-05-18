@@ -4,21 +4,25 @@
     :resource="dataSelectedResource"
     @back="dataSelectedResource = null"
   />
-  <VueDraggableNext
+  <div
     v-else
-    :list="schema"
-    ghost-class="ghost"
-    handle=".handle"
-    @change="updateOrder"
+    class="pt-3"
   >
-    <ResourceItem
-      v-for="model in schema"
-      :key="model.slug"
-      :resource="model"
-      class="cursor-pointer mb-2"
-      @click="dataSelectedResource = model"
-    />
-  </VueDraggableNext>
+    <VueDraggableNext
+      :list="schema"
+      ghost-class="ghost"
+      handle=".handle"
+      @change="updateOrder"
+    >
+      <ResourceItem
+        v-for="model in schema"
+        :key="model.slug"
+        :resource="model"
+        class="cursor-pointer mb-2"
+        @click="dataSelectedResource = model"
+      />
+    </VueDraggableNext>
+  </div>
 </template>
 
 <script>

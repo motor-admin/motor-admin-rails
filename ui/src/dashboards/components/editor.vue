@@ -1,9 +1,9 @@
 <template>
   <div
     class="bg-white p-2"
-    style="height: 100%"
+    style="height: calc(100% - 46px)"
   >
-    <div style="height: calc(100% - 46px); overflow-y: scroll">
+    <div>
       <QueriesList
         v-if="isQueriesListOpened"
         :exclude-ids="layout.map((item) => item.query_id)"
@@ -48,7 +48,10 @@
         </div>
       </VueDraggableNext>
     </div>
-    <div class="footer">
+    <div
+      class="footer"
+      :class="!layout.length && !isQueriesListOpened ? 'p-0 border-0' : ''"
+    >
       <VButton
         long
         type="default"
@@ -144,7 +147,7 @@ export default {
   bottom: 0;
   left: 0;
   border-top: 1px solid #e8e8e8;
-  padding-top: 10px;
+  padding: 10px 0;
   text-align: right;
   background: #fff;
 }

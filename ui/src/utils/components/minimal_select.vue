@@ -241,7 +241,7 @@ export default {
 
       if (this.searchInput && this.searchInput !== this.getLabel(this.selectedOption)) {
         return this.optionsData.filter((option) => {
-          return this.getLabel(option).toLowerCase().startsWith(this.searchInput.toLowerCase())
+          return this.getLabel(option).toLowerCase().includes(this.searchInput.toLowerCase())
         })
       } else {
         return this.optionsData
@@ -380,6 +380,8 @@ export default {
     applyFocused () {
       if (this.displayCreate && this.focusIndex === 0) {
         this.createOption(this.searchInput)
+
+        this.toggleDropdown()
       } else {
         const index = this.displayCreate ? this.focusIndex + 1 : this.focusIndex
         const option = this.optionsToRender[index]

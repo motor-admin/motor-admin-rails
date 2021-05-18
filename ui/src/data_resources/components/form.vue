@@ -266,8 +266,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import 'utils/styles/variables';
+
 form {
-  min-height: calc(100% - 53px);
+  @media screen and (max-width: $breakpoint-md) {
+    min-height: calc(100% - 53px);
+  }
 }
 
 .ivu-form-item {

@@ -2,7 +2,7 @@
   <Filters
     v-model:filters="dataFilters"
     :model="model"
-    style="min-height: calc(100% - 53px)"
+    class="filters"
     @keydown.enter="$emit('apply', clearedFilters)"
   />
   <div class="drawer-footer">
@@ -66,5 +66,12 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import 'utils/styles/variables';
+
+.filters {
+  @media screen and (max-width: $breakpoint-md) {
+    min-height: calc(100% - 53px);
+  }
+}
 </style>
