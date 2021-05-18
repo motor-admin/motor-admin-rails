@@ -66,12 +66,17 @@ export default {
     resource: {
       type: Object,
       required: true
+    },
+    activeTab: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   emits: ['back'],
   data () {
     return {
-      selectedTab: 'columns'
+      selectedTab: this.activeTab || 'columns'
     }
   }
 }

@@ -8,11 +8,14 @@
     />
     <div
       v-if="!isLoading"
+      :class="{ 'h-100': isShowSettings }"
     >
       <div
+        ref="title"
         class="d-flex"
       >
         <div
+          class="position-relative"
           style="min-width: 250px"
           :style="withActions && !notFound ? 'width: calc(100% - 100px)' : 'width: 100%'"
         >
@@ -28,13 +31,23 @@
           >
             {{ title }}
           </h2>
+          <SettingsMask
+            v-if="isShowSettings"
+          />
         </div>
         <div
           v-if="withActions && !notFound"
           class="d-flex justify-content-end"
           style="width: 100px"
         >
+          <SettingsMask
+            v-if="isShowSettings"
+            :button-only="true"
+            :settings-type="'actions'"
+            :resource="model"
+          />
           <ResourceActions
+            v-else
             :resources="[resource]"
             :resource-name="model.name"
             :button-type="'primary'"
@@ -46,9 +59,17 @@
         </div>
       </div>
       <div
-        class="row"
-        :style="oneColumn && !notFound ? 'max-width: 500px' : ''"
+        class="row position-relative"
+        :class="{ 'h-100': isShowSettings }"
+        :style="{ maxWidth: oneColumn && !notFound ? '500px' : '' }"
       >
+        <SettingsMask
+          v-if="isShowSettings"
+          :resource="model"
+          :settings-type="'columns'"
+          :style="{ height: `calc(100% - 30px)` }"
+        />
+
         <template
           v-for="column in columns"
           :key="column.name"
@@ -103,6 +124,9 @@ import { assignBreadcrumbLabel } from 'navigation/scripts/breadcrumb_store'
 import { truncate } from 'utils/scripts/string'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
 
+import { isShowSettings } from 'settings/scripts/toggle'
+import SettingsMask from 'settings/components/mask'
+
 import DataTypes from 'data_cells/scripts/data_types'
 
 export default {
@@ -110,7 +134,8 @@ export default {
   components: {
     DataCell,
     Reference,
-    ResourceActions
+    ResourceActions,
+    SettingsMask
   },
   props: {
     resourceName: {
@@ -147,6 +172,7 @@ export default {
     }
   },
   computed: {
+    isShowSettings,
     title () {
       return `${singularize(this.model.display_name)} #${this.resource[this.model.primary_key]}`
     },

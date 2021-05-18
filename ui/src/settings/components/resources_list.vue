@@ -2,6 +2,7 @@
   <ResourceSettings
     v-if="dataSelectedResource"
     :resource="dataSelectedResource"
+    :active-tab="settingsType"
     @back="dataSelectedResource = null"
   />
   <div
@@ -42,6 +43,11 @@ export default {
       type: Object,
       required: false,
       default: null
+    },
+    settingsType: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   emits: ['change-resource'],

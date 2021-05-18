@@ -8,13 +8,18 @@
       :model-value="isShowSiderScreen && isMenuSider"
       :collapsible="true"
       :collapsed-width="0"
-      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 60px)', overflowY: 'scroll' }"
+      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 60px)', overflowY: isShowSettings ? 'hidden' : 'scroll' }"
     >
       <ResourcesMenu
         :resources="visibleResources"
         :active-name="activeNavigationName"
         :style="{ minHeight: '100%' }"
         @select="onMenuSelect"
+      />
+      <SettingsMask
+        v-if="isShowSettings"
+        :settings-type="'scopes'"
+        :resource="model"
       />
     </Sider>
     <Layout class="d-block">
@@ -99,6 +104,8 @@ import LinksSection from 'navigation/components/links_section'
 import { widthLessThan } from 'utils/scripts/dimensions'
 
 import { breadcrumbStore } from 'navigation/scripts/breadcrumb_store'
+import { isShowSettings } from 'settings/scripts/toggle'
+import SettingsMask from 'settings/components/mask'
 
 export default {
   name: 'ResourcesBase',
@@ -107,7 +114,8 @@ export default {
     Resource,
     Breadcrumbs,
     ResourcesMenu,
-    LinksSection
+    LinksSection,
+    SettingsMask
   },
   data () {
     return {
@@ -115,6 +123,10 @@ export default {
     }
   },
   computed: {
+    isShowSettings,
+    model () {
+      return modelNameMap[this.resourceName]
+    },
     isShowSiderScreen () {
       return widthLessThan('xl')
     },

@@ -175,6 +175,10 @@ export default {
       this.persistChanges()
     },
     onNameFocusLost () {
+      if (this.displayName === this.tab.display_name) {
+        return
+      }
+
       if (!this.tab.display_name || this.tab.display_name.match(/^\s+$/)) {
         this.tab.display_name = this.displayName
         this.displayName = this.displayName + ' '

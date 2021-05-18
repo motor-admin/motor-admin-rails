@@ -24,6 +24,13 @@
           class="me-2 bg-transparent d-none d-md-block"
           @click="$emit('click-resize')"
         />
+        <SettingsMask
+          v-if="isShowSettings"
+          class="me-2"
+          :settings-type="'actions'"
+          :button-only="true"
+          :resource="model"
+        />
         <span
           v-if="withTitle && !selectedRows.length"
           class="fs-4 fw-bold nowrap overflow-hidden text-truncate"
@@ -33,7 +40,7 @@
           </template>
         </span>
         <ResourceActions
-          v-if="selectedRows.length"
+          v-if="selectedRows.length && !isShowSettings"
           :resources="selectedRows"
           :with-deselect="true"
           :resource-name="model.name"
@@ -76,6 +83,11 @@
       v-if="!isReloading"
       class="position-relative"
     >
+      <SettingsMask
+        v-if="isShowSettings"
+        :settings-type="'columns'"
+        :resource="model"
+      />
       <Spin
         v-if="isLoading"
         fix
@@ -129,6 +141,9 @@ import FiltersModal from './filters_modal'
 import { truncate } from 'utils/scripts/string'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
 
+import { isShowSettings } from 'settings/scripts/toggle'
+import SettingsMask from 'settings/components/mask'
+
 import DataTypes from 'data_cells/scripts/data_types'
 
 const defaultPaginationParams = {
@@ -151,7 +166,8 @@ export default {
     DataTable,
     ResourceSearch,
     ResourceActions,
-    NewResourceButton
+    NewResourceButton,
+    SettingsMask
   },
   props: {
     resourceName: {
@@ -197,6 +213,7 @@ export default {
     }
   },
   computed: {
+    isShowSettings,
     currentScope () {
       return this.model.scopes.find((scope) => scope.name === this.$route.query?.scope)
     },

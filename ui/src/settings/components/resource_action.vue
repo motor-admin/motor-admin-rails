@@ -180,6 +180,10 @@ export default {
       this.persistChanges()
     },
     onNameFocusLost () {
+      if (this.displayName === this.action.display_name) {
+        return
+      }
+
       if (!this.action.display_name || this.action.display_name.match(/^\s+$/)) {
         this.action.display_name = this.displayName
         this.displayName = this.displayName + ' '

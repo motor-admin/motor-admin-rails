@@ -1,16 +1,27 @@
 <template>
   <div class="bg-white">
     <TabsComponent
-      v-if="tabs.length > 1"
+      v-if="withTabs"
       v-model="selectedTabName"
-      class="mt-1"
+      class="pt-1"
       :tabs="tabParams"
-    />
+    >
+      <SettingsMask
+        v-if="isShowSettings"
+        :settings-type="'tabs'"
+        :resource="model"
+      />
+    </TabsComponent>
     <div
       :style="style"
       class="position-relative"
-      :class="selectedTabName === 'details' && selectedTab.tab_type === 'default' ? 'bg-white' : 'bg-body'"
+      :class="isDefaultDetails ? 'bg-white' : 'bg-body'"
     >
+      <SettingsMask
+        v-if="isShowSettings && !isDefaultDetails"
+        :settings-type="selectedTab.tab_type"
+        :preferences="selectedTab.preferences"
+      />
       <KeepAlive>
         <ResourcesMenu
           v-if="selectedTabName === 'assiciations'"
@@ -22,7 +33,7 @@
           :style="{ minHeight: '100%' }"
         />
         <ResourceInfo
-          v-else-if="selectedTabName === 'details' && selectedTab.tab_type === 'default'"
+          v-else-if="isDefaultDetails"
           :key="'details'"
           class="px-3 pb-3 pt-3"
           :style="{ height: '100%' }"
@@ -64,6 +75,8 @@ import FormTab from './form_tab'
 import DashboardTab from './dashboard_tab'
 import ResourcesMenu from 'navigation/components/resources'
 
+import { isShowSettings } from 'settings/scripts/toggle'
+import SettingsMask from 'settings/components/mask'
 import { widthLessThan } from 'utils/scripts/dimensions'
 
 export default {
@@ -74,7 +87,8 @@ export default {
     QueryTab,
     FormTab,
     DashboardTab,
-    ResourcesMenu
+    ResourcesMenu,
+    SettingsMask
   },
   props: {
     resourceName: {
@@ -98,6 +112,7 @@ export default {
     }
   },
   computed: {
+    isShowSettings,
     model () {
       return modelNameMap[this.resourceName]
     },
@@ -111,7 +126,10 @@ export default {
       }
     },
     withTabs () {
-      return this.tabs.length > 1
+      return this.tabs.length > 1 || this.isShowSettings
+    },
+    isDefaultDetails () {
+      return this.selectedTabName === 'details' && this.selectedTab.tab_type === 'default'
     },
     style () {
       const vh = this.minimized ? '(var(--vh) / 2)' : 'var(--vh)'
@@ -121,7 +139,7 @@ export default {
         subtract += 44
       }
 
-      return { height: `calc(${vh} - ${subtract}px)`, overflowY: 'scroll' }
+      return { height: `calc(${vh} - ${subtract}px)`, overflowY: this.isShowSettings ? 'hidden' : 'scroll' }
     },
     tabs () {
       const tabs = this.model.tabs.filter((tab) => tab.visible)

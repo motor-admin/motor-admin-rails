@@ -71,6 +71,16 @@
     </div>
     <div class="col-2 d-flex justify-content-end align-items-center">
       <VButton
+        v-if="isShowSettings"
+        type="primary"
+        size="large"
+        class="header-btn"
+        @click="openSettingsDrawer()"
+      >
+        All Resources
+      </VButton>
+      <VButton
+        v-if="!isShowSettings"
         type="primary"
         size="large"
         class="header-btn"
@@ -82,6 +92,7 @@
         />
       </VButton>
       <Dropdown
+        v-if="!isShowSettings"
         trigger="click"
         transfer
         class="ms-2"
@@ -117,10 +128,10 @@
         type="primary"
         class="ms-2 header-btn"
         size="large"
-        @click="openSettings"
+        @click="onSettingsClick"
       >
         <Icon
-          type="md-settings"
+          :type="isShowSettings ? 'md-close' : 'md-settings'"
           size="large"
         />
       </VButton>
@@ -130,16 +141,18 @@
 
 <script>
 import Search from './search'
-import ResourcesSettings from 'settings/components/resources_list'
 import LinksEdit from './links_edit'
 import { modelSlugMap, modelNameMap } from 'data_resources/scripts/schema'
 import { linksStore } from '../scripts/links_store'
 import { basePath } from 'utils/scripts/configs'
 import { widthLessThan } from 'utils/scripts/dimensions'
+import { isShowSettings, toggleSettings } from 'settings/scripts/toggle'
+import { openSettingsDrawer } from 'settings/scripts/drawer'
 
 export default {
   name: 'AppHeader',
   computed: {
+    isShowSettings,
     links () {
       return linksStore
     },
@@ -177,6 +190,7 @@ export default {
   },
   methods: {
     widthLessThan,
+    openSettingsDrawer,
     openSearch () {
       this.$Modal.open(Search, {
         placeholder: 'Search...',
@@ -185,16 +199,6 @@ export default {
         }
       })
     },
-    onChangeResource (resource) {
-      this.$Drawer.component.setTitle(this.drawerTitle(resource))
-    },
-    drawerTitle (resource) {
-      if (resource) {
-        return `${resource.display_name} Settings`
-      } else {
-        return 'Settings'
-      }
-    },
     openEditModal () {
       this.$Drawer.open(LinksEdit, {
       }, {
@@ -202,15 +206,16 @@ export default {
         closable: true
       })
     },
-    openSettings () {
-      this.$Drawer.open(ResourcesSettings, {
-        selectedResource: this.currentResource,
-        onChangeResource: this.onChangeResource
-      }, {
-        title: this.drawerTitle(this.currentResource),
-        className: 'drawer-no-bottom-padding drawer-no-top-padding',
-        closable: true
-      })
+    onSettingsClick () {
+      if (this.isShowSettings) {
+        return toggleSettings()
+      }
+
+      if (['resources'].includes(this.$route.name) && !widthLessThan('sm')) {
+        toggleSettings()
+      } else {
+        openSettingsDrawer({ selectedResource: this.currentResource })
+      }
     }
   }
 }
@@ -223,6 +228,10 @@ export default {
   display: flex;
   align-items: center;
 
+  .ion {
+    vertical-align: bottom;
+  }
+
   .ion-md-search {
     font-size: 24px;
   }
@@ -231,6 +240,9 @@ export default {
   }
   .ion-md-settings {
     font-size: 22px;
+  }
+  .ion-md-close {
+    font-size: 20px;
   }
 }
 </style>

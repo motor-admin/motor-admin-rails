@@ -171,6 +171,10 @@ export default {
       this.isForm = false
     },
     onNameFocusLost () {
+      if (this.displayName === this.column.display_name) {
+        return
+      }
+
       if (!this.column.display_name || this.column.display_name.match(/^\s+$/)) {
         this.column.display_name = this.displayName
         this.displayName = this.displayName + ' '

@@ -3,7 +3,7 @@
     <Sider
       v-if="associations.length && !widthLessThan('sm')"
       class="border-top"
-      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 112px)', overflowY: 'scroll' }"
+      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 112px)', overflowY: isShowSettings ? 'hidden' : 'scroll' }"
     >
       <ResourcesMenu
         :resources="associations"
@@ -12,6 +12,11 @@
         :path-fragments="pathFragments"
         :active-name="associationName"
         :style="{ minHeight: '100%' }"
+      />
+      <SettingsMask
+        v-if="isShowSettings"
+        :settings-type="'associations'"
+        :resource="model"
       />
     </Sider>
     <Layout>
@@ -49,6 +54,8 @@ import ResourceTable from './table'
 import ResourceTabs from './tabs'
 
 import { widthLessThan } from 'utils/scripts/dimensions'
+import { isShowSettings } from 'settings/scripts/toggle'
+import SettingsMask from 'settings/components/mask'
 
 const fullscreenTableKey = 'resources:fullscreenAssociationTable'
 
@@ -57,7 +64,8 @@ export default {
   components: {
     ResourcesMenu,
     ResourceTable,
-    ResourceTabs
+    ResourceTabs,
+    SettingsMask
   },
   props: {
     resourceName: {
@@ -80,6 +88,7 @@ export default {
     }
   },
   computed: {
+    isShowSettings,
     showTable () {
       return !!this.associationName
     },

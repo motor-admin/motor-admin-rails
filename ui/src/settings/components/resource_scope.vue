@@ -165,6 +165,10 @@ export default {
       this.isForm = false
     },
     onNameFocusLost () {
+      if (this.displayName === this.scope.display_name) {
+        return
+      }
+
       if (!this.scope.display_name || this.scope.display_name.match(/^\s+$/)) {
         this.scope.display_name = this.displayName
         this.displayName = this.displayName + ' '

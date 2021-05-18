@@ -70,6 +70,10 @@ export default {
       })
     },
     onNameFocusLost () {
+      if (this.displayName === this.association.display_name) {
+        return
+      }
+
       if (!this.association.display_name || this.association.display_name.match(/^\s+$/)) {
         this.association.display_name = this.displayName
         this.displayName = this.displayName + ' '
