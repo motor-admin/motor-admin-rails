@@ -132,7 +132,7 @@
             No data
           </div>
           <QueryResult
-            v-if="data.length"
+            v-if="data.length && !isLoadingQuery"
             :data="data"
             :errors="errors"
             :title="query.name"

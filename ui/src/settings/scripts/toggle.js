@@ -7,7 +7,7 @@ function toggleSettings () {
 }
 
 function closeSettings () {
-  isShowSettingsRef.value = !isShowSettingsRef.value
+  isShowSettingsRef.value = false
 }
 
 function isShowSettings () {

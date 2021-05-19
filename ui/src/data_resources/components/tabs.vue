@@ -35,7 +35,7 @@
         <ResourceInfo
           v-else-if="isDefaultDetails"
           :key="'details'"
-          class="px-3 pb-3 pt-3"
+          class="px-3 pt-3"
           :style="{ height: '100%' }"
           :resource-name="resourceName"
           :resource-id="resourceId"

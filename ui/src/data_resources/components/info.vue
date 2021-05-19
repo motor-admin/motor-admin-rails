@@ -8,7 +8,7 @@
     />
     <div
       v-if="!isLoading"
-      :class="{ 'h-100': isShowSettings }"
+      class="d-flex flex-column h-100"
     >
       <div
         ref="title"
@@ -60,16 +60,16 @@
       </div>
       <div
         class="row position-relative"
-        :class="{ 'h-100': isShowSettings }"
-        :style="{ maxWidth: oneColumn && !notFound ? '500px' : '' }"
+        :style="{
+          maxWidth: oneColumn && !notFound ? '500px' : '',
+          overflow: isShowSettings ? 'hidden' : ''
+        }"
       >
         <SettingsMask
           v-if="isShowSettings"
           :resource="model"
           :settings-type="'columns'"
-          :style="{ height: `calc(100% - 30px)` }"
         />
-
         <template
           v-for="column in columns"
           :key="column.name"
