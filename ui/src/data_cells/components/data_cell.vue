@@ -116,7 +116,7 @@ export default {
       return this.type === 'boolean'
     },
     isImage () {
-      return (this.isPath && !!this.stringValue.match(/\.(jpg|png|jpeg|wepb|svg)$/)) || this.type === 'image'
+      return (this.isPath && !!this.stringValue.match(/\.(jpg|png|jpeg|wepb|svg)$/i)) || this.type === 'image'
     },
     isCurrency () {
       return this.type === 'currency'

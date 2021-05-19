@@ -44,6 +44,7 @@
   <VInput
     v-else
     :model-value="modelValue"
+    :type="column.name === 'password' ? 'password' : 'text'"
     @keydown.enter="$emit('enter')"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
@@ -117,7 +118,7 @@ export default {
       return ['integer', 'bigint', 'int', 'float', 'demical', 'double', 'number', 'currency'].includes(this.type)
     },
     isTextArea () {
-      if (this.type === 'input') {
+      if (this.type === 'input' || this.column.name === 'password') {
         return false
       }
 

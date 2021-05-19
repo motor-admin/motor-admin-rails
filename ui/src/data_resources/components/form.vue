@@ -185,9 +185,10 @@ export default {
   },
   methods: {
     isJsonColumn (column) {
-      return column.column_type === 'json' ||
+      return (column.column_type === 'json' ||
         (this.resource[column.name] instanceof Object &&
-        this.resource[column.name].constructor === Object)
+        this.resource[column.name].constructor === Object)) &&
+        !['file', 'image'].includes(column.column_type)
     },
     scrollToErrors () {
       this.$nextTick(() => {

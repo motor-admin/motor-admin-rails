@@ -3,8 +3,10 @@
 module Motor
   class Admin < ::Rails::Engine
     initializer 'motor.startup_message' do
-      ActiveSupport::Notifications.subscribe('motor.routes.loaded') do
+      config.after_initialize do
         next unless Motor.server?
+
+        Rails.application.reload_routes!
 
         if Rails.application.routes.url_helpers.respond_to?(:motor_admin_path)
           url =
@@ -66,6 +68,10 @@ module Motor
     initializer 'motor.active_storage.extensions' do
       ActiveSupport.on_load(:active_storage_attachment) do
         ActiveStorage::Attachment.include(Motor::ActiveRecordUtils::ActiveStorageLinksExtension)
+      end
+
+      ActiveSupport.on_load(:active_storage_blob) do
+        ActiveStorage::Blob.singleton_class.prepend(Motor::ActiveRecordUtils::ActiveStorageBlobPatch)
       end
     end
   end

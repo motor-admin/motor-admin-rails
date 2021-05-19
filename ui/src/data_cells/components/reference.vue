@@ -1,16 +1,14 @@
 <template>
   <VButton
     v-popover="popoverParams"
-    :to="{ name: 'resources', params: { fragments: [resourceSlug, referenceId || resourceId].filter(Boolean) }}"
+    :to="referenceId ? { name: 'resources', params: { fragments: [resourceSlug, referenceId] }} : null"
     type="primary"
     ghost
     shape="circle"
     @click.stop
   >
     <template v-if="isNumberId">
-      #{{ resourceId }} <template v-if="!polymorphicName">
-        {{ truncate(displayText, maxLength) }}
-      </template>
+      #{{ resourceId }} {{ truncate(displayText, maxLength) }}
     </template>
     <template v-else>
       {{ truncate(resourceId.toString(), maxLength) }}
@@ -31,7 +29,8 @@ export default {
     },
     referenceName: {
       type: String,
-      required: true
+      required: false,
+      default: ''
     },
     referenceData: {
       type: [String, Object],
@@ -92,7 +91,7 @@ export default {
     },
     model () {
       if (this.polymorphicName) {
-        return modelNameMap[underscore(this.polymorphicName)]
+        return modelNameMap[underscore(this.polymorphicName).replace(/:{2}/g, '/')]
       } else {
         return modelNameMap[this.referenceName]
       }

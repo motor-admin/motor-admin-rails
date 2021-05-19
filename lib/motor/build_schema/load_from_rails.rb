@@ -10,7 +10,15 @@ module Motor
 
       def call
         models.map do |model|
-          build_model_schema(model)
+          Object.const_get(model.name)
+
+          schema = build_model_schema(model)
+
+          if model.respond_to?(:devise_modules)
+            Motor::BuildSchema::AdjustDeviseModelSchema.call(schema, model.devise_modules)
+          end
+
+          schema
         rescue StandardError, NotImplementedError => e
           Rails.logger.error(e) if model.name != 'Audited::Audit'
 
@@ -108,13 +116,15 @@ module Motor
         model.reflections.map do |name, ref|
           next if !ref.has_one? && !ref.belongs_to?
 
-          begin
-            ref.klass
-          rescue StandardError
-            next
-          end
+          unless ref.polymorphic?
+            begin
+              next if ref.klass.name == 'ActiveStorage::Blob'
+            rescue StandardError => e
+              Rails.logger.error(e)
 
-          next if ref.klass.name == 'ActiveStorage::Blob'
+              next
+            end
+          end
 
           build_reflection_column(name, model, ref, default_attrs)
         end.compact
@@ -122,7 +132,7 @@ module Motor
 
       def build_reflection_column(name, model, ref, default_attrs)
         column_name = ref.belongs_to? ? ref.foreign_key.to_s : name
-        is_attachment = ref.klass.name == 'ActiveStorage::Attachment'
+        is_attachment = !ref.polymorphic? && ref.klass.name == 'ActiveStorage::Attachment'
         access_type = ref.belongs_to? || is_attachment ? ColumnAccessTypes::READ_WRITE : ColumnAccessTypes::READ_ONLY
 
         {
@@ -139,27 +149,20 @@ module Motor
       end
 
       def build_reference(name, reflection)
-        is_attachment = reflection.klass.name == 'ActiveStorage::Attachment'
-
         {
           name: name,
           display_name: name.humanize,
-          model_name: reflection.klass.name.underscore,
+          model_name: reflection.polymorphic? ? nil : reflection.klass.name.underscore,
           reference_type: reflection.belongs_to? ? 'belongs_to' : 'has_one',
           foreign_key: reflection.foreign_key,
-          polymorphic: reflection.polymorphic? || is_attachment
+          polymorphic: reflection.polymorphic?
         }
       end
 
       def fetch_associations(model)
         model.reflections.map do |name, ref|
           next if ref.has_one? || ref.belongs_to?
-
-          begin
-            ref.klass
-          rescue StandardError
-            next
-          end
+          next unless valid_reflection?(ref)
 
           model_class = ref.klass
 
@@ -171,7 +174,7 @@ module Motor
             slug: name.underscore,
             model_name: model_class.name.underscore,
             foreign_key: ref.foreign_key,
-            polymorphic: ref.polymorphic? || model_class.name == 'ActiveStorage::Attachment',
+            polymorphic: ref.options[:as].present?,
             visible: true
           }
         end.compact
@@ -209,6 +212,17 @@ module Motor
         when ActiveModel::Validations::NumericalityValidator
           { numeric: validator.options }
         end
+      end
+
+      def valid_reflection?(reflection)
+        reflection.klass
+        reflection.foreign_key
+
+        true
+      rescue StandardError => e
+        Rails.logger.error(e)
+
+        false
       end
 
       def eager_load_models!

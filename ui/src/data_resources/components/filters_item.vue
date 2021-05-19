@@ -85,7 +85,7 @@ export default {
           }
         }).filter(Boolean),
         ...this.model.columns.map((column) => {
-          if (column.reference && ['read_write', 'read_only'].includes(column.access_type)) {
+          if (column.reference && !column.reference.polymorphic && ['read_write', 'read_only'].includes(column.access_type)) {
             const referenceModel = modelNameMap[column.reference.model_name]
 
             return referenceModel.columns.map((refColumn) => {

@@ -75,7 +75,6 @@
           :key="column.name"
         >
           <div
-            v-if="![null, undefined, ''].includes(resource[column.name])"
             :class="oneColumn ? 'col-12' : 'col-xxl-3 col-xl-6 col-md-12 col-12'"
             class="mb-3"
           >
@@ -89,7 +88,7 @@
               :type="'string'"
             />
             <Reference
-              v-else-if="column.reference"
+              v-else-if="column.reference && resource[column.name]"
               :resource-id="getReferenceId(column)"
               :reference-name="column.reference.model_name"
               :max-length="oneColumn ? 30 : 20"
@@ -97,6 +96,9 @@
               :reference-data="resource[column.reference.name]"
               :polymorphic-name="resource[column.reference.name + '_type']"
             />
+            <span
+              v-else-if="[null, undefined, ''].includes(resource[column.name])"
+            > - </span>
             <DataCell
               v-else
               :value="resource[column.name]"

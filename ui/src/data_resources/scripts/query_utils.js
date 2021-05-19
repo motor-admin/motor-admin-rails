@@ -5,7 +5,7 @@ function selectReadableColumns (columns) {
     return ['read_only', 'read_write'].includes(column.access_type)
       ? column.name
       : null
-  }).filter(Boolean)
+  }).filter(Boolean).join(',')
 }
 
 function includeParams (model) {
@@ -22,7 +22,7 @@ function fieldsParams (model) {
   }
 
   model.columns.forEach((column) => {
-    if (column.reference?.name && ['read_only', 'read_write'].includes(column.access_type)) {
+    if (column.reference?.name && !column.reference.polymorphic && ['read_only', 'read_write'].includes(column.access_type)) {
       const referenceModel = modelNameMap[column.reference.model_name]
 
       fields[column.reference.name] ||= selectReadableColumns(referenceModel.columns)

@@ -68,6 +68,7 @@ module Motor
 end
 
 require_relative './build_schema/active_storage_attachment_schema'
+require_relative './build_schema/adjust_devise_model_schema'
 require_relative './build_schema/load_from_rails'
 require_relative './build_schema/find_display_column'
 require_relative './build_schema/persist_resource_configs'

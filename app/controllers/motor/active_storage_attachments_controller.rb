@@ -26,7 +26,7 @@ module Motor
     end
 
     def file_params
-      params.require(:data).require(:file).permit(:io, :filename).to_h
+      params.require(:data).require(:file).permit(:io, :filename).to_h.symbolize_keys
     end
 
     def attachment_params

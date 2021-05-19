@@ -47,5 +47,3 @@ Motor::Admin.routes.draw do
     end
   end
 end
-
-ActiveSupport::Notifications.instrument('motor.routes.loaded')

@@ -79,7 +79,6 @@
               <Reference
                 v-else-if="column.reference && row[column.key]"
                 :resource-id="getReferenceId(column, row)"
-                :show-popover="!!column.reference.polymorphic"
                 :reference-name="column.reference.model_name"
                 :reference-data="row[column.reference.name]"
                 :polymorphic-name="row[column.reference.name + '_type']"
