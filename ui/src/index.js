@@ -52,6 +52,7 @@ import Badge from 'view3/src/components/badge'
 
 import { VueDraggableNext } from 'vue-draggable-next'
 import MinimalSelect from 'utils/components/minimal_select'
+import Contenteditable from 'utils/components/contenteditable'
 
 const app = createApp(App)
 
@@ -93,6 +94,7 @@ app.component('DatePicker', DatePicker)
 app.component('MSelect', MinimalSelect)
 app.component('Badge', Badge)
 app.component('VueDraggableNext', VueDraggableNext)
+app.component('Contenteditable', Contenteditable)
 
 app.use(router)
 

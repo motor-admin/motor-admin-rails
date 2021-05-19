@@ -19,17 +19,12 @@
               @click.stop
               @on-change="toggleVisible"
             />
-            <p
-              ref="contenteditable"
+            <Contenteditable
+              v-model="scope.display_name"
               class="fs-5 fw-bold cursor-text"
-              contenteditable
-              @input="updateName"
               @click.stop
-              @blur="onNameFocusLost"
-              @keydown.enter.prevent="$refs.contenteditable.blur()"
-            >
-              {{ displayName }}
-            </p>
+              @change="persistChanges"
+            />
           </div>
           <div
             v-if="scope.scope_type === 'filter'"
@@ -76,16 +71,7 @@ export default {
   emits: ['reorder'],
   data () {
     return {
-      isForm: false,
-      displayName: this.scope.display_name
-    }
-  },
-  watch: {
-    'scope.display_name' (value) {
-      if (value.trim() !== this.displayName.trim() &&
-        value.trim() !== this.$refs.contenteditable.innerText.trim()) {
-        this.displayName = this.scope.display_name
-      }
+      isForm: false
     }
   },
   methods: {
@@ -154,29 +140,12 @@ export default {
         this.isForm = !this.isForm
       }
     },
-    updateName (event) {
-      this.scope.display_name = event.target.innerText
-    },
     updateScope (scope) {
       Object.assign(this.scope, scope)
 
       this.persistChanges()
 
       this.isForm = false
-    },
-    onNameFocusLost () {
-      if (this.displayName === this.scope.display_name) {
-        return
-      }
-
-      if (!this.scope.display_name || this.scope.display_name.match(/^\s+$/)) {
-        this.scope.display_name = this.displayName
-        this.displayName = this.displayName + ' '
-      } else {
-        this.persistChanges()
-
-        this.displayName = this.scope.display_name
-      }
     }
   }
 }

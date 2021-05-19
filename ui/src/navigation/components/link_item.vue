@@ -14,17 +14,12 @@
               type="ios-menu"
               class="me-3 cursor-grab handle"
             />
-            <p
-              ref="contenteditable"
-              class="fs-5 fw-bold cursor-text"
-              contenteditable
-              @input="updateName"
+            <Contenteditable
+              v-model="link.name"
+              class="fs-5 fw-bold"
               @click.stop
-              @blur="onNameFocusLost"
-              @keydown.enter.prevent="$refs.contenteditable.blur()"
-            >
-              {{ displayName }}
-            </p>
+              @change="$emit('submit', [link, link])"
+            />
           </div>
           <div class="d-flex align-items-center">
             <Icon :type="isForm ? 'ios-arrow-up' : 'ios-arrow-down'" />
@@ -61,24 +56,12 @@ export default {
   emits: ['remove', 'submit'],
   data () {
     return {
-      isForm: false,
-      displayName: this.link.name
-    }
-  },
-  watch: {
-    'link.name' (value) {
-      if (value.trim() !== this.displayName.trim() &&
-        value.trim() !== this.$refs.contenteditable.innerText.trim()) {
-        this.displayName = this.link.name
-      }
+      isForm: false
     }
   },
   methods: {
     toggleForm () {
       this.isForm = !this.isForm
-    },
-    updateName (event) {
-      this.link.name = event.target.innerText
     },
     onSubmit (link) {
       this.isForm = false
@@ -89,17 +72,23 @@ export default {
       this.isForm = false
 
       this.$emit('remove', link)
-    },
-    onNameFocusLost () {
-      if (!this.link.name || this.link.name.match(/^\s+$/)) {
-        this.link.name = this.displayName
-        this.displayName = this.displayName + ' '
-      } else {
-        this.$emit('submit', [this.link, this.link])
-
-        this.displayName = this.link.name
-      }
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import 'utils/styles/variables';
+
+:deep(.contenteditable-edit-button) {
+  display: none
+}
+
+@media screen and (min-width: $breakpoint-md) {
+  :deep(.ivu-card:hover) {
+    .contenteditable-edit-button {
+      display: block
+    }
+  }
+}
+</style>

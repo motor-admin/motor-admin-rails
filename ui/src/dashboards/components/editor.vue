@@ -68,14 +68,12 @@
 import QueriesList from 'queries/components/list'
 import SizeControl from './size_control'
 import { queriesStore } from 'reports/scripts/store'
-import Contenteditable from 'utils/components/contenteditable'
 
 export default {
   name: 'DashboardEditor',
   components: {
     QueriesList,
-    SizeControl,
-    Contenteditable
+    SizeControl
   },
   props: {
     dashboard: {
@@ -141,6 +139,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import 'utils/styles/variables';
+
 .footer {
   width: 100%;
   position: sticky;
@@ -154,5 +154,17 @@ export default {
 
 .ion-md-arrow-dropup, .ion-md-arrow-dropdown {
   cursor: pointer;
+}
+
+:deep(.contenteditable-edit-button) {
+  display: none
+}
+
+@media screen and (min-width: $breakpoint-md) {
+  :deep(.ivu-card:hover) {
+    .contenteditable-edit-button {
+      display: block
+    }
+  }
 }
 </style>

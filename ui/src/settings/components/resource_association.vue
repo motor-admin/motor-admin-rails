@@ -14,16 +14,12 @@
             v-model="association.visible"
             @change="persistChanges"
           />
-          <p
-            ref="contenteditable"
-            class="fs-5 fw-bold cursor-text"
-            contenteditable
-            @input="updateName"
-            @blur="onNameFocusLost"
-            @keydown.enter.prevent="$refs.contenteditable.blur()"
-          >
-            {{ displayName }}
-          </p>
+          <Contenteditable
+            v-model="association.display_name"
+            class="fs-5 fw-bold"
+            @click.stop
+            @change="persistChanges"
+          />
         </div>
       </div>
     </div>
@@ -45,15 +41,7 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      displayName: this.association.display_name
-    }
-  },
   methods: {
-    updateName (event) {
-      this.association.display_name = event.target.innerText
-    },
     persistChanges () {
       return api.post('resources', {
         data: {
@@ -68,20 +56,6 @@ export default {
       }).catch((error) => {
         console.error(error)
       })
-    },
-    onNameFocusLost () {
-      if (this.displayName === this.association.display_name) {
-        return
-      }
-
-      if (!this.association.display_name || this.association.display_name.match(/^\s+$/)) {
-        this.association.display_name = this.displayName
-        this.displayName = this.displayName + ' '
-      } else {
-        this.persistChanges()
-
-        this.displayName = this.association.display_name
-      }
     }
   }
 }

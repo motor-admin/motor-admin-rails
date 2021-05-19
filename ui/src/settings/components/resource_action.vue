@@ -21,17 +21,18 @@
               @on-change="toggleVisible"
             />
             <p
-              ref="contenteditable"
+              v-if="isCrudAction"
               class="fs-5 fw-bold"
-              :contenteditable="!isCrudAction"
-              :class="{ 'cursor-text': !isCrudAction }"
-              @input="updateName"
-              @click="onTextClick"
-              @blur="onNameFocusLost"
-              @keydown.enter.prevent="$refs.contenteditable.blur()"
             >
-              {{ displayName }}
+              {{ action.display_name }}
             </p>
+            <Contenteditable
+              v-else
+              v-model="action.display_name"
+              class="fs-5 fw-bold"
+              @click.stop
+              @change="persistChanges"
+            />
           </div>
           <div class="d-flex align-items-center">
             <Icon :type="isForm ? 'ios-arrow-up' : 'ios-arrow-down'" />
@@ -81,21 +82,12 @@ export default {
   emits: ['reorder'],
   data () {
     return {
-      isForm: false,
-      displayName: this.action.display_name
+      isForm: false
     }
   },
   computed: {
     isCrudAction () {
       return ['edit', 'create', 'remove'].includes(this.action.name)
-    }
-  },
-  watch: {
-    'action.display_name' (value) {
-      if (value.trim() !== this.displayName.trim() &&
-        value.trim() !== this.$refs.contenteditable.innerText.trim()) {
-        this.displayName = this.action.display_name
-      }
     }
   },
   methods: {
@@ -164,9 +156,6 @@ export default {
     toggleForm () {
       this.isForm = !this.isForm
     },
-    updateName (event) {
-      this.action.display_name = event.target.innerText
-    },
     onTextClick (event) {
       if (!this.isCrudAction) {
         event.stopPropagation()
@@ -178,20 +167,6 @@ export default {
       Object.assign(this.action, action)
 
       this.persistChanges()
-    },
-    onNameFocusLost () {
-      if (this.displayName === this.action.display_name) {
-        return
-      }
-
-      if (!this.action.display_name || this.action.display_name.match(/^\s+$/)) {
-        this.action.display_name = this.displayName
-        this.displayName = this.displayName + ' '
-      } else {
-        this.persistChanges()
-
-        this.displayName = this.action.display_name
-      }
     }
   }
 }

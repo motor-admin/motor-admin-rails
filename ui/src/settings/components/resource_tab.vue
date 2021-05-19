@@ -22,16 +22,18 @@
               @on-change="toggleVisible"
             />
             <p
-              ref="contenteditable"
-              class="fs-5 fw-bold cursor-text"
-              :contenteditable="'details' !== tab.name"
-              @input="updateName"
-              @click="onTextClick"
-              @blur="onNameFocusLost"
-              @keydown.enter.prevent="$refs.contenteditable.blur()"
+              v-if="'details' === tab.name"
+              class="fs-5 fw-bold"
             >
-              {{ displayName }}
+              {{ tab.display_name }}
             </p>
+            <Contenteditable
+              v-else
+              v-model="tab.display_name"
+              class="fs-5 fw-bold"
+              @click.stop
+              @change="persistChanges"
+            />
           </div>
           <div class="d-flex align-items-center">
             <Icon :type="isForm ? 'ios-arrow-up' : 'ios-arrow-down'" />
@@ -81,16 +83,7 @@ export default {
   emits: ['reorder'],
   data () {
     return {
-      isForm: false,
-      displayName: this.tab.display_name
-    }
-  },
-  watch: {
-    'tab.display_name' (value) {
-      if (value.trim() !== this.displayName.trim() &&
-        value.trim() !== this.$refs.contenteditable.innerText.trim()) {
-        this.displayName = this.tab.display_name
-      }
+      isForm: false
     }
   },
   methods: {
@@ -159,9 +152,6 @@ export default {
     toggleForm () {
       this.isForm = !this.isForm
     },
-    updateName (event) {
-      this.tab.display_name = event.target.innerText
-    },
     onTextClick (event) {
       if (this.tab.name === 'details') {
         event.stopPropagation()
@@ -173,20 +163,6 @@ export default {
       Object.assign(this.tab, tab)
 
       this.persistChanges()
-    },
-    onNameFocusLost () {
-      if (this.displayName === this.tab.display_name) {
-        return
-      }
-
-      if (!this.tab.display_name || this.tab.display_name.match(/^\s+$/)) {
-        this.tab.display_name = this.displayName
-        this.displayName = this.displayName + ' '
-      } else {
-        this.persistChanges()
-
-        this.displayName = this.tab.display_name
-      }
     }
   }
 }

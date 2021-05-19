@@ -20,17 +20,12 @@
               @click.stop
               @on-change="toggleAccessType"
             />
-            <p
-              ref="contenteditable"
-              class="fs-5 fw-bold cursor-text"
-              contenteditable
-              @input="updateName"
+            <Contenteditable
+              v-model="column.display_name"
+              class="fs-5 fw-bold"
               @click.stop
-              @blur="onNameFocusLost"
-              @keydown.enter.prevent="$refs.contenteditable.blur()"
-            >
-              {{ displayName }}
-            </p>
+              @change="persistChanges"
+            />
           </div>
           <div class="d-flex align-items-center">
             <Icon :type="isForm ? 'ios-arrow-up' : 'ios-arrow-down'" />
@@ -74,21 +69,12 @@ export default {
   emits: ['reorder'],
   data () {
     return {
-      isForm: false,
-      displayName: this.column.display_name
+      isForm: false
     }
   },
   computed: {
     resource () {
       return modelNameMap[this.resourceName]
-    }
-  },
-  watch: {
-    'column.display_name' (value) {
-      if (value.trim() !== this.displayName.trim() &&
-        value.trim() !== this.$refs.contenteditable.innerText.trim()) {
-        this.displayName = this.column.display_name
-      }
     }
   },
   methods: {
@@ -169,20 +155,6 @@ export default {
       this.persistChanges()
 
       this.isForm = false
-    },
-    onNameFocusLost () {
-      if (this.displayName === this.column.display_name) {
-        return
-      }
-
-      if (!this.column.display_name || this.column.display_name.match(/^\s+$/)) {
-        this.column.display_name = this.displayName
-        this.displayName = this.displayName + ' '
-      } else {
-        this.persistChanges()
-
-        this.displayName = this.column.display_name
-      }
     }
   }
 }

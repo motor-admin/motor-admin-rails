@@ -104,7 +104,7 @@ import LinksSection from 'navigation/components/links_section'
 import { widthLessThan } from 'utils/scripts/dimensions'
 
 import { breadcrumbStore } from 'navigation/scripts/breadcrumb_store'
-import { isShowSettings } from 'settings/scripts/toggle'
+import { isShowSettings, closeSettings } from 'settings/scripts/toggle'
 import SettingsMask from 'settings/components/mask'
 
 export default {
@@ -235,6 +235,11 @@ export default {
     }
   },
   watch: {
+    '$route' (to, from) {
+      if (to.name === 'home') {
+        closeSettings()
+      }
+    },
     isShowSiderScreen () {
       this.isMenuSider = this.isShowSiderScreen
     }

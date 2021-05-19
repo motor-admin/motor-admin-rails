@@ -79,3 +79,19 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import 'utils/styles/variables';
+
+:deep(.contenteditable-edit-button) {
+  display: none
+}
+
+@media screen and (min-width: $breakpoint-md) {
+  :deep(.ivu-card:hover) {
+    .contenteditable-edit-button {
+      display: block
+    }
+  }
+}
+</style>

@@ -14,17 +14,12 @@
           @click.stop
           @change="persistChanges"
         />
-        <p
-          ref="contenteditable"
-          class="fs-4 fw-bold cursor-text"
-          contenteditable
-          @input="updateName"
+        <Contenteditable
+          v-model="resource.display_name"
+          class="fs-4 fw-bold"
           @click.stop
-          @blur="onNameFocusLost"
-          @keydown.enter.prevent="$refs.contenteditable.blur()"
-        >
-          {{ displayName }}
-        </p>
+          @change="persistChanges"
+        />
       </div>
       <div class="d-flex align-items-center">
         <Icon type="ios-arrow-forward" />
@@ -44,15 +39,7 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      displayName: this.resource.display_name
-    }
-  },
   methods: {
-    updateName (event) {
-      this.resource.display_name = event.target.innerText
-    },
     persistChanges () {
       return api.post('resources', {
         data: {
@@ -66,16 +53,6 @@ export default {
       }).catch((error) => {
         console.error(error)
       })
-    },
-    onNameFocusLost () {
-      if (!this.resource.display_name || this.resource.display_name.match(/^\s+$/)) {
-        this.resource.display_name = this.displayName
-        this.displayName = this.displayName + ' '
-      } else {
-        this.persistChanges()
-
-        this.displayName = this.resource.display_name
-      }
     }
   }
 }

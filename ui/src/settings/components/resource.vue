@@ -83,6 +83,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import 'utils/styles/variables';
+
 .resource-settings {
   min-height: calc(100% - 62px);
 }
@@ -98,5 +100,17 @@ export default {
 
 :deep(.ivu-tabs-bar) {
   margin: 0
+}
+
+:deep(.contenteditable-edit-button) {
+  display: none
+}
+
+@media screen and (min-width: $breakpoint-md) {
+  :deep(.ivu-card:hover) {
+    .contenteditable-edit-button {
+      display: block
+    }
+  }
 }
 </style>
