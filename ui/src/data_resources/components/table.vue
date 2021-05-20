@@ -46,7 +46,7 @@
           :resource-name="model.name"
           :label="`Actions (${selectedRows.length})`"
           @start-action="isLoading = true"
-          @finish-action="loadDataAndCount"
+          @finish-action="onFinishAction"
         />
       </div>
       <div
@@ -200,7 +200,7 @@ export default {
       default: null
     }
   },
-  emits: ['click-resize', 'click-menu'],
+  emits: ['click-resize', 'click-menu', 'action-applied'],
   data () {
     return {
       isLoading: true,
@@ -331,7 +331,7 @@ export default {
       return this.model.columns.map((column) => {
         const type = column.validators.find((v) => v.includes?.length) ? DataTypes.TAG : column.column_type
 
-        if (column.reference?.name !== modelNameMap[this.resourceName].name &&
+        if (column.reference?.model_name !== modelNameMap[this.resourceName].name &&
             ['read_only', 'read_write'].includes(column.access_type)) {
           return {
             key: column.name,
@@ -372,6 +372,11 @@ export default {
     this.loadDataAndCount()
   },
   methods: {
+    onFinishAction (value) {
+      this.loadDataAndCount()
+
+      this.$emit('action-applied', value)
+    },
     openFiltersModal () {
       this.$Drawer.open(FiltersModal, {
         filters: this.filterParams,

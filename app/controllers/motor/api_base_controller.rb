@@ -2,6 +2,12 @@
 
 module Motor
   class ApiBaseController < ActionController::API
+    rescue_from StandardError do |e|
+      Rails.logger.error(e)
+
+      render json: { errors: [e.message] }, status: :internal_server_error
+    end
+
     def current_user
       if defined?(current_admin)
         current_admin

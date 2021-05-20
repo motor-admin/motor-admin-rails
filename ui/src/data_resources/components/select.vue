@@ -5,7 +5,7 @@
     :remote-function="loadResources"
     :options="options"
     :loading="isLoading"
-    :value-key="model.primary_key"
+    :value-key="valueKey"
     :label-function="labelFunction"
   />
 </template>
@@ -27,6 +27,11 @@ export default {
     resourceName: {
       type: String,
       required: true
+    },
+    primaryKey: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   emits: ['update:modelValue'],
@@ -40,6 +45,9 @@ export default {
   computed: {
     model () {
       return modelNameMap[this.resourceName]
+    },
+    valueKey () {
+      return this.primaryKey || this.model.primary_key
     }
   },
   watch: {

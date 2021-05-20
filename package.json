@@ -1,0 +1,10 @@
+{
+  "name": "motor-admin",
+  "scripts": {
+    "heroku-postbuild": "yarn install && yarn build:prod"
+  },
+  "engines": {
+    "yarn": "1.x",
+    "node": "14.x"
+  }
+}

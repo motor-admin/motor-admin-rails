@@ -47,6 +47,7 @@ const defaultColumnAttributes = {
   name: '',
   column_type: 'string',
   access_type: 'read_write',
+  format: {},
   validators: []
 }
 

@@ -29,6 +29,7 @@
               </div>
               <Contenteditable
                 v-model="item.title"
+                :with-edit-button="false"
                 class="fs-4 fw-bold"
               />
             </div>

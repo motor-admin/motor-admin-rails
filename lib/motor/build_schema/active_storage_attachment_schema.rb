@@ -12,11 +12,14 @@ module Motor
       columns: [
         {
           name: 'id',
-          display_name: 'Id',
+          display_name: 'ID',
           column_type: 'integer',
           access_type: 'read_only',
           default_value: nil,
           validators: [],
+          format: {},
+          is_array: false,
+          reference: nil,
           virtual: false
         },
         {
@@ -26,6 +29,9 @@ module Motor
           access_type: 'read_only',
           default_value: nil,
           validators: [],
+          format: {},
+          is_array: false,
+          reference: nil,
           virtual: true
         },
         {
@@ -35,6 +41,9 @@ module Motor
           access_type: 'read_write',
           default_value: nil,
           validators: [],
+          format: {},
+          is_array: false,
+          reference: nil,
           virtual: false
         },
         {
@@ -44,6 +53,9 @@ module Motor
           access_type: 'read_write',
           default_value: nil,
           validators: [],
+          format: {},
+          is_array: false,
+          reference: nil,
           virtual: false
         },
         {
@@ -53,6 +65,16 @@ module Motor
           access_type: 'read_write',
           default_value: nil,
           validators: [],
+          format: {},
+          is_array: false,
+          reference: {
+            name: 'record',
+            display_name: 'Record',
+            model_name: nil,
+            reference_type: 'belongs_to',
+            foreign_key: 'record_id',
+            polymorphic: true
+          },
           virtual: false
         },
         {
@@ -62,6 +84,9 @@ module Motor
           access_type: 'write_only',
           default_value: nil,
           validators: [],
+          format: {},
+          is_array: false,
+          reference: nil,
           virtual: false
         },
         {
@@ -71,6 +96,9 @@ module Motor
           access_type: 'read_only',
           default_value: nil,
           validators: [],
+          format: {},
+          is_array: false,
+          reference: nil,
           virtual: false
         }
       ],

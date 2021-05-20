@@ -24,6 +24,7 @@
         <ResourceTabs
           v-if="!showTable || !isFullscreenTable"
           :key="resourceName + resourceId"
+          ref="tabs"
           :resource-name="resourceName"
           :resource-id="resourceId"
           :minimized="showTable"
@@ -39,6 +40,7 @@
           :with-title="!widthLessThan('sm')"
           class="border-top"
           :association-params="{ name: associationName, id: resourceId }"
+          @action-applied="reloadTabs"
           @click-resize="toggleSize"
         />
       </Content>
@@ -105,7 +107,7 @@ export default {
       return modelNameMap[this.resourceName]
     },
     associations () {
-      return this.model.associations.filter((assoc) => assoc.visible)
+      return this.model.associations.filter((assoc) => assoc.visible && modelNameMap[assoc.model_name])
     }
   },
   created () {
@@ -117,6 +119,11 @@ export default {
   },
   methods: {
     widthLessThan,
+    reloadTabs () {
+      if (this.$refs.tabs) {
+        this.$refs.tabs.reload()
+      }
+    },
     toggleSize () {
       this.isFullscreenTable = !this.isFullscreenTable
 

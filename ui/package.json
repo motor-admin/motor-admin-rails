@@ -12,20 +12,19 @@
     "marked": "^2.0.3",
     "mustache": "^4.2.0",
     "qs": "^6.9.3",
-    "view3": "https://github.com/omohokcoj/view3",
+    "view3": "https://github.com/omohokcoj/view3#motor-admin",
     "vue": "^3.0.0",
     "vue-draggable-next": "^2.0.1",
     "vue-router": "^4.0.0",
     "vue3-ace-editor": "^2.0.2"
   },
   "scripts": {
-    "serve": "webpack serve",
-    "build:dev": "webpack",
-    "build:prod": "webpack --env production",
+    "serve": "./node_modules/webpack/bin/webpack.js serve",
+    "build:dev": "./node_modules/webpack/bin/webpack.js",
+    "build:prod": "./node_modules/webpack/bin/webpack.js --env production",
     "eslint": "./node_modules/eslint/bin/eslint.js \"src/**/*.{js,vue}\" --fix",
     "stylelint": "./node_modules/stylelint/bin/stylelint.js \"src/**/*.{scss,css}\" --fix"
   },
-  "version": "1.0.3",
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/polyfill": "^7.12.1",

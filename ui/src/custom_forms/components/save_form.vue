@@ -124,7 +124,7 @@ export default {
           this.apiRequest.then((result) => {
             this.$emit('success', result.data.data)
           }).catch((error) => {
-            if (error.response.data.errors?.length) {
+            if (error.response.data?.errors?.length) {
               this.$refs.form.setErrors(error.response.data.errors)
             }
           })

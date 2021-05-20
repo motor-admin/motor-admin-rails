@@ -125,14 +125,14 @@
             fix
           />
           <div
-            v-else-if="!data.length"
+            v-else-if="!data.length && !errors.length"
             class="d-flex justify-content-center align-items-center"
             style="height: 100%"
           >
             No data
           </div>
           <QueryResult
-            v-if="data.length && !isLoadingQuery"
+            v-if="(data.length || errors.length) && !isLoadingQuery"
             :data="data"
             :errors="errors"
             :title="query.name"

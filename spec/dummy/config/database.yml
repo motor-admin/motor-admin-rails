@@ -1,0 +1,22 @@
+common: &common
+  adapter: postgresql
+  encoding: unicode
+  pool: 10
+  timeout: 5000
+  min_messages: warning
+  username: postgres
+  password: postgres
+  host: localhost
+
+development:
+  <<: *common
+  database: motor_example_dev
+
+test:
+  <<: *common
+  database: motor_example_test
+
+production:
+  adapter: postgresql
+  pool: 10
+  url: <%= ENV["DATABASE_URL"] %>

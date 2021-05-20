@@ -116,6 +116,7 @@ export default {
             if (error.response.data.errors?.length) {
               this.$refs.form.setErrors(error.response.data.errors)
             }
+
             console.error(error)
           })
         }

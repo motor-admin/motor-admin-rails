@@ -8,6 +8,7 @@
     v-else-if="column.reference && column.reference.model_name"
     :model-value="modelValue"
     :resource-name="column.reference.model_name"
+    :primary_key="column.reference.association_primary_key"
     @update:modelValue="onSelect"
   />
   <MSelect
@@ -24,9 +25,11 @@
   />
   <InputNumber
     v-else-if="isNumber"
-    :model-value="modelValue"
+    :model-value="maybeAdjustCurrencyNumber(modelValue)"
+    :parser="numberParser"
+    :formatter="numberFormatter"
     @keydown.enter="$emit('enter')"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:modelValue="onNumberUpdate"
   />
   <DatePicker
     v-else-if="isDateTime || isDate"
@@ -150,6 +153,34 @@ export default {
           filename: file.name,
           io: reader.result
         })
+      }
+    },
+    numberFormatter (value) {
+      if (this.type === 'currency') {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      } else {
+        return value
+      }
+    },
+    numberParser (value) {
+      if (this.type === 'currency') {
+        return value.replace(/\$\s?|(,*)/g, '')
+      } else {
+        return value
+      }
+    },
+    onNumberUpdate (value) {
+      if (this.type === 'currency' && this.column.format?.currency_base === 'cents') {
+        this.$emit('update:modelValue', value * 100)
+      } else {
+        this.$emit('update:modelValue', value)
+      }
+    },
+    maybeAdjustCurrencyNumber (value) {
+      if (this.type === 'currency' && this.column.format?.currency_base === 'cents') {
+        return value / 100
+      } else {
+        return value
       }
     },
     onSelect (value) {

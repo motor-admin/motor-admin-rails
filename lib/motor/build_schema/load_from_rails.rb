@@ -98,7 +98,7 @@ module Motor
 
         {
           name: column.name,
-          display_name: column.name.humanize,
+          display_name: Utils.humanize_column_name(column.name),
           column_type: is_enum ? 'string' : UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
           is_array: column.array?,
           access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
@@ -155,6 +155,7 @@ module Motor
           model_name: reflection.polymorphic? ? nil : reflection.klass.name.underscore,
           reference_type: reflection.belongs_to? ? 'belongs_to' : 'has_one',
           foreign_key: reflection.foreign_key,
+          association_primary_key: reflection.association_primary_key,
           polymorphic: reflection.polymorphic?
         }
       end
@@ -200,17 +201,19 @@ module Motor
       end
 
       def build_validator_hash(validator)
+        options = validator.options.reject { |_, v| v.is_a?(Proc) }
+
         case validator
         when ActiveModel::Validations::InclusionValidator
           { includes: validator.send(:delimiter) }
         when ActiveRecord::Validations::PresenceValidator
           { required: true }
         when ActiveModel::Validations::FormatValidator
-          { format: JsRegex.new(validator.options[:with]).to_h.slice(:source, :options) }
+          { format: JsRegex.new(options[:with]).to_h.slice(:source, :options) }
         when ActiveRecord::Validations::LengthValidator
-          { length: validator.options }
+          { length: options }
         when ActiveModel::Validations::NumericalityValidator
-          { numeric: validator.options }
+          { numeric: options }
         end
       end
 

@@ -26,8 +26,6 @@ module Motor
       render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params) }
     rescue ActiveRecord::RecordInvalid
       render json: { errors: @resource.errors }, status: :unprocessable_entity
-    rescue StandardError => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
 
     def update
@@ -36,8 +34,6 @@ module Motor
       render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params) }
     rescue ActiveRecord::RecordInvalid
       render json: { errors: @resource.errors }, status: :unprocessable_entity
-    rescue StandardError => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
 
     def destroy
@@ -54,8 +50,6 @@ module Motor
       @resource.public_send(params[:method].to_sym)
 
       head :ok
-    rescue StandardError => e
-      render json: { message: e.message }, status: :unprocessable_entity
     end
 
     private

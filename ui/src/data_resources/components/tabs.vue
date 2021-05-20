@@ -35,6 +35,7 @@
         <ResourceInfo
           v-else-if="isDefaultDetails"
           :key="'details'"
+          ref="details"
           class="px-3 pt-3"
           :style="{ height: '100%' }"
           :resource-name="resourceName"
@@ -52,12 +53,14 @@
         <QueryTab
           v-else-if="selectedTab.tab_type === 'query'"
           :key="selectedTab.tab_type + selectedTab.preferences.query_id"
+          ref="query"
           :tab="selectedTab"
           :variables="resourceData"
         />
         <DashboardTab
           v-else-if="selectedTab.tab_type === 'dashboard'"
           :key="selectedTab.tab_type + selectedTab.preferences.dashboard_id"
+          ref="dashboard"
           :tab="selectedTab"
           :variables="resourceData"
         />
@@ -171,6 +174,17 @@ export default {
   },
   created () {
     this.selectedTabName = this.$route.query?.tab || this.tabs[0].name
+  },
+  methods: {
+    reload () {
+      if (this.$refs.details) {
+        this.$refs.details.loadData()
+      } else if (this.$refs.query) {
+        this.$refs.query.runQuery()
+      } else if (this.$refs.dashboard) {
+        this.$refs.dashboard.$refs.layout.reload()
+      }
+    }
   }
 }
 </script>

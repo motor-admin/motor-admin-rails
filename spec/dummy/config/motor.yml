@@ -1,0 +1,489 @@
+---
+engine_version: 0.1.44
+file_version: 2021-05-21 20:23:48.488000000 Z
+resources:
+- name: country
+  preferences: {}
+  updated_at: 2021-05-20 16:41:05.892157000 +00:00
+- name: customer
+  preferences:
+    columns:
+    - name: lifetime_value
+      display_name: Lifetime value
+      column_type: currency
+      access_type: read_only
+      default_value: ''
+      virtual: true
+      format:
+        currency: USD
+        currency_base: cents
+    - display_name: Country
+      name: country_code
+    - display_name: Type
+      name: kind
+    scopes:
+    - display_name: VIP
+      name: vip
+    tabs:
+    - name: sales
+      display_name: Sales
+      tab_type: dashboard
+      preferences:
+        dashboard_id: 2
+  updated_at: 2021-05-21 17:55:39.711000000 +00:00
+- name: line_item
+  preferences:
+    columns:
+    - column_type: currency
+      default_value: ''
+      format:
+        currency: USD
+        currency_base: cents
+      name: unit_price
+    visible: false
+  updated_at: 2021-05-20 16:41:09.374872000 +00:00
+- name: order
+  preferences:
+    actions:
+    - name: mark_as_shipped
+      display_name: Mark as Shipped
+      action_type: method
+      preferences:
+        method_name: ship!
+    - name: cancel
+      display_name: Cancel
+      action_type: form
+      preferences:
+        form_id: 1
+    columns:
+    - name: total_price
+      display_name: Total price
+      column_type: currency
+      access_type: read_only
+      virtual: true
+      format:
+        currency: USD
+        currency_base: cents
+  updated_at: 2021-05-21 20:14:27.117124000 +00:00
+- name: product
+  preferences:
+    columns:
+    - column_type: currency
+      default_value: ''
+      format:
+        currency: USD
+        currency_base: cents
+      name: price
+    - access_type: hidden
+      name: slug
+    associations:
+    - visible: false
+      name: line_items
+  updated_at: 2021-05-20 18:51:38.655811000 +00:00
+configs:
+- key: header.links
+  value:
+  - name: Sales Dashboard
+    path: "/dashboards/1"
+  updated_at: 2021-05-20 22:03:27.130000000 +00:00
+- key: resources.active_storage/attachment.columns.order
+  value:
+  - id
+  - path
+  - record_id
+  - record_type
+  - name
+  - file
+  - created_at
+  updated_at: 2021-05-20 12:28:27.887703000 +00:00
+- key: resources.customer.associations.order
+  value:
+  - orders
+  - line_items
+  - notes
+  updated_at: 2021-05-21 17:59:03.557865000 +00:00
+- key: resources.customer.columns.order
+  value:
+  - id
+  - country_code
+  - name
+  - email
+  - lifetime_value
+  - kind
+  - email_subscriber
+  - updated_at
+  - created_at
+  updated_at: 2021-05-20 22:03:37.941000000 +00:00
+- key: resources.customer.scopes.order
+  value:
+  - vip
+  - standard
+  updated_at: 2021-05-20 13:46:36.180216000 +00:00
+- key: resources.customer.tabs.order
+  value:
+  - details
+  - sales
+  updated_at: 2021-05-21 17:58:38.821263000 +00:00
+- key: resources.order
+  value:
+  - product
+  - customer
+  - order
+  - country
+  - active_storage/attachment
+  - order_note
+  - line_item
+  updated_at: 2021-05-21 20:15:21.231446000 +00:00
+- key: resources.order.actions.order
+  value:
+  - create
+  - edit
+  - remove
+  - mark_as_shipped
+  - cancel
+  updated_at: 2021-05-20 13:33:38.049831000 +00:00
+- key: resources.order.columns.order
+  value:
+  - id
+  - customer_id
+  - total_price
+  - address_line_one
+  - address_line_two
+  - address_city
+  - address_state
+  - address_zip
+  - status
+  - shipped_at
+  - updated_at
+  - created_at
+  updated_at: 2021-05-20 16:48:42.325155000 +00:00
+- key: resources.order.scopes.order
+  value:
+  - pending
+  - shipped
+  - delivered
+  - canceled
+  updated_at: 2021-05-20 13:46:51.179106000 +00:00
+- key: resources.product.associations.order
+  value:
+  - orders
+  - line_items
+  - customers
+  updated_at: 2021-05-20 12:57:27.650784000 +00:00
+queries:
+- id: 1
+  name: Product category per country
+  sql_body: "SELECT co.name, \nsum(li.quantity) FILTER (WHERE pd.category = 'fanfiction')
+    as \"Fanfiction\",\nsum(li.quantity) FILTER (WHERE pd.category = 'humor') as \"Humor\",\nsum(li.quantity)
+    FILTER (WHERE pd.category = 'mythology') as \"Mythology\",\nsum(li.quantity) FILTER
+    (WHERE pd.category = 'fantasy') as \"Fantasy\"\nFROM orders as od \nJOIN line_items
+    as li ON li.order_id = od.id\nJOIN products as pd ON pd.id = li.product_id\nJOIN
+    customers as cs ON cs.id = od.customer_id\nJOIN countries as co ON co.code = cs.country_code\nGROUP
+    BY 1 ORDER BY 1;"
+  description:
+  preferences:
+    visualization: bar_chart
+    visualization_options:
+      label_format: decimal
+      label_format_options: {}
+      chart_stacked: true
+    variables: []
+  tags:
+  - Stats
+  updated_at: 2021-05-20 12:54:46.929124000 +00:00
+- id: 2
+  name: Orders per country
+  sql_body: |-
+    SELECT co.name, count(1)
+    FROM orders as od
+    JOIN customers as cs ON cs.id = od.customer_id
+    JOIN countries as co ON co.code = cs.country_code
+    GROUP BY 1 ORDER BY 2 DESC;
+  description:
+  preferences:
+    visualization: row_chart
+    visualization_options:
+      label_format: decimal
+      label_format_options: {}
+      chart_stacked: false
+    variables: []
+  tags:
+  - Stats
+  updated_at: 2021-05-20 19:48:27.970778000 +00:00
+- id: 3
+  name: Total sales per month
+  sql_body: "WITH \ndates AS (\n  SELECT date_trunc('month', date) as date FROM generate_series(now()
+    - '1 year'::interval, now(), '1 month'::interval) as date\n),\nvalues AS (\n  SELECT
+    \n  date_trunc('month', od.created_at) as date,\n  sum(li.unit_price * li.quantity)
+    / 100 as total\n  FROM orders as od\n  JOIN line_items as li ON li.order_id =
+    od.id\n  WHERE od.status != 'canceled'\n  GROUP BY 1\n)\nSELECT dd.date, coalesce(vl.total,
+    0) as total \nFROM dates as dd LEFT JOIN values as vl ON vl.date = dd.date;"
+  description:
+  preferences:
+    visualization: line_chart
+    visualization_options:
+      label_format: currency
+      label_format_options:
+        currency: USD
+    variables: []
+  tags:
+  - Stats
+  updated_at: 2021-05-20 17:52:03.026180000 +00:00
+- id: 4
+  name: 'Customer total sales per month '
+  sql_body: "WITH \ndates AS (\n  SELECT date_trunc('month', date) as date FROM generate_series(now()
+    - '1 year'::interval, now(), '1 month'::interval) as date\n),\nvalues AS (\n  SELECT
+    \n  date_trunc('month', od.created_at) as date,\n  sum(li.unit_price * li.quantity)
+    / 100 as total\n  FROM orders as od\n  JOIN line_items as li ON li.order_id =
+    od.id\n  WHERE od.status != 'canceled'\n  AND od.customer_id = {{ customer_id
+    }}\n  GROUP BY 1\n)\nSELECT dd.date, coalesce(vl.total, 0) as total FROM dates
+    as dd LEFT JOIN values as vl ON vl.date = dd.date;"
+  description:
+  preferences:
+    visualization: bar_chart
+    visualization_options:
+      label_format: currency
+      label_format_options:
+        currency: USD
+    variables:
+    - name: customer_id
+      display_name: Customer
+      variable_type: reference
+      reference_resource: customer
+  tags:
+  - Customers
+  updated_at: 2021-05-20 17:51:50.379192000 +00:00
+- id: 5
+  name: Total sales
+  sql_body: |-
+    SELECT (sum(li.unit_price * li.quantity)::integer::money / 100)
+    FROM orders as od
+    JOIN line_items as li ON li.order_id = od.id
+    WHERE od.status != 'canceled'
+  description:
+  preferences:
+    visualization: value
+    visualization_options:
+      label_format: decimal
+      label_format_options: {}
+    variables: []
+  tags:
+  - Stats
+  updated_at: 2021-05-20 19:02:17.847343000 +00:00
+- id: 6
+  name: Current month sales
+  sql_body: "WITH \nprev_period AS (\n  SELECT (sum(li.unit_price * li.quantity)::integer::money
+    / 100) as total\n  FROM orders as od\n  JOIN line_items as li ON li.order_id =
+    od.id\n  WHERE od.status != 'canceled'\n  AND od.created_at > date_trunc('month',
+    now() - '1 month'::interval) \n  AND od.created_at < date_trunc('month', now())\n),\ncurrent_period
+    AS (\n  SELECT (sum(li.unit_price * li.quantity)::integer::money / 100) as total\n
+    \ FROM orders as od\n  JOIN line_items as li ON li.order_id = od.id\n  WHERE od.status
+    != 'canceled'\n  AND od.created_at > date_trunc('month', now())\n)\nSELECT *,
+    (SELECT current_period.total - prev_period.total FROM prev_period) FROM current_period;"
+  description:
+  preferences:
+    visualization: value
+    visualization_options:
+      label_format: decimal
+      label_format_options: {}
+    variables: []
+  tags:
+  - Stats
+  updated_at: 2021-05-20 19:07:18.510477000 +00:00
+- id: 7
+  name: Orders processing funnel
+  sql_body: |-
+    (SELECT 'All', count(1) as total FROM orders as od WHERE od.status != 'canceled')
+    UNION ALL
+    (SELECT 'Shipped', count(1) as total FROM orders as od WHERE od.status IN ('delivered', 'shipped'))
+    UNION ALL
+    (SELECT 'Delivered', count(1) as total FROM orders as od WHERE od.status IN ('delivered'))
+  description:
+  preferences:
+    visualization: funnel
+    visualization_options:
+      label_format: decimal
+      label_format_options: {}
+    variables: []
+  tags:
+  - Stats
+  updated_at: 2021-05-20 19:19:54.517758000 +00:00
+- id: 8
+  name: Best performance result
+  sql_body: "WITH \ntop_product AS (\n  SELECT \n  pd.id as top_product_id, \n  pd.name
+    as top_product_name, \n  sum(li.quantity) as top_product_total\n  FROM products
+    as pd\n  JOIN line_items as li ON li.product_id = pd.id\n  GROUP BY pd.id ORDER
+    BY top_product_total DESC LIMIT 1\n),\ntop_customer AS (\n  SELECT \n  cs.id as
+    top_customer_id, \n  cs.name as top_customer_name, \n  cs.email as top_customer_email,
+    \n  (sum(li.quantity * li.unit_price) / 100)::numeric::money as top_customer_cash\n
+    \ FROM customers as cs \n  JOIN orders as od ON od.customer_id = cs.id\n  JOIN
+    line_items as li ON li.order_id = od.id\n  GROUP BY cs.id ORDER BY top_customer_cash
+    DESC LIMIT 1\n)\nSELECT * FROM top_customer CROSS JOIN top_product"
+  description:
+  preferences:
+    visualization: markdown
+    visualization_options:
+      label_format: decimal
+      label_format_options: {}
+      markdown: "### Largest customer\n\n[{{top_customer_name}}](/data/customers/{{top_customer_id}})
+        - **{{top_customer_cash}}** lifetime value \n\n### Best Product\n\n[{{top_product_name}}](/data/products/{{top_product_id}})
+        - ordered **{{top_product_total}}** times"
+    variables: []
+  tags:
+  - Stats
+  updated_at: 2021-05-20 22:07:10.070000000 +00:00
+- id: 9
+  name: Customer types
+  sql_body: |-
+    SELECT cs.kind, count(1)
+    FROM customers as cs
+    GROUP BY 1;
+  description:
+  preferences:
+    visualization: pie_chart
+    visualization_options:
+      label_format: decimal
+      label_format_options: {}
+    variables: []
+  tags:
+  - Stats
+  updated_at: 2021-05-20 20:07:05.429191000 +00:00
+- id: 10
+  name: Customer lifetime value
+  sql_body: "SELECT sum(unit_price::numeric::money * quantity) / 100 as total\nFROM
+    orders as od \nJOIN line_items as li ON li.order_id = od.id\nWHERE od.status !=
+    'canceled'\nAND od.customer_id = {{customer_id}}"
+  description:
+  preferences:
+    visualization: value
+    visualization_options:
+      label_format: decimal
+      label_format_options: {}
+    variables:
+    - name: customer_id
+      display_name: Customer
+      variable_type: reference
+      reference_resource: customer
+  tags:
+  - Customers
+  updated_at: 2021-05-21 17:45:28.272000000 +00:00
+- id: 11
+  name: Popular customer product categories
+  sql_body: "SELECT initcap(pr.category), count(1) \nFROM orders as od\nJOIN line_items
+    as li ON li.order_id = od.id\nJOIN products as pr ON pr.id = li.product_id\nWHERE
+    od.status != 'canceled'\nAND od.customer_id = {{customer_id}}\nGROUP BY 1 ORDER
+    BY 2 DESC"
+  description:
+  preferences:
+    visualization: row_chart
+    visualization_options:
+      label_format: decimal
+      label_format_options: {}
+      chart_values_axis: false
+    variables:
+    - name: customer_id
+      display_name: Customer
+      variable_type: reference
+      reference_resource: customer
+  tags:
+  - Customers
+  updated_at: 2021-05-21 20:23:48.488000000 +00:00
+- id: 12
+  name: New customers
+  sql_body: "SELECT * FROM customers \nWHERE created_at > now() - '3 months'::interval"
+  description:
+  preferences:
+    visualization: table
+    visualization_options: {}
+    variables: []
+  tags:
+  - Customers
+  updated_at: 2021-05-21 18:03:23.444000000 +00:00
+dashboards:
+- id: 1
+  title: Sales dashboard
+  description:
+  preferences:
+    layout:
+    - title: Current month sales
+      query_id: 6
+      size: 2x1
+    - title: Total sales
+      query_id: 5
+      size: 2x1
+    - title: Best performance result
+      query_id: 8
+      size: 2x1
+    - title: Total sales per month
+      query_id: 3
+      size: 6x2
+    - title: Product category per country
+      query_id: 1
+      size: 3x2
+    - title: Orders per country
+      query_id: 2
+      size: 3x2
+    - title: Orders processing funnel
+      query_id: 7
+      size: 3x2
+    - title: Customer types
+      query_id: 9
+      size: 3x2
+    variables: []
+  tags:
+  - Stats
+  updated_at: 2021-05-20 19:47:54.361980000 +00:00
+- id: 2
+  title: Customer summary
+  description:
+  preferences:
+    layout:
+    - title: Lifetime value
+      query_id: 10
+      size: 3x1
+    - title: Popular categories
+      query_id: 11
+      size: 3x1
+    - title: Total sales per month
+      query_id: 4
+      size: 6x2
+    variables: []
+  tags:
+  - Customers
+  updated_at: 2021-05-21 17:54:44.358000000 +00:00
+forms:
+- id: 1
+  name: Cancel order
+  http_method: POST
+  api_path: "/orders/{order_id}/cancel"
+  description:
+  preferences:
+    fields:
+    - display_name: Order
+      name: order_id
+      field_type: reference
+      default_value: ''
+      validators: []
+      reference:
+        model_name: order
+    - display_name: Reason
+      name: reason
+      field_type: textarea
+      default_value: ''
+      validators: []
+  tags:
+  - Orders
+  updated_at: 2021-05-20 13:23:05.149555000 +00:00
+alerts:
+- id: 1
+  name: New customers email
+  query_id: 12
+  to_emails: admin@example.com
+  is_enabled: true
+  description: ''
+  preferences:
+    timezone: Central Time (US & Canada)
+    interval: every Monday at 8 PM
+  tags:
+  - Customers
+  updated_at: 2021-05-21 18:05:05.637000000 +00:00

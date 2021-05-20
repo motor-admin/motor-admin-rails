@@ -168,6 +168,9 @@ export default {
         }
       }).then((result) => {
         this.$Message.info('Alert email has been sent!')
+      }).catch((error) => {
+        console.error(error)
+        this.$Message.error('Unable to send email')
       }).finally(() => {
         this.isSendingLoading = false
       })
@@ -183,6 +186,10 @@ export default {
         this.alert.is_enabled = result.data.data.is_enabled
 
         this.$Message.info(`Alert has been ${this.alert.is_enabled ? 'activated' : 'disabled'}`)
+      }).catch((error) => {
+        if (error.response.data?.errors?.length) {
+          this.$Message.error(error.response.data.errors.join('\n'))
+        }
       }).finally(() => {
         this.isEnabledToggleLoading = false
       })

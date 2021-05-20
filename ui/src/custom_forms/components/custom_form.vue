@@ -98,6 +98,16 @@ export default {
     safeSuccessData () {
       return DOMPurify.sanitize(this.successData)
     },
+    headers () {
+      const headers = {}
+      const csrfTag = document.querySelector('[name="csrf-token"]')
+
+      if (csrfTag) {
+        headers['X-CSRF-Token'] = csrfTag.content
+      }
+
+      return headers
+    },
     isSubmitDisabled () {
       return !this.form.api_path
     },
@@ -139,6 +149,8 @@ export default {
 
       return axios[method](path, {
         ...this.formData
+      }, {
+        headers: this.headers
       }).then((result) => {
         this.$emit('success', result)
         this.formData = Object.assign({ ...this.data }, this.defaultValues)
