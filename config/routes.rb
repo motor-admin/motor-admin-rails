@@ -13,6 +13,7 @@ Motor::Admin.routes.draw do
       resources :dashboards, only: %i[index show create update destroy]
       resources :forms, only: %i[index show create update destroy]
       resources :alerts, only: %i[index show create update destroy]
+      resources :icons, only: %i[index]
       resources :active_storage_attachments, only: %i[create], path: 'data/active_storage__attachments'
       resource :schema, only: %i[show update]
       resources :audits, only: %i[index]

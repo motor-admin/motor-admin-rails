@@ -14,6 +14,12 @@ module Motor
       JSON.parse(MANIFEST_PATH.read)
     end
 
+    def icons
+      manifest.select do |k, v|
+        !k.ends_with?('.gz') && v.starts_with?('icons/') && !v.include?('DS_Store')
+      end.keys
+    end
+
     def asset_path(path)
       Motor::Admin.routes.url_helpers.motor_asset_path(manifest[path])
     end

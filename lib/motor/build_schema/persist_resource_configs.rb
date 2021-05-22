@@ -3,9 +3,9 @@
 module Motor
   module BuildSchema
     module PersistResourceConfigs
-      RESOURCE_ATTRS = %w[display_name visible].freeze
+      RESOURCE_ATTRS = %w[display_name icon visible].freeze
       COLUMN_ATTRS = %w[name display_name column_type access_type default_value virtual format].freeze
-      ASSOCIATION_ATTRS = %w[name display_name visible].freeze
+      ASSOCIATION_ATTRS = %w[name display_name icon visible].freeze
       SCOPE_ATTRS = %w[name display_name scope_type preferences visible].freeze
       ACTION_ATTRS = %w[name display_name action_type preferences visible].freeze
       TAB_ATTRS = %w[name display_name tab_type preferences visible].freeze

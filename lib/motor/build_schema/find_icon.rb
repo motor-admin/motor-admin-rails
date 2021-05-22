@@ -3,6 +3,12 @@
 module Motor
   module FindIcon
     ICONS_MAP = {
+      'audit' => 'history',
+      'block' => 'ban',
+      'blocked' => 'ban',
+      'blacklisted' => 'ban',
+      'blocklisted' => 'ban',
+      'banned' => 'ban',
       'website' => 'world',
       'location' => 'gps',
       'photo' => 'photo',
@@ -28,7 +34,6 @@ module Motor
       'token' => 'key',
       'secret' => 'lock',
       'automation' => 'manual-gearbox',
-      'email' => 'mail',
       'relationship' => 'hierarchy',
       'person' => 'user',
       'people' => 'users',
@@ -43,7 +48,6 @@ module Motor
       'rule' => 'manual-gearbox',
       'tracking' => 'zoom-question',
       'github' => 'brand-github',
-      'block' => 'ban',
       'tag' => 'hash',
       'category' => 'hash',
       'label' => 'hash',
@@ -60,15 +64,11 @@ module Motor
       'model' => 'hash',
       'taxon' => 'hash',
       'affiliate' => 'affiliate',
-      'blocked' => 'ban',
-      'blacklisted' => 'ban',
-      'blocklisted' => 'ban',
       'chat' => 'message-circle',
       'message' => 'messages',
       'poll' => 'messages',
       'feedpack' => 'messages',
       'attachment' => 'paperclip',
-      'banned' => 'ban',
       'certificate' => 'certificate',
       'approval' => 'certificate',
       'bank' => 'building-bank',
@@ -105,7 +105,8 @@ module Motor
       'subscriber' => 'user-plus',
       'product' => 'building-store',
       'html' => 'code',
-      'stripe' => 'brand-stripe'
+      'stripe' => 'brand-stripe',
+      'email' => 'mail'
     }.freeze
 
     DEFAULT_ICON = 'database'

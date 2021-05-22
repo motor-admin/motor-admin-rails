@@ -13,7 +13,9 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir[
     '{app,config,db,lib}/**/*',
-    'ui/dist/**/*.{gz,woff2,json}',
+    'ui/dist/icons/*.gz',
+    'ui/dist/fonts/*.woff2',
+    'ui/dist/*.{gz,json}',
     'LICENSE',
     'Rakefile',
     'README.md'

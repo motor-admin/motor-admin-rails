@@ -14,6 +14,12 @@
           @click.stop
           @change="persistChanges"
         />
+        <CustomIcon
+          :type="resource.icon"
+          :size="20"
+          class="me-2"
+          @click.stop="openIconEditor"
+        />
         <Contenteditable
           v-model="resource.display_name"
           class="fs-4 fw-bold"
@@ -30,9 +36,14 @@
 
 <script>
 import api from 'api'
+import CustomIcon from 'utils/components/custom_icon'
+import IconSelect from './icon_select'
 
 export default {
   name: 'ResourceSettingsItem',
+  components: {
+    CustomIcon
+  },
   props: {
     resource: {
       type: Object,
@@ -40,12 +51,27 @@ export default {
     }
   },
   methods: {
+    openIconEditor () {
+      this.$Modal.open(IconSelect, {
+        onSelect: (icon) => {
+          this.resource.icon = icon
+
+          this.persistChanges()
+
+          this.$Modal.remove()
+        },
+        onClose: () => {
+          this.$Modal.remove()
+        }
+      })
+    },
     persistChanges () {
       return api.post('resources', {
         data: {
           name: this.resource.name,
           preferences: {
             display_name: this.resource.display_name,
+            icon: this.resource.icon,
             visible: this.resource.visible
           }
         }

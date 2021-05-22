@@ -1,10 +1,10 @@
 ---
-engine_version: 0.1.44
-file_version: 2021-05-22 09:32:53.638982000 Z
+engine_version: 0.1.45
+file_version: 2021-05-22 18:22:13.286210000 Z
 resources:
 - name: country
   preferences: {}
-  updated_at: 2021-05-20 16:41:05.892157000 +00:00
+  updated_at: 2021-05-22 16:22:23.404294000 +00:00
 - name: customer
   preferences:
     columns:
@@ -30,7 +30,7 @@ resources:
       tab_type: dashboard
       preferences:
         dashboard_id: 2
-  updated_at: 2021-05-21 17:55:39.711000000 +00:00
+  updated_at: 2021-05-22 16:30:58.033194000 +00:00
 - name: line_item
   preferences:
     columns:
@@ -68,7 +68,7 @@ resources:
 - name: order_note
   preferences:
     display_name: Notes
-  updated_at: 2021-05-22 09:32:53.638982000 +00:00
+  updated_at: 2021-05-22 16:22:28.073754000 +00:00
 - name: product
   preferences:
     columns:
@@ -83,7 +83,7 @@ resources:
     associations:
     - visible: false
       name: line_items
-  updated_at: 2021-05-20 18:51:38.655811000 +00:00
+  updated_at: 2021-05-22 18:22:13.286210000 +00:00
 configs:
 - key: header.links
   value:

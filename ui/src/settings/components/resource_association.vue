@@ -14,6 +14,12 @@
             v-model="association.visible"
             @change="persistChanges"
           />
+          <CustomIcon
+            :type="association.icon"
+            :size="18"
+            class="me-2 cursor-pointer"
+            @click.stop="openIconEditor"
+          />
           <Contenteditable
             v-model="association.display_name"
             class="fs-5 fw-bold"
@@ -28,9 +34,14 @@
 
 <script>
 import api from 'api'
+import CustomIcon from 'utils/components/custom_icon'
+import IconSelect from './icon_select'
 
 export default {
   name: 'AssociationItem',
+  components: {
+    CustomIcon
+  },
   props: {
     resourceName: {
       type: String,
@@ -42,6 +53,20 @@ export default {
     }
   },
   methods: {
+    openIconEditor () {
+      this.$Modal.open(IconSelect, {
+        onSelect: (icon) => {
+          this.association.icon = icon
+
+          this.persistChanges()
+
+          this.$Modal.remove()
+        },
+        onClose: () => {
+          this.$Modal.remove()
+        }
+      })
+    },
     persistChanges () {
       return api.post('resources', {
         data: {
