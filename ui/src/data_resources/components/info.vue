@@ -31,8 +31,9 @@
           >
             {{ title }}
           </h2>
-          <SettingsMask
+          <div
             v-if="isShowSettings"
+            class="settings-mask"
           />
         </div>
         <div

@@ -32,7 +32,7 @@ module Motor
       from ||= mailer_config_from_address
       from ||= "reports@#{ENV['HOST'].sub(/\Awww\./, '')}" if ENV['HOST'].present?
 
-      from
+      from || 'reports@example.com'
     end
 
     def application_mailer_default_from
@@ -42,7 +42,7 @@ module Motor
     end
 
     def mailer_config_from_address
-      return if Rails.application.config.action_mailer.default_url_options[:host].blank?
+      return if Rails.application.config.action_mailer.default_url_options&.dig(:host).blank?
 
       "reports@#{Rails.application.config.action_mailer.default_url_options[:host].sub(/\Awww\./, '')}"
     end

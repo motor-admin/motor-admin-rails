@@ -91,7 +91,7 @@ export default {
             return referenceModel.columns.map((refColumn) => {
               if (!refColumn.virtual && ['read_write', 'read_only'].includes(refColumn.access_type)) {
                 return {
-                  ...refColumn,
+                  ...(refColumn.name === column.reference.association_primary_key ? column : refColumn),
                   value: `${column.reference.name}.${refColumn.name}`,
                   label: `${column.reference.display_name} - ${refColumn.display_name}`
                 }

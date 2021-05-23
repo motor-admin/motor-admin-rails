@@ -1,6 +1,6 @@
 ---
-engine_version: 0.1.45
-file_version: 2021-05-22 18:22:13.286210000 Z
+engine_version: 0.1.46
+file_version: 2021-05-23 16:37:14.758438000 Z
 resources:
 - name: country
   preferences: {}
@@ -30,7 +30,7 @@ resources:
       tab_type: dashboard
       preferences:
         dashboard_id: 2
-  updated_at: 2021-05-22 16:30:58.033194000 +00:00
+  updated_at: 2021-05-23 16:37:14.758438000 +00:00
 - name: line_item
   preferences:
     columns:
@@ -100,6 +100,14 @@ configs:
   - file
   - created_at
   updated_at: 2021-05-20 12:28:27.887703000 +00:00
+- key: resources.country.columns.order
+  value:
+  - id
+  - name
+  - code
+  - updated_at
+  - created_at
+  updated_at: 2021-05-23 16:32:56.385918000 +00:00
 - key: resources.customer.associations.order
   value:
   - orders
@@ -329,13 +337,13 @@ queries:
     visualization_options:
       label_format: decimal
       label_format_options: {}
-      markdown: "### Largest customer\n\n[{{top_customer_name}}](/data/customers/{{top_customer_id}})
-        - **{{top_customer_cash}}** lifetime value \n\n### Best Product\n\n[{{top_product_name}}](/data/products/{{top_product_id}})
+      markdown: "### Top customer\n\n[{{top_customer_name}}](/data/customers/{{top_customer_id}})
+        - **{{top_customer_cash}}** lifetime value \n\n### Best selling product\n\n[{{top_product_name}}](/data/products/{{top_product_id}})
         - ordered **{{top_product_total}}** times"
     variables: []
   tags:
   - Stats
-  updated_at: 2021-05-20 22:07:10.070000000 +00:00
+  updated_at: 2021-05-23 09:35:35.569000000 +00:00
 - id: 9
   name: Customer types
   sql_body: |-
@@ -415,7 +423,7 @@ dashboards:
     - title: Total sales
       query_id: 5
       size: 2x1
-    - title: Best performance result
+    - title: Top performance result
       query_id: 8
       size: 2x1
     - title: Total sales per month
@@ -436,7 +444,7 @@ dashboards:
     variables: []
   tags:
   - Stats
-  updated_at: 2021-05-20 19:47:54.361980000 +00:00
+  updated_at: 2021-05-23 09:34:56.817000000 +00:00
 - id: 2
   title: Customer summary
   description:

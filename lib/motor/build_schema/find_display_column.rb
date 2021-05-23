@@ -31,6 +31,7 @@ module Motor
           manufacturer
           model
           address
+          code
         ]
       ).freeze
 

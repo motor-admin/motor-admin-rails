@@ -92,7 +92,7 @@
                                   <th><%= column[:name] %></th>
                                 <% end %>
                               </tr>
-                              <% @query_result.data.first(100).each do |row| %>
+                              <% @query_result.data.first(40).each do |row| %>
                                 <tr>
                                   <% row.each do |col| %>
                                     <td><%= col.respond_to?(:strftime) ? l(col, format: :long) : col.to_s.truncate(100) %></th>

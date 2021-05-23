@@ -16,11 +16,7 @@
         :style="{ minHeight: '100%' }"
         @select="onMenuSelect"
       />
-      <SettingsMask
-        v-if="isShowSettings"
-        :settings-type="'scopes'"
-        :resource="model"
-      />
+      <SettingsMask v-if="isShowSettings" />
     </Sider>
     <Layout class="d-block">
       <template v-if="fragments && fragments.length">

@@ -8,7 +8,7 @@
     v-else-if="column.reference && column.reference.model_name"
     :model-value="modelValue"
     :resource-name="column.reference.model_name"
-    :primary_key="column.reference.association_primary_key"
+    :primary-key="column.reference.association_primary_key"
     @update:modelValue="onSelect"
   />
   <MSelect

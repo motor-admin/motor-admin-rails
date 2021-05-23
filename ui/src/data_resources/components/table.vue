@@ -31,6 +31,13 @@
           :button-only="true"
           :resource="model"
         />
+        <SettingsMask
+          v-if="isShowSettings && !withResize"
+          class="me-2"
+          :settings-type="'scopes'"
+          :button-only="true"
+          :resource="model"
+        />
         <span
           v-if="withTitle && !selectedRows.length"
           class="fs-4 fw-bold nowrap overflow-hidden text-truncate"

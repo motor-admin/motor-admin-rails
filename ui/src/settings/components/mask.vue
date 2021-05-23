@@ -1,14 +1,13 @@
 <template>
   <div :class="{ 'settings-mask': !buttonOnly }">
     <VButton
-      v-if="resource || preferences"
       ghost
       class="bg-white"
       icon="md-create"
       type="warning"
       @click="openSettings"
     >
-      {{ titleize(settingsType) }}
+      {{ titleize(settingsType || 'resources') }}
     </VButton>
   </div>
 </template>
@@ -34,7 +33,7 @@ export default {
     settingsType: {
       type: String,
       required: false,
-      default: 'all'
+      default: null
     },
     buttonOnly: {
       type: Boolean,
@@ -47,12 +46,7 @@ export default {
   methods: {
     titleize,
     openSettings () {
-      if (this.resource) {
-        openSettingsDrawer({
-          selectedResource: this.resource,
-          settingsType: this.settingsType
-        })
-      } else if (this.preferences) {
+      if (this.preferences) {
         toggleSettings()
 
         this.$router.push({
@@ -61,13 +55,18 @@ export default {
             id: this.preferences[`${this.settingsType}_id`]
           }
         })
+      } else {
+        openSettingsDrawer({
+          selectedResource: this.resource,
+          settingsType: this.settingsType
+        })
       }
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .settings-mask {
   display: flex;
   justify-content: center;

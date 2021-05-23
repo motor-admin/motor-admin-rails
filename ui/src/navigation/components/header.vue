@@ -71,15 +71,6 @@
     </div>
     <div class="col-2 d-flex justify-content-end align-items-center">
       <VButton
-        v-if="isShowSettings"
-        type="primary"
-        size="large"
-        class="header-btn"
-        @click="openSettingsDrawer()"
-      >
-        All Resources
-      </VButton>
-      <VButton
         v-if="!isShowSettings"
         type="primary"
         size="large"
