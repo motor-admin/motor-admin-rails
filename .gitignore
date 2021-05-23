@@ -12,3 +12,5 @@
 /ui/dist
 .byebug_history
 .yardoc
+.DS_Store
+/images
