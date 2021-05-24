@@ -8,7 +8,7 @@ module Motor
       return taggable unless tags
 
       tags.each do |tag_name|
-        next if taggable.taggable_tags.find { |tt| tt.tag.name.downcase == tag_name.downcase }
+        next if taggable.taggable_tags.find { |tt| tt.tag.name.casecmp(tag_name).zero? }
 
         tag = Tag.where('lower(name) = ?', tag_name.downcase).take || Tag.new(name: tag_name)
 

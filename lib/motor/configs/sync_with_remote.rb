@@ -9,7 +9,7 @@ module Motor
       module_function
 
       def call(remote_url, api_key)
-        url = remote_url.sub(%r{/\z}, '') + Motor::Configs::SYNC_API_PATH
+        url = remote_url.delete_suffix('/') + Motor::Configs::SYNC_API_PATH
 
         sync_from_remote!(url, api_key)
         sync_to_remote!(url, api_key)

@@ -20,7 +20,7 @@ module Motor
     def show
       filename = params[:filename]
 
-      return [404, {}, ''] unless Motor::Assets.manifest.values.include?(filename)
+      return [404, {}, ''] unless Motor::Assets.manifest.value?(filename)
 
       assign_headers(filename)
 

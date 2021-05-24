@@ -22,7 +22,7 @@ countries = Country.create!(
   ]
 )
 
-customer_attributes = 120.times.map do
+customer_attributes = Array.new(120) do
   name = "#{Faker::Name.first_name} #{Faker::Name.last_name}"
 
   {
@@ -35,7 +35,7 @@ end
 
 customers = Customer.create!(customer_attributes)
 
-product_attributes = 30.times.map do
+product_attributes = Array.new(30) do
   {
     name: Faker::Book.unique.title,
     price: (99..9999).to_a.sample,
@@ -55,6 +55,8 @@ end
 
 Product.create!(product_attributes)
 
+customer_statuses = %w[pending delivered]
+
 customers.each do |customer|
   (1..3).to_a.sample.times do
     order = Order.create!(
@@ -64,7 +66,7 @@ customers.each do |customer|
       address_city: Faker::Address.city,
       address_state: Faker::Address.state_abbr,
       address_zip: Faker::Address.zip,
-      status: %w[pending delivered].sample,
+      status: customer_statuses.sample,
       created_at: Time.current - (0..150).to_a.sample.days
     )
 

@@ -2,6 +2,6 @@
 
 module Motor
   class Tag < ::Motor::ApplicationRecord
-    has_many :taggable_tags
+    has_many :taggable_tags, dependent: :destroy
   end
 end

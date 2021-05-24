@@ -4,6 +4,8 @@ module Motor
   class UiController < ApplicationController
     layout 'motor/application'
 
+    helper_method :current_user
+
     def index
       Motor.reload! if Motor.development?
 

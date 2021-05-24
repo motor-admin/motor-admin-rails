@@ -11,13 +11,14 @@
         />
         <Checkbox
           v-model="resource.visible"
+          class="m-0"
           @click.stop
           @change="persistChanges"
         />
         <CustomIcon
           :type="resource.icon"
-          :size="20"
-          class="me-2"
+          :size="36"
+          class="p-2 mx-1"
           @click.stop="openIconEditor"
         />
         <Contenteditable
@@ -83,3 +84,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.ivu-card-body {
+  padding: 10px 16px;
+}
+</style>

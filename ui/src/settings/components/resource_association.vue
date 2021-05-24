@@ -4,7 +4,7 @@
       class="ivu-card ivu-card-bordered"
       :style="{ opacity: association.visible ? 1 : 0.5 }"
     >
-      <div class="ivu-card-body d-flex align-items-center justify-content-between py-2">
+      <div class="ivu-card-body d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
           <Icon
             type="ios-menu"
@@ -12,12 +12,13 @@
           />
           <Checkbox
             v-model="association.visible"
+            class="m-0"
             @change="persistChanges"
           />
           <CustomIcon
             :type="association.icon"
-            :size="18"
-            class="me-2 cursor-pointer"
+            :size="26"
+            class="p-1 mx-1 cursor-pointer"
             @click.stop="openIconEditor"
           />
           <Contenteditable
@@ -85,3 +86,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.ivu-card-body {
+  padding: 5px 16px 6px 16px;
+}
+</style>

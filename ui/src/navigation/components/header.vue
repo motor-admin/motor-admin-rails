@@ -71,10 +71,22 @@
     </div>
     <div class="col-2 d-flex justify-content-end align-items-center">
       <VButton
-        v-if="!isShowSettings"
+        v-if="!isShowSettings && currentUser.showHelp"
         type="primary"
         size="large"
         class="header-btn"
+        @click="openGuides"
+      >
+        <Icon
+          type="md-help"
+          size="large"
+        />
+      </VButton>
+      <VButton
+        v-if="!isShowSettings"
+        type="primary"
+        size="large"
+        class="ms-2 header-btn"
         @click="openSearch"
       >
         <Icon
@@ -125,6 +137,10 @@
           :type="isShowSettings ? 'md-close' : 'md-settings'"
           size="large"
         />
+        <span
+          v-if="isShowSettings"
+          style="vertical-align: middle"
+        >Close Settings</span>
       </VButton>
     </div>
   </div>
@@ -132,6 +148,7 @@
 
 <script>
 import Search from './search'
+import Guides from './guides'
 import LinksEdit from './links_edit'
 import { modelSlugMap, modelNameMap } from 'data_resources/scripts/schema'
 import { linksStore } from '../scripts/links_store'
@@ -139,11 +156,13 @@ import { basePath } from 'utils/scripts/configs'
 import { widthLessThan } from 'utils/scripts/dimensions'
 import { isShowSettings, toggleSettings } from 'settings/scripts/toggle'
 import { openSettingsDrawer } from 'settings/scripts/drawer'
+import { currentUser } from 'navigation/scripts/user_store'
 
 export default {
   name: 'AppHeader',
   computed: {
     isShowSettings,
+    currentUser: () => currentUser,
     links () {
       return linksStore
     },
@@ -190,6 +209,14 @@ export default {
         }
       })
     },
+    openGuides () {
+      this.$Modal.open(Guides, {
+      }, {
+        title: '  ',
+        closable: true,
+        className: 'modal-size-large'
+      })
+    },
     openEditModal () {
       this.$Drawer.open(LinksEdit, {
       }, {
@@ -231,6 +258,9 @@ export default {
   }
   .ion-md-settings {
     font-size: 22px;
+  }
+  .ion-md-help {
+    font-size: 24px;
   }
   .ion-md-close {
     font-size: 20px;

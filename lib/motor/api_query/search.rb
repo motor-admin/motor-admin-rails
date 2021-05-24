@@ -57,13 +57,7 @@ module Motor
       def find_searchable_columns(model)
         model.columns.map do |column|
           next unless column.type.in?(COLUMN_TYPES)
-
-          has_inclusion_validator =
-            model.validators_on(column.name).any? do |e|
-              e.is_a?(ActiveModel::Validations::InclusionValidator)
-            end
-
-          next if has_inclusion_validator
+          next if model.validators_on(column.name).any?(ActiveModel::Validations::InclusionValidator)
 
           column.name
         end.compact

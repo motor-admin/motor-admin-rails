@@ -26,11 +26,11 @@ module Motor
     end
 
     def from_address
-      from = ENV['MOTOR_ADMIN_FROM_ADDRESS'].presence
+      from = ENV['MOTOR_ALERTS_FROM_ADDRESS'].presence
 
       from ||= application_mailer_default_from
       from ||= mailer_config_from_address
-      from ||= "reports@#{ENV['HOST'].sub(/\Awww\./, '')}" if ENV['HOST'].present?
+      from ||= "reports@#{ENV['HOST'].delete_prefix('www.')}" if ENV['HOST'].present?
 
       from || 'reports@example.com'
     end
@@ -44,7 +44,7 @@ module Motor
     def mailer_config_from_address
       return if Rails.application.config.action_mailer.default_url_options&.dig(:host).blank?
 
-      "reports@#{Rails.application.config.action_mailer.default_url_options[:host].sub(/\Awww\./, '')}"
+      "reports@#{Rails.application.config.action_mailer.default_url_options[:host].delete_prefix('www.')}"
     end
   end
 end

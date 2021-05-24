@@ -18,7 +18,7 @@ module Motor
       end
 
       def apply_filter_scope(rel, scope)
-        configs = Motor::Resource.find_by_name(rel.klass.name.underscore)
+        configs = Motor::Resource.find_by(name: rel.klass.name.underscore)
 
         return rel unless configs
 

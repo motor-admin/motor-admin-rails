@@ -111,6 +111,11 @@ export default {
     .contenteditable-edit-button {
       display: block
     }
+
+    img {
+      border-radius: 5px;
+      background: rgba(1,1,1,0.05);
+    }
   }
 }
 </style>

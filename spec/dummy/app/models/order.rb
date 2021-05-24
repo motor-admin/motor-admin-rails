@@ -21,7 +21,7 @@ class Order < ApplicationRecord
   scope :delivered, -> { where(status: :delivered) }
 
   def total_price
-    line_items.map(&:total_price).reduce(0, :+)
+    line_items.sum(&:total_price)
   end
 
   def ship!

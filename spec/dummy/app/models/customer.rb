@@ -25,6 +25,6 @@ class Customer < ApplicationRecord
   scope :standard, -> { where(kind: :standard) }
 
   def lifetime_value
-    orders.map(&:total_price).reduce(0, :+)
+    orders.sum(&:total_price)
   end
 end

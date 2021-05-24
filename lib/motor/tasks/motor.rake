@@ -3,6 +3,10 @@
 namespace :motor do
   desc 'Update configs/motor.yml file'
 
+  task install: :environment do
+    Rails::Generators.invoke('motor:install')
+  end
+
   task dump: :environment do
     Motor::Configs::WriteToFile.write_with_lock
 

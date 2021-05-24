@@ -195,3 +195,15 @@ input,
 textarea {
   background-clip: padding-box;
 }
+
+.modal-size-large {
+  .ivu-modal {
+    top: 10px;
+  }
+
+  @media screen and (min-width: 1200px) {
+    .ivu-modal {
+      width: 1200px !important;
+    }
+  }
+}

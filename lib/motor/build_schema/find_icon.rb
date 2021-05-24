@@ -13,6 +13,7 @@ module Motor
       'location' => 'gps',
       'photo' => 'photo',
       'image' => 'photo',
+      'screenshot' => 'photo',
       'picture' => 'photo',
       'video' => 'video',
       'file' => 'file',

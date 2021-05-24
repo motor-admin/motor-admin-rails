@@ -2,9 +2,9 @@
 
 Low-code Admin panel and Business intelligence Rails engine **(no DSL - configurable from the UI)**.
 
-🤓 [Demo App](https://motor-admin-demo.herokuapp.com)
+🤓 [Demo App](https://motor-admin.herokuapp.com/demo) | [Features overview](https://www.youtube.com/watch?v=ngVoci8Hll4&list=PLu7llEMh0KcOkR3Uy_RJT0cXPZQKAYVsq&index=1)
 
-[![Admin Panel](https://user-images.githubusercontent.com/5418788/119258612-2351f780-bbd3-11eb-8264-2e044cde868d.png)](https://motor-admin-demo.herokuapp.com)
+[![Admin Panel](https://user-images.githubusercontent.com/5418788/119318538-1f30e300-bc82-11eb-94a4-107c31c93b13.png)](https://motor-admin.herokuapp.com/demo)
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -20,7 +20,7 @@ $ bundle install
 
 Create and run migration:
 ```bash
-$ rails generate motor:install && rake db:migrate
+$ rails motor:install && rake db:migrate
 ```
 
 ## Features
@@ -38,7 +38,7 @@ $ rails generate motor:install && rake db:migrate
 
 ### Customizable CRUD
 
-![Resource settings](https://user-images.githubusercontent.com/5418788/119262945-b136de00-bbe5-11eb-846a-6e01c8c42904.png)
+![Resource settings](https://user-images.githubusercontent.com/5418788/119318569-2a840e80-bc82-11eb-9ba3-f3964eb6f997.png)
 
 ![Settings UI](https://user-images.githubusercontent.com/5418788/119263883-90708780-bbe9-11eb-9f9f-f76fed0b7f27.png)
 
@@ -56,7 +56,7 @@ Custom resource actions can be added via Active Record method call, API endpoint
 
 ![Custom form](https://user-images.githubusercontent.com/5418788/119264008-1391dd80-bbea-11eb-9f14-cb405e77fb60.png)
 
-Values from the form fields can be used in API path via `{field_name}` syntax: `/api/some-endpoint/{field_name}/apply`
+Values from the form fields can be used in API path via `{field_name}` syntax: `/api/some-endpoint/{resource_id}/apply`
 
 ### SQL Queries
 
@@ -68,7 +68,7 @@ Queries can include embeded variables via `{{variable}}` syntax ([mustache](http
 
 ![motor-visualization](https://user-images.githubusercontent.com/5418788/119264625-a2075e80-bbec-11eb-986c-6106dd6e47ce.png)
 
-Data from the SQL query can be represented as: [table](https://motor-admin-demo.herokuapp.com/queries/12), [number](https://motor-admin-demo.herokuapp.com/queries/6), [line chart](https://motor-admin-demo.herokuapp.com/queries/3), [bar chart](https://motor-admin-demo.herokuapp.com/queries/1), [pie chart](https://motor-admin-demo.herokuapp.com/queries/9), [funnel](https://motor-admin-demo.herokuapp.com/queries/7), [markdown](https://motor-admin-demo.herokuapp.com/queries/8)
+Data from the SQL query can be represented as: [table](https://motor-admin.herokuapp.com/demo/queries/12), [number](https://motor-admin.herokuapp.com/demo/queries/6), [line chart](https://motor-admin.herokuapp.com/demo/queries/3), [bar chart](https://motor-admin.herokuapp.com/demo/queries/1), [pie chart](https://motor-admin.herokuapp.com/demo/queries/9), [funnel](https://motor-admin.herokuapp.com/demo/queries/7), [markdown](https://motor-admin.herokuapp.com/demo/queries/8)
 
 ### Dashboards
 
@@ -82,7 +82,7 @@ SQL queries can be organized into dashboards to create a convenient representati
 
 Query data can be sent via email periodically using the alerts feature. Interval of the alert email can be specified using natural language, e.g., `every day at midnight`, `every Monday at 8 PM`, `every weekday at 6AM and 6PM`, `every minute`.
 
-The sender address can be specified using `MOTOR_ADMIN_FROM_ADDRESS` environment variable.
+Sender address can be specified using `MOTOR_ALERTS_FROM_ADDRESS` environment variable.
 
 ### Intelligence Search
 
@@ -125,6 +125,12 @@ Start webpack dev server:
 
 ```bash
 yarn install && yarn serve
+```
+
+Setup development database:
+
+```bash
+rake app:db:create && rake app:db:setup
 ```
 
 Start example application in development mode:

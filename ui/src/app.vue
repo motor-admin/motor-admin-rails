@@ -7,7 +7,10 @@
 </template>
 
 <script>
+import Welcome from 'navigation/components/welcome'
 import AppHeader from 'navigation/components/header'
+
+import { currentUser } from 'navigation/scripts/user_store'
 
 export default {
   name: 'App',
@@ -21,12 +24,32 @@ export default {
 
     window.addEventListener('load', this.setVh)
     window.addEventListener('resize', this.setVh)
+
+    this.maybeShowWelcomeModal()
   },
   methods: {
     setVh () {
       const vh = window.innerHeight
 
       document.documentElement.style.setProperty('--vh', `${vh}px`)
+    },
+    maybeShowWelcomeModal () {
+      if (currentUser.showWelcome) {
+        this.$Modal.open(Welcome, {
+          onClose: () => {
+            this.$Modal.remove()
+          },
+          onOpenGuides: () => {
+            this.$Modal.remove()
+
+            setTimeout(() => {
+              this.$refs.header.openGuides()
+            }, 350)
+          }
+        })
+
+        currentUser.showWelcome = false
+      }
     },
     processKey (event) {
       if ((event.ctrlKey || event.metaKey) && event.keyCode === 80) {

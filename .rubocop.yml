@@ -1,7 +1,11 @@
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+
 AllCops:
   NewCops: enable
   Exclude:
-    - test/**/*
     - node_modules/**/*
     - ui/node_modules/**/*
     - bin/*
@@ -39,3 +43,18 @@ Naming/MethodParameterName:
 
 Metrics/ModuleLength:
   Max: 200
+
+Rails/Date:
+  Enabled: false
+
+Rails/SquishedSQLHeredocs:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/Output:
+  Enabled: false
+
+Rails/LexicallyScopedActionFilter:
+  Enabled: false

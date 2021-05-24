@@ -16,7 +16,7 @@ module Motor
 
     def icons
       manifest.select do |k, v|
-        !k.ends_with?('.gz') && v.starts_with?('icons/') && !v.include?('DS_Store')
+        !k.ends_with?('.gz') && v.starts_with?('icons/') && v.exclude?('DS_Store')
       end.keys
     end
 

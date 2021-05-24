@@ -57,7 +57,7 @@ module Motor
       end
 
       def maybe_fetch_from_cache(type, cache_key, &block)
-        return block.call unless cache_key
+        return yield unless cache_key
 
         CACHE_STORE.fetch(type + cache_key.to_s, &block)
       end

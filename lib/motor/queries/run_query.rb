@@ -73,7 +73,7 @@ module Motor
 
         attributes = build_statement_attributes(query_variables)
 
-        [format(WITH_STATEMENT_TEMPLATE, sql_body: sql.strip.gsub(/;\z/, ''), limit: limit), 'SQL', attributes]
+        [format(WITH_STATEMENT_TEMPLATE, sql_body: sql.strip.delete_suffix(';'), limit: limit), 'SQL', attributes]
       end
 
       # @param variables [Array<(String, Object)>]

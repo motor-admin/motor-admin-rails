@@ -96,8 +96,8 @@ module Motor
       def normalize_include_params(params)
         case params
         when Array
-          params.each_with_object({}) do |name, hash|
-            hash[name] = { 'include' => {} }
+          params.index_with do |_|
+            { 'include' => {} }
           end
         when String
           { params => { 'include' => {} } }

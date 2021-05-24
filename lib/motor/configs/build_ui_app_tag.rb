@@ -12,21 +12,21 @@ module Motor
 
       module_function
 
-      def call
+      def call(current_user = nil)
         cache_keys = LoadFromCache.load_cache_keys
 
-        CACHE_STORE.fetch(cache_keys.hash) do
+        CACHE_STORE.fetch("#{cache_keys.hash}#{current_user&.id}") do
           CACHE_STORE.clear
 
-          Motor::ApplicationController.helpers.content_tag(
-            :div, '', id: 'app', data: build_data(cache_keys)
-          )
+          Motor::ApplicationController.helpers.tag.div('', id: 'app', data: build_data(cache_keys, current_user))
         end
       end
 
       # @return [Hash]
-      def build_data(cache_keys = {})
+      def build_data(cache_keys = {}, current_user = nil)
         {
+          current_user: current_user&.as_json(only: %i[id email]),
+          audits_count: Motor::Audit.count,
           base_path: Motor::Admin.routes.url_helpers.motor_path,
           schema: Motor::BuildSchema.call(cache_keys),
           header_links: header_links_data_hash(cache_keys[:configs]),
