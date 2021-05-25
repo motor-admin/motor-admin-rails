@@ -212,7 +212,6 @@ export default {
     openGuides () {
       this.$Modal.open(Guides, {
       }, {
-        title: '  ',
         closable: true,
         className: 'modal-size-large'
       })

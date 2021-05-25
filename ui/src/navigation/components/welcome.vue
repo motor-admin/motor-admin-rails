@@ -7,7 +7,7 @@
       👋 Welcome to Motor Admin
     </p>
     <p class="fs-4 mb-4">
-      Motor Admin allows to create a powerful admin panel writing less code.
+      Motor Admin allows to create a powerful admin panel with writing less code.
     </p>
 
     <VButton
@@ -20,9 +20,7 @@
       Watch Features Overview
     </VButton>
     <br>
-
     <a
-      class="fs-4"
       href="#"
       @click.prevent="step = 'subscribe'"
     >

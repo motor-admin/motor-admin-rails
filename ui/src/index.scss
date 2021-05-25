@@ -201,9 +201,9 @@ textarea {
     top: 10px;
   }
 
-  @media screen and (min-width: 1200px) {
+  @media screen and (min-width: $breakpoint-xl) {
     .ivu-modal {
-      width: 1200px !important;
+      width: $breakpoint-xl !important;
     }
   }
 }

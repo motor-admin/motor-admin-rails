@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-2 d-block">
+    <div class="col-12 col-xl-2 order-1 order-xl-0">
       <VButton
         v-for="item in steps"
         :key="item.key"
@@ -12,7 +12,7 @@
         {{ item.name }}
       </VButton>
     </div>
-    <div class="col-10">
+    <div class="col-12 col-xl-10">
       <div v-if="currentItem.videoId">
         <div class="video-container">
           <iframe
@@ -25,6 +25,7 @@
           <VButton
             type="primary"
             size="large"
+            class="d-none d-xl-inline"
             @click="nextStep"
           >
             Next
