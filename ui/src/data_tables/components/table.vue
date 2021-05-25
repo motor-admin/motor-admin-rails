@@ -81,6 +81,7 @@
                 :resource-id="getReferenceId(column, row)"
                 :reference-name="column.reference.model_name"
                 :reference-data="row[column.reference.name]"
+                :always-refer="alwaysRefer"
                 :polymorphic-name="row[column.reference.name + '_type']"
               />
               <DataCell
@@ -147,6 +148,11 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    alwaysRefer: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     clickRows: {
       type: Boolean,

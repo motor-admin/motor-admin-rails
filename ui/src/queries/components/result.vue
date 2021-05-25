@@ -46,6 +46,7 @@
         :click-rows="false"
         :borderless="borderless"
         :loading="loading"
+        :always-refer="true"
         :header-border="headerBorder"
         :compact="compact"
         :columns="normalizedColumns"

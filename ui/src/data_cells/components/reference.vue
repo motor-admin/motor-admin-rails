@@ -1,7 +1,7 @@
 <template>
   <VButton
     v-popover="popoverParams"
-    :to="referenceId ? { name: 'resources', params: { fragments: [resourceSlug, referenceId] }} : null"
+    :to="referenceId || alwaysRefer ? { name: 'resources', params: { fragments: [resourceSlug, referenceId || resourceId].filter(Boolean) }} : null"
     type="primary"
     ghost
     shape="circle"
@@ -46,6 +46,11 @@ export default {
       type: Number,
       required: false,
       default: 20
+    },
+    alwaysRefer: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     showPopover: {
       type: Boolean,
