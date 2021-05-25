@@ -110,7 +110,7 @@ export default {
       return !!this.stringValue.match(/^\+[\d\s()-]{5,}$/)
     },
     isEmail () {
-      return !!this.stringValue.match(/^[\w.]+@\w+\.\w{2,3}/)
+      return !!this.stringValue.match(/^[\w.]+@[\w-]+\.\w{2,3}/)
     },
     isBoolean () {
       return this.type === 'boolean'
