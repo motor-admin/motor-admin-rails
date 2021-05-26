@@ -3,7 +3,8 @@
 module Motor
   module Configs
     module LoadFromCache
-      CACHE_STORE = ActiveSupport::Cache::MemoryStore.new(size: 10.megabytes)
+      CACHE_STORE = ActiveSupport::Cache::MemoryStore.new(size: 10.megabytes,
+                                                          coder: ActiveSupport::Cache::NullCoder)
 
       module_function
 

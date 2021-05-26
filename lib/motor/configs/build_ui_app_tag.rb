@@ -7,7 +7,8 @@ module Motor
         if Motor.development?
           ActiveSupport::Cache::NullStore.new
         else
-          ActiveSupport::Cache::MemoryStore.new(size: 5.megabytes)
+          ActiveSupport::Cache::MemoryStore.new(size: 5.megabytes,
+                                                coder: ActiveSupport::Cache::NullCoder)
         end
 
       module_function

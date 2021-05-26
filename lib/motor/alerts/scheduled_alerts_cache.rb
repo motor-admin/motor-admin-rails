@@ -3,7 +3,8 @@
 module Motor
   module Alerts
     module ScheduledAlertsCache
-      CACHE_STORE = ActiveSupport::Cache::MemoryStore.new(size: 5.megabytes)
+      CACHE_STORE = ActiveSupport::Cache::MemoryStore.new(size: 5.megabytes,
+                                                          coder: ActiveSupport::Cache::NullCoder)
 
       module_function
 
