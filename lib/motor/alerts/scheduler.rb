@@ -3,7 +3,7 @@
 module Motor
   module Alerts
     module Scheduler
-      SCHEDULER_INTERVAL = 10.seconds
+      SCHEDULER_INTERVAL = 1.minute
       CHECK_BEHIND_DURATION = 15.minutes
 
       SCHEDULER_TASK = Concurrent::TimerTask.new(
