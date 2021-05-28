@@ -3,6 +3,7 @@
     v-if="createAction"
     type="primary"
     icon="md-add"
+    data-role="new"
     @click="openForm"
   />
 </template>

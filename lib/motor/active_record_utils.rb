@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
-module ActiveRecordUtils
+module Motor
+  module ActiveRecordUtils
+    module_function
+
+    def reset_id_sequence!(model)
+      case ActiveRecord::Base.connection.class.name
+      when 'ActiveRecord::ConnectionAdapters::PostgreSQLAdapter'
+        ActiveRecord::Base.connection.reset_pk_sequence!(model.table_name)
+      else
+        ActiveRecord::Base.connection.reset_sequence!(model.table_name, 'id')
+      end
+    end
+  end
 end
 
 require_relative './active_record_utils/types'

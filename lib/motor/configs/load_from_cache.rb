@@ -64,18 +64,22 @@ module Motor
       end
 
       def load_cache_keys
-        ActiveRecord::Base.connection.execute(
-          "(#{
-            [
-              Motor::Config.select("'configs', MAX(updated_at)").to_sql,
-              Motor::Resource.select("'resources', MAX(updated_at)").to_sql,
-              Motor::Dashboard.select("'dashboards', MAX(updated_at)").to_sql,
-              Motor::Alert.select("'alerts', MAX(updated_at)").to_sql,
-              Motor::Query.select("'queries', MAX(updated_at)").to_sql,
-              Motor::Form.select("'forms', MAX(updated_at)").to_sql
-            ].join(') UNION (')
-          })"
-        ).to_a.map(&:values).to_h.with_indifferent_access
+        result = ActiveRecord::Base.connection.execute(cache_keys_sql).to_a
+
+        result = result.map(&:values) if result.first.is_a?(Hash)
+
+        result.to_h.with_indifferent_access
+      end
+
+      def cache_keys_sql
+        [
+          Motor::Config.select("'configs', MAX(updated_at)").to_sql,
+          Motor::Resource.select("'resources', MAX(updated_at)").to_sql,
+          Motor::Dashboard.select("'dashboards', MAX(updated_at)").to_sql,
+          Motor::Alert.select("'alerts', MAX(updated_at)").to_sql,
+          Motor::Query.select("'queries', MAX(updated_at)").to_sql,
+          Motor::Form.select("'forms', MAX(updated_at)").to_sql
+        ].join(' UNION ')
       end
     end
   end

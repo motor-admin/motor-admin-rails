@@ -1,3 +1,16 @@
+<% if ENV['DATABASE_TYPE'] == 'mysql' %>
+common: &common
+  adapter: mysql2
+  encoding: utf8mb4
+  username: root
+  password:
+  host: 127.0.0.1
+  port: 3306
+<% elsif ENV['DATABASE_TYPE'] == 'sqlite' %>
+common: &common
+  adapter: sqlite3
+  timeout: 30000
+<% else %>
 common: &common
   adapter: postgresql
   encoding: unicode
@@ -7,16 +20,17 @@ common: &common
   username: postgres
   password: postgres
   host: localhost
+<% end %>
 
 development:
   <<: *common
-  database: motor_example_dev
+  database: motor_admin_dev
 
 test:
   <<: *common
-  database: motor_example_test
+  database: motor_admin_test
 
 production:
   adapter: postgresql
   pool: 10
-  url: <%= ENV["DATABASE_URL"] %>
+  url: <%= ENV['DATABASE_URL'] %>

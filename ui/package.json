@@ -22,6 +22,7 @@
   "scripts": {
     "serve": "./node_modules/webpack/bin/webpack.js serve",
     "build:dev": "./node_modules/webpack/bin/webpack.js",
+    "build:test": "./node_modules/webpack/bin/webpack.js --env test",
     "build:prod": "./node_modules/webpack/bin/webpack.js --env production",
     "eslint": "./node_modules/eslint/bin/eslint.js \"src/**/*.{js,vue}\" --fix",
     "stylelint": "./node_modules/stylelint/bin/stylelint.js \"src/**/*.{scss,css}\" --fix"

@@ -28,7 +28,7 @@ module Motor
       end
 
       def create_from_params!(params, current_user = nil)
-        raise NameAlreadyExists if Alert.exists?(['lower(name) = ?', params[:name].to_s.downcase])
+        raise NameAlreadyExists if Alert.exists?(name: params[:name])
 
         alert = build_from_params(params, current_user)
 
@@ -77,7 +77,7 @@ module Motor
       end
 
       def archive_with_existing_name(alert)
-        Motor::Alert.where(['lower(name) = ? AND id != ?', alert.name.to_s.downcase, alert.id])
+        Motor::Alert.where(['name = ? AND id != ?', alert.name, alert.id])
                     .update_all(deleted_at: Time.current)
       end
 
@@ -87,9 +87,9 @@ module Motor
 
       def name_already_exists?(alert)
         if alert.new_record?
-          Alert.exists?(['lower(name) = ?', alert.name.to_s.downcase])
+          Alert.exists?(name: alert.name)
         else
-          Alert.exists?(['lower(name) = ? AND id != ?', alert.name.to_s.downcase, alert.id])
+          Alert.exists?(['name = ? AND id != ?', alert.name, alert.id])
         end
       end
     end

@@ -7,14 +7,20 @@ module Motor
     helper_method :current_user
 
     def index
-      Motor.reload! if Motor.development?
+      render_ui
+    end
 
-      Motor::Configs::SyncFromFile.call
-
-      render :show
+    def new
+      render_ui
     end
 
     def show
+      render_ui
+    end
+
+    private
+
+    def render_ui
       Motor.reload! if Motor.development?
 
       Motor::Configs::SyncFromFile.call

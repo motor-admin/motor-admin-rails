@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'faker'
+gem 'mysql2'
 gem 'oj'
 gem 'pg'
 gem 'puma'
@@ -23,10 +24,14 @@ group :development, :test do
   gem 'letter_opener'
   gem 'pry-rails'
   gem 'simplecov', require: false
+  gem 'sqlite3'
 end
 
 group :test do
+  gem 'capybara'
+  gem 'cuprite'
   gem 'rspec-rails'
+  gem 'webmock'
   gem 'webrick'
 end
 

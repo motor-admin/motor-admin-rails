@@ -10,7 +10,7 @@ module Motor
       tags.each do |tag_name|
         next if taggable.taggable_tags.find { |tt| tt.tag.name.casecmp(tag_name).zero? }
 
-        tag = Tag.where('lower(name) = ?', tag_name.downcase).take || Tag.new(name: tag_name)
+        tag = Tag.find_or_initialize_by(name: tag_name)
 
         taggable.taggable_tags.new(tag: tag)
       end

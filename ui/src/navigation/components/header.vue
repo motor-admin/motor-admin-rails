@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="ivu-menu ivu-menu-primary ivu-menu-horizontal row m-0"
-    :style="{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05)', zIndex: 1 }"
-  >
+  <div class="ivu-menu ivu-menu-primary ivu-menu-horizontal row m-0">
     <div class="col-10 d-flex align-items-center">
       <VButton
         :to="{ name: 'home' }"
@@ -97,7 +94,6 @@
       <Dropdown
         v-if="!isShowSettings"
         trigger="click"
-        transfer
         class="ms-2"
       >
         <VButton

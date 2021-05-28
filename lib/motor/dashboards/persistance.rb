@@ -16,7 +16,7 @@ module Motor
       end
 
       def create_from_params!(params, current_user = nil)
-        raise TitleAlreadyExists if Dashboard.exists?(['lower(title) = ?', params[:title].to_s.downcase])
+        raise TitleAlreadyExists if Dashboard.exists?(title: params[:title])
 
         dashboard = build_from_params(params, current_user)
 
@@ -57,15 +57,15 @@ module Motor
       end
 
       def archive_with_existing_name(dashboard)
-        Motor::Dashboard.where(['lower(title) = ? AND id != ?', dashboard.title.to_s.downcase, dashboard.id])
+        Motor::Dashboard.where(['title = ? AND id != ?', dashboard.title, dashboard.id])
                         .update_all(deleted_at: Time.current)
       end
 
       def title_already_exists?(dashboard)
         if dashboard.new_record?
-          Motor::Dashboard.exists?(['lower(title) = ?', dashboard.title.to_s.downcase])
+          Motor::Dashboard.exists?(title: dashboard.title)
         else
-          Motor::Dashboard.exists?(['lower(title) = ? AND id != ?', dashboard.title.to_s.downcase, dashboard.id])
+          Motor::Dashboard.exists?(['title = ? AND id != ?', dashboard.title, dashboard.id])
         end
       end
     end

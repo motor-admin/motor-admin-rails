@@ -115,7 +115,7 @@ module.exports = (env = {}) => ({
       dry: false,
       verbose: true
     }),
-    env.production && new CompressionPlugin({ test: /\.(js|css|svg)(\?.*)?$/i }),
+    (env.production || env.test) && new CompressionPlugin({ test: /\.(js|css|svg)(\?.*)?$/i }),
     process.env.BUNDLE_ANALYZE && new BundleAnalyzerPlugin()
   ].filter(Boolean),
   devServer: {

@@ -1,0 +1,83 @@
+name: Rspec
+on: push
+
+jobs:
+  verify:
+    name: Build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        database:
+          - postgresql
+          - mysql
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: motor_admin_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_USER: postgres
+          MYSQL_DATABASE: motor_admin_test
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0.0
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.15.4
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+      - name: Cache gems
+        uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gem-
+      - name: Install dependencies
+        env:
+          RAILS_ENV: test
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install chromium-browser
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          yarn install
+      - name: Run
+        env:
+          RAILS_ENV: test
+          DATABASE_TYPE: ${{ matrix.database }}
+          COVERAGE: true
+        run: |
+          bundle exec rake db:setup
+          bundle exec rake app:motor:load
+          bundle exec yarn build:test
+          bundle exec rspec

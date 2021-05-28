@@ -16,7 +16,7 @@ module Motor
       end
 
       def create_from_params!(params, current_user = nil)
-        raise NameAlreadyExists if Query.exists?(['lower(name) = ?', params[:name].to_s.downcase])
+        raise NameAlreadyExists if Query.exists?(name: params[:name])
 
         query = build_from_params(params, current_user)
 
@@ -57,15 +57,15 @@ module Motor
       end
 
       def archive_with_existing_name(query)
-        Motor::Query.where(['lower(name) = ? AND id != ?', query.name.to_s.downcase, query.id])
+        Motor::Query.where(['name = ? AND id != ?', query.name, query.id])
                     .update_all(deleted_at: Time.current)
       end
 
       def name_already_exists?(query)
         if query.new_record?
-          Query.exists?(['lower(name) = ?', query.name.to_s.downcase])
+          Query.exists?(name: query.name)
         else
-          Query.exists?(['lower(name) = ? AND id != ?', query.name.to_s.downcase, query.id])
+          Query.exists?(['name = ? AND id != ?', query.name, query.id])
         end
       end
     end

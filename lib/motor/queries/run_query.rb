@@ -35,8 +35,8 @@ module Motor
 
         ActiveRecord::Base.transaction do
           result =
-            case ActiveRecord::Base.connection
-            when ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
+            case ActiveRecord::Base.connection.class.name
+            when 'ActiveRecord::ConnectionAdapters::PostgreSQLAdapter'
               PostgresqlExecQuery.call(ActiveRecord::Base.connection, statement)
             else
               ActiveRecord::Base.connection.exec_query(*statement)

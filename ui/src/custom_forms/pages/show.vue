@@ -30,6 +30,7 @@
         Save
       </VButton>
       <VButton
+        v-if="form.api_path"
         size="large"
         type="primary"
         class="ms-2 d-none d-md-block"
@@ -98,7 +99,7 @@ export default {
     return {
       isLoading: false,
       isEditorOpened: false,
-      form: { ...defaultFormParams }
+      form: JSON.parse(JSON.stringify(defaultFormParams))
     }
   },
   computed: {
@@ -127,7 +128,7 @@ export default {
         this.loadForm()
       } else {
         this.isEditorOpened = true
-        this.form = { ...defaultFormParams }
+        this.form = JSON.parse(JSON.stringify(defaultFormParams))
       }
     },
     toggleEditor () {

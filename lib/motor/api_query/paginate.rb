@@ -11,6 +11,7 @@ module Motor
         params ||= {}
 
         rel = rel.limit([MAX_PER_PAGE, (params[:limit] || MAX_PER_PAGE).to_i].min)
+
         rel.offset(params[:offset].to_i)
       end
     end

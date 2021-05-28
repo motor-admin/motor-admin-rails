@@ -58,3 +58,9 @@ Rails/Output:
 
 Rails/LexicallyScopedActionFilter:
   Enabled: false
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/MultipleExpectations:
+  Max: 10

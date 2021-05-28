@@ -12,6 +12,8 @@ module Motor
         models.map do |model|
           Object.const_get(model.name)
 
+          next unless ActiveRecord::Base.connection.table_exists?(model.table_name)
+
           schema = build_model_schema(model)
 
           if model.respond_to?(:devise_modules)
@@ -20,7 +22,7 @@ module Motor
 
           schema
         rescue StandardError, NotImplementedError => e
-          Rails.logger.error(e) if model.name != 'Audited::Audit'
+          Rails.logger.error(e)
 
           next
         end.compact
@@ -34,6 +36,7 @@ module Motor
         models -= Motor::ApplicationRecord.descendants
         models -= [Motor::Audit]
         models -= [ActiveRecord::SchemaMigration] if defined?(ActiveRecord::SchemaMigration)
+        models -= [ActiveRecord::InternalMetadata] if defined?(ActiveRecord::InternalMetadata)
         models -= [ActiveStorage::Blob] if defined?(ActiveStorage::Blob)
         models -= [ActiveStorage::VariantRecord] if defined?(ActiveStorage::VariantRecord)
 
@@ -101,7 +104,7 @@ module Motor
           name: column.name,
           display_name: Utils.humanize_column_name(column.name),
           column_type: is_enum ? 'string' : UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
-          is_array: column.array?,
+          is_array: column.respond_to?(:array?) && column.array?,
           access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
           default_value: default_attrs[column.name],
           validators: fetch_validators(model, column.name),

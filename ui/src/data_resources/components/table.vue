@@ -73,6 +73,7 @@
         >
           <VButton
             icon="ios-funnel"
+            data-role="filter"
             class="mx-1 bg-white"
             @click="openFiltersModal"
           />

@@ -16,7 +16,7 @@ module Motor
       end
 
       def create_from_params!(params, current_user = nil)
-        raise NameAlreadyExists if Form.exists?(['lower(name) = ?', params[:name].to_s.downcase])
+        raise NameAlreadyExists if Form.exists?(name: params[:name])
 
         form = build_from_params(params, current_user)
 
@@ -57,15 +57,15 @@ module Motor
       end
 
       def archive_with_existing_name(form)
-        Motor::Form.where(['lower(name) = ? AND id != ?', form.name.to_s.downcase, form.id])
+        Motor::Form.where(['name = ? AND id != ?', form.name, form.id])
                    .update_all(deleted_at: Time.current)
       end
 
       def name_already_exists?(form)
         if form.new_record?
-          Motor::Form.exists?(['lower(name) = ?', form.name.to_s.downcase])
+          Motor::Form.exists?(['name = ?', form.name])
         else
-          Motor::Form.exists?(['lower(name) = ? AND id != ?', form.name.to_s.downcase, form.id])
+          Motor::Form.exists?(['name = ? AND id != ?', form.name, form.id])
         end
       end
     end

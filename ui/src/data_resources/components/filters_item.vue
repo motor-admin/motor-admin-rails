@@ -1,8 +1,12 @@
 <template>
-  <div class="row">
+  <div
+    class="row"
+    data-role="filter-item"
+  >
     <div class="col-5 pe-2 ps-0">
       <MSelect
         v-model="dataFilter.key"
+        data-role="filter-field"
         filterable
         style="margin-left: 50px; width: calc(100% - 50px)"
         :options="columns"
@@ -13,6 +17,7 @@
     <div class="col-2 p-0">
       <MSelect
         v-model="dataFilter.action"
+        data-role="filter-condition"
         :options="actions"
       />
     </div>
@@ -20,11 +25,13 @@
       <FormInput
         v-if="selectedColumn && !['contains', 'starts_with', 'ends_with'].includes(dataFilter.action)"
         v-model="dataFilter.value"
+        data-role="filter-value"
         :column="selectedColumn"
       />
       <VInput
         v-else
         v-model="dataFilter.value"
+        data-role="filter-value"
       />
       <VButton
         icon="md-close"

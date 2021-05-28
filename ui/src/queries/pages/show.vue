@@ -60,6 +60,7 @@
         size="large"
         type="primary"
         :loading="isLoading"
+        data-role="run"
         icon="md-play"
         @click="runQuery"
       />

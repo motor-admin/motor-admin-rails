@@ -2,7 +2,7 @@
 
 Motor::Admin.routes.draw do
   namespace :motor, path: '' do
-    scope 'api', as: 'api' do
+    scope 'api', as: :api do
       resources :run_queries, only: %i[show create]
       resources :send_alerts, only: %i[create]
       resources :queries, only: %i[index show create update destroy]
@@ -34,16 +34,15 @@ Motor::Admin.routes.draw do
 
     get '/', to: 'ui#show'
 
-    scope as: 'ui' do
+    scope as: :ui do
+      get '/data(/*path)', to: 'ui#index', as: :data
+
       with_options controller: 'ui' do
-        resources :data, only: %i[index show],
-                         param: 'path',
-                         constraints: { path: /.+/ }
         resources :reports, only: %i[index show]
-        resources :queries, only: %i[index show]
-        resources :dashboards, only: %i[index show]
-        resources :alerts, only: %i[index show]
-        resources :forms, only: %i[index show]
+        resources :queries, only: %i[index show new]
+        resources :dashboards, only: %i[index show new]
+        resources :alerts, only: %i[index show new]
+        resources :forms, only: %i[index show new]
       end
     end
   end

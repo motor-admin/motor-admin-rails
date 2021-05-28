@@ -1,8 +1,5 @@
 <template>
-  <Dropdown
-    trigger="click"
-    transfer
-  >
+  <Dropdown trigger="click">
     <VButton
       :ghost="buttonGhost"
       :type="buttonType"

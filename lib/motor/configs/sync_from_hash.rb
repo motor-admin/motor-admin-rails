@@ -87,7 +87,7 @@ module Motor
 
         archive_taggable_items(records - processed_records, configs_timestamp)
 
-        ActiveRecord::Base.connection.reset_pk_sequence!(records.klass.table_name)
+        ActiveRecordUtils.reset_id_sequence!(records.klass)
       end
 
       def update_taggable_items(records, config_items, update_proc)

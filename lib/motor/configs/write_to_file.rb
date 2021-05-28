@@ -9,6 +9,7 @@ module Motor
       module_function
 
       def call
+        return if Rails.env.test?
         return if THREAD_POOL.queue_length.positive?
 
         THREAD_POOL.post do

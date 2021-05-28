@@ -40,7 +40,6 @@ module Motor
       (defined?(::Puma) && File.basename($PROGRAM_NAME) == 'puma') ||
       defined?(::Unicorn::HttpServer) ||
       defined?(::Mongrel::HttpServer) ||
-      defined?(::WEBrick::VERSION) ||
       defined?(JRuby::Rack::VERSION) ||
       defined?(::Trinidad::Server)
   end

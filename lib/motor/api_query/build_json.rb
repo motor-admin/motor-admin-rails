@@ -10,12 +10,12 @@ module Motor
 
         rel = rel.preload_associations_lazily if rel.is_a?(ActiveRecord::Relation)
 
-        json_params = {}
+        json_params = {}.with_indifferent_access
 
         assign_include_params(json_params, rel, params)
         assign_fields_params(json_params, rel, params)
 
-        rel.as_json(json_params.with_indifferent_access)
+        rel.as_json(json_params)
       end
 
       def assign_include_params(json_params, _rel, api_params)
@@ -51,11 +51,11 @@ module Motor
         params[:fields].each do |key, fields|
           fields = fields.split(',') if fields.is_a?(String)
 
-          merge_fields_params!(key, fields, json_params, model)
+          merge_fields_params!(json_params, key, fields, model)
         end
       end
 
-      def merge_fields_params!(key, fields, json_params, model)
+      def merge_fields_params!(json_params, key, fields, model)
         model_name = model.name.underscore
 
         if key == model_name || model_name.split('/').last == key
