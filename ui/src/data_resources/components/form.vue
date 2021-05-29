@@ -53,8 +53,8 @@
 <script>
 import api from 'api'
 import { modelNameMap } from '../scripts/schema'
+import { isJsonColumn, buildColumnValidator } from '../scripts/form_utils'
 
-import Validators from 'utils/scripts/validators'
 import FormInput from 'data_forms/components/input'
 import FormListInput from 'data_forms/components/list_input'
 
@@ -96,45 +96,7 @@ export default {
   computed: {
     rules () {
       return this.columns.reduce((acc, column) => {
-        if (column.is_array) {
-          return acc
-        }
-
-        acc[column.name] = column.validators.map((validator) => {
-          if (validator.required) {
-            return { required: true }
-          } else if (validator.format) {
-            return { pattern: new RegExp(validator.format.source, validator.format.options) }
-          } else if (validator.includes) {
-            return { required: true }
-          } else if (validator.length) {
-            return { len: validator.length }
-          } else if (validator.numeric) {
-            return [
-              { type: 'number' },
-              { required: !validator.numeric.allow_nil },
-              {
-                required: !validator.numeric.allow_nil,
-                validator: Validators.numeric,
-                options: validator.numeric
-              }
-            ]
-          } else {
-            return null
-          }
-        }).filter(Boolean).flat()
-
-        if (column.name === 'email') {
-          acc[column.name].push({ type: 'email' })
-        }
-
-        if (this.isJsonColumn(column)) {
-          acc[column.name].push({ validator: Validators.json })
-        }
-
-        if (!column.reference && ['integer', 'float'].includes(column.column_type)) {
-          acc[column.name].push({ type: 'number' })
-        }
+        acc[column.name] = buildColumnValidator(column, this.resource)
 
         return acc
       }, {})
@@ -148,7 +110,7 @@ export default {
       }
 
       this.columns.forEach((column) => {
-        if (this.isJsonColumn(column)) {
+        if (isJsonColumn(column, this.resource)) {
           data[column.name] = JSON.parse(data[column.name])
         }
 
@@ -184,12 +146,6 @@ export default {
     this.resourceData = this.normalizeResourceData(this.resource)
   },
   methods: {
-    isJsonColumn (column) {
-      return (column.column_type === 'json' ||
-        (this.resource[column.name] instanceof Object &&
-        this.resource[column.name].constructor === Object)) &&
-        !['file', 'image'].includes(column.column_type)
-    },
     scrollToErrors () {
       this.$nextTick(() => {
         const errorField = this.$refs.form.$el.querySelector('.ivu-form-item-error')
@@ -229,7 +185,7 @@ export default {
       this.columns.forEach((column) => {
         const value = resource[column.name]
 
-        if (this.isJsonColumn(column)) {
+        if (isJsonColumn(column, this.resource)) {
           data[column.name] = JSON.stringify(value || {}, null, '  ')
         } else if (value && typeof value === 'object') {
           data[column.name] = JSON.parse(JSON.stringify(value))

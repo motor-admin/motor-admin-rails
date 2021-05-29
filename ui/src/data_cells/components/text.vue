@@ -44,6 +44,6 @@ export default {
 .text-cell {
   max-height: 150px;
   overflow-y: auto;
-  line-break: anywhere;
+  line-break: normal;
 }
 </style>

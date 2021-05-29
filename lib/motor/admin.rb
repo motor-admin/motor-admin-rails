@@ -43,7 +43,7 @@ module Motor
     end
 
     initializer 'motor.alerts.scheduler' do
-      config.after_initialize do |_app|
+      config.after_initialize do
         next unless Motor.server?
 
         Motor::Alerts::Scheduler::SCHEDULER_TASK.execute

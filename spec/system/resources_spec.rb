@@ -118,7 +118,25 @@ RSpec.describe 'Resources' do
       visit motor_ui_data_path(['customers', customer.id])
     end
 
-    context 'when edit' do
+    context 'when edit inline' do
+      it 'updates record' do
+        expect(page).to have_content(customer.name)
+
+        cell = find(:xpath, "//div[./b[starts-with(text(), 'Name')]]")
+        cell.find('.edit-button', visible: false).click
+
+        within cell do
+          fill_in with: 'test'
+        end
+
+        cell.find('.ion-md-checkmark').click
+
+        expect(page).not_to have_content(customer.name)
+        expect(page).to have_content(customer.reload.name)
+      end
+    end
+
+    context 'when edit form' do
       it 'updates record' do
         expect(page).to have_content(customer.email)
 

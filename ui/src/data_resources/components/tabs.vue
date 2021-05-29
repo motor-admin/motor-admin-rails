@@ -41,6 +41,7 @@
           :resource-name="resourceName"
           :resource-id="resourceId"
           :with-actions="true"
+          :editable="true"
           :one-column="!minimized"
           @remove="$emit('remove')"
         />

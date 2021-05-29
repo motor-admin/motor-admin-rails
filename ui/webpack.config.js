@@ -93,7 +93,7 @@ module.exports = (env = {}) => ({
     extensions: ['.js', '.ts', '.vue', '.json', '.less' , '.scss', '.css']
   },
   plugins: [
-   new CopyPlugin({
+    new CopyPlugin({
       patterns: [
         {
           from: path.resolve(__dirname, './node_modules/@tabler/icons/icons'),
@@ -110,11 +110,7 @@ module.exports = (env = {}) => ({
       publicPath: true
     }),
     new VueLoaderPlugin(),
-    env.production && new CleanWebpackPlugin({
-      dangerouslyAllowCleanPatternsOutsideProject: true,
-      dry: false,
-      verbose: true
-    }),
+    env.production && new CleanWebpackPlugin(),
     (env.production || env.test) && new CompressionPlugin({ test: /\.(js|css|svg)(\?.*)?$/i }),
     process.env.BUNDLE_ANALYZE && new BundleAnalyzerPlugin()
   ].filter(Boolean),

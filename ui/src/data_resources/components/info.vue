@@ -83,29 +83,14 @@
               {{ column.display_name }}:
             </b>
             <br>
-            <DataCell
-              v-if="column.reference?.model_name === 'active_storage/attachment'"
-              :value="resource[column.name]?.path"
-              :type="'string'"
-            />
-            <Reference
-              v-else-if="column.reference && resource[column.name]"
-              :resource-id="getReferenceId(column)"
-              :reference-name="column.reference.model_name"
-              :max-length="oneColumn ? 30 : 20"
-              :show-popover="referencePopover"
-              :reference-data="resource[column.reference.name]"
-              :polymorphic-name="resource[column.reference.name + '_type']"
-            />
-            <span
-              v-else-if="[null, undefined, ''].includes(resource[column.name])"
-            > - </span>
-            <DataCell
-              v-else
-              :value="resource[column.name]"
-              :format="column.format"
-              :text-truncate="false"
-              :type="columnType(column)"
+            <InfoCell
+              :resource="resource"
+              :column="column"
+              :resource-name="resourceName"
+              :editable="editable"
+              :reference-popover="referencePopover"
+              :reference-size="oneColumn ? 30 : 20"
+              @update="assignResource"
             />
           </div>
         </template>
@@ -119,8 +104,7 @@ import api from 'api'
 import { modelNameMap } from '../scripts/schema'
 import singularize from 'inflected/src/singularize'
 
-import DataCell from 'data_cells/components/data_cell'
-import Reference from 'data_cells/components/reference'
+import InfoCell from './info_cell'
 import ResourceActions from './actions'
 
 import { assignBreadcrumbLabel } from 'navigation/scripts/breadcrumb_store'
@@ -130,13 +114,10 @@ import { includeParams, fieldsParams } from '../scripts/query_utils'
 import { isShowSettings } from 'settings/scripts/toggle'
 import SettingsMask from 'settings/components/mask'
 
-import DataTypes from 'data_cells/scripts/data_types'
-
 export default {
   name: 'ResourceInfo',
   components: {
-    DataCell,
-    Reference,
+    InfoCell,
     ResourceActions,
     SettingsMask
   },
@@ -150,6 +131,11 @@ export default {
       required: true
     },
     withActions: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    editable: {
       type: Boolean,
       required: false,
       default: false
@@ -217,15 +203,6 @@ export default {
     this.loadData()
   },
   methods: {
-    getReferenceId (column) {
-      if (column.reference.reference_type === 'belongs_to') {
-        return this.resource[column.name]
-      } else {
-        const referenceModel = modelNameMap[column.reference.model_name]
-
-        return this.resource[column.name][referenceModel.primary_key]
-      }
-    },
     onFinisAction (action) {
       if (action === 'remove') {
         this.$emit('remove', this.resource)
@@ -233,8 +210,16 @@ export default {
         this.loadData()
       }
     },
-    columnType (column) {
-      return column.validators.find((v) => v.includes?.length) ? DataTypes.TAG : column.column_type
+    assignResource (data) {
+      this.resource = data
+
+      if (this.model.display_column) {
+        assignBreadcrumbLabel(
+          this.resourceName,
+          this.resourceId,
+          `#${this.resourceId} ${truncate(this.resource[this.model.display_column] ?? '', 22)}`
+        )
+      }
     },
     loadData () {
       this.isReloading = true
@@ -242,15 +227,7 @@ export default {
       api.get(`data/${this.model.slug}/${this.resourceId}`, {
         params: this.queryParams
       }).then((result) => {
-        this.resource = result.data.data
-
-        if (this.model.display_column && this.resource[this.model.display_column]) {
-          assignBreadcrumbLabel(
-            this.resourceName,
-            this.resourceId,
-            `#${this.resourceId} ${truncate(this.resource[this.model.display_column], 22)}`
-          )
-        }
+        this.assignResource(result.data.data)
       }).catch((error) => {
         if (error.response.status === 404) {
           this.notFound = true
