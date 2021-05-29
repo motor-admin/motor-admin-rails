@@ -2,7 +2,7 @@
 
 module Motor
   class AssetsController < ActionController::Metal
-    CACHE_STORE = ActiveSupport::Cache::MemoryStore.new(coder: ActiveSupport::Cache::NullCoder)
+    CACHE_STORE = ActiveSupport::Cache::MemoryStore.new
 
     GZIP_TYPES = [
       'application/javascript',

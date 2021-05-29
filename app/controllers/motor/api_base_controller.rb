@@ -12,10 +12,12 @@ module Motor
       end
     end
 
-    rescue_from StandardError do |e|
-      Rails.logger.error(e)
+    unless Rails.env.test?
+      rescue_from StandardError do |e|
+        Rails.logger.error(e)
 
-      render json: { errors: [e.message] }, status: :internal_server_error
+        render json: { errors: [e.message] }, status: :internal_server_error
+      end
     end
 
     def current_ability

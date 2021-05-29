@@ -2,7 +2,7 @@
 
 module Motor
   class IconsController < ApiBaseController
-    CACHE_STORE = ActiveSupport::Cache::MemoryStore.new(coder: ActiveSupport::Cache::NullCoder)
+    CACHE_STORE = ActiveSupport::Cache::MemoryStore.new
 
     def index
       data = CACHE_STORE.fetch('icons') do

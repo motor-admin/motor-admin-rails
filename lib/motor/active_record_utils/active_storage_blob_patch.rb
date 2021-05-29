@@ -13,6 +13,10 @@ module Motor
         super(**hash.with_indifferent_access.slice(*KEYWORD_ARGS).symbolize_keys)
       end
 
+      def create_after_upload!(hash)
+        super(**hash.with_indifferent_access.slice(*KEYWORD_ARGS).symbolize_keys)
+      end
+
       def create_after_unfurling!(hash)
         super(**hash.with_indifferent_access.slice(*KEYWORD_ARGS).symbolize_keys)
       end

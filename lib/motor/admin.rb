@@ -66,11 +66,10 @@ module Motor
     end
 
     initializer 'motor.active_storage.extensions' do
-      ActiveSupport.on_load(:active_storage_attachment) do
-        ActiveStorage::Attachment.include(Motor::ActiveRecordUtils::ActiveStorageLinksExtension)
-      end
+      config.after_initialize do
+        next unless defined?(ActiveStorage::Engine)
 
-      ActiveSupport.on_load(:active_storage_blob) do
+        ActiveStorage::Attachment.include(Motor::ActiveRecordUtils::ActiveStorageLinksExtension)
         ActiveStorage::Blob.singleton_class.prepend(Motor::ActiveRecordUtils::ActiveStorageBlobPatch)
       end
     end

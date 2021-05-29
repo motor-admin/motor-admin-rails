@@ -3,8 +3,7 @@
 module Motor
   module Configs
     module LoadFromCache
-      CACHE_STORE = ActiveSupport::Cache::MemoryStore.new(size: 10.megabytes,
-                                                          coder: ActiveSupport::Cache::NullCoder)
+      CACHE_HASH = HashWithIndifferentAccess.new
 
       module_function
 
@@ -57,10 +56,18 @@ module Motor
         end
       end
 
-      def maybe_fetch_from_cache(type, cache_key, &block)
+      def maybe_fetch_from_cache(type, cache_key)
         return yield unless cache_key
 
-        CACHE_STORE.fetch(type + cache_key.to_s, &block)
+        if CACHE_HASH[type] && CACHE_HASH[type][:key] == cache_key
+          CACHE_HASH[type][:value]
+        else
+          result = yield
+
+          CACHE_HASH[type] = { key: cache_key, value: result }
+
+          result
+        end
       end
 
       def load_cache_keys

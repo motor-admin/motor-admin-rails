@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 20_200_714_081_950) do
     t.text 'filename', null: false
     t.text 'content_type'
     t.text 'metadata'
-    t.text 'service_name', null: false
+    t.text 'service_name', null: false if Rails::VERSION::MAJOR >= 6 && Rails::VERSION::MINOR >= 1
     t.bigint 'byte_size', null: false
     t.text 'checksum', null: false
     t.datetime 'created_at', null: false
@@ -46,8 +46,8 @@ ActiveRecord::Schema.define(version: 20_200_714_081_950) do
   end
 
   create_table 'countries', force: :cascade do |t|
-    t.text 'code', null: false
     t.text 'name', null: false
+    t.text 'code', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.index ['code'], name: 'index_countries_on_code', unique: true, length: { code: 4 }

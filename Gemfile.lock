@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.1.51)
+    motor-admin (0.1.52)
       activerecord-filter (>= 5.2)
       ar_lazy_preload (~> 0.6)
       audited (~> 4.9)
@@ -313,6 +313,7 @@ DEPENDENCIES
   pg
   pry-rails
   puma
+  rails
   rspec-rails
   rubocop
   rubocop-performance

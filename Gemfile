@@ -9,6 +9,7 @@ gem 'mysql2'
 gem 'oj'
 gem 'pg'
 gem 'puma'
+gem 'rails', ENV.fetch('RAILS_VERSION', '>= 0')
 
 group :development do
   gem 'brakeman', require: false

@@ -2,15 +2,15 @@
 
 module CapybaraHelpers
   FIELD_XPATH =
-    "//div[./label[@class='ivu-form-item-label' and text() = '%<name>s']]/div[@class='ivu-form-item-content']/*[1]"
+    %|//div[./label[@class='ivu-form-item-label' and text() = "%<name>s"]]/div[@class='ivu-form-item-content']/*[1]|
   SELECT_ITEM_XPATH =
-    ".//li[contains(@class, 'ivu-select-item') and normalize-space() = '%<value>s']"
+    %|.//li[contains(@class, 'ivu-select-item') and normalize-space() = "%<value>s"]|
   SELECT_ITEM_CONTAINING_XPATH =
-    ".//li[contains(@class, 'ivu-select-item') and contains(., '%<value>s')][1]"
+    %|.//li[contains(@class, 'ivu-select-item') and contains(., "%<value>s")][1]|
   DROPDOWN_XPATH =
-    "//*[@class='ivu-dropdown' and .//*[contains(@class, 'ivu-btn') and normalize-space() = '%<name>s']]"
+    %|//*[@class='ivu-dropdown' and .//*[contains(@class, 'ivu-btn') and normalize-space() = "%<name>s"]]|
   DROPDOWN_ITEM_XPATH =
-    ".//li[contains(@class, 'ivu-dropdown-item') and normalize-space() = '%<value>s']"
+    %|.//li[contains(@class, 'ivu-dropdown-item') and normalize-space() = "%<value>s"]|
 
   def ivu_select(node, value)
     node.click
@@ -22,6 +22,8 @@ module CapybaraHelpers
         option.click
       else
         node.fill_in(with: val)
+
+        page.driver.wait_for_network_idle
 
         node.find(:xpath, format(SELECT_ITEM_CONTAINING_XPATH, value: val)).click
       end

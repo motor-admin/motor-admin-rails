@@ -246,6 +246,10 @@ export default {
         query.scope = this.$route.query?.scope
       }
 
+      if (this.$route.query?.tab) {
+        query.tab = this.$route.query?.tab
+      }
+
       if (this.paginationParams.pageSize !== defaultPaginationParams.pageSize) {
         query.per_page = this.paginationParams.pageSize
       }
