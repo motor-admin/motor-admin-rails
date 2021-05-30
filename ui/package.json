@@ -28,10 +28,9 @@
     "stylelint": "./node_modules/stylelint/bin/stylelint.js \"src/**/*.{scss,css}\" --fix"
   },
   "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.13.10",
-    "@babel/polyfill": "^7.12.1",
-    "@babel/preset-env": "^7.13.10",
-    "@babel/runtime": "^7.13.9",
+    "@babel/core": "^7.14.0",
+    "@babel/plugin-transform-runtime": "^7.14.0",
+    "@babel/preset-env": "^7.14.0",
     "@vue/compiler-sfc": "^3.0.5",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",

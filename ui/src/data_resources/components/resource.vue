@@ -20,30 +20,28 @@
       />
     </Sider>
     <Layout>
-      <Content>
-        <ResourceTabs
-          v-if="!showTable || !isFullscreenTable"
-          :key="resourceName + resourceId"
-          ref="tabs"
-          :resource-name="resourceName"
-          :resource-id="resourceId"
-          :minimized="showTable"
-          class="border-top"
-          @remove="goToParent"
-        />
-        <ResourceTable
-          v-if="showTable"
-          :key="resourceName + resourceId + associationName"
-          :height="isFullscreenTable ? 'calc(var(--vh, 100vh) - 199px)' : 'calc((var(--vh) / 2) - 108px)'"
-          :with-resize="true"
-          :resource-name="resourceName"
-          :with-title="!widthLessThan('sm')"
-          class="border-top"
-          :association-params="{ name: associationName, id: resourceId }"
-          @action-applied="reloadTabs"
-          @click-resize="toggleSize"
-        />
-      </Content>
+      <ResourceTabs
+        v-if="!showTable || !isFullscreenTable"
+        :key="resourceName + resourceId"
+        ref="tabs"
+        :resource-name="resourceName"
+        :resource-id="resourceId"
+        :minimized="showTable"
+        class="border-top"
+        @remove="goToParent"
+      />
+      <ResourceTable
+        v-if="showTable"
+        :key="resourceName + resourceId + associationName"
+        :height="isFullscreenTable ? 'calc(var(--vh, 100vh) - 199px)' : 'calc((var(--vh) / 2) - 108px)'"
+        :with-resize="true"
+        :resource-name="resourceName"
+        :with-title="!widthLessThan('sm')"
+        class="border-top"
+        :association-params="{ name: associationName, id: resourceId }"
+        @action-applied="reloadTabs"
+        @click-resize="toggleSize"
+      />
     </Layout>
   </Layout>
 </template>

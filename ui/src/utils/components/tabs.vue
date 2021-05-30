@@ -88,7 +88,7 @@ export default {
       const tabRef = this.tabRefs[index + 1] || this.tabRefs[index]
       const el = tabRef?.$el || tabRef
 
-      el?.scrollIntoView({ inline: 'end', block: 'start' })
+      el?.scrollIntoView({ inline: 'end', block: 'start', behavior: 'smooth' })
     }
   }
 }

@@ -67,7 +67,7 @@
     </div>
   </div>
   <div
-    :style="{ height: isVariablesForm ? 'calc(var(--vh, 100vh) - 217px)' : 'calc(var(--vh, 100vh) - 134px)' }"
+    :style="{ height: isVariablesForm ? 'calc(var(--vh, 100vh) - 218px)' : 'calc(var(--vh, 100vh) - 135px)' }"
     class="row border-top m-0"
   >
     <div
@@ -281,7 +281,9 @@ export default {
         if (this.dataQueryString !== this.queryString) {
           location.replace(this.queryDataLocationHashString)
         } else {
-          location.hash = ''
+          if (location.hash) {
+            location.hash = ''
+          }
         }
       }, 0.5 * 1000)
     }

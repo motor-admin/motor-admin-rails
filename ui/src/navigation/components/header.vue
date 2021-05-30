@@ -242,7 +242,8 @@ export default {
   align-items: center;
 
   .ion {
-    vertical-align: bottom;
+    vertical-align: sub;
+    line-height: 1;
   }
 
   .ion-md-search {

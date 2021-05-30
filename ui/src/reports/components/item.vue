@@ -8,7 +8,7 @@
         <Icon :type="iconClass" />
         {{ item.name || item.title }}
         <VButton
-          class="text-dark float-right pb-2"
+          class="text-dark float-end pb-2"
           type="text"
           icon="md-trash"
           @click.prevent="remove"

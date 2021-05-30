@@ -65,6 +65,13 @@ export default {
     findQuery (queryId) {
       return this.dashboard.queries.find((query) => query.id === queryId)
     },
+    scrollInto (item) {
+      const board = this.boards.find((board) => board.item === item)
+
+      if (board) {
+        board.$el.parentElement.scrollIntoView({ behavior: 'smooth' })
+      }
+    },
     pushBoardRef (el) {
       if (el) {
         this.boards.push(el)

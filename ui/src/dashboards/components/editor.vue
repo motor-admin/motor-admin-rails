@@ -13,11 +13,13 @@
         v-else
         :list="layout"
         handle=".handle"
+        @end="onEnd"
       >
         <div
           v-for="item in layout"
           :key="item.query_id"
           class="ivu-card ivu-card-bordered cursor-default mb-2"
+          @click="$emit('click-item', item)"
         >
           <div class="ivu-card-body d-flex align-items-center justify-content-between py-2">
             <div class="d-flex align-items-center">
@@ -82,7 +84,7 @@ export default {
       required: true
     }
   },
-  emits: ['add-query', 'remove-query'],
+  emits: ['add-query', 'remove-query', 'click-item', 'move'],
   data () {
     return {
       isQueriesListOpened: false
@@ -112,11 +114,8 @@ export default {
         queriesStore.find((query) => query.id === queryId)
       )?.name
     },
-    moveItem (item, step) {
-      const index = this.layout.indexOf(item)
-
-      this.layout.splice(index, 1)
-      this.layout.splice(index + step, 0, item)
+    onEnd ({ newIndex }) {
+      this.$emit('move', this.layout[newIndex])
     },
     removeItem (item) {
       const index = this.layout.indexOf(item)

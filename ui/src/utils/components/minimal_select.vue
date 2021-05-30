@@ -255,7 +255,11 @@ export default {
     isOptionsLoaded () {
       this.assignSelectedFromValue(this.modelValue)
 
-      this.searchInput = this.getLabel(this.selectedOption)
+      const label = this.getLabel(this.selectedOption)
+
+      if (label) {
+        this.searchInput = label
+      }
     },
     optionsToRender (newArray, oldArray) {
       if (newArray.length !== oldArray.length) {

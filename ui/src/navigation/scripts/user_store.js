@@ -8,7 +8,7 @@ const appNode = document.getElementById('app')
 const userAttrs = JSON.parse(appNode.getAttribute('data-current-user') || 'null') || {}
 const auditsCount = JSON.parse(appNode.getAttribute('data-audits-count'))
 
-const showHelp = auditsCount < 10 && !localStorage.getItem(NAVIGATION_HIDE_HELP_KEY)
+const showHelp = auditsCount < 20 && !localStorage.getItem(NAVIGATION_HIDE_HELP_KEY)
 const showWelcome = auditsCount === 0 && !localStorage.getItem(NAVIGATION_HIDE_WELCOME_KEY)
 const isSubscribed = !!localStorage.getItem(USER_SUBSCRIPTION_KEY)
 

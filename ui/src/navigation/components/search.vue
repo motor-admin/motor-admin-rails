@@ -239,7 +239,7 @@ export default {
         loadForms()
       }
 
-      if (this.value.length > 1) {
+      if (this.value.length) {
         this.options = this.buildItems()
       } else {
         this.options = recentlySelectedStore.displayOptions()

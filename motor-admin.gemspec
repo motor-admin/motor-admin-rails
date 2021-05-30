@@ -7,8 +7,7 @@ Gem::Specification.new do |spec|
   spec.version     = Motor::VERSION
   spec.authors     = ['Pete Matsyburka']
   spec.email       = ['pete.matsy@gmail.com']
-  spec.summary     = 'Admin UI and Business Analytics'
-  spec.description = 'Admin UI and Business Analytics.'
+  spec.summary     = 'Low-code Admin panel and Business intelligence'
   spec.license     = 'MIT'
 
   spec.files = Dir[
@@ -30,4 +29,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'fugit', '~> 1.0'
   spec.add_dependency 'js_regex', '~> 3.0'
   spec.add_dependency 'rails', '>= 5.2'
+
+  spec.description = <<~TEXT
+    Motor Admin allows to create a flexible admin panel with writing less code.
+    All customizations to the admin panel can be made directly in the UI without
+    the need of writing any configurations code.
+  TEXT
 end

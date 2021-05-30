@@ -7,7 +7,7 @@
   />
   <div class="drawer-footer">
     <VButton
-      class="float-left"
+      class="float-start"
       @click="$emit('cancel')"
     >
       Cancel

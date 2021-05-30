@@ -5,11 +5,16 @@ module Motor
     module RunQuery
       DEFAULT_LIMIT = 100_000
 
-      QueryResult = Struct.new(:data, :columns, keyword_init: true)
+      QueryResult = Struct.new(:data, :columns, :error, keyword_init: true)
+
+      WITH_STATEMENT_START = 'WITH __query__ AS ('
 
       WITH_STATEMENT_TEMPLATE = <<~SQL
-        WITH __query__ AS (%<sql_body>s) SELECT * FROM __query__ LIMIT %<limit>s;
+        #{WITH_STATEMENT_START}%<sql_body>s
+        ) SELECT * FROM __query__ LIMIT %<limit>s;
       SQL
+
+      PG_ERROR_REGEXP = /\APG.+ERROR:/.freeze
 
       module_function
 
@@ -17,12 +22,28 @@ module Motor
       # @param variables_hash [Hash]
       # @param limit [Integer]
       # @return [Motor::Queries::RunQuery::QueryResult]
-      def call(query, variables_hash: nil, limit: DEFAULT_LIMIT)
+      def call!(query, variables_hash: nil, limit: DEFAULT_LIMIT)
         variables_hash ||= {}
 
         result = execute_query(query, limit, variables_hash)
 
         QueryResult.new(data: result.rows, columns: build_columns_hash(result))
+      end
+
+      # @param query [Motor::Query]
+      # @param variables_hash [Hash]
+      # @param limit [Integer]
+      # @return [Motor::Queries::RunQuery::QueryResult]
+      def call(query, variables_hash: nil, limit: DEFAULT_LIMIT)
+        call!(query, variables_hash: variables_hash, limit: limit)
+      rescue ActiveRecord::StatementInvalid => e
+        QueryResult.new(error: build_error_message(e))
+      end
+
+      # @param exception [ActiveRecord::StatementInvalid]
+      # @return [String]
+      def build_error_message(exception)
+        exception.message.sub(WITH_STATEMENT_START, '').sub(PG_ERROR_REGEXP, '').strip.upcase_first
       end
 
       # @param query [Motor::Query]

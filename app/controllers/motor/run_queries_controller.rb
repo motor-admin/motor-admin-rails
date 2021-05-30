@@ -9,22 +9,24 @@ module Motor
     before_action :build_query, only: :create
     authorize_resource :query, only: :create
 
-    rescue_from 'ActiveRecord::StatementInvalid' do |e|
-      render json: { errors: [{ detail: e.message }] }, status: :unprocessable_entity
-    end
-
     def show
-      render json: query_result_hash(query_result)
+      render_result
     end
 
     def create
-      render json: query_result_hash(query_result)
+      render_result
     end
 
     private
 
-    def query_result
-      Queries::RunQuery.call(@query, variables_hash: params[:variables])
+    def render_result
+      query_result = Queries::RunQuery.call(@query, variables_hash: params[:variables])
+
+      if query_result.error
+        render json: { errors: [{ detail: query_result.error }] }, status: :unprocessable_entity
+      else
+        render json: query_result_hash(query_result)
+      end
     end
 
     def query_result_hash(query_result)

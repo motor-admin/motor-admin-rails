@@ -8,8 +8,6 @@ import App from './app'
 import router from './router'
 
 import PopoverDirective from 'view3/src/directives/popover'
-import TooltipDirective from 'view3/src/directives/tooltip'
-import VueClipboard from 'view3/src/directives/clipboard'
 
 import DynamicModal from 'view3/src/plugins/dynamic-modal'
 import DynamicDrawer from 'view3/src/plugins/dynamic-drawer'
@@ -27,7 +25,6 @@ import DropdownItem from 'view3/src/components/dropdown-item'
 import Header from 'view3/src/components/header'
 import Card from 'view3/src/components/card'
 import Icon from 'view3/src/components/icon'
-import Content from 'view3/src/components/content'
 import Layout from 'view3/src/components/layout'
 import Input from 'view3/src/components/input'
 import InputNumber from 'view3/src/components/input-number'
@@ -39,7 +36,6 @@ import Spin from 'view3/src/components/spin'
 import Checkbox from 'view3/src/components/checkbox'
 import Tag from 'view3/src/components/tag'
 import Panel from 'view3/src/components/panel'
-import Tooltip from 'view3/src/components/tooltip'
 import Select from 'view3/src/components/select'
 import Option from 'view3/src/components/option'
 import Sider from 'view3/src/components/sider'
@@ -57,8 +53,6 @@ import Contenteditable from 'utils/components/contenteditable'
 const app = createApp(App)
 
 app.directive('popover', PopoverDirective)
-app.directive('tooltip', TooltipDirective)
-app.directive('clipboard', VueClipboard)
 
 app.component('VButton', Button)
 app.component('Menu', Menu)
@@ -76,10 +70,8 @@ app.component('Tag', Tag)
 app.component('Radio', Radio)
 app.component('RadioGroup', RadioGroup)
 app.component('Panel', Panel)
-app.component('Tooltip', Tooltip)
 app.component('VSelect', Select)
 app.component('VOption', Option)
-app.component('Content', Content)
 app.component('Layout', Layout)
 app.component('Sider', Sider)
 app.component('Breadcrumb', Breadcrumb)
@@ -105,7 +97,5 @@ app.use(DynamicDialog)
 app.use(DynamicMessage)
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('app')) {
-    app.mount('#app')
-  }
+  app.mount('#app')
 })

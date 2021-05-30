@@ -35,6 +35,8 @@ module Motor
     def load_from_disk(filename, gzip:)
       filename += '.gz' if gzip
 
+      raise InvalidPathError if filename.include?('..')
+
       path = ASSETS_PATH.join(filename)
 
       raise InvalidPathError unless path.to_s.starts_with?(ASSETS_PATH.to_s)

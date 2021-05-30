@@ -19,7 +19,6 @@
 @import 'view3/src/styles/components/message';
 @import 'view3/src/styles/components/checkbox';
 @import 'view3/src/styles/components/radio';
-@import 'view3/src/styles/components/tooltip';
 @import 'view3/src/styles/components/poptip';
 @import 'view3/src/styles/components/tag';
 @import 'view3/src/styles/components/drawer';
@@ -44,6 +43,12 @@
 html,
 body {
   height: 100%;
+  overflow-x: hidden;
+}
+
+input,
+textarea {
+  background-clip: padding-box;
 }
 
 h1 {
@@ -88,11 +93,6 @@ h5 {
   .ivu-drawer {
     width: 100% !important;
   }
-}
-
-.ivu-tooltip-inner {
-  text-align: center;
-  white-space: pre;
 }
 
 .ivu-btn-small {
@@ -144,14 +144,6 @@ h5 {
   font-size: 16px !important;
 }
 
-.float-right {
-  float: right !important;
-}
-
-.float-left {
-  float: left !important;
-}
-
 .drawer-footer {
   background: #fff;
   border-top: 1px solid #e8e8e8;
@@ -189,11 +181,6 @@ h5 {
   .ivu-btn.md-icon-only > span {
     display: none;
   }
-}
-
-input,
-textarea {
-  background-clip: padding-box;
 }
 
 .modal-size-large {

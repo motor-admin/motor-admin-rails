@@ -29,13 +29,13 @@
             @click="nextStep"
           >
             Next
-            <Icon type="md-arrow-forward" />
+            <Icon type="ios-arrow-forward" />
           </VButton>
         </div>
       </div>
       <div
         v-else
-        class="text-center"
+        class="text-center mb-2"
         style="max-width: 530px; margin: auto"
       >
         <SubscribeFrom
@@ -48,13 +48,25 @@
         </p>
         <VButton
           :to="'https://github.com/omohokcoj/motor-admin/issues/new'"
-          type="primary"
           target="_blank"
+          icon="ios-bug"
           class="mt-3"
           size="large"
-          ghost
         >
           Open Issue
+        </VButton>
+
+        <p class="fs-3 mt-3">
+          Enjoy using Motor Admin?
+        </p>
+        <VButton
+          :to="'https://github.com/omohokcoj/motor-admin/stargazers'"
+          target="_blank"
+          class="mt-3"
+          icon="md-star"
+          size="large"
+        >
+          Give a Star
         </VButton>
       </div>
     </div>

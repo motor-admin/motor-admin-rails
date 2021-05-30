@@ -86,6 +86,8 @@
         v-if="isEditorOpened"
         :dashboard="dashboard"
         @remove-query="removeQuery"
+        @click-item="$refs.layout.scrollInto"
+        @move="$refs.layout.scrollInto"
         @add-query="addQuery"
       />
       <div v-if="isVariableSettingsOpened">
