@@ -14,43 +14,41 @@
 
 ActiveRecord::Schema.define(version: 20_200_714_081_950) do
   create_table 'active_storage_attachments', force: :cascade do |t|
-    t.text 'name', null: false
-    t.text 'record_type', null: false
+    t.string 'name', null: false
+    t.string 'record_type', null: false
     t.bigint 'record_id', null: false
     t.bigint 'blob_id', null: false
     t.datetime 'created_at', null: false
     t.index ['blob_id'], name: 'index_active_storage_attachments_on_blob_id'
     t.index %w[record_type record_id name blob_id], name: 'index_active_storage_attachments_uniqueness',
-                                                    unique: true,
-                                                    length: { record_type: 255, name: 255 }
+                                                    unique: true
   end
 
   create_table 'active_storage_variant_records', force: :cascade do |t|
     t.bigint 'blob_id', null: false
-    t.text 'variation_digest', null: false
+    t.string 'variation_digest', null: false
     t.index %w[blob_id variation_digest], name: 'index_active_storage_variant_records_uniqueness',
-                                          unique: true,
-                                          length: { variation_digest: 255 }
+                                          unique: true
   end
 
   create_table 'active_storage_blobs', force: :cascade do |t|
-    t.text 'key', null: false
-    t.text 'filename', null: false
-    t.text 'content_type'
+    t.string 'key', null: false
+    t.string 'filename', null: false
+    t.string 'content_type'
     t.text 'metadata'
-    t.text 'service_name', null: false if Rails::VERSION::MAJOR >= 6 && Rails::VERSION::MINOR >= 1
+    t.string 'service_name', null: false if Rails::VERSION::MAJOR >= 6 && Rails::VERSION::MINOR >= 1
     t.bigint 'byte_size', null: false
-    t.text 'checksum', null: false
+    t.string 'checksum', null: false
     t.datetime 'created_at', null: false
-    t.index ['key'], name: 'index_active_storage_blobs_on_key', unique: true, length: { key: 255 }
+    t.index ['key'], name: 'index_active_storage_blobs_on_key', unique: true
   end
 
   create_table 'countries', force: :cascade do |t|
-    t.text 'name', null: false
-    t.text 'code', null: false
+    t.string 'name', null: false
+    t.string 'code', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
-    t.index ['code'], name: 'index_countries_on_code', unique: true, length: { code: 4 }
+    t.index ['code'], name: 'index_countries_on_code', unique: true
   end
 
   create_table 'line_items', force: :cascade do |t|
@@ -103,133 +101,131 @@ ActiveRecord::Schema.define(version: 20_200_714_081_950) do
     t.text 'category', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
-    t.text 'slug', null: false
+    t.string 'slug', null: false
     t.bigint 'release_year', null: false
-    t.index ['slug'], name: 'index_products_on_slug', unique: true, length: { slug: 255 }
+    t.index ['slug'], name: 'index_products_on_slug', unique: true
   end
 
   create_table 'motor_alert_locks', force: :cascade do |t|
     t.bigint 'alert_id', null: false
-    t.text 'lock_timestamp', null: false
+    t.string 'lock_timestamp', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
-    t.index %w[alert_id lock_timestamp], name: 'index_motor_alert_locks_on_alert_id_and_lock_timestamp', unique: true,
-                                         length: { lock_timestamp: 255 }
+    t.index %w[alert_id lock_timestamp], name: 'index_motor_alert_locks_on_alert_id_and_lock_timestamp', unique: true
     t.index ['alert_id'], name: 'index_motor_alert_locks_on_alert_id'
   end
 
   create_table 'motor_alerts', force: :cascade do |t|
     t.bigint 'query_id', null: false
-    t.text 'name', null: false
+    t.string 'name', null: false
     t.text 'description'
     t.text 'to_emails', null: false
     t.boolean 'is_enabled', default: true, null: false
     t.text 'preferences', null: false
     t.bigint 'author_id'
-    t.text 'author_type'
+    t.string 'author_type'
     t.datetime 'deleted_at'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.index 'name', name: 'motor_alerts_name_unique_index', unique: true,
-                    where: '(deleted_at IS NULL)', length: { name: 255 }
+                    where: '(deleted_at IS NULL)'
     t.index ['query_id'], name: 'index_motor_alerts_on_query_id'
   end
 
   create_table 'motor_audits', force: :cascade do |t|
     t.bigint 'auditable_id'
-    t.text 'auditable_type'
+    t.string 'auditable_type'
     t.bigint 'associated_id'
-    t.text 'associated_type'
+    t.string 'associated_type'
     t.bigint 'user_id'
-    t.text 'user_type'
-    t.text 'username'
-    t.text 'action'
+    t.string 'user_type'
+    t.string 'username'
+    t.string 'action'
     t.text 'audited_changes'
     t.integer 'version', default: 0
     t.text 'comment'
-    t.text 'remote_address'
-    t.text 'request_uuid'
+    t.string 'remote_address'
+    t.string 'request_uuid'
     t.datetime 'created_at'
-    t.index %w[associated_type associated_id], name: 'associated_index', length: { associated_type: 255 }
-    t.index %w[auditable_type auditable_id version], name: 'auditable_index', length: { auditable_type: 255 }
+    t.index %w[associated_type associated_id], name: 'associated_index'
+    t.index %w[auditable_type auditable_id version], name: 'auditable_index'
     t.index ['created_at'], name: 'index_motor_audits_on_created_at'
-    t.index ['request_uuid'], name: 'index_motor_audits_on_request_uuid', length: { request_uuid: 255 }
-    t.index %w[user_id user_type], name: 'user_index', length: { user_type: 255 }
+    t.index ['request_uuid'], name: 'index_motor_audits_on_request_uuid'
+    t.index %w[user_id user_type], name: 'user_index'
   end
 
   create_table 'motor_configs', force: :cascade do |t|
-    t.text 'key', null: false
+    t.string 'key', null: false
     t.text 'value', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
-    t.index ['key'], name: 'index_motor_configs_on_key', unique: true, length: { key: 255 }
+    t.index ['key'], name: 'index_motor_configs_on_key', unique: true
   end
 
   create_table 'motor_dashboards', force: :cascade do |t|
-    t.text 'title', null: false
+    t.string 'title', null: false
     t.text 'description'
     t.text 'preferences', null: false
     t.bigint 'author_id'
-    t.text 'author_type'
+    t.string 'author_type'
     t.datetime 'deleted_at'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
     t.index 'title', name: 'motor_dashboards_title_unique_index', unique: true,
-                     where: '(deleted_at IS NULL)', length: { title: 255 }
+                     where: '(deleted_at IS NULL)'
   end
 
   create_table 'motor_forms', force: :cascade do |t|
-    t.text 'name', null: false
+    t.string 'name', null: false
     t.text 'description'
     t.text 'api_path', null: false
     t.text 'http_method', null: false
     t.text 'preferences', null: false
     t.bigint 'author_id'
-    t.text 'author_type'
+    t.string 'author_type'
     t.datetime 'deleted_at'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.index 'name', name: 'motor_forms_name_unique_index', unique: true,
-                    where: '(deleted_at IS NULL)', length: { name: 255 }
+                    where: '(deleted_at IS NULL)'
     t.index ['updated_at'], name: 'index_motor_forms_on_updated_at'
   end
 
   create_table 'motor_queries', force: :cascade do |t|
-    t.text 'name', null: false
+    t.string 'name', null: false
     t.text 'description'
     t.text 'sql_body', null: false
     t.text 'preferences', null: false
     t.bigint 'author_id'
-    t.text 'author_type'
+    t.string 'author_type'
     t.datetime 'deleted_at'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
     t.index 'name', name: 'motor_queries_name_unique_index', unique: true,
-                    where: '(deleted_at IS NULL)', length: { name: 255 }
+                    where: '(deleted_at IS NULL)'
   end
 
   create_table 'motor_resources', force: :cascade do |t|
-    t.text 'name', null: false
+    t.string 'name', null: false
     t.text 'preferences', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
-    t.index ['name'], name: 'index_motor_resources_on_name', unique: true, length: { name: 255 }
+    t.index ['name'], name: 'index_motor_resources_on_name', unique: true
   end
 
   create_table 'motor_taggable_tags', force: :cascade do |t|
     t.bigint 'tag_id', null: false
     t.bigint 'taggable_id', null: false
-    t.text 'taggable_type', null: false
+    t.string 'taggable_type', null: false
     t.index ['tag_id'], name: 'index_motor_taggable_tags_on_tag_id'
-    t.index %w[taggable_id taggable_type tag_id], name: 'motor_polymorphic_association_tag_index', unique: true,
-                                                  length: { taggable_type: 255 }
+    t.index %w[taggable_id taggable_type tag_id], name: 'motor_polymorphic_association_tag_index', unique: true
   end
 
   create_table 'motor_tags', force: :cascade do |t|
-    t.text 'name', null: false
+    t.string 'name', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
-    t.index 'name', name: 'motor_tags_name_unique_index', unique: true, length: { name: 255 }
+    t.index 'name', name: 'motor_tags_name_unique_index', unique: true
   end
 
   add_foreign_key 'active_storage_attachments', 'active_storage_blobs', column: 'blob_id'
