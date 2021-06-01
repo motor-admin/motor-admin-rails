@@ -32,7 +32,7 @@ RSpec.describe 'Resources' do
         within(first_row) do
           expect(page).to have_content product.name
           expect(page).to have_content number_to_currency(product.price / 100)
-          expect(page).to have_content I18n.l(product.created_at, format: '%B %d, %Y, %-I:%M %p')
+          expect(page).to have_content I18n.l(product.created_at, format: '%b %-d, %Y, %-I:%M %p')
           expect(page.find('img')[:src]).to end_with product.image.path
         end
 
