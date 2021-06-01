@@ -4,6 +4,7 @@
     ref="form"
     :model="value"
     :rules="rules"
+    @submit.prevent="handleSubmit"
     @keyup.enter="handleSubmit"
   >
     <div class="row">
