@@ -49,6 +49,8 @@ module Motor
 
       def normalize_action(action, value)
         case action
+        when 'includes'
+          ['contains', value]
         when 'contains'
           ['ilike', value.sub(LIKE_FILTER_VALUE_REGEXP, '%\1%')]
         when 'starts_with'

@@ -47,7 +47,7 @@
 import FormInput from 'data_forms/components/input'
 import { modelNameMap } from '../scripts/schema'
 
-const ACTIONS = ['eq', 'neq', 'contains', 'gt', 'gte', 'lt', 'lte', 'starts_with', 'ends_with']
+const ACTIONS = ['eq', 'neq', 'contains', 'gt', 'gte', 'lt', 'lte', 'starts_with', 'ends_with', 'includes', 'excludes']
 
 export default {
   name: 'FilterItem',
@@ -138,6 +138,15 @@ export default {
       ]
 
       if (!this.selectedColumn) {
+        return actions
+      }
+
+      if (this.selectedColumn.is_array) {
+        actions.push(
+          { value: 'includes', label: 'includes' },
+          { value: 'excludes', label: 'excludes' }
+        )
+
         return actions
       }
 

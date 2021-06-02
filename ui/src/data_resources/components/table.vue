@@ -494,6 +494,9 @@ export default {
         params: this.queryParams
       }).then((result) => {
         this.rows = result.data.data
+      }).catch((error) => {
+        console.error(error)
+        this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
       }).finally(() => {
         this.$nextTick(() => {
           this.isLoading = false
