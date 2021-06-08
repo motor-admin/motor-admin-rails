@@ -82,7 +82,7 @@
                 :reference-name="column.reference.model_name"
                 :reference-data="row[column.reference.name]"
                 :always-refer="alwaysRefer"
-                :polymorphic-name="row[column.reference.name + '_type']"
+                :polymorphic-name="column.reference?.polymorphic ? row[column.reference.name + '_type'] : null"
               />
               <DataCell
                 v-else

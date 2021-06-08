@@ -42,7 +42,7 @@
         :max-length="referenceSize"
         :show-popover="referencePopover"
         :reference-data="resource[column.reference.name]"
-        :polymorphic-name="resource[column.reference.name + '_type']"
+        :polymorphic-name="column.reference?.polymorphic ? resource[column.reference.name + '_type'] : null"
       />
       <span
         v-else-if="isEmpty"
