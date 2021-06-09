@@ -8,10 +8,19 @@ module Motor
     MANIFEST_PATH = ASSETS_PATH.join('manifest.json')
     DEV_SERVER_URL = 'http://localhost:9090/'
 
+    CACHE_STORE =
+      if Motor.development?
+        ActiveSupport::Cache::NullStore.new
+      else
+        ActiveSupport::Cache::MemoryStore.new(size: 5.megabytes)
+      end
+
     module_function
 
     def manifest
-      JSON.parse(MANIFEST_PATH.read)
+      CACHE_STORE.fetch('manifest') do
+        JSON.parse(MANIFEST_PATH.read)
+      end
     end
 
     def icons
