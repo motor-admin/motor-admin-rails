@@ -3,5 +3,6 @@
 module Motor
   class ApplicationController < ActionController::Base
     include Motor::CurrentUserMethod
+    include Motor::CurrentAbility
   end
 end

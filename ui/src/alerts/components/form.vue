@@ -93,6 +93,7 @@
       />
     </FormItem>
     <VButton
+      v-if="withSubmit"
       size="large"
       class="mt-3"
       long
@@ -124,6 +125,11 @@ export default {
       type: Object,
       required: true
     },
+    withSubmit: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     loading: {
       type: Boolean,
       required: false,
@@ -149,13 +155,20 @@ export default {
   },
   watch: {
     alert () {
-      this.dataAlert = JSON.parse(JSON.stringify(this.alert))
+      this.dataAlert = JSON.parse(JSON.stringify(this.normalizeAlert(this.alert)))
     }
   },
   created () {
-    this.dataAlert = JSON.parse(JSON.stringify(this.alert))
+    this.dataAlert = JSON.parse(JSON.stringify(this.normalizeAlert(this.alert)))
   },
   methods: {
+    normalizeAlert (alert) {
+      return {
+        ...alert,
+        to_emails: alert.to_emails.split(','),
+        tags: alert.tags.map((tag) => tag.name)
+      }
+    },
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {

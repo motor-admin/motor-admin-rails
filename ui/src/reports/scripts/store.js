@@ -1,5 +1,6 @@
 import { reactive } from 'vue'
 import api from 'api'
+import CanCan from 'utils/scripts/cancan'
 
 const itemsStore = reactive([])
 const queriesStore = reactive([])
@@ -10,7 +11,6 @@ function normalizeItems (items, type) {
   return items.map((item) => {
     return {
       ...item,
-      tags: item.tags.map((tag) => tag.name),
       type
     }
   })
@@ -88,9 +88,9 @@ function assignItems (dashboardsData, queriesData, alertsData) {
 
 function loadItems () {
   return Promise.all([
-    dashboardsRequest(),
-    queriesRequest(),
-    alertsRequest()
+    CanCan.$can('read', 'Motor::Dashboard') ? dashboardsRequest() : Promise.resolve({ data: { data: [] } }),
+    CanCan.$can('read', 'Motor::Query') ? queriesRequest() : Promise.resolve({ data: { data: [] } }),
+    CanCan.$can('read', 'Motor::Alert') ? alertsRequest() : Promise.resolve({ data: { data: [] } })
   ]).then(([
     dashboardsResult,
     queriesResult,

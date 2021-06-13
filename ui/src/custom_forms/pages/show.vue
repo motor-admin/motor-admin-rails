@@ -12,6 +12,7 @@
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
       <VButton
+        v-if="canEdit"
         size="large"
         class="bg-white md-icon-only"
         :icon="isEditorOpened ? 'md-close' : 'md-create'"
@@ -20,7 +21,7 @@
         {{ isEditorOpened ? 'Close editor' : 'Edit' }}
       </VButton>
       <VButton
-        v-if="form.preferences.fields.length"
+        v-if="form.preferences.fields.length && canEdit"
         size="large"
         class="bg-white ms-2"
         ghost
@@ -106,6 +107,13 @@ export default {
     isExisting () {
       return this.$route.params.id
     },
+    canEdit () {
+      if (this.isExisting) {
+        return this.$can('update', 'Motor::Form', this.form)
+      } else {
+        return this.$can('create', 'Motor::Form')
+      }
+    },
     cachedFormName () {
       return formsStore.find((f) => f.id.toString() === this.$route.params?.id)?.name
     }
@@ -145,6 +153,10 @@ export default {
         this.form = result.data.data
       }).catch((error) => {
         console.error(error)
+
+        if (error.response.data?.errors) {
+          this.$Message.error(error.response.data.errors.join('\n'))
+        }
       }).finally(() => {
         this.isLoading = false
       })

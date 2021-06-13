@@ -12,7 +12,7 @@
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
       <VButton
-        v-if="query.id && query.updated_at !== query.created_at"
+        v-if="query.id && query.updated_at !== query.created_at && $can('edit', 'Motor::Query', query)"
         size="large"
         class="bg-white me-2 md-icon-only d-none d-sm-block"
         icon="md-time"
@@ -30,7 +30,7 @@
         {{ isMarkdownEditor ? 'Edit SQL' : 'Edit Markdown' }}
       </VButton>
       <VButton
-        v-if="vSplit === 0"
+        v-if="vSplit === 0 && $can('edit', 'Motor::Query', query)"
         size="large"
         class="bg-white me-2 md-icon-only"
         icon="md-create"
@@ -62,7 +62,7 @@
         :loading="isLoading"
         data-role="run"
         icon="md-play"
-        @click="runQuery"
+        @click="loadQueryData"
       />
     </div>
   </div>
@@ -93,7 +93,7 @@
         <VariablesForm
           v-model:data="variablesData"
           :variables="dataQuery.preferences.variables"
-          @submit="runQuery"
+          @submit="loadQueryData"
         />
       </div>
 
@@ -104,19 +104,21 @@
         @update:model-value="saveSplitPosition"
       >
         <template #top>
-          <template v-if="vSplit > 0">
+          <template v-if="vSplit > 0 && isCanEdit">
             <CodeEditor
               v-if="dataQuery.preferences.visualization === 'markdown' && isMarkdownEditor"
               v-model="dataQuery.preferences.visualization_options.markdown"
               language="markdown"
               :columns="columns"
-              @run="runQuery"
+              :variables="dataQuery.preferences.variables"
+              @run="loadQueryData"
             />
             <CodeEditor
               v-else
               v-model="dataQuery.sql_body"
               language="pgsql"
-              @run="runQuery"
+              :variables="dataQuery.preferences.variables"
+              @run="loadQueryData"
             />
           </template>
         </template>
@@ -139,7 +141,8 @@
             :title="query.name"
             :columns="columns"
             :query-id="query.id"
-            :with-alert="!!query.id"
+            :with-alert="!!query.id && $can('create', 'Motor::Alert')"
+            :with-settings="isCanEdit"
             :show-markdown-table="!widthLessThan('md') && isEdit"
             :preferences="dataQuery.preferences"
             @settings="toggleSettings"
@@ -167,6 +170,7 @@ import RevisionsModal from 'utils/components/revisions_modal'
 import api from 'api'
 
 const SPLIT_POSITION_KEY = 'motor:queries:vsplit'
+const RESERVED_VARIABLES = ['current_user', 'current_user_id', 'current_user_email']
 
 const defaultQueryParams = {
   name: '',
@@ -225,10 +229,13 @@ export default {
       return this.$route.params.id
     },
     canSave () {
-      return this.dataQuery.sql_body && this.isEdit
+      return this.dataQuery.sql_body && this.isEdit && this.isCanEdit
     },
     canSaveNew () {
-      return this.query.id && this.isEdited
+      return this.query.id && this.isEdited && this.$can('create', 'Motor::Query')
+    },
+    isCanEdit () {
+      return this.query.id ? this.$can('edit', 'Motor::Query', this.query) : this.$can('create', 'Motor::Query')
     },
     isVariablesForm () {
       return !!this.dataQuery.preferences.variables?.length
@@ -342,7 +349,7 @@ export default {
 
         if (this.dataQuery.sql_body) {
           this.assignVariablesData()
-          this.runQuery()
+          this.loadQueryData()
         }
       }
     },
@@ -362,8 +369,7 @@ export default {
           preferences: {
             ...defaultQueryParams.preferences,
             ...result.data.data.preferences
-          },
-          tags: result.data.data.tags.map((t) => t.name)
+          }
         }
 
         if (!this.locationHashParams) {
@@ -379,26 +385,15 @@ export default {
         this.assignVariablesData()
       }).catch((error) => {
         console.error(error)
+
+        if (error.response.data?.errors) {
+          this.$Message.error(error.response.data.errors.join('\n'))
+        }
       }).finally(() => {
         this.isLoadingQuery = false
       })
 
-      if (this.locationHashParams?.sql_body) {
-        this.runQuery()
-      } else {
-        this.isLoading = true
-
-        api.get(`run_queries/${this.$route.params.id}`, {
-        }).then((result) => {
-          this.errors = []
-          this.data = result.data.data
-          this.columns = result.data.meta.columns
-        }).catch((error) => {
-          this.errors = error.response.data?.errors
-        }).finally(() => {
-          this.isLoading = false
-        })
-      }
+      this.loadQueryData()
     },
     assignVariablesFromSql (sql) {
       if (sql) {
@@ -419,23 +414,25 @@ export default {
           })
 
           variables.forEach((variableName) => {
-            const variable = {
-              name: variableName,
-              display_name: titleize(variableName),
-              variable_type: 'text'
+            if (!RESERVED_VARIABLES.includes(variableName)) {
+              const variable = {
+                name: variableName,
+                display_name: titleize(variableName),
+                variable_type: 'text'
+              }
+
+              const model = modelNameMap[variableName.replace(/_id$/, '')]
+
+              if (model) {
+                Object.assign(variable, {
+                  display_name: singularize(model.display_name),
+                  reference_resource: model.name,
+                  variable_type: 'reference'
+                })
+              }
+
+              this.dataQuery.preferences.variables.push(variable)
             }
-
-            const model = modelNameMap[variableName.replace(/_id$/, '')]
-
-            if (model) {
-              Object.assign(variable, {
-                display_name: singularize(model.display_name),
-                reference_resource: model.name,
-                variable_type: 'reference'
-              })
-            }
-
-            this.dataQuery.preferences.variables.push(variable)
           })
         } else {
           this.dataQuery.preferences.variables = []
@@ -448,6 +445,7 @@ export default {
       this.$Modal.open(QueryForm, {
         query: {
           ...this.query,
+          tags: this.query.tags.map((t) => t.name),
           sql_body: this.dataQuery.sql_body,
           preferences: this.dataQuery.preferences
         },
@@ -489,11 +487,37 @@ export default {
         closable: true
       })
     },
+    loadQueryData () {
+      if (this.isEdited) {
+        return this.runQuery()
+      } else {
+        return this.runExistingQuery()
+      }
+    },
+    runExistingQuery () {
+      if (!this.isLoading) {
+        this.isLoading = true
+
+        return api.get(`run_queries/${this.$route.params.id}`, {
+          params: {
+            variables: this.variablesData
+          }
+        }).then((result) => {
+          this.errors = []
+          this.data = result.data.data
+          this.columns = result.data.meta.columns
+        }).catch((error) => {
+          this.errors = error.response.data?.errors
+        }).finally(() => {
+          this.isLoading = false
+        })
+      }
+    },
     runQuery () {
       if (!this.isLoading) {
         this.isLoading = true
 
-        api.post('run_queries', {
+        return api.post('run_queries', {
           data: this.dataQuery,
           variables: this.variablesData
         }).then((result) => {

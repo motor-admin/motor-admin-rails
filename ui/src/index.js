@@ -49,6 +49,7 @@ import Badge from 'view3/src/components/badge'
 import { VueDraggableNext } from 'vue-draggable-next'
 import MinimalSelect from 'utils/components/minimal_select'
 import Contenteditable from 'utils/components/contenteditable'
+import CanCan from 'utils/scripts/cancan'
 
 const app = createApp(App)
 
@@ -95,6 +96,7 @@ app.use(DynamicDrawer)
 app.use(DynamicPopover)
 app.use(DynamicDialog)
 app.use(DynamicMessage)
+app.use(CanCan)
 
 document.addEventListener('DOMContentLoaded', () => {
   app.mount('#app')

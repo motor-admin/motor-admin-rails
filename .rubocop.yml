@@ -64,3 +64,9 @@ RSpec/ExampleLength:
 
 RSpec/MultipleExpectations:
   Max: 10
+
+RSpec/NestedGroups:
+  Max: 4
+
+RSpec/Capybara/VisibilityMatcher:
+  Enabled: false

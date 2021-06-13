@@ -1,5 +1,8 @@
 <template>
-  <Dropdown trigger="click">
+  <Dropdown
+    v-if="withDeselect || hasActions"
+    trigger="click"
+  >
     <VButton
       :ghost="buttonGhost"
       :type="buttonType"
@@ -19,14 +22,14 @@
           {{ action.display_name }}
         </DropdownItem>
         <DropdownItem
-          v-if="editAction"
+          v-if="editAction && canEdit"
           :disabled="resources.length > 1"
           @click="applyAction(editAction)"
         >
           Edit
         </DropdownItem>
         <DropdownItem
-          v-if="removeAction"
+          v-if="removeAction && canRemove"
           :divided="!!editAction"
           class="text-danger"
           @click="applyAction(removeAction)"
@@ -35,7 +38,7 @@
         </DropdownItem>
         <DropdownItem
           v-if="withDeselect"
-          divided
+          :divided="hasActions"
           @click="deselect"
         >
           Deselect All
@@ -50,7 +53,7 @@ import api from 'api'
 import axios from 'axios'
 import { modelNameMap } from '../scripts/schema'
 import ResourceForm from './form'
-import { interpolate } from 'utils/scripts/string'
+import { interpolate, truncate } from 'utils/scripts/string'
 import CustomFormModal from 'custom_forms/components/form_modal'
 import singularize from 'inflected/src/singularize'
 
@@ -101,9 +104,20 @@ export default {
         return action.name === 'remove' && action.visible
       })
     },
+    canEdit () {
+      return this.resources.some((res) => this.$can('edit', this.model.class_name, res))
+    },
+    canRemove () {
+      return this.resources.some((res) => this.$can('destroy', this.model.class_name, res))
+    },
+    hasActions () {
+      return this.canEdit || this.canRemove || this.customActions.length > 0
+    },
     customActions () {
       return this.model.actions.filter((action) => {
-        return !['create', 'edit', 'remove'].includes(action.name) && action.visible
+        return !['create', 'edit', 'remove'].includes(action.name) && action.visible && this.resources.some((res) => {
+          return this.$can(action.name, this.model.class_name, res)
+        })
       })
     },
     model () {
@@ -151,7 +165,11 @@ export default {
       Promise.all(requests).then((result) => {
         this.$Message.info('Action has been applied!')
       }).catch((error) => {
-        this.$Message.error(`Action failed with code ${error.response.status}`)
+        if (error.response.data?.errors) {
+          this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
+        } else {
+          this.$Message.error(`Action failed with code ${error.response.status}`)
+        }
       }).finally(() => {
         this.$emit('finish-action', action.name)
       })
@@ -229,7 +247,12 @@ export default {
             }
           }).catch((error) => {
             console.error(error)
-            this.$Message.error('Unable to remove items')
+
+            if (error.response.data?.errors) {
+              this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
+            } else {
+              this.$Message.error('Unable to remove items')
+            }
           }).finally(() => {
             this.$emit('finish-action', 'remove')
           })

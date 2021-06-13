@@ -20,13 +20,24 @@ module Motor
     private
 
     def render_result
-      query_result = Queries::RunQuery.call(@query, variables_hash: params[:variables])
+      variables = params.fetch(:variables, {}).merge(current_user_variables)
+      query_result = Queries::RunQuery.call(@query, variables_hash: variables)
 
       if query_result.error
         render json: { errors: [{ detail: query_result.error }] }, status: :unprocessable_entity
       else
         render json: query_result_hash(query_result)
       end
+    end
+
+    def current_user_variables
+      return {} unless current_user
+
+      current_user
+        .attributes
+        .slice('id', 'email')
+        .transform_keys { |key| "current_user_#{key}" }
+        .compact
     end
 
     def query_result_hash(query_result)

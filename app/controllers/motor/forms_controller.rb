@@ -10,11 +10,11 @@ module Motor
     authorize_resource :form, only: :create
 
     def index
-      render json: { data: Motor::ApiQuery::BuildJson.call(@forms.active, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@forms.active, params, current_ability) }
     end
 
     def show
-      render json: { data: Motor::ApiQuery::BuildJson.call(@form, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@form, params, current_ability) }
     end
 
     def create
@@ -24,7 +24,7 @@ module Motor
         ApplicationRecord.transaction { @form.save! }
         Motor::Configs::WriteToFile.call
 
-        render json: { data: Motor::ApiQuery::BuildJson.call(@form, params) }
+        render json: { data: Motor::ApiQuery::BuildJson.call(@form, params, current_ability) }
       end
     rescue ActiveRecord::RecordNotUnique
       retry
@@ -34,7 +34,7 @@ module Motor
       Motor::Forms::Persistance.update_from_params!(@form, form_params)
       Motor::Configs::WriteToFile.call
 
-      render json: { data: Motor::ApiQuery::BuildJson.call(@form, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@form, params, current_ability) }
     rescue Motor::Forms::Persistance::NameAlreadyExists
       render json: { errors: [{ source: 'name', detail: 'Name already exists' }] }, status: :unprocessable_entity
     end

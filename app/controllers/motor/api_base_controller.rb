@@ -3,14 +3,7 @@
 module Motor
   class ApiBaseController < ActionController::API
     include Motor::CurrentUserMethod
-
-    class CanCanAbilityManageAll
-      include CanCan::Ability
-
-      def initialize(_)
-        can :manage, :all
-      end
-    end
+    include Motor::CurrentAbility
 
     unless Rails.env.test?
       rescue_from StandardError do |e|
@@ -18,10 +11,6 @@ module Motor
 
         render json: { errors: [e.message] }, status: :internal_server_error
       end
-    end
-
-    def current_ability
-      CanCanAbilityManageAll.new(current_user)
     end
   end
 end

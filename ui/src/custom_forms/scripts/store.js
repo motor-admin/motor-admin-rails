@@ -3,21 +3,12 @@ import api from 'api'
 
 const formsStore = reactive([])
 
-function normalizeForms (forms) {
-  return forms.map((form) => {
-    return {
-      ...form,
-      tags: form.tags.map((tag) => tag.name)
-    }
-  })
-}
-
 function sortForms (forms) {
   return forms.sort((a, b) => a.updated_at > b.updated_at ? -1 : 1)
 }
 
 function assignForms (forms) {
-  formsStore.splice(0, formsStore.length, ...sortForms(normalizeForms(forms)))
+  formsStore.splice(0, formsStore.length, ...sortForms(forms))
 }
 
 let requestLock = null

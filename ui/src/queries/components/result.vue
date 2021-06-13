@@ -7,9 +7,9 @@
   >
     <p
       v-for="error in errors"
-      :key="error.detail"
+      :key="error.detail || error"
     >
-      {{ error.detail }}
+      {{ error.detail || error }}
     </p>
   </div>
   <ValueResult

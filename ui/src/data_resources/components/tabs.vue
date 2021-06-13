@@ -79,9 +79,18 @@ import FormTab from './form_tab'
 import DashboardTab from './dashboard_tab'
 import ResourcesMenu from 'navigation/components/resources'
 
+import { dashboardsStore, queriesStore } from 'reports/scripts/store'
+import { formsStore } from 'custom_forms/scripts/store'
+
 import { isShowSettings } from 'settings/scripts/toggle'
 import SettingsMask from 'settings/components/mask'
 import { widthLessThan } from 'utils/scripts/dimensions'
+
+const tabResources = {
+  dashboard: dashboardsStore,
+  form: formsStore,
+  query: queriesStore
+}
 
 export default {
   name: 'ResourceTabs',
@@ -146,7 +155,9 @@ export default {
       return { height: `calc(${vh} - ${subtract}px)`, overflowY: this.isShowSettings ? 'hidden' : 'scroll' }
     },
     tabs () {
-      const tabs = this.model.tabs.filter((tab) => tab.visible)
+      const tabs = this.model.tabs.filter((tab) => {
+        return tab.visible && (tab.tab_type === 'default' || tabResources[tab.tab_type].find((e) => e.id.toString() === tab.preferences[`${tab.tab_type}_id`].toString()))
+      })
 
       if (this.associations.length && widthLessThan('sm')) {
         tabs.splice(1, 0, {

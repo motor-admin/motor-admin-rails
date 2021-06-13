@@ -87,10 +87,11 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include FactoryBot::Syntax::Methods
-  config.include CapybaraHelpers
   config.include ActiveRecordHelpers
-  config.include Motor::Admin.routes.url_helpers
+  config.include CapybaraHelpers, type: :system
+  config.include Motor::Admin.routes.url_helpers, type: :system
   config.include ActionView::Helpers::NumberHelper, type: :system
+  config.include Warden::Test::Helpers, type: :system
 
   config.before(:each, type: :system) do
     if ENV['HEADLESS'] == 'false'

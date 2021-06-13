@@ -35,6 +35,7 @@ module Motor
       'token' => 'key',
       'secret' => 'lock',
       'automation' => 'manual-gearbox',
+      'workflow' => 'manual-gearbox',
       'relationship' => 'hierarchy',
       'person' => 'user',
       'people' => 'users',
@@ -96,6 +97,8 @@ module Motor
       'page' => 'brand-pagekit',
       'date' => 'calendar-event',
       'customer' => 'users',
+      'client' => 'users',
+      'ticket' => 'ticket',
       'contact' => 'users',
       'member' => 'users',
       'admin' => 'user-check',
@@ -107,7 +110,8 @@ module Motor
       'product' => 'building-store',
       'html' => 'code',
       'stripe' => 'brand-stripe',
-      'email' => 'mail'
+      'email' => 'mail',
+      'status' => 'hash'
     }.freeze
 
     DEFAULT_ICON = 'database'

@@ -51,10 +51,10 @@ export default {
     tags () {
       return Object.values(this.taggableItems.reduce((acc, item) => {
         item.tags.forEach((tag) => {
-          acc[tag] ||= { name: tag, count: 0 }
+          acc[tag.name] ||= { ...tag, count: 0 }
 
           if (this.taggableFilteredItems.includes(item)) {
-            acc[tag].count++
+            acc[tag.name].count++
           }
         })
 

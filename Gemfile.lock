@@ -1,10 +1,10 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.1.57)
+    motor-admin (0.1.58)
       activerecord-filter (>= 5.2)
       ar_lazy_preload (~> 0.6)
-      audited (~> 4.9)
+      audited (~> 5.0)
       cancancan (~> 3.0)
       fugit (~> 1.0)
       js_regex (~> 3.0)
@@ -82,8 +82,8 @@ GEM
     arel-extensions (6.1.0)
       activerecord (>= 6.1.0)
     ast (2.4.2)
-    audited (4.10.0)
-      activerecord (>= 4.2, < 6.2)
+    audited (5.0.1)
+      activerecord (>= 5.0, < 6.2)
     aws-eventstream (1.1.1)
     aws-partitions (1.460.0)
     aws-sdk-core (3.114.0)
@@ -100,6 +100,7 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.2.3)
       aws-eventstream (~> 1, >= 1.0.2)
+    bcrypt (3.1.16)
     brakeman (5.0.1)
     builder (3.2.4)
     cancancan (3.2.2)
@@ -122,6 +123,12 @@ GEM
     cuprite (0.13)
       capybara (>= 2.1, < 4)
       ferrum (~> 0.11.0)
+    devise (4.8.0)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
     diff-lcs (1.4.4)
     docile (1.4.0)
     erubi (1.10.0)
@@ -172,6 +179,7 @@ GEM
     nokogiri (1.11.5-x86_64-linux)
       racc (~> 1.4)
     oj (3.11.5)
+    orm_adapter (0.5.0)
     parallel (1.20.1)
     parser (3.0.0.0)
       ast (~> 2.4.1)
@@ -220,6 +228,9 @@ GEM
     rbtree (0.4.4)
     regexp_parser (2.1.1)
     regexp_property_values (1.0.0)
+    responders (3.0.1)
+      actionpack (>= 5.0)
+      railties (>= 5.0)
     rexml (3.2.4)
     rspec-core (3.10.1)
       rspec-support (~> 3.10.0)
@@ -282,6 +293,8 @@ GEM
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     unicode-display_width (1.7.0)
+    warden (1.2.9)
+      rack (>= 2.0.9)
     webmock (3.13.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -304,6 +317,7 @@ DEPENDENCIES
   brakeman
   capybara
   cuprite
+  devise
   factory_bot_rails
   faker
   letter_opener

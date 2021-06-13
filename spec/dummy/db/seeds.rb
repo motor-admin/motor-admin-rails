@@ -9,10 +9,19 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 LineItem.destroy_all
+User.destroy_all
 Order.destroy_all
 Customer.destroy_all
 Product.destroy_all
 Country.destroy_all
+
+%w[admin sales ops].each do |role|
+  User.create!(
+    email: "#{role}@example.com",
+    role: role,
+    password: '123456'
+  )
+end
 
 countries = Country.create!(
   [

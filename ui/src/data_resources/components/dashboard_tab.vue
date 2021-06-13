@@ -4,7 +4,7 @@
       v-if="isLoading"
       fix
     />
-    <template v-else>
+    <template v-else-if="dashboard.id">
       <VariablesForm
         v-model:data="dataVariables"
         :variables="variablesToRender"
@@ -94,6 +94,10 @@ export default {
         this.assignDefaultVariables()
       }).catch((error) => {
         console.error(error)
+
+        if (error.response.data?.errors) {
+          this.$Message.error(error.response.data.errors.join('\n'))
+        }
       }).finally(() => {
         this.isLoading = false
       })

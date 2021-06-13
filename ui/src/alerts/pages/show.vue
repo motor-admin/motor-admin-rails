@@ -12,7 +12,7 @@
     </div>
     <div class="col-5 col-md-4 d-flex align-items-center justify-content-end">
       <VButton
-        v-if="alert.id"
+        v-if="alert.id && $can('update', 'Motor::Alert')"
         size="large"
         class="bg-white ms-2 md-icon-only"
         :loading="isEnabledToggleLoading"
@@ -22,7 +22,7 @@
         {{ alert.is_enabled ? 'Disable' : 'Activate' }}
       </VButton>
       <VButton
-        v-if="alert.query_id && alert.to_emails.length"
+        v-if="alert.query_id && alert.to_emails.length && $can('manage', 'Motor::Alert')"
         size="large"
         icon="md-send"
         :loading="isSendingLoading"
@@ -32,6 +32,7 @@
         Send Now
       </VButton>
       <VButton
+        v-if="isCanEdit"
         size="large"
         ghost
         type="primary"
@@ -88,6 +89,7 @@
         v-else
         ref="form"
         :alert="alert"
+        :with-submit="isCanEdit"
         :loading="isSubmitting"
         @submit="onSubmit"
         @select-query="onSelectQuery"
@@ -106,8 +108,9 @@ import api from 'api'
 const defaultAlertParams = {
   name: '',
   description: '',
-  to_emails: [],
+  to_emails: '',
   query_id: null,
+  tags: [],
   preferences: {}
 }
 
@@ -133,6 +136,9 @@ export default {
   computed: {
     cachedAlertName () {
       return alertsStore.find((q) => q.id.toString() === this.$route.params?.id)?.name
+    },
+    isCanEdit () {
+      return this.alert.id ? this.$can('edit', 'Motor::Alert', this.alert) : this.$can('create', 'Motor::Alert')
     }
   },
   watch: {
@@ -220,7 +226,7 @@ export default {
       this.isSubmitting = true
 
       this.submitRequest(alert).then((result) => {
-        this.alert = this.normalizeAlert(result.data.data)
+        this.alert = result.data.data
 
         this.$router.push({ name: 'alert', params: { id: this.alert.id } })
 
@@ -238,13 +244,6 @@ export default {
     onSaveClick () {
       this.$refs.form.submit()
     },
-    normalizeAlert (alert) {
-      return {
-        ...alert,
-        to_emails: alert.to_emails.split(','),
-        tags: alert.tags.map((tag) => tag.name)
-      }
-    },
     loadAlert () {
       this.isLoadingAlert = true
 
@@ -253,9 +252,13 @@ export default {
           include: 'tags'
         }
       }).then((result) => {
-        this.alert = this.normalizeAlert(result.data.data)
+        this.alert = result.data.data
       }).catch((error) => {
         console.error(error)
+
+        if (error.response.data?.errors) {
+          this.$Message.error(error.response.data.errors.join('\n'))
+        }
       }).finally(() => {
         this.isLoadingAlert = false
       })

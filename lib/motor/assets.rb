@@ -9,10 +9,10 @@ module Motor
     DEV_SERVER_URL = 'http://localhost:9090/'
 
     CACHE_STORE =
-      if Motor.development?
-        ActiveSupport::Cache::NullStore.new
-      else
+      if Rails.env.production?
         ActiveSupport::Cache::MemoryStore.new(size: 5.megabytes)
+      else
+        ActiveSupport::Cache::NullStore.new
       end
 
     module_function

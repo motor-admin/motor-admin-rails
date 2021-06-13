@@ -109,8 +109,7 @@ export default {
         if (valid) {
           this.apiRequest.then((result) => {
             this.$emit('success', {
-              ...result.data.data,
-              tags: result.data.data.tags.map((t) => t.name)
+              ...result.data.data
             })
           }).catch((error) => {
             if (error.response.data.errors?.length) {

@@ -10,11 +10,11 @@ module Motor
     authorize_resource :dashboard, only: :create
 
     def index
-      render json: { data: Motor::ApiQuery::BuildJson.call(@dashboards.active, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@dashboards.active, params, current_ability) }
     end
 
     def show
-      render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params, current_ability) }
     end
 
     def create
@@ -24,7 +24,7 @@ module Motor
         ApplicationRecord.transaction { @dashboard.save! }
         Motor::Configs::WriteToFile.call
 
-        render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params) }
+        render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params, current_ability) }
       end
     rescue ActiveRecord::RecordNotUnique
       retry
@@ -34,7 +34,7 @@ module Motor
       Motor::Dashboards::Persistance.update_from_params!(@dashboard, dashboard_params)
       Motor::Configs::WriteToFile.call
 
-      render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@dashboard, params, current_ability) }
     rescue Motor::Dashboards::Persistance::TitleAlreadyExists
       render json: { errors: [{ source: 'title', detail: 'Title already exists' }] }, status: :unprocessable_entity
     end
@@ -51,6 +51,10 @@ module Motor
 
     def build_dashboard
       @dashboard = Motor::Dashboards::Persistance.build_from_params(dashboard_params)
+
+      @dashboard.define_singleton_method(:tags) do
+        taggable_tags.map(&:tag)
+      end
     end
 
     def dashboard_params

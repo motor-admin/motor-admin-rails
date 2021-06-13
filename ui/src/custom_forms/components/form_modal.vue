@@ -51,6 +51,10 @@ export default {
         this.form = result.data.data
       }).catch((error) => {
         console.error(error)
+
+        if (error.response.data?.errors) {
+          this.$Message.error(error.response.data.errors.join('\n'))
+        }
       }).finally(() => {
         this.$emit('loaded')
       })

@@ -12,7 +12,7 @@
     </div>
     <div class="col-5 col-md-4 d-flex align-items-center justify-content-end">
       <VButton
-        v-if="variables.length"
+        v-if="variables.length && isCanEdit"
         size="large"
         class="me-2 md-icon-only d-none d-sm-block"
         :icon="isVariableSettingsOpened ? 'md-close' : 'md-flask'"
@@ -21,6 +21,7 @@
         {{ isVariableSettingsOpened ? 'Close Variables' : 'Variables' }}
       </VButton>
       <VButton
+        v-if="isCanEdit"
         size="large"
         class="bg-white me-2 md-icon-only"
         :icon="isEditorOpened ? 'md-close' : 'md-create'"
@@ -29,6 +30,7 @@
         {{ isEditorOpened ? 'Close editor' : 'Edit' }}
       </VButton>
       <VButton
+        v-if="isCanEdit"
         size="large"
         class="bg-white me-2"
         ghost
@@ -159,6 +161,9 @@ export default {
     isExisting () {
       return this.$route.params.id
     },
+    isCanEdit () {
+      return this.dashboard.id ? this.$can('edit', 'Motor::Dashboard', this.dashboard) : this.$can('create', 'Motor::Dashboard')
+    },
     isSettingsOpened () {
       return this.isEditorOpened || this.isVariableSettingsOpened
     },
@@ -262,6 +267,10 @@ export default {
         this.assignDefaultVariables()
       }).catch((error) => {
         console.error(error)
+
+        if (error.response.data?.errors) {
+          this.$Message.error(error.response.data.errors.join('\n'))
+        }
       }).finally(() => {
         this.isDashboardLoading = false
       })

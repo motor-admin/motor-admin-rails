@@ -87,7 +87,7 @@
               :resource="resource"
               :column="column"
               :resource-name="resourceName"
-              :editable="editable"
+              :editable="editable && $can('edit', model.class_name, resource)"
               :reference-popover="referencePopover"
               :reference-size="oneColumn ? 30 : 20"
               @update="assignResource"

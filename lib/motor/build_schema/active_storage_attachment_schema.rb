@@ -5,6 +5,7 @@ module Motor
     ACTIVE_STORAGE_ATTACHMENT_SCHEMA = {
       name: 'active_storage/attachment',
       slug: 'active_storage__attachments',
+      class_name: 'ActiveStorage::Attachment',
       table_name: 'active_storage_attachments',
       primary_key: 'id',
       display_name: 'Attachments',

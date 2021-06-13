@@ -16,6 +16,8 @@ module Motor
 
       PG_ERROR_REGEXP = /\APG.+ERROR:/.freeze
 
+      RESERVED_VARIABLES = %w[current_user_id current_user_email].freeze
+
       module_function
 
       # @param query [Motor::Query]
@@ -110,11 +112,13 @@ module Motor
       end
 
       # @param variable_configs [Array<Hash>]
-      # @param variable_hash [Hash]
+      # @param variables_hash [Hash]
       # @return [Hash]
       def merge_variable_default_values(variable_configs, variables_hash)
-        variable_configs.each_with_object({}) do |variable, acc|
-          acc[variable[:name]] = variables_hash[variable[:name]] || variable[:default_value]
+        variable_configs.each_with_object(variables_hash.slice(*RESERVED_VARIABLES)) do |variable, acc|
+          next if RESERVED_VARIABLES.include?(variable[:name])
+
+          acc[variable[:name]] ||= variables_hash[variable[:name]] || variable[:default_value]
         end
       end
     end

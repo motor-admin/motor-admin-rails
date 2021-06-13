@@ -32,27 +32,39 @@ module Motor
         end
       end
 
-      def load_queries(cache_key: nil)
+      def load_queries(cache_key: nil, current_ability: nil)
         maybe_fetch_from_cache('queries', cache_key) do
-          Motor::Query.all.active.preload(:tags).load
+          rel = Motor::Query.all.active.preload(:tags)
+          rel = rel.accessible_by(current_ability) if current_ability
+
+          rel.load
         end
       end
 
-      def load_dashboards(cache_key: nil)
+      def load_dashboards(cache_key: nil, current_ability: nil)
         maybe_fetch_from_cache('dashboards', cache_key) do
-          Motor::Dashboard.all.active.preload(:tags).load
+          rel = Motor::Dashboard.all.active.preload(:tags)
+          rel = rel.accessible_by(current_ability) if current_ability
+
+          rel.load
         end
       end
 
-      def load_alerts(cache_key: nil)
+      def load_alerts(cache_key: nil, current_ability: nil)
         maybe_fetch_from_cache('alerts', cache_key) do
-          Motor::Alert.all.active.preload(:tags).load
+          rel = Motor::Alert.all.active.preload(:tags)
+          rel = rel.accessible_by(current_ability) if current_ability
+
+          rel.load
         end
       end
 
-      def load_forms(cache_key: nil)
+      def load_forms(cache_key: nil, current_ability: nil)
         maybe_fetch_from_cache('forms', cache_key) do
-          Motor::Form.all.active.preload(:tags).load
+          rel = Motor::Form.all.active.preload(:tags)
+          rel = rel.accessible_by(current_ability) if current_ability
+
+          rel.load
         end
       end
 

@@ -8,7 +8,7 @@ module Motor
       audits = Motor::ApiQuery.call(@audits, params)
 
       render json: {
-        data: Motor::ApiQuery::BuildJson.call(audits, params),
+        data: Motor::ApiQuery::BuildJson.call(audits, params, current_ability),
         meta: Motor::ApiQuery::BuildMeta.call(audits, params)
       }
     end

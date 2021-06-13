@@ -11,19 +11,19 @@ module Motor
       @resources = Motor::ApiQuery.call(@resources, params)
 
       render json: {
-        data: Motor::ApiQuery::BuildJson.call(@resources, params),
+        data: Motor::ApiQuery::BuildJson.call(@resources, params, current_ability),
         meta: Motor::ApiQuery::BuildMeta.call(@resources, params)
       }
     end
 
     def show
-      render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params, current_ability) }
     end
 
     def create
       @resource.save!
 
-      render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params, current_ability) }
     rescue ActiveRecord::RecordInvalid
       render json: { errors: @resource.errors }, status: :unprocessable_entity
     end
@@ -31,7 +31,7 @@ module Motor
     def update
       @resource.update!(resource_params)
 
-      render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params, current_ability) }
     rescue ActiveRecord::RecordInvalid
       render json: { errors: @resource.errors }, status: :unprocessable_entity
     end
@@ -47,6 +47,11 @@ module Motor
     end
 
     def execute
+      resource_preferences = Motor::Resource.find_by(name: @resource.class.name.underscore).preferences
+      resource_action = resource_preferences[:actions].find { |a| a[:preferences][:method_name] == params[:method] }
+
+      authorize!(resource_action[:name].to_sym, @resource)
+
       @resource.public_send(params[:method].to_sym)
 
       head :ok

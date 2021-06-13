@@ -7,7 +7,7 @@ module Motor
     load_and_authorize_resource
 
     def index
-      render json: { data: Motor::ApiQuery::BuildJson.call(@configs, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@configs, params, current_ability) }
     end
 
     def create
@@ -19,7 +19,7 @@ module Motor
       @config.save!
       Motor::Configs::WriteToFile.call
 
-      render json: { data: Motor::ApiQuery::BuildJson.call(@config, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@config, params, current_ability) }
     rescue ActiveRecord::RecordNotUnique
       retry
     end

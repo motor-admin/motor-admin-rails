@@ -5,83 +5,90 @@ module Motor
     module BuildJson
       module_function
 
-      def call(rel, params)
-        rel = rel.none if params.dig(:page, :limit).yield_self { |limit| limit.present? && limit.to_i.zero? }
-
+      # @param rel [ActiveRecord::Base, ActiveRecord::Relation]
+      # @param params [Hash]
+      # @param current_ability [CanCan::Ability]
+      # @return [Hash]
+      def call(rel, params, current_ability = Motor::CancanUtils::CanManageAll.new)
+        rel = rel.none if limit_zero_params?(params)
         rel = rel.preload_associations_lazily if rel.is_a?(ActiveRecord::Relation)
-
-        json_params = {}.with_indifferent_access
-
-        assign_include_params(json_params, rel, params)
-        assign_fields_params(json_params, rel, params)
-
-        rel.as_json(json_params)
-      end
-
-      def assign_include_params(json_params, _rel, api_params)
-        return if api_params['include'].blank?
-
-        include_params = api_params['include']
-
-        if include_params.is_a?(String)
-          include_params =
-            include_params.split(',').reduce({}) do |accumulator, path|
-              hash = {}
-
-              path.split('.').reduce(hash) do |acc, part|
-                acc_hash = {}
-
-                acc[part] = acc_hash
-
-                acc_hash
-              end
-
-              accumulator.deep_merge(hash)
-            end
-        end
-
-        json_params.deep_merge!(normalize_include_params(include_params))
-      end
-
-      def assign_fields_params(json_params, rel, params)
-        return if params[:fields].blank?
 
         model = rel.is_a?(ActiveRecord::Relation) ? rel.klass : rel.class
 
+        include_hash = build_include_hash(params['include'])
+        models_index = build_models_index(model, include_hash)
+
+        json_params = normalize_include_params(include_hash)
+
+        assign_fields_params!(json_params, model, params, current_ability, models_index)
+
+        rel.as_json(json_params.with_indifferent_access)
+      end
+
+      # @param include_params [Hash]
+      # @return [Hash]
+      def build_include_hash(include_params)
+        return {} if include_params.blank?
+
+        if include_params.is_a?(String)
+          build_hash_from_string_path(include_params)
+        else
+          include_params
+        end
+      end
+
+      # @param json_params [Hash]
+      # @param model [Class<ActiveRecord::Base>]
+      # @param params [Hash]
+      # @param current_ability [CanCan::Ability]
+      # @param models_index [Hash]
+      # @return [void]
+      def assign_fields_params!(json_params, model, params, current_ability, models_index)
+        return if params[:fields].blank?
+
         params[:fields].each do |key, fields|
+          fields_model = models_index[key]
+
+          next unless model
+
           fields = fields.split(',') if fields.is_a?(String)
 
-          merge_fields_params!(json_params, key, fields, model)
+          fields_hash = fields_model == model ? json_params : find_key_in_params(json_params, key)
+
+          fields_hash.merge!(build_fields_hash(fields_model, fields, current_ability))
         end
       end
 
-      def merge_fields_params!(json_params, key, fields, model)
-        model_name = model.name.underscore
+      # @param model [Class<ActiveRecord::Base>]
+      # @param fields [Hash]
+      # @param current_ability [CanCan::Ability]
+      # @return [Hash]
+      def build_fields_hash(model, fields, current_ability)
+        return { 'methods' => fields } unless model
 
-        if key == model_name || model_name.split('/').last == key
-          json_params.merge!(build_fields_hash(model, fields))
-        else
-          hash = find_key_in_params(json_params, key)
+        column_names = model.column_names.map(&:to_sym)
+        instance_methods = model.instance_methods
+        permitted_attributes = current_ability.permitted_attributes(:read, model)
+        is_permitted_all = column_names == permitted_attributes
 
-          fields_hash = build_fields_hash(model.reflections[key]&.klass, fields)
-
-          hash.merge!(fields_hash)
-        end
-      end
-
-      def build_fields_hash(model, fields)
-        columns = model ? model.columns.map(&:name) : []
         fields_hash = { 'only' => [], 'methods' => [] }
 
         fields.each_with_object(fields_hash) do |field, acc|
-          if field.in?(columns)
+          field_symbol = field.to_sym
+
+          next if !is_permitted_all && permitted_attributes.exclude?(field_symbol)
+
+          if column_names.include?(field_symbol)
             acc['only'] << field
-          elsif model.nil? || model.instance_methods.include?(field.to_sym)
+          elsif instance_methods.include?(field_symbol)
             acc['methods'] << field
           end
         end
       end
 
+      # @param params [Hash]
+      # @param key [String]
+      # @return [Hash]
       def find_key_in_params(params, key)
         params = params['include']
 
@@ -93,6 +100,8 @@ module Motor
         end
       end
 
+      # @param params [Hash]
+      # @return [Hash]
       def normalize_include_params(params)
         case params
         when Array
@@ -111,6 +120,51 @@ module Motor
         else
           raise ArgumentError, "Wrong include param type #{params.class}"
         end
+      end
+
+      # @param model [Class<ActiveRecord::Base>]
+      # @param includes_hash [Hash]
+      # @return [Hash]
+      def build_models_index(model, includes_hash)
+        default_index = {
+          model.name.underscore => model,
+          model.name.underscore.split('/').last => model
+        }
+
+        includes_hash.reduce(default_index) do |acc, (key, value)|
+          reflection = model.reflections[key]
+
+          next acc unless reflection
+          next acc if reflection.polymorphic?
+
+          acc[key] = reflection.klass
+
+          acc.merge(build_models_index(reflection.klass, value))
+        end
+      end
+
+      # @param string_path [String]
+      # @return [Hash]
+      def build_hash_from_string_path(string_path)
+        string_path.split(',').reduce({}) do |accumulator, path|
+          hash = {}
+
+          path.split('.').reduce(hash) do |acc, part|
+            acc_hash = {}
+
+            acc[part] = acc_hash
+
+            acc_hash
+          end
+
+          accumulator.deep_merge(hash)
+        end
+      end
+
+      # @param params [Hash]
+      # @return [Boolean]
+      def limit_zero_params?(params)
+        params.dig(:page, :limit).yield_self { |limit| limit.present? && limit.to_i.zero? }
       end
     end
   end

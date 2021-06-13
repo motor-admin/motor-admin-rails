@@ -7,6 +7,7 @@
     </div>
     <div class="col-10 col-lg-10 text-end d-none d-md-block">
       <VButton
+        v-if="$can('create', 'Motor::Query')"
         icon="md-add"
         size="large"
         type="default"
@@ -16,6 +17,7 @@
         Add Query
       </VButton>
       <VButton
+        v-if="$can('create', 'Motor::Dashboard')"
         icon="md-add"
         size="large"
         type="default"
@@ -25,6 +27,7 @@
         Add Dashboard
       </VButton>
       <VButton
+        v-if="$can('create', 'Motor::Alert')"
         icon="md-add"
         size="large"
         type="default"
@@ -144,22 +147,22 @@ export default {
           label: 'All',
           to: { name: 'reports', query }
         },
-        {
+        this.$can('read', 'Motor::Query') && {
           value: 'queries',
           label: 'Queries',
           to: { name: 'reports', params: { type: 'queries' }, query }
         },
-        {
+        this.$can('read', 'Motor::Dashboard') && {
           value: 'dashboards',
           label: 'Dashboards',
           to: { name: 'reports', params: { type: 'dashboards' }, query }
         },
-        {
+        this.$can('read', 'Motor::Alert') && {
           value: 'alerts',
           label: 'Alerts',
           to: { name: 'reports', params: { type: 'alerts' }, query }
         }
-      ]
+      ].filter(Boolean)
     },
     items () {
       return itemsStore.filter((item) => {
@@ -170,7 +173,7 @@ export default {
       return this.items.filter((item) => {
         return (
           !this.selectedTags.length ||
-          this.selectedTags.every((tag) => item.tags.includes(tag))
+          this.selectedTags.every((tag) => item.tags.some((t) => t.name === tag))
         ) && (
           !this.searchQuery ||
           (item.name || item.title).toLowerCase().includes(this.searchQuery.toLowerCase())

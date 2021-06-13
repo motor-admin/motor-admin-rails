@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'devise'
 gem 'faker'
 gem 'mysql2'
 gem 'oj'

@@ -31,6 +31,7 @@
       </VButton>
       <template v-if="!widthLessThan('sm')">
         <VButton
+          v-if="canReadReports"
           type="primary"
           :to="{ name: 'reports' }"
           class="header-btn ms-2"
@@ -39,6 +40,7 @@
           Reports
         </VButton>
         <VButton
+          v-if="$can('read', 'Motor::Form')"
           type="primary"
           class="header-btn ms-2"
           size="large"
@@ -59,6 +61,7 @@
           {{ link.name }}
         </VButton>
         <VButton
+          v-if="$can('manage', 'Motor::Config')"
           type="primary"
           class="ms-2 add-item-btn"
           icon="md-add"
@@ -92,8 +95,9 @@
         />
       </VButton>
       <Dropdown
-        v-if="!isShowSettings"
+        v-if="!isShowSettings && isShowCreateButton"
         trigger="click"
+        :placement="$can('manage', 'all') ? 'bottom' : 'bottom-end'"
         class="ms-2"
       >
         <VButton
@@ -108,22 +112,35 @@
         </VButton>
         <template #list>
           <DropdownMenu>
-            <DropdownItem @click="$router.push({ name: 'new_query' })">
+            <DropdownItem
+              v-if="$can('create', 'Motor::Query')"
+              @click="$router.push({ name: 'new_query' })"
+            >
               Add Query
             </DropdownItem>
-            <DropdownItem @click="$router.push({ name: 'new_dashboard' })">
+            <DropdownItem
+              v-if="$can('create', 'Motor::Dashboard')"
+              @click="$router.push({ name: 'new_dashboard' })"
+            >
               Add Dashboard
             </DropdownItem>
-            <DropdownItem @click="$router.push({ name: 'new_form'})">
+            <DropdownItem
+              v-if="$can('create', 'Motor::Form')"
+              @click="$router.push({ name: 'new_form'})"
+            >
               Add Form
             </DropdownItem>
-            <DropdownItem @click="$router.push({ name: 'new_alert' })">
+            <DropdownItem
+              v-if="$can('create', 'Motor::Alert')"
+              @click="$router.push({ name: 'new_alert' })"
+            >
               Add Alert
             </DropdownItem>
           </DropdownMenu>
         </template>
       </Dropdown>
       <VButton
+        v-if="$can('manage', 'all')"
         type="primary"
         class="ms-2 header-btn"
         size="large"
@@ -153,6 +170,7 @@ import { widthLessThan } from 'utils/scripts/dimensions'
 import { isShowSettings, toggleSettings } from 'settings/scripts/toggle'
 import { openSettingsDrawer } from 'settings/scripts/drawer'
 import { currentUser } from 'navigation/scripts/user_store'
+import { canVisit } from '../scripts/can_visit'
 
 export default {
   name: 'AppHeader',
@@ -172,10 +190,22 @@ export default {
 
         if (path.match(/^https?:/)) {
           params.target = '_blank'
+
+          return params
         }
 
-        return params
-      })
+        const resolvedRoute = this.$router.resolve({ path }, this.$route)
+
+        if (resolvedRoute?.name) {
+          if (canVisit(resolvedRoute)) {
+            return params
+          } else {
+            return null
+          }
+        } else {
+          return params
+        }
+      }).filter(Boolean)
     },
     currentResource () {
       if (this.$route.name !== 'resources') {
@@ -204,6 +234,12 @@ export default {
           this.$Modal.remove()
         }
       })
+    },
+    canReadReports () {
+      return this.$can('read', 'Motor::Query') || this.$can('read', 'Motor::Dashboard') || this.$can('read', 'Motor::Alert')
+    },
+    isShowCreateButton () {
+      return this.$can('create', 'Motor::Query') || this.$can('create', 'Motor::Dashboard') || this.$can('create', 'Motor::Alert') || this.$can('create', 'Motor::Form')
     },
     openGuides () {
       this.$Modal.open(Guides, {

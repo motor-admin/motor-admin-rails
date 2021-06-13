@@ -10,11 +10,11 @@ module Motor
     authorize_resource :alert, only: :create
 
     def index
-      render json: { data: Motor::ApiQuery::BuildJson.call(@alerts.active, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@alerts.active, params, current_ability) }
     end
 
     def show
-      render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params, current_ability) }
     end
 
     def create
@@ -25,7 +25,7 @@ module Motor
         Motor::Alerts::ScheduledAlertsCache.clear
         Motor::Configs::WriteToFile.call
 
-        render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params) }
+        render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params, current_ability) }
       end
     rescue Motor::Alerts::Persistance::InvalidInterval
       invalid_interval_response
@@ -36,7 +36,7 @@ module Motor
       Motor::Alerts::ScheduledAlertsCache.clear
       Motor::Configs::WriteToFile.call
 
-      render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params) }
+      render json: { data: Motor::ApiQuery::BuildJson.call(@alert, params, current_ability) }
     rescue Motor::Alerts::Persistance::NameAlreadyExists
       name_already_exists_response
     rescue Motor::Alerts::Persistance::InvalidInterval

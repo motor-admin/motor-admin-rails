@@ -32,6 +32,7 @@ $ rails motor:install && rake db:migrate
 * [Data visualization](#data-visualization)
 * [Dashboards](#dashboards)
 * [Email alerts](#email-alerts)
+* [Authorization](#authorization)
 * [Intelligence search](#intelligence-search)
 * [Optimized for mobile](#optimized-for-mobile)
 * [Configurations sync between environments](#configurations-sync)
@@ -90,6 +91,9 @@ Sender address can be specified using `MOTOR_ALERTS_FROM_ADDRESS` environment va
 
 Intelligence search can be opened via the top right corner button or using <kbd>Cmd</kbd> + <kbd>P</kbd> shortcut.
 
+### Authorization
+
+Motor Admin allows to set row-level and column-level permissions via [cancan](https://github.com/CanCanCommunity/cancancan) gem. Admin UI permissions should be defined in `app/models/motor/ability.rb` file in `Motor::Ability` class. See [Motor Admin guide](https://github.com/omohokcoj/motor-admin/blob/master/guides/defining_permissions.md) and [CanCan documentation](https://github.com/CanCanCommunity/cancancan/blob/develop/docs/Defining-Abilities.md) to learn how to define user permissions.
 
 ### Optimized for Mobile
 
@@ -141,8 +145,6 @@ MOTOR_DEVELOPMENT=true rails s
 
 ## Comming Soon
 
-* User groups
-* Row-level permissions
 * Multiple databases
 * NoSQL data sources
 * Pro Bussines intelligence features

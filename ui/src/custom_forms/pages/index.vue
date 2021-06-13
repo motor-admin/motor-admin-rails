@@ -7,6 +7,7 @@
     </div>
     <div class="col-10 col-lg-10 text-end">
       <VButton
+        v-if="$can('create', 'Motor::Form')"
         icon="md-add"
         size="large"
         type="default"
@@ -111,7 +112,7 @@ export default {
       return this.items.filter((item) => {
         return (
           !this.selectedTags.length ||
-          this.selectedTags.every((tag) => item.tags.includes(tag))
+          this.selectedTags.every((tag) => item.tags.some((t) => t.name === tag))
         ) && (
           !this.searchQuery ||
           (item.name || item.title).toLowerCase().includes(this.searchQuery.toLowerCase())

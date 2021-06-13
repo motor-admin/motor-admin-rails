@@ -4,7 +4,7 @@ module Motor
   class UiController < ApplicationController
     layout 'motor/application'
 
-    helper_method :current_user
+    helper_method :current_user, :current_ability
 
     def index
       render_ui

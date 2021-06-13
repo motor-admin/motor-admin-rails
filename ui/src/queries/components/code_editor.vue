@@ -171,6 +171,11 @@ export default {
       type: Array,
       required: false,
       default: () => []
+    },
+    variables: {
+      type: Array,
+      required: false,
+      default: () => []
     }
   },
   emits: ['update:modelValue', 'run'],
@@ -182,9 +187,9 @@ export default {
   computed: {
     completions () {
       if (this.language === 'markdown') {
-        return this.columnCompletions
+        return this.columnCompletions.concat(this.variablesCompletions)
       } else {
-        return this.schemaCompletions
+        return this.schemaCompletions.concat(this.variablesCompletions)
       }
     },
     columnCompletions () {
@@ -193,6 +198,15 @@ export default {
           name: column.name,
           value: column.name,
           meta: 'column'
+        }
+      })
+    },
+    variablesCompletions () {
+      return this.variables.map((variable) => {
+        return {
+          name: variable.name,
+          value: variable.name,
+          meta: 'variable'
         }
       })
     },
