@@ -65,6 +65,18 @@ module Motor
       end
     end
 
+    initializer 'warden.configure.dispatch_requests' do
+      next unless defined?(Warden::JWTAuth)
+
+      config.after_initialize do
+        Warden::JWTAuth.configure do |config|
+          config.dispatch_requests += [
+            ['POST', /\A#{Regexp.escape(Motor::Admin.routes.url_helpers.motor_api_auth_tokens_path)}\z/]
+          ]
+        end
+      end
+    end
+
     initializer 'motor.active_storage.extensions' do
       config.after_initialize do
         next unless defined?(ActiveStorage::Engine)

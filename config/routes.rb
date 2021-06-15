@@ -5,6 +5,7 @@ Motor::Admin.routes.draw do
     scope 'api', as: :api do
       resources :run_queries, only: %i[show create]
       resources :send_alerts, only: %i[create]
+      resources :auth_tokens, only: %i[create]
       resources :queries, only: %i[index show create update destroy]
       resources :tags, only: %i[index]
       resources :configs, only: %i[index create]

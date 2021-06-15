@@ -56,6 +56,7 @@ import ResourceForm from './form'
 import { interpolate, truncate } from 'utils/scripts/string'
 import CustomFormModal from 'custom_forms/components/form_modal'
 import singularize from 'inflected/src/singularize'
+import { loadCredentials } from 'utils/scripts/auth_credentials'
 
 export default {
   name: 'ResourceActions',
@@ -180,7 +181,9 @@ export default {
     apiRequest (resource, action) {
       const path = interpolate(action.preferences.api_path, resource)
 
-      return axios.post(path)
+      return loadCredentials().then((credentials) => {
+        return axios.post(path, {}, { headers: credentials.headers })
+      })
     },
     openForm (resource, action) {
       const data = action.name === 'edit'

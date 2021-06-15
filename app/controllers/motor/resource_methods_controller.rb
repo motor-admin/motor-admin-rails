@@ -2,6 +2,8 @@
 
 module Motor
   class ResourceMethodsController < ApiBaseController
+    skip_authorization_check
+
     before_action :authorize_resource
 
     def show

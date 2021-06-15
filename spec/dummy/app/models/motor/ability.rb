@@ -4,7 +4,7 @@ module Motor
   class Ability
     include CanCan::Ability
 
-    def initialize(user, _request)
+    def initialize(user, _request = nil)
       case user.role
       when 'admin'
         can :manage, :all

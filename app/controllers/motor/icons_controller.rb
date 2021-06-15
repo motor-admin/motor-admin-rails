@@ -2,6 +2,8 @@
 
 module Motor
   class IconsController < ApiBaseController
+    skip_authorization_check
+
     CACHE_STORE = ActiveSupport::Cache::MemoryStore.new
 
     def index

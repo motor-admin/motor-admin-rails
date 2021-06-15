@@ -66,6 +66,7 @@
 <script>
 import FormInput from 'data_forms/components/input'
 import { interpolate } from 'utils/scripts/string'
+import { loadCredentials } from 'utils/scripts/auth_credentials'
 import axios from 'axios'
 import DOMPurify from 'dompurify'
 
@@ -147,28 +148,33 @@ export default {
 
       this.isLoading = true
 
-      return axios[method](path, {
-        ...this.formData
-      }, {
-        headers: this.headers
-      }).then((result) => {
-        this.$emit('success', result)
-        this.formData = Object.assign({ ...this.data }, this.defaultValues)
-        this.isSuccess = true
-        this.successData = result.data
-      }).catch((error) => {
-        console.error(error)
+      loadCredentials().then((credentials) => {
+        return axios[method](path, {
+          ...this.formData
+        }, {
+          headers: {
+            ...this.headers,
+            ...credentials.headers
+          }
+        }).then((result) => {
+          this.$emit('success', result)
+          this.formData = Object.assign({ ...this.data }, this.defaultValues)
+          this.isSuccess = true
+          this.successData = result.data
+        }).catch((error) => {
+          console.error(error)
 
-        if (error.response?.data?.errors?.length) {
-          this.$refs.form.setErrors(error.response.data.errors)
-        }
+          if (error.response?.data?.errors?.length) {
+            this.$refs.form.setErrors(error.response.data.errors)
+          }
 
-        this.$Message.error(`Form failed with code ${error.response.status}`)
+          this.$Message.error(`Form failed with code ${error.response.status}`)
 
-        this.$emit('error', error)
-      }).finally(() => {
-        this.isLoading = false
-        this.$emit('submit', this.formData)
+          this.$emit('error', error)
+        }).finally(() => {
+          this.isLoading = false
+          this.$emit('submit', this.formData)
+        })
       })
     },
     handleSubmit () {
