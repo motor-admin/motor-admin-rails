@@ -43,9 +43,9 @@ $ rails motor:install && rake db:migrate
 
 ![Settings UI](https://user-images.githubusercontent.com/5418788/119263883-90708780-bbe9-11eb-9f9f-f76fed0b7f27.png)
 
-Everything in the admin panel can be configured using intuitive settings UI, which can be opened via the icon in the top right corner.
+Everything in the admin panel can be configured using the intuitive settings UI, which can be opened via the icon in the top right corner.
 
-Data displayed on the resource page can be completely custimized via [SQL queries](#sql-queries) and [dashboards](#dashboards) attached to the resource as a tab. Usually, queries used to display resource data should contain `{{resource_name_id}}` [variable](#sql-queries).
+Data displayed on the resource page can be completely customized via [SQL queries](#sql-queries) and [dashboards](#dashboards) attached to the resource as a tab. Usually, queries used to display resource data should contain `{{resource_name_id}}` [variable](#sql-queries).
 
 ### Custom Actions
 
@@ -63,7 +63,7 @@ Values from the form fields can be used in API path via `{field_name}` syntax: `
 
 ![SQL query](https://user-images.githubusercontent.com/5418788/119264127-84d19080-bbea-11eb-9903-ef465d1d2c97.png)
 
-Queries can include embeded variables via `{{variable}}` syntax ([mustache](https://mustache.github.io)). `{{#variable}} ... {{/variable}}` syntax allows to decide if conditions inside the scope should be included in the query.
+Queries can include embedded variables via `{{variable}}` syntax ([mustache](https://mustache.github.io)). `{{#variable}} ... {{/variable}}` syntax allows to decide if conditions inside the scope should be included in the query.
 
 ### Data Visualization
 
@@ -142,12 +142,6 @@ Start example application in development mode:
 ```bash
 MOTOR_DEVELOPMENT=true rails s
 ```
-
-## Comming Soon
-
-* Multiple databases
-* NoSQL data sources
-* Pro Bussines intelligence features
 
 ## License
 
