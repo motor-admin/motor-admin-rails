@@ -54,7 +54,7 @@ import axios from 'axios'
 import { modelNameMap } from '../scripts/schema'
 import ResourceForm from './form'
 import { interpolate, truncate } from 'utils/scripts/string'
-import CustomFormModal from 'custom_forms/components/form_modal'
+import CustomFormWrapper from 'custom_forms/components/form_wrapper'
 import singularize from 'inflected/src/singularize'
 import { loadCredentials } from 'utils/scripts/auth_credentials'
 
@@ -193,8 +193,9 @@ export default {
             [`${this.model.name}_${this.model.primary_key}`]: resource[this.model.primary_key]
           }
 
-      this.$Drawer.open(CustomFormModal, {
+      this.$Drawer.open(CustomFormWrapper, {
         data,
+        withFooterSubmit: true,
         formId: action.preferences.form_id,
         onSuccess: (result) => {
           this.$emit('finish-action', action.name)

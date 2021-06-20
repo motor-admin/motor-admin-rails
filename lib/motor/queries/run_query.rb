@@ -7,13 +7,16 @@ module Motor
 
       QueryResult = Struct.new(:data, :columns, :error, keyword_init: true)
 
-      WITH_STATEMENT_START = 'WITH __query__ AS ('
+      CTE_NAME = '__query__'
+
+      WITH_STATEMENT_START = "WITH #{CTE_NAME} AS ("
 
       WITH_STATEMENT_TEMPLATE = <<~SQL
         #{WITH_STATEMENT_START}%<sql_body>s
-        ) SELECT * FROM __query__ LIMIT %<limit>s;
+        )
       SQL
 
+      STATEMENT_VARIABLE_REGEXP = /\$\d+/.freeze
       PG_ERROR_REGEXP = /\APG.+ERROR:/.freeze
 
       RESERVED_VARIABLES = %w[current_user_id current_user_email].freeze
@@ -23,11 +26,14 @@ module Motor
       # @param query [Motor::Query]
       # @param variables_hash [Hash]
       # @param limit [Integer]
+      # @param filters [Hash]
       # @return [Motor::Queries::RunQuery::QueryResult]
-      def call!(query, variables_hash: nil, limit: DEFAULT_LIMIT)
+      def call!(query, variables_hash: nil, limit: nil, filters: nil)
         variables_hash ||= {}
+        limit ||= DEFAULT_LIMIT
+        filters ||= {}
 
-        result = execute_query(query, limit, variables_hash)
+        result = execute_query(query, limit, variables_hash, filters)
 
         QueryResult.new(data: result.rows, columns: build_columns_hash(result))
       end
@@ -36,8 +42,8 @@ module Motor
       # @param variables_hash [Hash]
       # @param limit [Integer]
       # @return [Motor::Queries::RunQuery::QueryResult]
-      def call(query, variables_hash: nil, limit: DEFAULT_LIMIT)
-        call!(query, variables_hash: variables_hash, limit: limit)
+      def call(query, variables_hash: nil, limit: nil, filters: nil)
+        call!(query, variables_hash: variables_hash, limit: limit, filters: filters)
       rescue ActiveRecord::StatementInvalid => e
         QueryResult.new(error: build_error_message(e))
       end
@@ -51,10 +57,11 @@ module Motor
       # @param query [Motor::Query]
       # @param limit [Integer]
       # @param variables_hash [Hash]
+      # @param filters [Hash]
       # @return [ActiveRecord::Result]
-      def execute_query(query, limit, variables_hash)
+      def execute_query(query, limit, variables_hash, filters)
         result = nil
-        statement = prepare_sql_statement(query, limit, variables_hash)
+        statement = prepare_sql_statement(query, limit, variables_hash, filters)
 
         ActiveRecord::Base.transaction do
           result =
@@ -62,6 +69,8 @@ module Motor
             when 'ActiveRecord::ConnectionAdapters::PostgreSQLAdapter'
               PostgresqlExecQuery.call(ActiveRecord::Base.connection, statement)
             else
+              statement = normalize_statement_for_sql(statement)
+
               ActiveRecord::Base.connection.exec_query(*statement)
             end
 
@@ -88,27 +97,68 @@ module Motor
       # @param query [Motor::Query]
       # @param limit [Integer]
       # @param variables_hash [Hash]
+      # @param filters [Hash]
       # @return [Array]
-      def prepare_sql_statement(query, limit, variables_hash)
+      def prepare_sql_statement(query, limit, variables_hash, filters)
         variables = merge_variable_default_values(query.preferences.fetch(:variables, []), variables_hash)
 
         sql, query_variables = RenderSqlTemplate.call(query.sql_body, variables)
+        cte_sql = format(WITH_STATEMENT_TEMPLATE, sql_body: sql.strip.delete_suffix(';'))
+        cte_select_sql = build_cte_select_sql(limit, filters)
 
         attributes = build_statement_attributes(query_variables)
 
-        [format(WITH_STATEMENT_TEMPLATE, sql_body: sql.strip.delete_suffix(';'), limit: limit), 'SQL', attributes]
+        [[cte_sql, cte_select_sql].join, 'SQL', attributes]
+      end
+
+      # @param limit [Number]
+      # @param filters [Hash]
+      # @return [String]
+      def build_cte_select_sql(limit, filters)
+        table = Arel::Table.new(CTE_NAME)
+
+        arel_filters = build_filters_arel(filters)
+
+        expresion = table.project(table[Arel.star])
+        expresion = expresion.where(arel_filters) if arel_filters.present?
+
+        expresion.take(limit.to_i).to_sql
+      end
+
+      # @param filters [Hash]
+      # @return [Arel::Nodes, nil]
+      def build_filters_arel(filters)
+        return nil if filters.blank?
+
+        table = Arel::Table.new(CTE_NAME)
+
+        arel_filters = filters.map { |key, value| table[key].in(value) }
+
+        arel_filters[1..].reduce(arel_filters.first) { |acc, arel| acc.and(arel) }
       end
 
       # @param variables [Array<(String, Object)>]
       # @return [Array<ActiveRecord::Relation::QueryAttribute>]
       def build_statement_attributes(variables)
         variables.map do |variable_name, value|
-          ActiveRecord::Relation::QueryAttribute.new(
-            variable_name,
-            value,
-            ActiveRecord::Type::Value.new
-          )
-        end
+          [value].flatten.map do |val|
+            ActiveRecord::Relation::QueryAttribute.new(
+              variable_name,
+              val,
+              ActiveRecord::Type::Value.new
+            )
+          end
+        end.flatten
+      end
+
+      # @param array [Array]
+      # @return [Array]
+      def normalize_statement_for_sql(statement)
+        sql, _, attributes = statement
+
+        sql = ActiveRecord::Base.sanitize_sql([sql.gsub(STATEMENT_VARIABLE_REGEXP, '?'), attributes.map(&:value)])
+
+        [sql, 'SQL', attributes]
       end
 
       # @param variable_configs [Array<Hash>]

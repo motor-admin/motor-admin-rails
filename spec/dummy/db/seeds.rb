@@ -64,7 +64,7 @@ end
 
 Product.create!(product_attributes)
 
-customer_statuses = %w[pending delivered]
+order_statuses = %w[pending delivered]
 
 customers.each do |customer|
   (1..3).to_a.sample.times do
@@ -75,7 +75,7 @@ customers.each do |customer|
       address_city: Faker::Address.city,
       address_state: Faker::Address.state_abbr,
       address_zip: Faker::Address.zip,
-      status: customer_statuses.sample,
+      status: order_statuses.sample,
       created_at: Time.current - (0..150).to_a.sample.days
     )
 

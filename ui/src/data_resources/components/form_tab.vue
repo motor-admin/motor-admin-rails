@@ -10,7 +10,7 @@
       v-show="!isLoading"
       style="max-width: 600px; margin: 0 auto"
     >
-      <CustomFormModal
+      <CustomFormWrapper
         :form-id="tab.preferences.form_id"
         :data="data"
         @loaded="isLoading = false"
@@ -20,12 +20,12 @@
 </template>
 
 <script>
-import CustomFormModal from 'custom_forms/components/form_modal'
+import CustomFormWrapper from 'custom_forms/components/form_wrapper'
 
 export default {
   name: 'ResourceFormTab',
   components: {
-    CustomFormModal
+    CustomFormWrapper
   },
   props: {
     data: {

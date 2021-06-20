@@ -39,6 +39,28 @@
         />
       </FormItem>
     </div>
+    <div class="row">
+      <FormItem
+        label="Load initial data"
+        class="col-3 pe-0"
+      >
+        <Checkbox
+          v-model="loadDefault"
+        />
+      </FormItem>
+
+      <FormItem
+        v-if="loadDefault"
+        label="API path"
+        prop="default_values_api_path"
+        class="col-9"
+      >
+        <VInput
+          v-model="dataForm.preferences.default_values_api_path"
+          :placeholder="'/api/path/{id}...'"
+        />
+      </FormItem>
+    </div>
     <FormItem
       label="Description"
       prop="description"
@@ -90,6 +112,7 @@ export default {
   emits: ['success'],
   data () {
     return {
+      loadDefault: false,
       dataForm: {}
     }
   },
@@ -116,6 +139,8 @@ export default {
   },
   created () {
     this.dataForm = JSON.parse(JSON.stringify(this.form))
+
+    this.loadDefault = !!this.dataForm.preferences.default_values_api_path
   },
   methods: {
     submit () {

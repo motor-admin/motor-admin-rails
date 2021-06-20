@@ -30,7 +30,7 @@ async function loadCredentials () {
       result.data.headers.Authorization ||= normalizeToken(token)
     }
 
-    return result.data
+    credentials = result.data
   }
 
   loadedAt = new Date()

@@ -19,7 +19,7 @@ function titleize (string) {
 }
 
 function interpolate (string, params) {
-  return string.replace(/{(\w+)}/g, (expr, key) => {
+  return string.replace(/{{?(\w+)}}?/g, (expr, key) => {
     return params[key]
   })
 }

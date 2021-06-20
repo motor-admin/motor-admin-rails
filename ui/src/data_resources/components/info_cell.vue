@@ -25,6 +25,7 @@
         <FormInput
           v-else
           v-model="resourceData[column.name]"
+          :form-data="resource"
           :column="column"
         />
       </FormItem>

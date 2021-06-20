@@ -33,6 +33,7 @@
 @import 'view3/src/styles/components/alert';
 @import 'view3/src/styles/components/date-picker';
 @import 'view3/src/styles/components/time-picker';
+@import 'view3/src/styles/components/collapse';
 
 .#{$spin-prefix-cls} {
   &-fix {
@@ -144,7 +145,7 @@ h5 {
   font-size: 16px !important;
 }
 
-.drawer-footer {
+.sticky-footer {
   background: #fff;
   border-top: 1px solid #e8e8e8;
   bottom: 0;

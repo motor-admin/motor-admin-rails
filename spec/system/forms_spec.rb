@@ -40,19 +40,77 @@ RSpec.describe 'Forms' do
     end
 
     context 'when existing' do
-      let(:order) { load_random(Order) }
-
       before do
-        visit motor_ui_form_path(Motor::Form.find(1))
+        visit motor_ui_form_path(form)
       end
 
-      it 'cancels order' do
-        ivu_fill_field 'Order', order.address_line_one
-        ivu_fill_field 'Reason', 'test'
+      describe 'cancel order form' do
+        let(:form) { Motor::Form.find(1) }
+        let(:order) { load_random(Order) }
 
-        click_on 'Submit', match: :first
+        it 'cancels order' do
+          ivu_fill_field 'Order', order.address_line_one
+          ivu_fill_field 'Reason', 'test'
 
-        expect(order.reload.status).to eq 'canceled'
+          click_on 'Submit', match: :first
+
+          expect(order.reload.status).to eq 'canceled'
+        end
+      end
+
+      describe 'order update form' do
+        let(:form) { Motor::Form.find(3) }
+        let(:order) { Order.find(23) }
+        let(:product) { load_random(Product) }
+
+        it 'updates order line items' do
+          ivu_fill_field 'Order', order.address_line_one
+
+          expect(page).to have_content(order.line_items.first.product.name)
+
+          ivu_fill_field 'Line items', product.name
+
+          click_on 'Submit', match: :first
+
+          expect(order.line_items.reload.map(&:product)).to include(product)
+        end
+      end
+
+      describe 'new order form' do
+        let(:form) { Motor::Form.find(2) }
+        let(:order_attrs) { attributes_for(:order) }
+        let(:customer_attrs) { attributes_for(:customer) }
+
+        context 'when valid form' do
+          it 'creates new order' do
+            ivu_fill_field 'Address line one', order_attrs[:address_line_one]
+            ivu_fill_field 'Address line two', order_attrs[:address_line_two]
+            ivu_fill_field 'Address state', Faker::Address.state
+            ivu_fill_field 'Address city', order_attrs[:address_city]
+            ivu_fill_field 'Address ZIP', order_attrs[:address_zip]
+            ivu_fill_field 'Email', customer_attrs[:email]
+            ivu_fill_field 'Name', customer_attrs[:name]
+            ivu_fill_field 'Country', load_random(Country).name
+            ivu_fill_field 'Product', load_random(Product).id
+            ivu_fill_field 'Price', (rand * 100).to_i
+            ivu_fill_field 'Quantity', (rand * 4).to_i
+            ivu_fill_field 'Body', 'Test'
+
+            click_on 'Submit', match: :first
+
+            expect(page).to have_content 'Form has been submitted successfully'
+          end
+        end
+
+        context 'when invalid form' do
+          it 'shows validator errors' do
+            click_on 'Submit', match: :first
+
+            expect(page).to have_content('address_line_two is required')
+            expect(page).to have_content('notes.0.body is required')
+            expect(page).to have_content('line_items.0.unit_price is required')
+          end
+        end
       end
     end
   end

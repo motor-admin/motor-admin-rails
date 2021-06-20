@@ -32,25 +32,19 @@
     v-else
     ref="form"
     :model="formData"
-    :rules="rules"
     label-position="top"
     @submit.prevent="handleSubmit"
   >
-    <FormItem
-      v-for="field in fields"
-      :key="field.name"
-      :label="field.display_name"
-      :prop="field.name"
-    >
-      <FormInput
-        v-model="formData[field.name]"
-        :column="field"
-      />
-    </FormItem>
+    <FormItems
+      v-model:form-data="formData"
+      :items="fields"
+    />
     <VButton
+      v-if="withSubmit"
       type="primary"
       long
       size="large"
+      style="position: sticky; bottom: 0"
       :disabled="isSubmitDisabled"
       @click="handleSubmit"
     >
@@ -64,16 +58,18 @@
 </template>
 
 <script>
-import FormInput from 'data_forms/components/input'
+import FormItems from './form_items'
 import { interpolate } from 'utils/scripts/string'
 import { loadCredentials } from 'utils/scripts/auth_credentials'
+import { scrollToErrors } from 'data_forms/scripts/form_utils'
+import { buildDefaultValues } from '../scripts/utils'
 import axios from 'axios'
 import DOMPurify from 'dompurify'
 
 export default {
   name: 'DataForm',
   components: {
-    FormInput
+    FormItems
   },
   props: {
     data: {
@@ -84,15 +80,20 @@ export default {
     form: {
       type: Object,
       required: true
+    },
+    withSubmit: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
-  emits: ['submit', 'success', 'error'],
+  emits: ['submit', 'success', 'error', 'reset'],
   data () {
     return {
       isLoading: false,
       isSuccess: false,
       successData: null,
-      formData: { ...this.data }
+      formData: {}
     }
   },
   computed: {
@@ -114,33 +115,29 @@ export default {
     },
     fields () {
       return this.form.preferences.fields
+    }
+  },
+  watch: {
+    data () {
+      this.formData = { ...this.formData, ...buildDefaultValues(this.fields), ...this.data }
     },
-    rules () {
-      return this.fields.reduce((acc, field) => {
-        if (field.validators?.length) {
-          acc[field.name] = field.validators
-        }
-
-        return acc
-      }, {})
-    },
-    defaultValues () {
-      return this.fields.reduce((acc, field) => {
-        if (field.default_value) {
-          acc[field.name] = field.default_value
-        }
-
-        return acc
-      }, {})
+    form () {
+      this.formData = { ...this.formData, ...buildDefaultValues(this.fields), ...this.data }
     }
   },
   created () {
-    Object.assign(this.formData, this.defaultValues)
+    this.formData = { ...buildDefaultValues(this.fields), ...this.data }
   },
   methods: {
+    scrollToErrors,
     reset () {
+      this.formData = {}
+      this.$parent.resetData()
+
       this.isSuccess = false
       this.successData = null
+
+      this.formData = { ...buildDefaultValues(this.fields), ...this.$parent.formData }
     },
     sendData () {
       const path = interpolate(this.form.api_path, this.formData)
@@ -158,17 +155,17 @@ export default {
           }
         }).then((result) => {
           this.$emit('success', result)
-          this.formData = Object.assign({ ...this.data }, this.defaultValues)
           this.isSuccess = true
           this.successData = result.data
         }).catch((error) => {
           console.error(error)
 
-          if (error.response?.data?.errors?.length) {
+          if (error.response?.data?.errors) {
             this.$refs.form.setErrors(error.response.data.errors)
+            this.scrollToErrors()
+          } else {
+            this.$Message.error(`Unable to submit form: ${error.response.status}`)
           }
-
-          this.$Message.error(`Form failed with code ${error.response.status}`)
 
           this.$emit('error', error)
         }).finally(() => {
@@ -182,6 +179,8 @@ export default {
         this.$refs.form.validate((valid) => {
           if (valid) {
             this.sendData()
+          } else {
+            this.scrollToErrors()
           }
         })
       }

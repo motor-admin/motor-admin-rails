@@ -19,23 +19,25 @@
       @click="toggleDropdown"
     >
       <div>
-        <div
-          v-for="option in selectedOptions"
-          :key="getValue(option)"
-          class="ivu-tag ivu-tag-checked"
-        >
-          <span class="ivu-tag-text">{{ getLabel(option) }}</span>
-          <i
-            class="ion ion-ios-close"
-            @click.stop="removeOption(option)"
-          />
-        </div>
+        <template v-if="multiple">
+          <div
+            v-for="option in selectedOptionsData"
+            :key="getValue(option)"
+            class="ivu-tag ivu-tag-checked"
+          >
+            <span class="ivu-tag-text">{{ getLabel(option) }}</span>
+            <i
+              class="ion ion-ios-close"
+              @click.stop="removeOption(option)"
+            />
+          </div>
+        </template>
         <input
-          v-if="remoteFunction || filterable"
+          v-if="remoteFunction || filterable || allowCreate"
           ref="input"
           v-model="searchInput"
           type="text"
-          :placeholder="selectedOptions.length ? '' : placeholder"
+          :placeholder="selectedOptionsData.length ? '' : placeholder"
           autocomplete="off"
           spellcheck="false"
           class="ivu-select-input"
@@ -50,7 +52,7 @@
           v-else
           class="ivu-select-selected-value"
         >
-          {{ getLabel(selectedOption) }}
+          {{ getLabel(selectedOptionData) }}
         </span>
         <i
           class="ivu-select-icon"
@@ -115,6 +117,9 @@ import { getStyle } from 'view3/src/utils/assist'
 import throttle from 'view3/src/utils/throttle'
 import Popper from 'popper.js/dist/umd/popper.js'
 
+const MAX_FILTER_ITEMS = 100
+const REMOTE_SEARCH_THROTTLE_DURATION = 500
+
 export default {
   name: 'SimpleSelect',
   directives: { clickOutside },
@@ -128,6 +133,16 @@ export default {
       type: Array,
       required: false,
       default: () => []
+    },
+    selectedOptions: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    selectedOption: {
+      type: [Array, Object],
+      required: false,
+      default: null
     },
     size: {
       type: String,
@@ -172,7 +187,7 @@ export default {
       default: 'Select'
     },
     labelKey: {
-      type: String,
+      type: [String, Number],
       reqired: false,
       default: 'label'
     },
@@ -197,9 +212,14 @@ export default {
       default: null
     },
     valueKey: {
-      type: String,
+      type: [String, Number],
       reqired: false,
       default: 'value'
+    },
+    inputValue: {
+      type: String,
+      reqired: false,
+      default: ''
     },
     remoteFunction: {
       type: Function,
@@ -207,41 +227,52 @@ export default {
       default: null
     }
   },
-  emits: ['update:modelValue', 'search', 'select'],
+  emits: ['update:modelValue', 'update:selectedOptions', 'update:selectedOption', 'search', 'select'],
   data () {
     return {
       isLoading: false,
       optionsData: [],
       optionRefs: [],
       popper: null,
-      selectedOption: null,
-      selectedOptions: [],
+      selectedOptionData: null,
+      selectedOptionsData: [],
       focusIndex: -1,
-      searchInput: '',
+      searchInput: this.inputValue,
       isOptionsLoaded: false,
       isOpen: false
     }
   },
   computed: {
+    remoteFunctionThrottled () {
+      return throttle((query) => this.remoteFunction(query), REMOTE_SEARCH_THROTTLE_DURATION)
+    },
     displayCreate () {
       return this.searchInput && this.allowCreate && !this.optionsToRender.find((opt) => this.getValue(opt) === this.searchInput)
     },
     withFilter () {
-      return this.remoteFunction || this.filterable
+      return this.remoteFunction || this.filterable || this.allowCreate
     },
     optionsToRender () {
-      if (this.filterable && !this.remoteFunction) {
-        return this.filteredOptions
+      if ((this.filterable || this.allowCreate) && !this.remoteFunction) {
+        return this.filteredOptions.slice(0, MAX_FILTER_ITEMS)
       } else {
-        return this.optionsData
+        if (this.remoteFunction && !this.multiple && this.selectedOptionData && this.searchInput === this.getLabel(this.selectedOptionData)) {
+          const notSelectedOptions = this.optionsData.filter((option) => {
+            return this.getValue(option) !== this.getValue(this.selectedOptionData)
+          })
+
+          return [this.selectedOption, ...notSelectedOptions]
+        } else {
+          return this.optionsData
+        }
       }
     },
     filteredOptions () {
       if (this.remoteFunction) return []
 
-      if (this.searchInput && this.searchInput !== this.getLabel(this.selectedOption)) {
+      if (this.searchInput && this.searchInput !== this.getLabel(this.selectedOptionData)) {
         return this.optionsData.filter((option) => {
-          return this.getLabel(option).toLowerCase().includes(this.searchInput.toLowerCase())
+          return this.getLabel(option).toString().toLowerCase().includes(this.searchInput.toString().toLowerCase())
         })
       } else {
         return this.optionsData
@@ -255,11 +286,21 @@ export default {
     isOptionsLoaded () {
       this.assignSelectedFromValue(this.modelValue)
 
-      const label = this.getLabel(this.selectedOption)
+      if (!this.multiple) {
+        const label = this.getLabel(this.selectedOptionData)
 
-      if (label) {
-        this.searchInput = label
+        if (label) {
+          this.searchInput = label
+        }
       }
+    },
+    selectedOptions (value) {
+      this.selectedOptionsData = [...value]
+    },
+    selectedOption (value) {
+      this.selectedOptionData = value
+
+      this.searchInput = this.getLabel(this.selectedOptionData)
     },
     optionsToRender (newArray, oldArray) {
       if (newArray.length !== oldArray.length) {
@@ -267,21 +308,30 @@ export default {
       }
     },
     modelValue (value) {
-      if (this.remoteFunction) {
-        this.remoteFunction(value).then(() => {
-          this.assignSelectedFromValue(value)
+      if (this.remoteFunction && !this.multiple) {
+        if (this.searchInput !== this.getLabel(this.selectedOptionData)) {
+          this.remoteFunction(this.searchInput || value).then(() => {
+            this.assignSelectedFromValue(value)
 
-          this.searchInput = this.getLabel(this.selectedOption)
-        })
+            this.searchInput = this.getLabel(this.selectedOptionData)
+          })
+        } else {
+          this.remoteFunction('')
+        }
       } else {
         this.assignSelectedFromValue(value)
+
+        this.searchInput = this.getLabel(this.selectedOptionData)
       }
     },
     options: {
       deep: true,
       handler (value) {
         this.optionsData = this.normalizeOptions(value)
-        this.assignSelectedFromValue(this.modelValue)
+
+        if (!this.remoteFunction) {
+          this.assignSelectedFromValue(this.modelValue)
+        }
 
         if (this.optionsData.length) {
           this.isOptionsLoaded = true
@@ -296,13 +346,22 @@ export default {
   },
   mounted () {
     if (this.remoteFunction) {
-      this.remoteFunction(this.modelValue)
+      this.remoteFunction(this.multiple ? this.searchInput : '')
+
+      if (!this.multiple) {
+        this.selectedOptionData = this.selectedOption
+        this.searchInput = this.getLabel(this.selectedOptionData) || this.modelValue
+      }
     } else {
       this.optionsData = this.normalizeOptions(this.options)
       this.assignSelectedFromValue(this.modelValue)
 
-      if (!this.multiple) {
-        this.searchInput = this.getLabel(this.selectedOption) || this.modelValue
+      if (this.multiple) {
+        this.selectedOptionsData = [...this.selectedOptions]
+      } else {
+        this.selectedOptionData = this.selectedOption || this.selectedOptionData
+
+        this.searchInput = this.getLabel(this.selectedOptionData) || this.modelValue
       }
     }
   },
@@ -346,21 +405,21 @@ export default {
     },
     getLabel (option) {
       if (option) {
-        return this.labelFunction ? this.labelFunction(option) : option[this.labelKey]
+        return this.labelFunction ? this.labelFunction(option) : (option[this.labelKey] ?? '')
       } else {
         return ''
       }
     },
     getValue (option) {
       if (option) {
-        return this.valueFunction ? this.valueFunction(option) : option[this.valueKey]
+        return this.valueFunction ? this.valueFunction(option) : (option[this.valueKey] ?? '')
       } else {
         return ''
       }
     },
     onSearch () {
-      this.remoteFunction && this.remoteFunction(this.searchInput)
-      const index = this.optionsToRender.indexOf(this.selectedOption)
+      this.remoteFunction && this.remoteFunctionThrottled(this.searchInput)
+      const index = this.optionsToRender.indexOf(this.selectedOptionData)
       this.focusIndex = index === -1 ? 0 : index
       this.isOpen = true
       this.popper?.update()
@@ -397,72 +456,92 @@ export default {
     },
     assignSelectedFromValue (value) {
       if (this.multiple) {
-        this.selectedOptions = this.optionsData.filter((option) => {
-          return !!value.find((val) => this.getValue(option).toString() === (val ?? '').toString())
-        })
+        if (value) {
+          this.selectedOptionsData = value.map((val) => {
+            return this.selectedOptionsData.find((option) => this.getValue(option).toString() === (val ?? '').toString()) ||
+              this.optionsData.find((option) => this.getValue(option).toString() === (val ?? '').toString())
+          })
+        }
       } else {
-        this.selectedOption = this.optionsData.find((option) => this.getValue(option).toString() === (value ?? '').toString())
+        if (this.getValue(this.selectedOption).toString() === (value ?? '').toString()) {
+          this.selectedOptionData = this.selectedOption
+        } else {
+          this.selectedOptionData = this.optionsData.find((option) => this.getValue(option).toString() === (value ?? '').toString())
+        }
 
-        const index = this.optionsToRender.indexOf(this.selectedOption)
+        const index = this.optionsToRender.indexOf(this.selectedOptionData)
 
         this.focusIndex = this.focusFirst && index === -1 ? 0 : index
+
+        this.$emit('update:selectedOption', this.selectedOptionData)
       }
     },
     isSelected (option) {
-      const hasSelected = this.getValue(option) && (this.selectedOption || this.selectedOptions.length)
+      const hasSelected = this.getValue(option) && (this.selectedOptionData || this.selectedOptionsData.length)
 
       if (hasSelected) {
-        return (this.multiple ? this.selectedOptions : [this.selectedOption]).find((opt) => this.getValue(opt) === this.getValue(option))
+        return (this.multiple ? this.selectedOptionsData : [this.selectedOptionData]).find((opt) => this.getValue(opt) === this.getValue(option))
       } else {
         return false
       }
     },
     selectOption (option) {
       if (this.multiple) {
-        const existingOption = this.selectedOptions.find((opt) => this.getValue(opt) === this.getValue(option))
+        const existingOption = this.selectedOptionsData.find((opt) => this.getValue(opt) === this.getValue(option))
 
         if (existingOption) {
-          this.selectedOptions.splice(this.selectedOptions.indexOf(existingOption), 1)
+          this.selectedOptionsData.splice(this.selectedOptionsData.indexOf(existingOption), 1)
         } else {
-          this.selectedOptions.push(option)
+          this.selectedOptionsData.push(option)
         }
 
         this.searchInput = ''
 
-        this.$emit('update:modelValue', this.selectedOptions.map(this.getValue))
-        this.$emit('select', this.selectedOptions)
+        if (this.remoteFunction) {
+          this.remoteFunction(this.searchInput)
+        }
+
+        this.$emit('update:selectedOptions', this.selectedOptionsData)
+        this.$emit('update:modelValue', this.selectedOptionsData.map(this.getValue))
+        this.$emit('select', this.selectedOptionsData)
 
         this.focusIndex = this.optionsToRender.indexOf(option)
 
         this.popper?.update()
         this.$refs.input?.focus()
       } else {
-        this.selectedOption = option
+        this.selectedOptionData = option
         this.searchInput = this.getLabel(option)
         this.focusIndex = this.optionsToRender.indexOf(option)
         this.$emit('update:modelValue', this.getValue(option))
-        this.$emit('select', this.selectedOption)
+        this.$emit('update:selectedOption', option)
+        this.$emit('select', option)
 
         this.closeDropdown()
       }
     },
     removeOption (option) {
-      this.selectedOptions.splice(this.selectedOptions.indexOf(option), 1)
+      this.selectedOptionsData.splice(this.selectedOptionsData.indexOf(option), 1)
 
-      this.$emit('update:modelValue', this.selectedOptions.map(this.getValue))
-      this.$emit('select', this.selectedOptions)
+      this.$emit('update:modelValue', this.selectedOptionsData.map(this.getValue))
+      this.$emit('update:selectedOptions', this.selectedOptionsData)
+      this.$emit('select', this.selectedOptionsData)
     },
     maybeRemoveOption () {
       if (this.multiple && this.searchInput === '') {
-        this.removeOption(this.selectedOptions[this.selectedOptions.length - 1])
+        this.removeOption(this.selectedOptions[this.selectedOptionsData.length - 1])
       }
     },
     closeDropdown () {
       this.isOpen = false
 
-      if (this.selectedOption) {
-        this.searchInput = this.getLabel(this.selectedOption)
+      if (this.selectedOptionData) {
+        this.searchInput = this.getLabel(this.selectedOptionData)
       }
+
+      this.$nextTick(() => {
+        this.optionRefs[0]?.scrollIntoView({ block: 'nearest' })
+      })
     },
     toggleDropdown () {
       this.isOpen = !this.isOpen

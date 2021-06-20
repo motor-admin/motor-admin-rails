@@ -9,6 +9,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = (env = {}) => ({
   mode: env.production ? 'production' : 'development',
+  devtool: env.production ? false : 'eval-source-map',
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: '[name]-[fullhash].js',

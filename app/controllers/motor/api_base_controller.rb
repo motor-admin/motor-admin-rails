@@ -8,6 +8,7 @@ module Motor
     unless Rails.env.test?
       rescue_from StandardError do |e|
         Rails.logger.error(e)
+        Rails.logger.error(e.backtrace.join("\n"))
 
         render json: { errors: [e.message] }, status: :internal_server_error
       end

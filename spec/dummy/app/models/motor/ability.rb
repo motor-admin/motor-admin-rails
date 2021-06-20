@@ -39,7 +39,7 @@ module Motor
       can :read, ActiveStorage::Attachment
       can :read, Motor::Form, %i[name tags], tags: { name: %w[Orders Customers] }
       can :manage, Motor::Form, tags: { name: %w[Orders Customers] }
-      cannot :update, Motor::Form
+      cannot %i[create update], Motor::Form
       can :manage, Motor::Query
       can :read, Motor::Dashboard, tags: { name: 'Customers' }
       can :read, Motor::Alert, tags: { name: 'Customers' }

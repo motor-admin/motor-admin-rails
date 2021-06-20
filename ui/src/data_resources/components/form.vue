@@ -20,10 +20,11 @@
         v-else
         v-model="resourceData[column.name]"
         :column="column"
+        :form-data="resource"
       />
     </FormItem>
   </VForm>
-  <div class="drawer-footer">
+  <div class="sticky-footer">
     <VButton
       style="float: left"
       @click.stop="$emit('close')"
@@ -54,6 +55,7 @@
 import api from 'api'
 import { modelNameMap } from '../scripts/schema'
 import { isJsonColumn, buildColumnValidator } from '../scripts/form_utils'
+import { scrollToErrors } from 'data_forms/scripts/form_utils'
 
 import FormInput from 'data_forms/components/input'
 import FormListInput from 'data_forms/components/list_input'
@@ -146,17 +148,7 @@ export default {
     this.resourceData = this.normalizeResourceData(this.resource)
   },
   methods: {
-    scrollToErrors () {
-      this.$nextTick(() => {
-        const errorField = this.$refs.form.$el.querySelector('.ivu-form-item-error')
-
-        if (errorField) {
-          errorField.scrollIntoView()
-        } else {
-          this.$refs.form.$el.querySelector('.ivu-alert-error')?.scrollIntoView()
-        }
-      })
-    },
+    scrollToErrors,
     onSaveClick () {
       this.$refs.form.validate((valid) => {
         if (valid) {

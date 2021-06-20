@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import FieldForm from './field_form'
+import FieldForm from './editor_field_form'
 
 export default {
   name: 'FieldItem',
@@ -60,6 +60,12 @@ export default {
   methods: {
     toggleForm () {
       this.isForm = !this.isForm
+
+      if (this.isForm) {
+        this.$nextTick(() => {
+          this.$el.scrollIntoView({ inline: 'end', block: 'center', behavior: 'smooth' })
+        })
+      }
     },
     onRemove () {
       this.isForm = false

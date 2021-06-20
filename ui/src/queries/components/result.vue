@@ -45,7 +45,6 @@
         :with-select="false"
         :click-rows="false"
         :borderless="borderless"
-        :loading="loading"
         :always-refer="true"
         :header-border="headerBorder"
         :compact="compact"

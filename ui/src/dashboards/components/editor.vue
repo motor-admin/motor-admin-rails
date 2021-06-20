@@ -52,7 +52,7 @@
       </VueDraggableNext>
     </div>
     <div
-      class="footer"
+      class="sticky-footer"
       :class="!layout.length && !isQueriesListOpened ? 'p-0 border-0' : ''"
     >
       <VButton
@@ -140,17 +140,6 @@ export default {
 
 <style lang="scss" scoped>
 @import 'utils/styles/variables';
-
-.footer {
-  width: 100%;
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  border-top: 1px solid #e8e8e8;
-  padding: 10px 0;
-  text-align: right;
-  background: #fff;
-}
 
 .ion-md-arrow-dropup, .ion-md-arrow-dropdown {
   cursor: pointer;

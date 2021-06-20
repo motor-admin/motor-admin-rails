@@ -21,6 +21,14 @@
         {{ isEditorOpened ? 'Close editor' : 'Edit' }}
       </VButton>
       <VButton
+        v-if="form.id && $can('create', 'Motor::Form')"
+        size="large"
+        class="bg-white ms-2 d-none d-sm-block"
+        @click="saveAsNew"
+      >
+        Save as new
+      </VButton>
+      <VButton
         v-if="form.preferences.fields.length && canEdit"
         size="large"
         class="bg-white ms-2"
@@ -50,17 +58,18 @@
       class="pt-4 position-relative"
     >
       <Spin
-        v-if="isLoading"
+        v-if="isLoading || !isFormDataLoaded"
         fix
       />
       <Card
-        v-if="form.preferences.fields.length"
+        v-show="isFormDataLoaded && form.preferences.fields.length"
         style="max-width: 640px; margin: 0 auto"
         class="mb-3"
       >
-        <CustomForm
-          ref="customForm"
+        <CustomFormWrapper
+          ref="customFormWrapper"
           :form="form"
+          @loaded="isFormDataLoaded = true"
         />
       </Card>
     </div>
@@ -69,14 +78,14 @@
       class="col-12 col-md-6 col-lg-3 border-left bg-white p-0"
       style="height: 100%; overflow: scroll"
     >
-      <Editor :form="form" />
+      <Editor :fields="form.preferences.fields" />
     </div>
   </div>
 </template>
 
 <script>
 import Editor from '../components/editor'
-import CustomForm from '../components/custom_form'
+import CustomFormWrapper from '../components/form_wrapper'
 import SaveForm from '../components/save_form'
 import { formsStore } from '../scripts/store'
 import api from 'api'
@@ -94,11 +103,12 @@ export default {
   name: 'FromShow',
   components: {
     Editor,
-    CustomForm
+    CustomFormWrapper
   },
   data () {
     return {
       isLoading: false,
+      isFormDataLoaded: false,
       isEditorOpened: false,
       form: JSON.parse(JSON.stringify(defaultFormParams))
     }
@@ -162,7 +172,33 @@ export default {
       })
     },
     submit () {
-      this.$refs.customForm.handleSubmit()
+      this.$refs.customFormWrapper.submit()
+    },
+    onSuccess (form) {
+      this.form = form
+
+      this.$Modal.remove()
+      this.$Message.info('Form has been saved!')
+
+      this.$router.push({ name: 'form', params: { id: form.id } })
+
+      this.isEditorOpened = false
+    },
+    saveAsNew () {
+      this.$Modal.open(SaveForm, {
+        form: {
+          ...this.form,
+          id: null,
+          tags: this.form.tags.map((tag) => tag.name)
+        },
+        action: 'new',
+        onSuccess: (form) => {
+          this.onSuccess(form)
+        }
+      }, {
+        title: 'Save form',
+        closable: true
+      })
     },
     save () {
       this.$Modal.open(SaveForm, {
@@ -171,21 +207,7 @@ export default {
           tags: this.form.tags.map((tag) => tag.name)
         },
         onSuccess: (form) => {
-          Object.assign(this.form, {
-            id: form.id,
-            api_path: form.api_path,
-            http_method: form.http_method,
-            name: form.name,
-            description: form.description,
-            tags: form.tags
-          })
-
-          this.$Modal.remove()
-          this.$Message.info('Form has been saved!')
-
-          this.$router.push({ name: 'form', params: { id: form.id } })
-
-          this.isEditorOpened = false
+          this.onSuccess(form)
         }
       }, {
         title: 'Save form',

@@ -32,7 +32,7 @@
       :resource="resource"
     />
   </div>
-  <div class="drawer-footer">
+  <div class="sticky-footer">
     <VButton
       long
       size="large"

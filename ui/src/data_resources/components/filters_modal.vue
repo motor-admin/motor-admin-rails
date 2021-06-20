@@ -5,7 +5,7 @@
     class="filters"
     @keydown.enter="$emit('apply', clearedFilters)"
   />
-  <div class="drawer-footer">
+  <div class="sticky-footer">
     <VButton
       class="float-start"
       @click="$emit('cancel')"

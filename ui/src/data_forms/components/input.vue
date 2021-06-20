@@ -8,13 +8,25 @@
     v-else-if="column.reference && column.reference.model_name"
     :model-value="modelValue"
     :resource-name="column.reference.model_name"
+    :selected-resource="formData ? formData[column.reference.name] : null"
+    :multiple="column.is_array"
     :primary-key="column.reference.association_primary_key"
+    @update:modelValue="onSelect"
+  />
+  <QueryValueSelect
+    v-else-if="type === 'select' && column.select_query_id"
+    :model-value="modelValue"
+    :query-id="column.select_query_id"
+    :form-data="formData"
+    :multiple="column.is_array"
     @update:modelValue="onSelect"
   />
   <MSelect
     v-else-if="isTagSelect"
     :model-value="modelValue"
     :options="tagOptions"
+    :allow-create="!tagOptions.length"
+    :multiple="column.is_array"
     :label-function="(option) => titleize(option.value.toString())"
     @update:modelValue="onSelect"
   />
@@ -54,7 +66,9 @@
 </template>
 
 <script>
+import Emitter from 'view3/src/mixins/emitter'
 import ResourceSelect from 'data_resources/components/select'
+import QueryValueSelect from 'queries/components/value_select'
 import { titleize } from 'utils/scripts/string'
 
 const SINGLE_LINE_INPUT_NAMES = [
@@ -76,8 +90,10 @@ const SINGLE_LINE_INPUT_REGEXP = new RegExp(SINGLE_LINE_INPUT_NAMES.join('|'))
 export default {
   name: 'FormInput',
   components: {
-    ResourceSelect
+    ResourceSelect,
+    QueryValueSelect
   },
+  mixins: [Emitter],
   props: {
     modelValue: {
       type: [String, Number, Boolean, Date, Object],
@@ -87,6 +103,11 @@ export default {
     column: {
       type: Object,
       required: true
+    },
+    formData: {
+      type: Object,
+      required: false,
+      default: null
     }
   },
   emits: ['update:modelValue', 'select', 'enter'],
@@ -100,10 +121,10 @@ export default {
       return this.column.column_type || this.column.field_type
     },
     isTagSelect () {
-      return !!this.tagOptions
+      return this.tagOptions.length || this.column.is_array
     },
     tagOptions () {
-      return this.column.validators?.find((validator) => validator.includes?.length)?.includes
+      return this.column.validators?.find((validator) => validator.includes?.length)?.includes || []
     },
     isBoolean () {
       return typeof this.modelValue === 'boolean' || this.type === 'boolean' || this.type === 'checkbox'
@@ -184,10 +205,9 @@ export default {
       }
     },
     onSelect (value) {
-      if (value) {
-        this.$emit('update:modelValue', value)
-        this.$emit('select')
-      }
+      this.$emit('update:modelValue', value)
+      this.$emit('select')
+      this.dispatch('FormItem', 'on-form-change', value)
     },
     updateDateTime (datetime) {
       if (datetime) {

@@ -1,6 +1,6 @@
 ---
-engine_version: 0.1.47
-file_version: 2021-05-23 16:37:14.758438000 Z
+engine_version: 0.1.61
+file_version: 2021-06-21 17:35:00.990272000 Z
 resources:
 - name: country
   preferences: {}
@@ -55,6 +55,10 @@ resources:
       action_type: form
       preferences:
         form_id: 1
+    - action_type: form
+      preferences:
+        form_id: 2
+      name: create
     columns:
     - name: total_price
       display_name: Total price
@@ -64,7 +68,7 @@ resources:
       format:
         currency: USD
         currency_base: cents
-  updated_at: 2021-05-21 20:14:27.117124000 +00:00
+  updated_at: 2021-06-20 17:59:52.060401000 +00:00
 - name: order_note
   preferences:
     display_name: Notes
@@ -411,6 +415,101 @@ queries:
   tags:
   - Customers
   updated_at: 2021-05-21 18:03:23.444000000 +00:00
+- id: 13
+  name: USA states
+  sql_body: "SELECT * FROM \n(\nSELECT 'Alaska','AK','West','Pacific'\nUNION SELECT
+    'Alabama','AL','South','East South Central'\nUNION SELECT 'Arkansas','AR','South','West
+    South Central'\nUNION SELECT 'Arizona','AZ','West','Mountain'\nUNION SELECT 'California','CA','West','Pacific'\nUNION
+    SELECT 'Colorado','CO','West','Mountain'\nUNION SELECT 'Connecticut','CT','Northeast','New
+    England'\nUNION SELECT 'District of Columbia','DC','South','South Atlantic'\nUNION
+    SELECT 'Delaware','DE','South','South Atlantic'\nUNION SELECT 'Florida','FL','South','South
+    Atlantic'\nUNION SELECT 'Georgia','GA','South','South Atlantic'\nUNION SELECT
+    'Hawaii','HI','West','Pacific'\nUNION SELECT 'Iowa','IA','Midwest','West North
+    Central'\nUNION SELECT 'Idaho','ID','West','Mountain'\nUNION SELECT 'Illinois','IL','Midwest','East
+    North Central'\nUNION SELECT 'Indiana','IN','Midwest','East North Central'\nUNION
+    SELECT 'Kansas','KS','Midwest','West North Central'\nUNION SELECT 'Kentucky','KY','South','East
+    South Central'\nUNION SELECT 'Louisiana','LA','South','West South Central'\nUNION
+    SELECT 'Massachusetts','MA','Northeast','New England'\nUNION SELECT 'Maryland','MD','South','South
+    Atlantic'\nUNION SELECT 'Maine','ME','Northeast','New England'\nUNION SELECT 'Michigan','MI','Midwest','East
+    North Central'\nUNION SELECT 'Minnesota','MN','Midwest','West North Central'\nUNION
+    SELECT 'Missouri','MO','Midwest','West North Central'\nUNION SELECT 'Mississippi','MS','South','East
+    South Central'\nUNION SELECT 'Montana','MT','West','Mountain'\nUNION SELECT 'North
+    Carolina','NC','South','South Atlantic'\nUNION SELECT 'North Dakota','ND','Midwest','West
+    North Central'\nUNION SELECT 'Nebraska','NE','Midwest','West North Central'\nUNION
+    SELECT 'New Hampshire','NH','Northeast','New England'\nUNION SELECT 'New Jersey','NJ','Northeast','Middle
+    Atlantic'\nUNION SELECT 'New Mexico','NM','West','Mountain'\nUNION SELECT 'Nevada','NV','West','Mountain'\nUNION
+    SELECT 'New York','NY','Northeast','Middle Atlantic'\nUNION SELECT 'Ohio','OH','Midwest','East
+    North Central'\nUNION SELECT 'Oklahoma','OK','South','West South Central'\nUNION
+    SELECT 'Oregon','OR','West','Pacific'\nUNION SELECT 'Pennsylvania','PA','Northeast','Middle
+    Atlantic'\nUNION SELECT 'Rhode Island','RI','Northeast','New England'\nUNION SELECT
+    'South Carolina','SC','South','South Atlantic'\nUNION SELECT 'South Dakota','SD','Midwest','West
+    North Central'\nUNION SELECT 'Tennessee','TN','South','East South Central'\nUNION
+    SELECT 'Texas','TX','South','West South Central'\nUNION SELECT 'Utah','UT','West','Mountain'\nUNION
+    SELECT 'Virginia','VA','South','South Atlantic'\nUNION SELECT 'Vermont','VT','Northeast','New
+    England'\nUNION SELECT 'Washington','WA','West','Pacific'\nUNION SELECT 'Wisconsin','WI','Midwest','East
+    North Central'\nUNION SELECT 'West Virginia','WV','South','South Atlantic'\nUNION
+    SELECT 'Wyoming','WY','West','Mountain'\n) as t(label, value, region, division)\n{{#region}}
+    WHERE t.region IN({{region}}) {{/region}};"
+  description:
+  preferences:
+    visualization: table
+    visualization_options: {}
+    variables:
+    - name: region
+      display_name: Region
+      variable_type: select
+      default_value: ''
+      select_options:
+      - West
+      - South
+      - Northeast
+      - Midwest
+  tags:
+  - Selector
+  updated_at: 2021-06-21 16:59:23.674590000 +00:00
+- id: 14
+  name: USA regions
+  sql_body: |-
+    SELECT 'West' as value
+    UNION SELECT 'South'
+    UNION SELECT 'Northeast'
+    UNION SELECT 'Midwest'
+  description:
+  preferences:
+    visualization: table
+    visualization_options: {}
+    variables: []
+  tags:
+  - Selector
+  updated_at: 2021-06-21 16:57:11.919080000 +00:00
+- id: 15
+  name: Countries for select
+  sql_body: SELECT code, name FROM countries;
+  description:
+  preferences:
+    visualization: table
+    visualization_options: {}
+    variables: []
+  tags:
+  - Selector
+  updated_at: 2021-06-20 17:38:38.754267000 +00:00
+- id: 16
+  name: Searchable line item selector query
+  sql_body: "WITH items AS (\nSELECT li.id as value, CONCAT(pr.name, ' - ', '$', (li.quantity
+    * li.unit_price / 100)) as label\nFROM line_items as li\nJOIN products as pr ON
+    pr.id = li.product_id\n)\nSELECT * FROM items \n{{#search}} WHERE lower(label)
+    LIKE lower(concat(cast({{search}} as CHAR), '%')) {{/search}}"
+  description:
+  preferences:
+    visualization: table
+    visualization_options: {}
+    variables:
+    - name: search
+      display_name: Search
+      variable_type: text
+  tags:
+  - Selector
+  updated_at: 2021-06-21 17:35:00.990272000 +00:00
 dashboards:
 - id: 1
   title: Sales dashboard
@@ -486,6 +585,142 @@ forms:
   tags:
   - Orders
   updated_at: 2021-05-20 13:23:05.149555000 +00:00
+- id: 2
+  name: New order form
+  http_method: POST
+  api_path: "/orders"
+  description:
+  preferences:
+    fields:
+    - display_name: Address line one
+      name: address_line_one
+      field_type: input
+      default_value: ''
+      validators:
+      - required: true
+    - display_name: Address line two
+      name: address_line_two
+      field_type: input
+      default_value: ''
+      validators:
+      - required: true
+    - display_name: Region
+      name: region
+      field_type: select
+      default_value: ''
+      validators: []
+      select_query_id: 14
+    - display_name: Address state
+      name: address_state
+      field_type: select
+      default_value: ''
+      validators:
+      - required: true
+      select_query_id: 13
+    - display_name: Address city
+      name: address_city
+      field_type: input
+      default_value: ''
+      validators:
+      - required: true
+    - display_name: Address ZIP
+      name: address_zip
+      field_type: input
+      default_value: ''
+      validators:
+      - required: true
+    - display_name: Customer
+      name: customer
+      items:
+      - display_name: Email
+        name: email
+        field_type: input
+        default_value: ''
+        validators:
+        - required: true
+      - display_name: Name
+        name: name
+        field_type: input
+        default_value: ''
+        validators:
+        - required: true
+      - display_name: Country
+        name: country_code
+        field_type: select
+        default_value: ''
+        validators:
+        - required: true
+        select_query_id: 15
+    - display_name: Line items
+      name: line_items
+      items:
+      - display_name: Product
+        name: product_id
+        field_type: reference
+        default_value: ''
+        validators:
+        - required: true
+        reference:
+          model_name: product
+      - display_name: Price
+        name: unit_price
+        field_type: number
+        default_value: ''
+        validators:
+        - required: true
+      - display_name: Quantity
+        name: quantity
+        field_type: number
+        default_value: ''
+        validators:
+        - required: true
+      is_array: true
+    - display_name: Notes
+      name: notes
+      items:
+      - display_name: Body
+        name: body
+        field_type: textarea
+        default_value: ''
+        validators:
+        - required: true
+        is_array: false
+      is_array: true
+    - display_name: Tags
+      name: tags
+      field_type: input
+      default_value: []
+      validators: []
+      is_array: true
+  tags:
+  - Orders
+  updated_at: 2021-06-20 17:52:47.807307000 +00:00
+- id: 3
+  name: Update order line items
+  http_method: PUT
+  api_path: "/orders/{order_id}"
+  description:
+  preferences:
+    fields:
+    - display_name: Order
+      name: order_id
+      field_type: reference
+      default_value: 23
+      validators:
+      - required: true
+      reference:
+        model_name: order
+    - display_name: Line items
+      name: line_item_ids
+      field_type: select
+      default_value: ''
+      validators: []
+      is_array: true
+      select_query_id: 16
+    default_values_api_path: "/orders/{order_id}"
+  tags:
+  - Orders
+  updated_at: 2021-06-21 13:29:50.410041000 +00:00
 alerts:
 - id: 1
   name: New customers email

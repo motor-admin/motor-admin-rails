@@ -22,9 +22,19 @@ module Motor
             variable_name = Regexp.last_match[1]
 
             index = selected_variables.index { |name, _| name == variable_name }
-            selected_variables << [variable_name, variables[variable_name]] unless index
+            variable_values = variables[variable_name]
 
-            "$#{selected_variables.size}"
+            if variable_values.is_a?(Array)
+              first_variable_index = selected_variables.size + 1
+
+              variable_values.each { |value| selected_variables << [variable_name, value] } unless index
+
+              (first_variable_index..selected_variables.size).map { |i| "$#{i}" }.join(', ')
+            else
+              selected_variables << [variable_name, variables[variable_name]] unless index
+
+              "$#{selected_variables.size}"
+            end
           end
 
         [rendered, selected_variables]

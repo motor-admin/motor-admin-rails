@@ -12,7 +12,7 @@
 import { modelNameMap } from '../scripts/schema'
 
 import ResourceForm from './form'
-import CustomFormModal from 'custom_forms/components/form_modal'
+import CustomFormWrapper from 'custom_forms/components/form_wrapper'
 
 import singularize from 'inflected/src/singularize'
 
@@ -73,6 +73,7 @@ export default {
       return {
         data: this.resource,
         formId: this.createAction.preferences.form_id,
+        withFooterSubmit: true,
         onSuccess: (result) => {
           this.$Message.info(`${this.resourceTitle} has been created`)
           this.$emit('success', result)
@@ -100,7 +101,7 @@ export default {
   },
   methods: {
     openForm () {
-      const component = this.createAction.action_type === 'default' ? ResourceForm : CustomFormModal
+      const component = this.createAction.action_type === 'default' ? ResourceForm : CustomFormWrapper
       const props = this.createAction.action_type === 'default' ? this.defaultProps : this.customActionProps
 
       this.$Drawer.open(component, props, {

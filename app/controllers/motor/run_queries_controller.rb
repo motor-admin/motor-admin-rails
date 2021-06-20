@@ -20,8 +20,9 @@ module Motor
     private
 
     def render_result
-      variables = params.fetch(:variables, {}).merge(current_user_variables)
-      query_result = Queries::RunQuery.call(@query, variables_hash: variables)
+      query_result = Queries::RunQuery.call(@query, variables_hash: variables_params,
+                                                    limit: params[:limit].presence,
+                                                    filters: filter_params)
 
       if query_result.error
         render json: { errors: [{ detail: query_result.error }] }, status: :unprocessable_entity
@@ -55,6 +56,14 @@ module Motor
 
     def query_params
       params.require(:data).permit(:sql_body, preferences: {})
+    end
+
+    def variables_params
+      params.fetch(:variables, {}).merge(current_user_variables)
+    end
+
+    def filter_params
+      (params[:filter] || params[:filters])&.to_unsafe_h
     end
   end
 end

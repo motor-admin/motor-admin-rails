@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   mount Motor::Admin => '/'
 
-  resources :orders, only: [] do
+  resources :orders, only: %i[show create update] do
     resource :cancel, only: %i[create], controller: 'orders_cancel'
   end
 end

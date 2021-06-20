@@ -5,9 +5,9 @@ module Motor
     module_function
 
     def call(rel, params)
-      rel = ApiQuery::Sort.call(rel, params[:sort])
+      rel = ApiQuery::Sort.call(rel, params[:sort] || params[:order])
       rel = ApiQuery::Paginate.call(rel, params[:page])
-      rel = ApiQuery::Filter.call(rel, params[:filter])
+      rel = ApiQuery::Filter.call(rel, params[:filter] || params[:filters])
       rel = ApiQuery::ApplyScope.call(rel, params[:scope])
 
       ApiQuery::Search.call(rel, params[:q] || params[:search] || params[:query])

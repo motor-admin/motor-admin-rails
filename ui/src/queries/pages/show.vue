@@ -470,7 +470,7 @@ export default {
         query: {
           name: this.query.name,
           description: this.query.description,
-          tags: this.query.tags,
+          tags: this.query.tags.map((t) => t.name),
           preferences: this.dataQuery.preferences,
           sql_body: this.dataQuery.sql_body
         },

@@ -30,6 +30,14 @@
         {{ isEditorOpened ? 'Close editor' : 'Edit' }}
       </VButton>
       <VButton
+        v-if="dashboard.id && $can('create', 'Motor::Dashboard')"
+        size="large"
+        class="bg-white me-2 d-none d-sm-block"
+        @click="saveAsNew"
+      >
+        Save as new
+      </VButton>
+      <VButton
         v-if="isCanEdit"
         size="large"
         class="bg-white me-2"
@@ -275,6 +283,32 @@ export default {
         this.isDashboardLoading = false
       })
     },
+    onSuccess (dashboard) {
+      Object.assign(this.dashboard, dashboard)
+
+      this.$Modal.remove()
+      this.$Message.info('Dashboard has been saved!')
+
+      this.$router.push({ name: 'dashboard', params: { id: dashboard.id } })
+
+      this.isEditorOpened = false
+    },
+    saveAsNew () {
+      this.$Modal.open(DashboardForm, {
+        board: {
+          title: this.dashboard.title,
+          description: this.dashboard.description,
+          tags: this.dashboard.tags.map((tag) => tag.name),
+          preferences: this.dashboard.preferences
+        },
+        onSuccess: (dashboard) => {
+          this.onSuccess(dashboard)
+        }
+      }, {
+        title: 'Save dashboard',
+        closable: true
+      })
+    },
     save () {
       this.$Modal.open(DashboardForm, {
         board: {
@@ -285,14 +319,7 @@ export default {
           preferences: this.dashboard.preferences
         },
         onSuccess: (dashboard) => {
-          Object.assign(this.dashboard, dashboard)
-
-          this.$Modal.remove()
-          this.$Message.info('Dashboard has been saved!')
-
-          this.$router.push({ name: 'dashboard', params: { id: dashboard.id } })
-
-          this.isEditorOpened = false
+          this.onSuccess(dashboard)
         }
       }, {
         title: 'Save dashboard',
