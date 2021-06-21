@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.1.61)
+    motor-admin (0.1.62)
       activerecord-filter (>= 5.2)
       ar_lazy_preload (~> 0.6)
       audited (~> 5.0)
@@ -103,7 +103,7 @@ GEM
     bcrypt (3.1.16)
     brakeman (5.0.1)
     builder (3.2.4)
-    cancancan (3.2.2)
+    cancancan (3.3.0)
     capybara (3.35.3)
       addressable
       mini_mime (>= 0.1.3)

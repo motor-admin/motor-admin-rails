@@ -4,6 +4,7 @@ module Motor
   module ApiQuery
     module Filter
       LIKE_FILTER_VALUE_REGEXP = /\A%?(.*?)%?\z/.freeze
+      DISTINCT_RESTRICTED_COLUMN_TYPES = %i[json point].freeze
 
       module_function
 
@@ -12,7 +13,10 @@ module Motor
 
         normalized_params = normalize_params(Array.wrap(params))
 
-        rel.filter(normalized_params).distinct
+        rel = rel.filter(normalized_params)
+        rel = rel.distinct if can_apply_distinct?(rel)
+
+        rel
       end
 
       def normalize_params(params)
@@ -44,6 +48,12 @@ module Motor
           acc[new_action] = new_value
 
           acc
+        end
+      end
+
+      def can_apply_distinct?(rel)
+        rel.columns.none? do |column|
+          DISTINCT_RESTRICTED_COLUMN_TYPES.include?(column.type)
         end
       end
 
