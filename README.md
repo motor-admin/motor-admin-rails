@@ -57,7 +57,8 @@ Custom resource actions can be added via Active Record method call, API endpoint
 
 ![Custom form](https://user-images.githubusercontent.com/5418788/119264008-1391dd80-bbea-11eb-9f14-cb405e77fb60.png)
 
-Values from the form fields can be used in API path via `{field_name}` syntax: `/api/some-endpoint/{resource_id}/apply`
+Values from the form fields can be used in API path via `{field_name}` syntax: `/api/some-endpoint/{resource_id}/apply`.<br>
+[Learn more about custom forms builder](https://github.com/omohokcoj/motor-admin/blob/master/guides/building_custom_forms.md).
 
 ### SQL Queries
 

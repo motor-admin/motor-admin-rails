@@ -95,3 +95,13 @@ can :mark_as_shipped, Order, { status: :pending }
 # Only dashboards with specific tag will be accessiable by user with the role
 can :read, Motor::Dashboard, { tags: { name: current_user.role.capitalize } }
 ```
+
+# Query permissions
+
+It's possible to filter data for specific user in SQL using `{{current_user_id}}` `{{current_user_email}}` variables.
+
+```sql
+SELECT * FROM orders as od
+JOIN sales_reps as sr ON sr.id = od.sales_rep_id
+WHERE sr.user_id = {{current_user_id}}
+```
