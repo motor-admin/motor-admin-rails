@@ -1,5 +1,6 @@
 <template>
   <MSelect
+    :key="resourceName"
     v-model="value"
     v-model:selected-options="selectedOptions"
     v-model:selected-option="selectedOption"
@@ -82,6 +83,9 @@ export default {
     resourceName () {
       this.value = this.multiple ? [] : ''
 
+      this.selectedOption = null
+      this.selectedOptions = []
+
       this.loadResources('')
     },
     value (value) {
@@ -101,11 +105,15 @@ export default {
       if (this.selectedOption) {
         this.value = this.modelValue ?? ''
       } else {
-        this.loadMultipleResourceoptionsById([this.modelValue]).then((result) => {
-          this.selectedOption = result.data.data[0]
+        if (this.modelValue) {
+          this.loadMultipleResourceoptionsById([this.modelValue]).then((result) => {
+            this.selectedOption = result.data.data[0]
 
+            this.value = this.modelValue ?? ''
+          })
+        } else {
           this.value = this.modelValue ?? ''
-        })
+        }
       }
     }
   },
@@ -143,10 +151,12 @@ export default {
       })
     },
     loadResources (query) {
+      const cacheKey = this.model.slug + query
+
       this.isLoading = true
 
       this.resourcesRespCache ||= {}
-      this.resourcesRespCache[query] ||= api.get(`data/${this.model.slug}`, {
+      this.resourcesRespCache[cacheKey] ||= api.get(`data/${this.model.slug}`, {
         params: {
           q: query.includes(' ') ? query.replace(/^#\d+\s/, '') : query.replace(/^#/, ''),
           page: {
@@ -155,7 +165,7 @@ export default {
         }
       })
 
-      return this.resourcesRespCache[query].then((result) => {
+      return this.resourcesRespCache[cacheKey].then((result) => {
         this.options = result.data.data
       }).catch((error) => {
         console.error(error)

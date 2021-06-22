@@ -39,7 +39,7 @@
               <FormItems
                 v-model:form-data="formData[index]"
                 :items="item.items"
-                :prop-prefix="propPrefix ? `${propPrefix}.${item.name}.${index}` : `${item.name}.${index}`"
+                :prop-prefix="propPrefix ? `${propPrefix}.${index}` : `${item.name}.${index}`"
               />
             </div>
           </div>
@@ -61,7 +61,7 @@
           v-else
           v-model:form-data="formData"
           :items="item.items"
-          :prop-prefix="propPrefix ? `${propPrefix}.${item.name}` : item.name"
+          :prop-prefix="propPrefix ? propPrefix : item.name"
         />
       </template>
     </Panel>

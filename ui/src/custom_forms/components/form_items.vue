@@ -7,7 +7,7 @@
       v-if="item.items"
       v-model:form-data="formData[item.name]"
       :item="item"
-      :prop="propPrefix ? `${propPrefix}.${item.name}` : item.name"
+      :prop-prefix="propPrefix ? `${propPrefix}.${item.name}` : item.name"
     />
     <FormItem
       v-else
