@@ -185,6 +185,10 @@ export default {
         rules['reference.model_name'] = [{ required: true }]
       }
 
+      if (this.dataField.field_type === 'select') {
+        rules.select_query_id = [{ required: true }]
+      }
+
       return rules
     },
     generatedParamName () {

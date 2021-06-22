@@ -74,17 +74,17 @@ export default {
           })
         }
       } else {
-        this.value = (value ?? '')
+        this.assignSelectedOption()
       }
+    },
+    multiple () {
+      this.resetData()
     },
     selectedResource () {
       this.selectedOption = this.selectedResource
     },
     resourceName () {
-      this.value = this.multiple ? [] : ''
-
-      this.selectedOption = null
-      this.selectedOptions = []
+      this.resetData()
 
       this.loadResources('')
     },
@@ -105,19 +105,28 @@ export default {
       if (this.selectedOption) {
         this.value = this.modelValue ?? ''
       } else {
-        if (this.modelValue) {
-          this.loadMultipleResourceoptionsById([this.modelValue]).then((result) => {
-            this.selectedOption = result.data.data[0]
-
-            this.value = this.modelValue ?? ''
-          })
-        } else {
-          this.value = this.modelValue ?? ''
-        }
+        this.assignSelectedOption()
       }
     }
   },
   methods: {
+    resetData () {
+      this.value = this.multiple ? [] : ''
+
+      this.selectedOption = null
+      this.selectedOptions = []
+    },
+    assignSelectedOption () {
+      if (this.modelValue) {
+        this.loadMultipleResourceoptionsById([this.modelValue]).then((result) => {
+          this.selectedOption = result.data.data[0]
+
+          this.value = this.modelValue ?? ''
+        })
+      } else {
+        this.value = this.modelValue ?? ''
+      }
+    },
     labelFunction (option) {
       const displayValue = option[this.model.display_column]
 
@@ -134,13 +143,18 @@ export default {
     loadMultipleResourceoptionsById (ids) {
       this.isLoading = true
 
-      return api.get(`data/${this.model.slug}`, {
+      const cacheKey = this.model.slug + ids.join()
+
+      this.resourcesRespCache ||= {}
+      this.resourcesRespCache[cacheKey] ||= api.get(`data/${this.model.slug}`, {
         params: {
           filter: {
             [this.valueKey]: ids
           }
         }
-      }).then((result) => {
+      })
+
+      return this.resourcesRespCache[cacheKey].then((result) => {
         this.selectedOptions = result.data.data
 
         return result

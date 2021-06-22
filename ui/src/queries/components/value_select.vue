@@ -1,6 +1,7 @@
 <template>
   <MSelect
     v-model:selected-options="selectedOptions"
+    v-model:selected-option="selectedOption"
     v-model="dataValue"
     filterable
     :size="size"
@@ -58,6 +59,7 @@ export default {
       data: [],
       columns: [],
       selectedOptions: [],
+      selectedOption: null,
       query: null
     }
   },
@@ -80,6 +82,11 @@ export default {
     }
   },
   watch: {
+    multiple () {
+      this.dataValue = null
+      this.selectedOption = null
+      this.selectedOptions = []
+    },
     queryId () {
       this.data = []
 
