@@ -215,7 +215,7 @@ export default {
         this.isEdit = false
 
         this.$emit('update', result.data.data)
-        this.$Message.info(`${this.column.display_name} has been updated`)
+        this.$Message.info(`${this.column.display_name} ${this.i18n.has_been_updated}`)
       } catch (error) {
         if (error.response?.data?.errors) {
           if (typeof error.response.data.errors[0] === 'string') {

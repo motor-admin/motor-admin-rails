@@ -62,16 +62,16 @@ export default {
   methods: {
     remove () {
       this.$Dialog.confirm({
-        title: 'Selected item will be removed. Are you sure?',
+        title: this.i18n.selected_item_will_be_removed_are_you_sure,
         closable: true,
         onOk: () => {
           api.delete(this.apiPath).then((result) => {
-            this.$Message.info(`${titleize(this.itemType)} has been removed succesfully`)
+            this.$Message.info(`${titleize(this.itemType)} ${this.i18n.has_been_removed_succesfully}`)
 
             this.$emit('remove')
           }).catch((error) => {
             console.error(error)
-            this.$Message.error('Unable to remove item')
+            this.$Message.error(this.i18n.unable_to_remove_item)
           })
         }
       })

@@ -61,7 +61,7 @@
         :icon="isQueriesListOpened ? 'md-close' : 'md-add'"
         @click="toggleQueriesList"
       >
-        {{ isQueriesListOpened ? 'Cancel' : 'Add query' }}
+        {{ isQueriesListOpened ? i18n['cancel'] : i18n['add_query'] }}
       </VButton>
     </div>
   </div>

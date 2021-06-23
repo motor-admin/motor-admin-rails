@@ -51,7 +51,7 @@
           class="row mx-0 mx-md-2"
         >
           <h1 class="mt-3 mb-2">
-            Hello Admin 👋
+            {{ i18n['hello_admin'] }}
           </h1>
           <LinksSection />
         </div>
@@ -66,7 +66,7 @@
             v-else
             class="mt-3 mb-2"
           >
-            Hello Admin 👋
+            {{ i18n['hello_admin'] }}
           </h1>
           <div
             v-for="resource in visibleResources"

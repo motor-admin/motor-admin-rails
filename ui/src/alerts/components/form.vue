@@ -6,17 +6,17 @@
     label-position="top"
   >
     <FormItem
-      label="Name"
+      :label="i18n['name']"
       prop="name"
     >
       <VInput
         v-model="dataAlert.name"
         size="large"
-        placeholder="Alert name"
+        :placeholder="i18n['alert_name']"
       />
     </FormItem>
     <FormItem
-      label="Query"
+      :label="i18n['query']"
       prop="query_id"
     >
       <SelectQuery
@@ -27,7 +27,7 @@
     </FormItem>
 
     <FormItem
-      label="Send to"
+      :label="i18n['send_to']"
       prop="to_emails"
     >
       <MSelect
@@ -36,14 +36,14 @@
         allow-create
         multiple
         :options="dataAlert.to_emails"
-        placeholder="Emails"
+        :placeholder="i18n['emails']"
         :size="'large'"
       />
     </FormItem>
     <div class="row">
       <div class="col-7">
         <FormItem
-          label="Interval"
+          :label="i18n['interval']"
           prop="preferences.interval"
         >
           <IntervalInput
@@ -53,7 +53,7 @@
       </div>
       <div class="col-5 ps-0">
         <FormItem
-          label="Timezone"
+          :label="i18n['timezone']"
           prop="preferences.timezone"
         >
           <TimezoneSelect
@@ -64,7 +64,7 @@
       </div>
     </div>
     <FormItem
-      label="Send empty?"
+      :label="i18n['send_empty']"
       prop="preferences.send_empty"
     >
       <Checkbox
@@ -72,24 +72,24 @@
       />
     </FormItem>
     <FormItem
-      label="Description"
+      :label="i18n['description']"
       prop="description"
     >
       <VInput
         v-model="dataAlert.description"
         type="textarea"
-        placeholder="Describe this alert (optional)"
+        :placeholder="i18n['describe_this_alert_optional']"
 
         :autosize="{ minRows: 3, maxRows: 7 }"
       />
     </FormItem>
     <FormItem
-      label="Tags"
+      :label="i18n['tags']"
       prop="tags"
     >
       <TagsSelect
         v-model="dataAlert.tags"
-        placeholder="Select alert tags"
+        :placeholder="i18n['select_alert_tags']"
       />
     </FormItem>
     <VButton
@@ -101,7 +101,7 @@
       :loading="loading"
       @click="submit"
     >
-      Save
+      {{ i18n['save'] }}
     </VButton>
   </VForm>
 </template>

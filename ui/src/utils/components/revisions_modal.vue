@@ -17,7 +17,7 @@
           type="warning"
           @click="$emit('revert', audit.revision)"
         >
-          Revert
+          {{ i18n['revert'] }}
         </VButton>
       </div>
     </Card>

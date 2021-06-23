@@ -9,7 +9,7 @@
     >
       <FormItem
         v-if="withName"
-        label="Name"
+        :label="i18n['name']"
         prop="display_name"
       >
         <VInput v-model="dataAction.display_name" />
@@ -18,7 +18,7 @@
       <div class="row">
         <div :class="dataAction.action_type && dataAction.action_type !== 'default' ? 'col-sm-4 pe-sm-1' : 'col-12'">
           <FormItem
-            label="Action type"
+            :label="i18n['action_type']"
             prop="action_type"
           >
             <MSelect
@@ -34,14 +34,14 @@
         >
           <FormItem
             v-if="dataAction.action_type === 'form'"
-            label="Form"
+            :label="i18n['form']"
             prop="preferences.form_id"
           >
             <FormSelect v-model="dataAction.preferences.form_id" />
           </FormItem>
           <FormItem
             v-if="dataAction.action_type === 'method'"
-            label="Method"
+            :label="i18n['method']"
             prop="preferences.method_name"
           >
             <MethodSelect
@@ -51,7 +51,7 @@
           </FormItem>
           <FormItem
             v-if="dataAction.action_type === 'api'"
-            label="API path"
+            :label="i18n['api_path']"
             prop="preferences.api_path"
           >
             <VInput v-model="dataAction.preferences.api_path" />
@@ -68,12 +68,12 @@
           class="me-2"
           @click="$emit('remove')"
         >
-          Remove
+          {{ i18n['remove'] }}
         </VButton>
         <VButton
           @click="$emit('cancel')"
         >
-          Cancel
+          {{ i18n['cancel'] }}
         </VButton>
       </div>
       <VButton
@@ -81,7 +81,7 @@
         :loading="isLoading"
         @click="submit"
       >
-        Save
+        {{ i18n['save'] }}
       </VButton>
     </div>
   </div>

@@ -34,6 +34,7 @@ $ rails motor:install && rake db:migrate
 * [Email alerts](#email-alerts)
 * [Authorization](#authorization)
 * [Intelligence search](#intelligence-search)
+* [I18n](#i18n)
 * [Optimized for mobile](#optimized-for-mobile)
 * [Configurations sync between environments](#configurations-sync)
 
@@ -95,6 +96,25 @@ Intelligence search can be opened via the top right corner button or using <kbd>
 ### Authorization
 
 Motor Admin allows to set row-level and column-level permissions via [cancan](https://github.com/CanCanCommunity/cancancan) gem. Admin UI permissions should be defined in `app/models/motor/ability.rb` file in `Motor::Ability` class. See [Motor Admin guide](https://github.com/omohokcoj/motor-admin/blob/master/guides/defining_permissions.md) and [CanCan documentation](https://github.com/CanCanCommunity/cancancan/blob/develop/docs/Defining-Abilities.md) to learn how to define user permissions.
+
+### I18n
+
+Motor Admin can use Rails ActiveRecord i18n keys to render resource translations:
+
+```yml
+es:
+  activerecord:
+    models:
+      customer:
+        one: Cliente
+        other: Clientes
+    attributes:
+      customer:
+        name: Nombre
+    scopes:
+      customer:
+        enabled: Activado
+```
 
 ### Optimized for Mobile
 

@@ -3,7 +3,7 @@
     :model-value="modelValue"
     filterable
     :size="size"
-    :placeholder="'Timezone'"
+    :placeholder="i18n['timezone']"
     :options="options"
     @update:modelValue="updateValue"
   />

@@ -17,7 +17,7 @@
       {{ value }}
     </p>
     <p v-else-if="!loading">
-      No data
+      {{ i18n['no_data'] }}
     </p>
     <div v-if="label">
       {{ label }}

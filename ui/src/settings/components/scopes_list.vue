@@ -32,7 +32,7 @@
       icon="md-add"
       @click="addScope"
     >
-      Add Scope
+      {{ i18n['add_scope'] }}
     </VButton>
   </div>
 </template>

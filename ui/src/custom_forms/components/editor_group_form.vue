@@ -8,14 +8,14 @@
       @submit.prevent="submit"
     >
       <FormItem
-        label="Name"
+        :label="i18n['name']"
         prop="display_name"
         :class="dataGroup.display_name && !isCustomName ? 'mb-0' : ''"
       >
         <VInput
           ref="nameInput"
           v-model="dataGroup.display_name"
-          placeholder="Group name"
+          :placeholder="i18n['group_name']"
           @drag.stop
         />
       </FormItem>
@@ -32,12 +32,12 @@
       </p>
       <FormItem
         v-if="isCustomName"
-        label="Param name"
+        :label="i18n['param_name']"
         prop="name"
       >
         <VInput
           v-model="dataGroup.name"
-          placeholder="Request param"
+          :placeholder="i18n['request_param']"
           @drag.stop
         />
       </FormItem>
@@ -45,7 +45,7 @@
         v-model="dataGroup.is_array"
         class="d-block mb-3"
       >
-        Multiple
+        {{ i18n['multiple'] }}
       </Checkbox>
     </VForm>
     <div class="d-flex justify-content-between">
@@ -57,12 +57,12 @@
           class="me-2"
           @click="$emit('remove')"
         >
-          Remove
+          {{ i18n['remove'] }}
         </VButton>
         <VButton
           @click="$emit('cancel')"
         >
-          Cancel
+          {{ i18n['cancel'] }}
         </VButton>
       </div>
       <VButton

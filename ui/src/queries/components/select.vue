@@ -6,7 +6,7 @@
     :options="queries"
     label-key="name"
     value-key="id"
-    :placeholder="'Select query'"
+    :placeholder="i18n['select_query']"
   />
 </template>
 

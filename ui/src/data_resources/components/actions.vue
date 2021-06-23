@@ -26,7 +26,7 @@
           :disabled="resources.length > 1"
           @click="applyAction(editAction)"
         >
-          Edit
+          {{ i18n['edit'] }}
         </DropdownItem>
         <DropdownItem
           v-if="removeAction && canRemove"
@@ -34,14 +34,14 @@
           class="text-danger"
           @click="applyAction(removeAction)"
         >
-          Remove
+          {{ i18n['remove'] }}
         </DropdownItem>
         <DropdownItem
           v-if="withDeselect"
           :divided="hasActions"
           @click="deselect"
         >
-          Deselect All
+          {{ i18n['deselect_all'] }}
         </DropdownItem>
       </DropdownMenu>
     </template>
@@ -164,12 +164,12 @@ export default {
       })
 
       Promise.all(requests).then((result) => {
-        this.$Message.info('Action has been applied!')
+        this.$Message.info(this.i18n.action_has_been_applied)
       }).catch((error) => {
         if (error.response.data?.errors) {
           this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
         } else {
-          this.$Message.error(`Action failed with code ${error.response.status}`)
+          this.$Message.error(`${this.i18n.action_has_failed_with_code} ${error.response.status}`)
         }
       }).finally(() => {
         this.$emit('finish-action', action.name)
@@ -223,11 +223,11 @@ export default {
         },
         onSuccess: (data) => {
           this.$Drawer.remove()
-          this.$Message.info(`${resourceTitle} has been updated`)
+          this.$Message.info(`${resourceTitle} ${this.i18n.has_been_updated}`)
           this.$emit('finish-action', 'edit')
         }
       }, {
-        title: `Edit ${resourceTitle}`,
+        title: `${this.i18n.edit} ${resourceTitle}`,
         className: 'drawer-no-bottom-padding',
         closable: true
       })
@@ -245,9 +245,9 @@ export default {
 
           Promise.all(this.resources.map(this.removeRequest)).then((result) => {
             if (this.resources.length > 1) {
-              this.$Message.info(`${this.resources.length} items has been removed`)
+              this.$Message.info(`${this.resources.length} ${this.i18n.items_has_been_removed}`)
             } else {
-              this.$Message.info('Selected item has been removed')
+              this.$Message.info(this.i18n.selected_item_has_been_removed)
             }
           }).catch((error) => {
             console.error(error)
@@ -255,7 +255,7 @@ export default {
             if (error.response.data?.errors) {
               this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
             } else {
-              this.$Message.error('Unable to remove items')
+              this.$Message.error(this.i18n.unable_to_remove_items)
             }
           }).finally(() => {
             this.$emit('finish-action', 'remove')

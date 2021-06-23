@@ -61,7 +61,7 @@
       class="me-1"
       @click="toggleNewField"
     >
-      Add Field
+      {{ i18n['add_field'] }}
     </VButton>
 
     <VButton
@@ -71,7 +71,7 @@
       class="ms-1"
       @click="toggleNewGroup"
     >
-      Add Group
+      {{ i18n['add_group'] }}
     </VButton>
   </div>
 </template>

@@ -33,7 +33,7 @@
       icon="md-add"
       @click="addAction"
     >
-      Add Action
+      {{ i18n['add_action'] }}
     </VButton>
   </div>
 </template>

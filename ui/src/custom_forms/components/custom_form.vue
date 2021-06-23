@@ -5,7 +5,7 @@
         type="md-checkmark-circle-outline"
         class="text-success"
       />
-      Form has been submitted successfully!
+      {{ i18n['form_has_been_submitted_successfully'] }}
     </p>
     <div
       v-if="successData"
@@ -25,7 +25,7 @@
       type="primary"
       @click="reset"
     >
-      Resubmit
+      {{ i18n['resubmit'] }}
     </VButton>
   </div>
   <VForm
@@ -48,7 +48,7 @@
       :disabled="isSubmitDisabled"
       @click="handleSubmit"
     >
-      Submit
+      {{ i18n['submit'] }}
     </VButton>
   </VForm>
   <Spin
@@ -164,7 +164,7 @@ export default {
             this.$refs.form.setErrors(error.response.data.errors)
             this.scrollToErrors()
           } else {
-            this.$Message.error(`Unable to submit form: ${error.response.status}`)
+            this.$Message.error(`${this.i18n.unable_to_submit_form}: ${error.response.status}`)
           }
 
           this.$emit('error', error)

@@ -4,11 +4,11 @@
       v-model="selectedTab"
       :position="'center'"
       :tabs="[
-        { label: 'Columns', value: 'columns' },
-        { label: 'Actions', value: 'actions' },
-        { label: 'Tabs', value: 'tabs' },
-        { label: 'Scopes', value: 'scopes' },
-        { label: 'Associations', value: 'associations' }
+        { label: i18n['columns'], value: 'columns' },
+        { label: i18n['actions'], value: 'actions' },
+        { label: i18n['tabs'], value: 'tabs' },
+        { label: i18n['scopes'], value: 'scopes' },
+        { label: i18n['associations'], value: 'associations' }
       ]"
     />
     <ResourceColumnsList
@@ -39,7 +39,7 @@
       icon="ios-arrow-back"
       @click="$emit('back')"
     >
-      All Resources
+      {{ i18n['all_resources'] }}
     </VButton>
   </div>
 </template>

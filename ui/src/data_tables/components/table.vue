@@ -107,7 +107,7 @@
         v-else
         style="margin: auto;"
       >
-        No Data
+        {{ i18n['no_data'] }}
       </div>
     </div>
   </div>

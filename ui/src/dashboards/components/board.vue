@@ -24,7 +24,7 @@
           v-model="searchInput"
           :border="false"
           class="border-0"
-          placeholder="Search..."
+          :placeholder="i18n['search_placeholder']"
           @keydown.enter="applySearch"
         />
       </div>

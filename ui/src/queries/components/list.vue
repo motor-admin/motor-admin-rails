@@ -16,7 +16,7 @@
         v-if="searchQuery && !filteredItems.length"
         class="text-center mt-2"
       >
-        Not Found
+        {{ i18n['not_found'] }}
       </p>
       <div
         v-for="item in filteredItems"

@@ -26,7 +26,7 @@
           style="position: sticky; bottom: 0"
           @click="submit"
         >
-          Submit
+          {{ i18n['submit'] }}
         </VButton>
       </div>
     </template>
@@ -166,7 +166,7 @@ export default {
             if (error.response.data?.errors) {
               this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
             } else {
-              this.$Message.error('Unable to load form data')
+              this.$Message.error(this.i18n.unable_to_load_form_data)
             }
           })
         })

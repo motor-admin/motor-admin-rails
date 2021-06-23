@@ -7,7 +7,7 @@
       :model="dataScope"
     >
       <FormItem
-        label="Name"
+        :label="i18n['name']"
         prop="display_name"
       >
         <VInput v-model="dataScope.display_name" />
@@ -26,12 +26,12 @@
           class="me-2"
           @click="$emit('remove')"
         >
-          Remove
+          {{ i18n['remove'] }}
         </VButton>
         <VButton
           @click="$emit('cancel')"
         >
-          Cancel
+          {{ i18n['cancel'] }}
         </VButton>
       </div>
       <VButton
@@ -39,7 +39,7 @@
         :loading="isLoading"
         @click="submit"
       >
-        Save
+        {{ i18n['save'] }}
       </VButton>
     </div>
   </div>

@@ -9,7 +9,7 @@
     >
       <FormItem
         v-if="withName"
-        label="Name"
+        :label="i18n['name']"
         prop="display_name"
       >
         <VInput v-model="dataTab.display_name" />
@@ -18,7 +18,7 @@
       <div class="row">
         <div :class="dataTab.tab_type && dataTab.tab_type !== 'default' ? 'col-sm-4 pe-sm-1' : 'col-12'">
           <FormItem
-            label="Tab type"
+            :label="i18n['tab_type']"
             prop="tab_type"
           >
             <MSelect
@@ -62,12 +62,12 @@
           class="me-2"
           @click="$emit('remove')"
         >
-          Remove
+          {{ i18n['remove'] }}
         </VButton>
         <VButton
           @click="$emit('cancel')"
         >
-          Cancel
+          {{ i18n['cancel'] }}
         </VButton>
       </div>
       <VButton
@@ -75,7 +75,7 @@
         :loading="isLoading"
         @click="submit"
       >
-        Save
+        {{ i18n['save'] }}
       </VButton>
     </div>
   </div>

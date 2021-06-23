@@ -104,7 +104,7 @@
           v-show="isLoading"
           class="ivu-select-loading"
         >
-          Loading...
+          {{ i18n['loading'] }}
         </ul>
       </div>
     </transition>

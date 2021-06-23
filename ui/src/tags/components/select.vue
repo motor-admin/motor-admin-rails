@@ -4,7 +4,7 @@
     filterable
     allow-create
     multiple
-    placeholder="Set tags"
+    :placeholder="i18n['set_tags']"
     :size="size"
     :options="tags"
     :create-function="createFunction"
