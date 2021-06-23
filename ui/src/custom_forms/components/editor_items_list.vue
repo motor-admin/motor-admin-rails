@@ -2,6 +2,8 @@
   <VueDraggableNext
     :list="items"
     handle=".handle"
+    :group="{ name: 'g1' }"
+    style="min-height: 15px"
   >
     <div
       v-for="item in items"
