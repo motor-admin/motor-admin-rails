@@ -6,7 +6,7 @@
     :model="variable"
   >
     <FormItem
-      label="Input type"
+      :label="i18n['input_type']"
       prop="variable_type"
     >
       <MSelect
@@ -17,14 +17,14 @@
     </FormItem>
     <FormItem
       v-if="variable.variable_type === 'reference'"
-      label="Reference resource"
+      :label="i18n['reference_resource']"
       prop="reference_resource"
     >
       <MSelect
         v-model="variable.reference_resource"
         label-key="display_name"
         value-key="name"
-        placeholder="Select resource..."
+        :placeholder="i18n['select_resource_placeholder']"
         filterable
         :options="schema"
         @update:model-value="$emit('update:variable', variable)"
@@ -32,7 +32,7 @@
     </FormItem>
     <FormItem
       v-if="variable.variable_type === 'select'"
-      label="Select options"
+      :label="i18n['select_options']"
       prop="select_options"
     >
       <OptionsInput
@@ -41,7 +41,7 @@
       />
     </FormItem>
     <FormItem
-      label="Default value"
+      :label="i18n['default_value']"
       prop="default_value"
     >
       <VariableInput

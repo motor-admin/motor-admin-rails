@@ -2,7 +2,7 @@
   <VInput
     :model-value="modelValue"
     size="large"
-    placeholder="every day at HH:mm PM..."
+    :placeholder="i18n['every_day_at_hh_mm']"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
   <VButton

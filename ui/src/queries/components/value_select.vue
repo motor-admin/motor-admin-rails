@@ -11,7 +11,7 @@
     :remote-function="isSearchableQuery ? loadOptions : null"
     :label-key="labelColumnIndex"
     :value-key="valueColumnIndex"
-    :placeholder="'Select...'"
+    :placeholder="i18n['select_placeholder']"
     @update:model-value="onUpdateValue"
   />
 </template>

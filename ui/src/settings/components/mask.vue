@@ -7,7 +7,7 @@
       type="warning"
       @click="openSettings"
     >
-      {{ titleize(settingsType || 'resources') }}
+      {{ titleize(settingsType || i18n['resources']) }}
     </VButton>
   </div>
 </template>

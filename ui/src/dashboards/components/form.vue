@@ -6,34 +6,34 @@
     label-position="top"
   >
     <FormItem
-      label="Title"
+      :label="i18n['title']"
       prop="title"
     >
       <VInput
         v-model="dataBoard.title"
         size="large"
-        placeholder="Dashboard title"
+        :placeholder="i18n['dashboard_title']"
       />
     </FormItem>
     <FormItem
-      label="Description"
+      :label="i18n['description']"
       prop="description"
     >
       <VInput
         v-model="dataBoard.description"
         type="textarea"
-        placeholder="Describe your dashboard (optional)"
+        :placeholder="i18n['describe_your_dashboard_optional']"
 
         :autosize="{ minRows: 3, maxRows: 7 }"
       />
     </FormItem>
     <FormItem
-      label="Tags"
+      :label="i18n['tags']"
       prop="tags"
     >
       <TagsSelect
         v-model="dataBoard.tags"
-        placeholder="Select dashboard tags"
+        :placeholder="i18n['select_dashboard_tags']"
       />
     </FormItem>
     <VButton

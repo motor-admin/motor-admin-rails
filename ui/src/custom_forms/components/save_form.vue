@@ -6,19 +6,19 @@
     label-position="top"
   >
     <FormItem
-      label="Name"
+      :label="i18n['name']"
       prop="name"
     >
       <VInput
         v-model="dataForm.name"
         size="large"
-        placeholder="Form name"
+        :placeholder="i18n['form_name']"
       />
     </FormItem>
 
     <div class="row">
       <FormItem
-        label="Method"
+        :label="i18n['method']"
         prop="http_method"
         class="col-3 pe-0"
       >
@@ -29,7 +29,7 @@
       </FormItem>
 
       <FormItem
-        label="Path"
+        :label="i18n['path']"
         prop="api_path"
         class="col-9"
       >
@@ -41,7 +41,7 @@
     </div>
     <div class="row">
       <FormItem
-        label="Load initial data"
+        :label="i18n['load_initial_data']"
         class="col-3 pe-0"
       >
         <Checkbox
@@ -51,7 +51,7 @@
 
       <FormItem
         v-if="loadDefault"
-        label="API path"
+        :label="i18n['api_path']"
         prop="default_values_api_path"
         class="col-9"
       >
@@ -62,24 +62,24 @@
       </FormItem>
     </div>
     <FormItem
-      label="Description"
+      :label="i18n['description']"
       prop="description"
     >
       <VInput
         v-model="dataForm.description"
         type="textarea"
-        placeholder="Describe your form (optional)"
+        :placeholder="i18n['describe_your_form_optional']"
 
         :autosize="{ minRows: 3, maxRows: 7 }"
       />
     </FormItem>
     <FormItem
-      label="Tags"
+      :label="i18n['tags']"
       prop="tags"
     >
       <TagsSelect
         v-model="dataForm.tags"
-        placeholder="Select dashform tags"
+        :placeholder="i18n['select_form_tags']"
       />
     </FormItem>
     <VButton
@@ -89,7 +89,7 @@
       type="primary"
       @click="submit"
     >
-      Save
+      {{ i18n['save'] }}
     </VButton>
   </VForm>
 </template>

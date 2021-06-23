@@ -7,7 +7,7 @@
     <VInput
       v-model="searchQuery"
       search
-      placeholder="Search..."
+      :placeholder="i18n['search_placeholder']"
       size="large"
       class="mb-2"
     />
@@ -26,7 +26,7 @@
       class="mt-2"
       @click="$emit('close')"
     >
-      Close
+      {{ i18n['close'] }}
     </VButton>
   </div>
 </template>

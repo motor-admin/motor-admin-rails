@@ -7,7 +7,7 @@
       <h1
         class="my-3 overflow-hidden text-truncate"
       >
-        {{ dashboard.title || cachedDashboardTitle || (isExisting ? '' : 'New dashboard') }}
+        {{ dashboard.title || cachedDashboardTitle || (isExisting ? '' : i18n['new_dashboard']) }}
       </h1>
     </div>
     <div class="col-5 col-md-4 d-flex align-items-center justify-content-end">
@@ -18,7 +18,7 @@
         :icon="isVariableSettingsOpened ? 'md-close' : 'md-flask'"
         @click="toggleVariablesSettings"
       >
-        {{ isVariableSettingsOpened ? 'Close Variables' : 'Variables' }}
+        {{ isVariableSettingsOpened ? i18n['close_variables'] : i18n['variables'] }}
       </VButton>
       <VButton
         v-if="isCanEdit"
@@ -27,7 +27,7 @@
         :icon="isEditorOpened ? 'md-close' : 'md-create'"
         @click="toggleEditor"
       >
-        {{ isEditorOpened ? 'Close editor' : 'Edit' }}
+        {{ isEditorOpened ? i18n['close_editor'] : i18n['edit'] }}
       </VButton>
       <VButton
         v-if="dashboard.id && $can('create', 'Motor::Dashboard')"
@@ -35,7 +35,7 @@
         class="bg-white me-2 d-none d-sm-block"
         @click="saveAsNew"
       >
-        Save as new
+        {{ i18n['save_as_new'] }}
       </VButton>
       <VButton
         v-if="isCanEdit"
@@ -45,7 +45,7 @@
         type="primary"
         @click="save"
       >
-        Save
+        {{ i18n['save'] }}
       </VButton>
       <VButton
         size="large"
@@ -287,7 +287,7 @@ export default {
       Object.assign(this.dashboard, dashboard)
 
       this.$Modal.remove()
-      this.$Message.info('Dashboard has been saved!')
+      this.$Message.info(this.i18n.dashboard_has_been_saved)
 
       this.$router.push({ name: 'dashboard', params: { id: dashboard.id } })
 
@@ -305,7 +305,7 @@ export default {
           this.onSuccess(dashboard)
         }
       }, {
-        title: 'Save dashboard',
+        title: this.i18n.save_dashboard,
         closable: true
       })
     },
@@ -322,7 +322,7 @@ export default {
           this.onSuccess(dashboard)
         }
       }, {
-        title: 'Save dashboard',
+        title: this.i18n.save_dashboard,
         closable: true
       })
     }

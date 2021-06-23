@@ -31,7 +31,7 @@
       icon="md-add"
       @click="addColumn"
     >
-      Add Column
+      {{ i18n['add_column'] }}
     </VButton>
   </div>
 </template>

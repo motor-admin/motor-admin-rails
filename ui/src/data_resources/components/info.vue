@@ -23,7 +23,7 @@
             v-if="notFound"
             class="text-center mt-2"
           >
-            Not Found
+            {{ i18n['not_found'] }}
           </p>
           <h2
             v-else
@@ -53,7 +53,7 @@
             :resource-name="model.name"
             :button-type="'primary'"
             :button-ghost="false"
-            :label="'Actions'"
+            :label="i18n['actions']"
             @start-action="isReloading = true"
             @finish-action="onFinisAction"
           />

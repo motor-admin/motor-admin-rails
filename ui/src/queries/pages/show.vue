@@ -7,7 +7,7 @@
       <h1
         class="my-3 overflow-hidden text-truncate"
       >
-        {{ query.name || cachedQueryName || (isExisting ? '' : 'New query') }}
+        {{ query.name || cachedQueryName || (isExisting ? '' : i18n['new_query']) }}
       </h1>
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
@@ -18,7 +18,7 @@
         icon="md-time"
         @click="openRevisionsModal"
       >
-        Revisions
+        {{ i18n['revisions'] }}
       </VButton>
       <VButton
         v-if="vSplit !== 0 && dataQuery.preferences.visualization === 'markdown'"
@@ -27,7 +27,7 @@
         :icon="isMarkdownEditor ? 'md-code-working' : 'logo-markdown'"
         @click="isMarkdownEditor = !isMarkdownEditor"
       >
-        {{ isMarkdownEditor ? 'Edit SQL' : 'Edit Markdown' }}
+        {{ isMarkdownEditor ? i18n['edit_sql'] : i18n['edit_makrdown'] }}
       </VButton>
       <VButton
         v-if="vSplit === 0 && $can('edit', 'Motor::Query', query)"
@@ -36,7 +36,7 @@
         icon="md-create"
         @click="openEditor"
       >
-        Edit
+        {{ i18n['edit'] }}
       </VButton>
       <VButton
         v-if="canSaveNew && vSplit !== 0"
@@ -44,7 +44,7 @@
         class="bg-white me-2 d-none d-sm-block"
         @click="saveAsNew"
       >
-        Save as new
+        {{ i18n['save_as_new'] }}
       </VButton>
       <VButton
         v-if="canSave"
@@ -54,7 +54,7 @@
         class="bg-white me-2"
         @click="save"
       >
-        Save
+        {{ i18n['save'] }}
       </VButton>
       <VButton
         size="large"
@@ -132,7 +132,7 @@
             class="d-flex justify-content-center align-items-center"
             style="height: 100%"
           >
-            No data
+            {{ i18n['no_data'] }}
           </div>
           <QueryResult
             v-if="(data.length || errors.length) && !isLoadingQuery"
@@ -313,13 +313,13 @@ export default {
 
           this.query.name = data.name
 
-          this.$Message.info('Revision has been applied')
+          this.$Message.info(this.i18n.revision_has_been_applied)
           this.openEditor()
           this.$Drawer.remove()
         }
       }, {
         closable: true,
-        title: 'Query Revisions'
+        title: this.i18n.query_revisions
       })
     },
     assignDataFromLocationHash () {
@@ -453,12 +453,12 @@ export default {
         onSuccess: (result) => {
           this.query = result
           this.$Modal.remove()
-          this.$Message.info('Query has been saved!')
+          this.$Message.info(this.i18n.query_has_been_saved)
 
           this.$router.push({ name: 'query', params: { id: result.id } })
         }
       }, {
-        title: 'Save query',
+        title: this.i18n.save_query,
         closable: true
       })
     },
@@ -478,12 +478,12 @@ export default {
         onSuccess: (result) => {
           this.query = result
           this.$Modal.remove()
-          this.$Message.info('Query has been saved!')
+          this.$Message.info(this.i18n.query_has_been_saved)
 
           this.$router.push({ name: 'query', params: { id: result.id } })
         }
       }, {
-        title: 'Save query',
+        title: this.i18n.save_query,
         closable: true
       })
     },

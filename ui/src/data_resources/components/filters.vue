@@ -28,7 +28,7 @@
         class="m-0"
         @click="toggleOr(index)"
       >
-        AND
+        {{ i18n['and']?.toUpperCase() }}
       </Tag>
     </template>
     <div class="pb-2 pt-3 text-center">
@@ -37,7 +37,7 @@
         type="text"
         @click="addFilter"
       >
-        Add Filter
+        {{ i18n['add_filter'] }}
       </VButton>
     </div>
   </div>

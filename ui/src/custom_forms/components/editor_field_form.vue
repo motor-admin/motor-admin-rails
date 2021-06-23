@@ -8,14 +8,14 @@
       @submit.prevent="submit"
     >
       <FormItem
-        label="Name"
+        :label="i18n['name']"
         prop="display_name"
         :class="dataField.display_name && !isCustomName ? 'mb-0' : ''"
       >
         <VInput
           ref="nameInput"
           v-model="dataField.display_name"
-          placeholder="Field name"
+          :placeholder="i18n['field_name']"
           @drag.stop
         />
       </FormItem>
@@ -23,7 +23,7 @@
         v-if="!isCustomName && generatedParamName"
         style="margin-bottom: 6px; font-size: 12px"
       >
-        Param name: <code>{{ generatedParamName }}</code>
+        {{ i18n['param_name'] }}: <code>{{ generatedParamName }}</code>
         <Icon
           type="md-create"
           class="ms-1 cursor-pointer"
@@ -32,29 +32,29 @@
       </p>
       <FormItem
         v-if="isCustomName"
-        label="Param name"
+        :label="i18n['param_name']"
         prop="name"
       >
         <VInput
           v-model="dataField.name"
-          placeholder="Request param"
+          :placeholder="i18n['request_param']"
           @drag.stop
         />
       </FormItem>
       <FormItem
-        label="Type"
+        :label="i18n['type']"
         prop="field_type"
       >
         <MSelect
           v-model="dataField.field_type"
           :options="fieldTypes"
-          placeholder="Input type"
+          :placeholder="i18n['input_type']"
           @update:modelValue="onTypeChange"
         />
       </FormItem>
       <FormItem
         v-if="dataField.field_type === 'reference'"
-        label="Reference"
+        :label="i18n['reference']"
         prop="reference.model_name"
       >
         <MSelect
@@ -62,20 +62,20 @@
           :value-key="'name'"
           :label-key="'display_name'"
           :options="referenceModels"
-          placeholder="Select resource..."
+          :placeholder="i18n['select_resource_placeholder']"
           filterable
           @update:modelValue="dataField.default_value = ''"
         />
       </FormItem>
       <FormItem
         v-if="dataField.field_type === 'select'"
-        label="Select query"
+        :label="i18n['select_query']"
         prop="select_query_id"
       >
         <QuerySelect v-model="dataField.select_query_id" />
       </FormItem>
       <FormItem
-        label="Default value"
+        :label="i18n['default_value']"
         prop="default_value"
       >
         <FormInput
@@ -108,12 +108,12 @@
           class="me-2"
           @click="$emit('remove')"
         >
-          Remove
+          {{ i18n['remove'] }}
         </VButton>
         <VButton
           @click="$emit('cancel')"
         >
-          Cancel
+          {{ i18n['cancel'] }}
         </VButton>
       </div>
       <VButton

@@ -52,7 +52,16 @@ import MinimalSelect from 'utils/components/minimal_select'
 import Contenteditable from 'utils/components/contenteditable'
 import CanCan from 'utils/scripts/cancan'
 
+import enDict from 'view3/src/locale/lang/en-US'
+import { i18nDict } from 'utils/scripts/configs'
+
+if (i18nDict.i) {
+  Object.assign(enDict, { i: i18nDict.i })
+}
+
 const app = createApp(App)
+
+app.config.globalProperties.i18n = i18nDict
 
 app.directive('popover', PopoverDirective)
 

@@ -6,7 +6,7 @@
     :options="dashboards"
     label-key="title"
     value-key="id"
-    :placeholder="'Select dashboard'"
+    :placeholder="i18n['select_dashboard']"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>

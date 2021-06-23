@@ -14,7 +14,7 @@
         class="me-2"
         :to="{ name: 'new_query' }"
       >
-        Add Query
+        {{ i18n['add_query'] }}
       </VButton>
       <VButton
         v-if="$can('create', 'Motor::Dashboard')"
@@ -24,7 +24,7 @@
         class="me-2"
         :to="{ name: 'new_dashboard' }"
       >
-        Add Dashboard
+        {{ i18n['add_dashboard'] }}
       </VButton>
       <VButton
         v-if="$can('create', 'Motor::Alert')"
@@ -33,7 +33,7 @@
         type="default"
         :to="{ name: 'new_alert' }"
       >
-        Add Alert
+        {{ i18n['add_alert'] }}
       </VButton>
     </div>
   </div>
@@ -54,7 +54,7 @@
       <VInput
         v-model="searchQuery"
         search
-        :placeholder="'Search'"
+        :placeholder="i18n['search']"
         size="large"
         class="mb-2"
       />
@@ -67,13 +67,13 @@
           v-else-if="!searchQuery && !selectedTags.length && !paginatedItems.length"
           class="text-center mt-2"
         >
-          Looks like you are new here 🙃
+          {{ i18n['looks_like_you_are_new_here'] }}
         </p>
         <p
           v-if="searchQuery && !paginatedItems.length"
           class="text-center mt-2"
         >
-          Not Found
+          {{ i18n['not_found'] }}
         </p>
         <div
           v-for="item in paginatedItems"

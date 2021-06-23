@@ -1,0 +1,160 @@
+en:
+  motor:
+    action_has_been_applied: Action has been applied!
+    action_has_failed_with_code: Action failed with code
+    action_type: Action type
+    actions: Actions
+    add: Add
+    add_action: Add Action
+    add_alert: Add Alert
+    add_column: Add Column
+    add_dashboard: Add Dashboard
+    add_field: Add Field
+    add_filter: Add Filter
+    add_form: Add Form
+    add_group: Add Group
+    add_item: Add Item
+    add_link: Add Link
+    add_query: Add Query
+    add_scope: Add Scope
+    add_tab: Add Tab
+    alert_email_has_been_sent: Alert email has been sent!
+    alert_has_been_activated: Alert has been activated
+    alert_has_been_disabled: Alert has been disabled
+    alert_has_been_saved: Alert has been saved!
+    alert_name: Alert name
+    all_resources: All Resources
+    and: And
+    api_path: API path
+    apply: Apply
+    are_you_sure: Are you sure?
+    associations: Associations
+    bar_chart: Bar chart
+    base: Base
+    cancel: Cancel
+    clear_all: Clear All
+    clear_selection: Clear selection
+    close: Close
+    close_editor: Close editor
+    close_settings: Close Settings
+    close_variables: Close Variables
+    columns: Columns
+    create: Create
+    currency: Currency
+    dashboard_has_been_saved: Dashboard has been saved!
+    dashboard_title: Dashboard title
+    decimal: Decimal
+    default_value: Default value
+    describe_this_alert_optional: Describe this alert (optional)
+    describe_your_dashboard_optional: Describe your dashboard (optional)
+    describe_your_form_optional: Describe your form (optional)
+    describe_your_query_optional: Describe your query (optional)
+    description: Description
+    deselect_all: Deselect All
+    disable: Disable
+    display_as: Display as
+    edit: Edit
+    edit_sql: Edit SQL
+    emails: Emails
+    every_day_at_hh_mm: every day at HH:mm PM...
+    field_name: Field name
+    filters: Filters
+    form: Form
+    form_has_been_saved: Form has been saved!
+    form_has_been_submitted_successfully: Form has been submitted successfully!
+    form_name: Form name
+    forms: Forms
+    funnel: Funnel
+    group_name: Group name
+    has_been_created: has been created
+    has_been_removed_succesfully: has been removed succesfully
+    has_been_updated: has been updated
+    hello_admin: Hello Admin 👋
+    input_type: Input type
+    interval: Interval
+    items_has_been_removed: items has been removed
+    label: Currency
+    line_chart: Line chart
+    link_name: Link name
+    links: Links
+    load_initial_data: Load initial data
+    loading: Loading...
+    looks_like_you_are_new_here: Looks like you are new here 🙃
+    markdown: Markdown
+    method: Method
+    multiple: Multiple
+    name: Name
+    new_alert: New alert
+    new_dashboard: New dashboard
+    new_form: New form
+    new_query: New query
+    no_data: No data
+    not_found: Not Found
+    ok: OK
+    options_separated_with_new_line_or_comma: Options separated with new line or comma
+    param_name: Param name
+    path: Path
+    percent: Percent
+    pie_chart: Pie chart
+    query: Query
+    query_has_been_saved: Query has been saved!
+    query_name: Query name
+    query_not_selected: Query not selected
+    query_revisions: Query Revisions
+    reference: Reference
+    reference_resource: Reference resource
+    remove: Remove
+    reports: Reports
+    request_param: Request param
+    resources: Resources
+    resubmit: Resubmit
+    revert: Revert
+    revision_has_been_applied: Revision has been applied
+    revisions: Revisions
+    row_chart: Row chart
+    save: Save
+    save_and_create_new: Save and Create New
+    save_as_new: Save as new
+    save_dashboard: Save dashboard
+    save_form: Save form
+    save_query: Save query
+    scopes: Scopes
+    search: Search
+    search_placeholder: Search...
+    select_alert_tags: Select alert tags
+    select_dashboard: Select dashboard
+    select_dashboard_tags: Select dashboard tags
+    select_form: Select form
+    select_form_tags: Select dashform tags
+    select_options: Select options
+    select_placeholder: Select...
+    select_query: Select query
+    select_query_tags: Select query tags
+    select_resource_placeholder: Select resource...
+    select_resource_placeholder: Select resource...
+    selected_item_has_been_removed: Selected item has been removed
+    selected_item_will_be_removed_are_you_sure: Selected item will be removed. Are you sure?
+    send_empty: Send empty?
+    send_now: Send Now
+    send_to: Send to
+    set_tags: Set tags
+    settings: Settings
+    stacked_bars: Stacked bars
+    submit: Submit
+    tab_type: Tab type
+    table: Table
+    tabs: Tabs
+    tags: Tags
+    timezone: Timezone
+    title: Title
+    type: Type
+    unable_to_load_form_data: Unable to load form data
+    unable_to_remove_item: Unable to remove item
+    unable_to_remove_items: Unable to remove items
+    unable_to_send_email: Unable to send email
+    unable_to_submit_form: Unable to submit form
+    value: Value
+    values_axis: Values axis
+    variables: Variables
+    visibility: Visibility
+    visualization: Visualization

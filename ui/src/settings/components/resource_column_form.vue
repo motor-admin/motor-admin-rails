@@ -7,7 +7,7 @@
       :model="dataColumn"
     >
       <FormItem
-        label="Name"
+        :label="i18n['name']"
         prop="display_name"
       >
         <VInput v-model="dataColumn.display_name" />
@@ -16,7 +16,7 @@
       <div class="row">
         <div :class="dataColumn.access_type !== 'hidden' ? 'col-sm-6 pe-sm-1' : 'col-12'">
           <FormItem
-            label="Visibility"
+            :label="i18n['visibility']"
             prop="access_type"
           >
             <MSelect
@@ -30,7 +30,7 @@
           class="col-sm-6 ps-sm-1"
         >
           <FormItem
-            label="Type"
+            :label="i18n['type']"
             prop="column_type"
           >
             <MSelect
@@ -47,7 +47,7 @@
       >
         <div class="col-sm-6 pe-sm-1">
           <FormItem
-            label="Currency"
+            :label="i18n['label']"
             prop="format.currency"
           >
             <CurrencySelect
@@ -57,7 +57,7 @@
         </div>
         <div class="col-sm-6 ps-sm-1">
           <FormItem
-            label="Base"
+            :label="i18n['base']"
             prop="format.currency_base"
           >
             <MSelect
@@ -69,7 +69,7 @@
       </div>
       <FormItem
         v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !['image', 'file'].includes(dataColumn.column_type)"
-        label="Default value"
+        :label="i18n['default_value']"
         prop="default_value"
       >
         <FormInput
@@ -87,12 +87,12 @@
           class="me-2"
           @click="$emit('remove')"
         >
-          Remove
+          {{ i18n['remove'] }}
         </VButton>
         <VButton
           @click="$emit('cancel')"
         >
-          Cancel
+          {{ i18n['cancel'] }}
         </VButton>
       </div>
       <VButton
@@ -100,7 +100,7 @@
         :loading="isLoading"
         @click="submit"
       >
-        Save
+        {{ i18n['save'] }}
       </VButton>
     </div>
   </div>

@@ -29,7 +29,7 @@
       style="float: left"
       @click.stop="$emit('close')"
     >
-      Cancel
+      {{ i18n['cancel'] }}
     </VButton>
     <VButton
       v-if="action === 'new'"
@@ -39,14 +39,14 @@
       :loading="isSaveAndNewLoading"
       @click.stop="onSaveAndCreateClick"
     >
-      Save and Create New
+      {{ i18n['save_and_create_new'] }}
     </VButton>
     <VButton
       type="primary"
       :loading="isSaveLoading"
       @click.stop="onSaveClick"
     >
-      Save
+      {{ i18n['save'] }}
     </VButton>
   </div>
 </template>

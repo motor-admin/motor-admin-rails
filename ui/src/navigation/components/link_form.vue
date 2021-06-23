@@ -8,17 +8,17 @@
       @submit.prevent="submit"
     >
       <FormItem
-        label="Name"
+        :label="i18n['name']"
         prop="name"
       >
         <VInput
           v-model="dataLink.name"
-          placeholder="Link name"
+          :placeholder="i18n['link_name']"
           @keydown.enter="submit"
         />
       </FormItem>
       <FormItem
-        label="Path"
+        :label="i18n['path']"
         prop="path"
       >
         <VInput
@@ -37,12 +37,12 @@
           class="me-2"
           @click="$emit('remove', link)"
         >
-          Remove
+          {{ i18n['remove'] }}
         </VButton>
         <VButton
           @click="$emit('cancel')"
         >
-          Cancel
+          {{ i18n['cancel'] }}
         </VButton>
       </div>
       <VButton
@@ -50,7 +50,7 @@
         :loading="isLoading"
         @click="submit"
       >
-        Save
+        {{ i18n['save'] }}
       </VButton>
     </div>
   </div>

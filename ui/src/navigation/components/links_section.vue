@@ -25,7 +25,7 @@
       long
       @click="openEditModal"
     >
-      Add Link
+      {{ i18n['add_link'] }}
     </VButton>
   </div>
 </template>
@@ -93,7 +93,7 @@ export default {
     openEditModal () {
       this.$Drawer.open(LinksEdit, {
       }, {
-        title: 'Links',
+        title: this.i18n.links,
         closable: true
       })
     }

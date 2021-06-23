@@ -4,12 +4,12 @@ module Motor
   module BuildSchema
     module Utils
       ABBREVIATIONS = {
-        'id' => 'ID',
-        'url' => 'URL',
-        'iso' => 'ISO',
+        'Id' => 'ID',
+        'Url' => 'URL',
+        'Iso' => 'ISO',
         'vip' => 'VIP',
-        'ip' => 'IP',
-        'zip' => 'ZIP'
+        'Ip' => 'IP',
+        'Zip' => 'ZIP'
       }.freeze
 
       module_function
