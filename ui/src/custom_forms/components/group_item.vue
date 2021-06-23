@@ -51,7 +51,7 @@
               type="text"
               icon="md-add"
               class="me-1"
-              @click="formData.push({})"
+              @click="formData.push(buildDefaultValues(item.items))"
             >
               Add Item
             </VButton>
@@ -70,6 +70,8 @@
 
 <script>
 import { defineAsyncComponent } from 'vue'
+import { buildDefaultValues } from '../scripts/utils'
+
 const FormItems = defineAsyncComponent(() => import('./form_items'))
 
 export default {
@@ -91,6 +93,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  methods: {
+    buildDefaultValues
   }
 }
 </script>
