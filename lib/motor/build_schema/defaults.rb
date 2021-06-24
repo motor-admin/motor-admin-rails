@@ -7,7 +7,7 @@ module Motor
 
       # rubocop:disable Metrics/MethodLength
       def actions
-        @actions ||= [
+        [
           {
             name: 'create',
             display_name: I18n.t('motor.create'),
@@ -34,7 +34,7 @@ module Motor
       # rubocop:enable Metrics/MethodLength
 
       def tabs
-        @tabs ||= [
+        [
           {
             name: 'details',
             display_name: I18n.t('motor.details'),
