@@ -118,10 +118,10 @@ export default {
   },
   watch: {
     data () {
-      this.formData = { ...this.formData, ...buildDefaultValues(this.fields), ...this.data }
+      this.formData = { ...buildDefaultValues(this.fields), ...this.formData, ...this.data }
     },
     form () {
-      this.formData = { ...this.formData, ...buildDefaultValues(this.fields), ...this.data }
+      this.formData = { ...buildDefaultValues(this.fields), ...this.formData, ...this.data }
     }
   },
   created () {
