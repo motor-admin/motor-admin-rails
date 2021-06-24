@@ -78,11 +78,11 @@ export default {
     },
     variableTypes () {
       return [
-        { label: 'Text', value: 'text' },
-        { label: 'Number', value: 'number' },
-        { label: 'Date', value: 'date' },
-        { label: 'Reference', value: 'reference' },
-        { label: 'Select', value: 'select' }
+        { label: this.i18n.text, value: 'text' },
+        { label: this.i18n.number, value: 'number' },
+        { label: this.i18n.date, value: 'date' },
+        { label: this.i18n.reference, value: 'reference' },
+        { label: this.i18n.select, value: 'select' }
       ]
     }
   },

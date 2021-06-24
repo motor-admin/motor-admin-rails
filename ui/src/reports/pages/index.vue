@@ -2,7 +2,7 @@
   <div class="row mx-0 mx-md-2 mt-3 mb-2">
     <div class="col-2">
       <h1>
-        Reports
+        {{ i18n['reports'] }}
       </h1>
     </div>
     <div class="col-10 col-lg-10 text-end d-none d-md-block">
@@ -144,22 +144,22 @@ export default {
       return [
         {
           value: 'all',
-          label: 'All',
+          label: this.i18n.all,
           to: { name: 'reports', query }
         },
         this.$can('read', 'Motor::Query') && {
           value: 'queries',
-          label: 'Queries',
+          label: this.i18n.queries,
           to: { name: 'reports', params: { type: 'queries' }, query }
         },
         this.$can('read', 'Motor::Dashboard') && {
           value: 'dashboards',
-          label: 'Dashboards',
+          label: this.i18n.dashboards,
           to: { name: 'reports', params: { type: 'dashboards' }, query }
         },
         this.$can('read', 'Motor::Alert') && {
           value: 'alerts',
-          label: 'Alerts',
+          label: this.i18n.alerts,
           to: { name: 'reports', params: { type: 'alerts' }, query }
         }
       ].filter(Boolean)

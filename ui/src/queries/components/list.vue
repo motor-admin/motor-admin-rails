@@ -62,7 +62,7 @@ export default {
       return queriesStore
     },
     searchPlaceholder () {
-      return 'Search Query'
+      return this.i18n.search_query
     },
     filteredItems () {
       return this.items.filter((item) => {

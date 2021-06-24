@@ -157,6 +157,63 @@ es:
     variables: Variables
     visibility: Visibilidad
     visualization: Visualización
+    alerts: Alerts
+    all: All
+    api: API
+    api_request: API request
+    boolean: Boolean
+    cents: Cents
+    checkbox: Checkbox
+    contains: Contains
+    dashboard: Dashboard
+    dashboards: Dashboards
+    date: Date
+    date_and_time: Date and Time
+    default: Default
+    details: Details
+    ends_with: Ends with
+    equal_to: Equal to
+    excludes: excludes
+    field_is_not_a_number: '%{field} is not a number'
+    field_is_required: '%{field} is required'
+    field_list_cant_be_empty: "%{field} list can't be empty"
+    field_must_be_exactly_in_length: '%{field} must be exactly %{length} in length'
+    field_value_does_not_match_pattern: '%{field} value does not match %{pattern}'
+    file: File
+    greater_or_equal: Greater or equal
+    greater_than: Greater than
+    greater_than_or_equal_to: Greater than or equal to
+    hidden: Hidden
+    image: Image
+    includes: Includes
+    integer: Integer
+    is: Is
+    is_not: Is not
+    items_will_be_removed: '%{count} items will be removed'
+    json: JSON
+    less_or_equal: Less or equal
+    less_than: Less than
+    less_than_or_equal_to: Less than or equal to
+    method_call: Method call
+    number: Number
+    or: Or
+    other_than: Other than
+    queries: Queries
+    read_only: Read-Only
+    read_write: Read-Write
+    required: Required
+    resource_filters: 'Filtros de %{resource}'
+    resource_settings: '%{resource} Settings'
+    search_query: Search Query
+    select: Select
+    selected_item_will_be_removed: Selected item will be removed
+    should_be_a_valid_json: Should be a valid JSON
+    should_be_error_constraint: 'Should be %{error} %{constraint}'
+    starts_with: Starts with
+    text: Text
+    textarea: Textarea
+    unit: Unit
+    write_only: Write-Only
     i:
       locale: es
       select:

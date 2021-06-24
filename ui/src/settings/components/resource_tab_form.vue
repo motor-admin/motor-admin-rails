@@ -86,6 +86,7 @@ import { titleize } from 'utils/scripts/string'
 import FormSelect from 'custom_forms/components/select'
 import QuerySelect from 'queries/components/select'
 import DashboardSelect from 'dashboards/components/select'
+import { fieldRequiredMessage } from 'utils/scripts/i18n'
 
 export default {
   name: 'ResourceTabForm',
@@ -124,17 +125,26 @@ export default {
   computed: {
     rules () {
       const rules = {
-        tab_type: [{ required: true }]
+        tab_type: [{
+          required: true,
+          message: fieldRequiredMessage(this.i18n.tab_type)
+        }]
       }
 
       const key = this.tabTypeKeys[this.dataTab.tab_type]
 
       if (key) {
-        rules[`preferences.${key}`] = [{ required: true }]
+        rules[`preferences.${key}`] = [{
+          required: true,
+          message: fieldRequiredMessage(this.dataTab.tab_type)
+        }]
       }
 
       if (this.withName) {
-        rules.display_name = [{ required: true }]
+        rules.display_name = [{
+          required: true,
+          message: fieldRequiredMessage('name')
+        }]
       }
 
       return rules
@@ -148,13 +158,13 @@ export default {
     },
     tabTypes () {
       const tabs = [
-        { label: 'Dashboard', value: 'dashboard' },
-        { label: 'Query', value: 'query' },
-        { label: 'Form', value: 'form' }
+        { label: this.i18n.dashboard, value: 'dashboard' },
+        { label: this.i18n.query, value: 'query' },
+        { label: this.i18n.form, value: 'form' }
       ]
 
       if (this.dataTab.name === 'details') {
-        tabs.unshift({ label: 'Default', value: 'default' })
+        tabs.unshift({ label: this.i18n.default, value: 'default' })
       }
 
       return tabs

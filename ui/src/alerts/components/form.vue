@@ -111,6 +111,7 @@ import SelectQuery from 'queries/components/select'
 import TagsSelect from 'tags/components/select'
 import IntervalInput from 'utils/components/interval_input'
 import TimezoneSelect from 'utils/components/timezone_select'
+import { fieldRequiredMessage } from 'utils/scripts/i18n'
 
 export default {
   name: 'AlertForm',
@@ -145,11 +146,11 @@ export default {
   computed: {
     rules () {
       return {
-        name: [{ required: true }],
-        query_id: [{ required: true }],
-        to_emails: [{ required: true }],
-        'preferences.interval': [{ required: true }],
-        'preferences.timezone': [{ required: true }]
+        name: [{ required: true, message: fieldRequiredMessage('name') }],
+        query_id: [{ required: true, message: fieldRequiredMessage('query') }],
+        to_emails: [{ required: true, message: this.i18n.field_list_cant_be_empty.replace('%{field}', this.i18n.emails) }],
+        'preferences.interval': [{ required: true, message: fieldRequiredMessage('interval') }],
+        'preferences.timezone': [{ required: true, message: fieldRequiredMessage('timezone') }]
       }
     }
   },

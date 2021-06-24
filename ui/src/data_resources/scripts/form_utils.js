@@ -1,4 +1,5 @@
 import Validators from 'utils/scripts/validators'
+import { i18nDict } from 'utils/scripts/configs'
 
 function isJsonColumn (column, resource) {
   return (column.column_type === 'json' ||
@@ -14,17 +15,35 @@ function buildColumnValidator (column, resource) {
 
   const validators = column.validators.map((validator) => {
     if (validator.required) {
-      return { required: true }
+      return {
+        required: true,
+        message: i18nDict.field_is_required.replace('%{field}', column.display_name)
+      }
     } else if (validator.format) {
-      return { pattern: new RegExp(validator.format.source, validator.format.options) }
+      return {
+        pattern: new RegExp(validator.format.source, validator.format.options),
+        message: i18nDict.field_value_does_not_match_pattern.replace('%{field}', column.display_name).replace('%{pattern}', validator.format.source)
+      }
     } else if (validator.includes) {
-      return { required: true }
+      return {
+        required: true,
+        message: i18nDict.field_is_required.replace('%{field}', column.display_name)
+      }
     } else if (validator.length) {
-      return { len: validator.length }
+      return {
+        len: validator.length,
+        message: i18nDict.field_must_be_exactly_in_length.replace('%{field}', column.display_name)
+      }
     } else if (validator.numeric) {
       return [
-        { type: 'number' },
-        { required: !validator.numeric.allow_nil },
+        {
+          type: 'number',
+          message: i18nDict.field_is_not_a_number.replace('%{field}', column.display_name)
+        },
+        {
+          required: !validator.numeric.allow_nil,
+          message: i18nDict.field_is_required.replace('%{field}', column.display_name)
+        },
         {
           required: !validator.numeric.allow_nil,
           validator: Validators.numeric,

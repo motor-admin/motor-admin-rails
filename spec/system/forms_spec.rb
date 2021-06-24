@@ -106,9 +106,9 @@ RSpec.describe 'Forms' do
           it 'shows validator errors' do
             click_on 'Submit', match: :first
 
-            expect(page).to have_content('address_line_two is required')
-            expect(page).to have_content('notes.0.body is required')
-            expect(page).to have_content('line_items.0.unit_price is required')
+            expect(page).to have_content('Address line two is required')
+            expect(page).to have_content('Body is required')
+            expect(page).to have_content('Price is required')
           end
         end
       end

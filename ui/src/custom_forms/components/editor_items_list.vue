@@ -2,6 +2,8 @@
   <VueDraggableNext
     :list="items"
     handle=".handle"
+    :group="{ name: 'g1' }"
+    style="min-height: 15px"
   >
     <div
       v-for="item in items"
@@ -31,7 +33,7 @@
     <FieldForm
       :field="newField"
       :focus="true"
-      ok-text="Add"
+      :ok-text="i18n['add']"
       @submit="addField"
       @cancel="newField = null"
     />
@@ -44,7 +46,7 @@
     <GroupForm
       :group="newGroup"
       :focus="true"
-      ok-text="Add"
+      :ok-text="i18n['add']"
       @submit="addGroup"
       @cancel="newGroup = null"
     />

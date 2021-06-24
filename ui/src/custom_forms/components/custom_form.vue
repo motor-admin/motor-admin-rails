@@ -44,7 +44,6 @@
       type="primary"
       long
       size="large"
-      style="position: sticky; bottom: 0"
       :disabled="isSubmitDisabled"
       @click="handleSubmit"
     >

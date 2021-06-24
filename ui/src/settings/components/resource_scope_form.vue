@@ -47,6 +47,7 @@
 
 <script>
 import Filters from 'data_resources/components/filters'
+import { fieldRequiredMessage } from 'utils/scripts/i18n'
 
 export default {
   name: 'ResourceScopeForm',
@@ -78,7 +79,10 @@ export default {
   computed: {
     rules () {
       const rules = {
-        display_name: [{ required: true }]
+        display_name: [{
+          required: true,
+          message: fieldRequiredMessage('name')
+        }]
       }
 
       return rules

@@ -22,40 +22,6 @@ module Motor
 
     DEFAULT_SCOPE_TYPE = 'default'
 
-    DEFAULT_ACTIONS = [
-      {
-        name: 'create',
-        display_name: 'Create',
-        action_type: 'default',
-        preferences: {},
-        visible: true
-      },
-      {
-        name: 'edit',
-        display_name: 'Edit',
-        action_type: 'default',
-        preferences: {},
-        visible: true
-      },
-      {
-        name: 'remove',
-        display_name: 'Remove',
-        action_type: 'default',
-        preferences: {},
-        visible: true
-      }
-    ].freeze
-
-    DEFAULT_TABS = [
-      {
-        name: 'details',
-        display_name: 'Details',
-        tab_type: 'default',
-        preferences: {},
-        visible: true
-      }
-    ].freeze
-
     module_function
 
     def call(cache_keys = {}, current_ability = nil)
@@ -78,3 +44,4 @@ require_relative './build_schema/reorder_schema'
 require_relative './build_schema/merge_schema_configs'
 require_relative './build_schema/apply_permissions'
 require_relative './build_schema/utils'
+require_relative './build_schema/defaults'

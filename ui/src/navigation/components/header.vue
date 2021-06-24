@@ -229,7 +229,7 @@ export default {
     openSettingsDrawer,
     openSearch () {
       this.$Modal.open(Search, {
-        placeholder: 'Search...',
+        placeholder: this.i18n.search_placeholder,
         onSelected: (value) => {
           this.$Modal.remove()
         }

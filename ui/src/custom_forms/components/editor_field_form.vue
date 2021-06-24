@@ -89,14 +89,14 @@
         class="d-block"
         @update:model-value="resetDefault"
       >
-        Multiple
+        {{ ' ' }} {{ i18n['multiple'] }}
       </Checkbox>
       <Checkbox
         :model-value="isRequired"
         class="d-block mb-3"
         @update:model-value="toggleRequired"
       >
-        Required
+        {{ ' ' }} {{ i18n['required'] }}
       </Checkbox>
     </VForm>
     <div class="d-flex justify-content-between">
@@ -132,6 +132,7 @@ import { underscore } from 'utils/scripts/string'
 import FormInput from 'data_forms/components/input'
 import QuerySelect from 'queries/components/select'
 import Validators from 'utils/scripts/validators'
+import { i18nDict, fieldRequiredMessage } from 'utils/scripts/i18n'
 
 const MULTIPLE_COLUMN_TYPES = ['input', 'number', 'select', 'reference']
 
@@ -149,7 +150,7 @@ export default {
     okText: {
       type: String,
       required: false,
-      default: 'OK'
+      default: i18nDict.ok
     },
     focus: {
       type: Boolean,
@@ -172,9 +173,18 @@ export default {
   computed: {
     rules () {
       const rules = {
-        display_name: [{ required: true }],
-        name: [{ required: true }],
-        field_type: [{ required: true }]
+        display_name: [{
+          required: true,
+          message: fieldRequiredMessage('name')
+        }],
+        name: [{
+          required: true,
+          message: fieldRequiredMessage('param_name')
+        }],
+        field_type: [{
+          required: true,
+          message: fieldRequiredMessage('field_type')
+        }]
       }
 
       if (this.dataField.field_type === 'json') {
@@ -182,11 +192,17 @@ export default {
       }
 
       if (this.dataField.field_type === 'reference') {
-        rules['reference.model_name'] = [{ required: true }]
+        rules['reference.model_name'] = [{
+          required: true,
+          message: fieldRequiredMessage('reference')
+        }]
       }
 
       if (this.dataField.field_type === 'select') {
-        rules.select_query_id = [{ required: true }]
+        rules.select_query_id = [{
+          required: true,
+          message: fieldRequiredMessage('query')
+        }]
       }
 
       return rules
@@ -205,16 +221,16 @@ export default {
     },
     fieldTypes () {
       return [
-        { label: 'Text', value: 'input' },
-        { label: 'Number', value: 'number' },
-        { label: 'Reference', value: 'reference' },
-        { label: 'Textarea', value: 'textarea' },
-        { label: 'Select', value: 'select' },
-        { label: 'Date and Time', value: 'datetime' },
-        { label: 'Date', value: 'date' },
-        { label: 'Checkbox', value: 'checkbox' },
-        { label: 'File', value: 'file' },
-        { label: 'JSON', value: 'json' }
+        { label: this.i18n.text, value: 'input' },
+        { label: this.i18n.number, value: 'number' },
+        { label: this.i18n.reference, value: 'reference' },
+        { label: this.i18n.textarea, value: 'textarea' },
+        { label: this.i18n.select, value: 'select' },
+        { label: this.i18n.date_and_time, value: 'datetime' },
+        { label: this.i18n.date, value: 'date' },
+        { label: this.i18n.checkbox, value: 'checkbox' },
+        { label: this.i18n.file, value: 'file' },
+        { label: this.i18n.json, value: 'json' }
       ]
     },
     showMultiple () {

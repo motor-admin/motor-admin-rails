@@ -60,10 +60,10 @@ module Motor
           display_column: FindDisplayColumn.call(model),
           columns: fetch_columns(model),
           associations: fetch_associations(model),
-          icon: Motor::FindIcon.call(model.name.titleize),
+          icon: Motor::FindIcon.call(model_name),
           scopes: fetch_scopes(model),
-          actions: DEFAULT_ACTIONS,
-          tabs: DEFAULT_TABS,
+          actions: BuildSchema::Defaults.actions,
+          tabs: BuildSchema::Defaults.tabs,
           visible: true
         }.with_indifferent_access
       end

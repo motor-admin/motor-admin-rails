@@ -5,7 +5,7 @@ module Motor
     module ActiveStorageAttachmentSchema
       module_function
 
-      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       def call
         model = ActiveStorage::Attachment
 
@@ -78,7 +78,7 @@ module Motor
               is_array: false,
               reference: {
                 name: 'record',
-                display_name: 'Record',
+                display_name: model.human_attribute_name(:record),
                 model_name: nil,
                 reference_type: 'belongs_to',
                 foreign_key: 'record_id',
@@ -99,8 +99,8 @@ module Motor
               virtual: false
             },
             {
-              name: model.human_attribute_name(:created_at),
-              display_name: 'Created at',
+              name: 'created_at',
+              display_name: model.human_attribute_name(:created_at),
               column_type: 'datetime',
               access_type: 'read_only',
               default_value: nil,
@@ -113,12 +113,12 @@ module Motor
           ],
           associations: [],
           scopes: [],
-          actions: Motor::BuildSchema::DEFAULT_ACTIONS.reject { |e| e[:name] == 'edit' },
-          tabs: Motor::BuildSchema::DEFAULT_TABS,
+          actions: Motor::BuildSchema::Defaults.actions.reject { |e| e[:name] == 'edit' },
+          tabs: Motor::BuildSchema::Defaults.tabs,
           visible: true
         }.with_indifferent_access
       end
-      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
     end
   end
 end

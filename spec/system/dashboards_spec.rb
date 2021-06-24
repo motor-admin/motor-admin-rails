@@ -14,10 +14,10 @@ RSpec.describe 'Dashboards' do
       it 'saves dashboard' do
         first('p', text: 'New customers').click
 
-        click_on 'Add query'
+        click_on 'Add Query'
         first('p', text: 'Best performance result').click
 
-        click_on 'Add query'
+        click_on 'Add Query'
         first('p', text: 'Customer total sales per month').click
 
         ivu_fill_field 'Customer', customer.id
