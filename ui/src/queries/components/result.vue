@@ -82,7 +82,7 @@
         style="height: 24px"
         @click="$emit('settings')"
       >
-        Settings
+        {{ i18n['settings'] }}
       </VButton>
     </div>
     <div

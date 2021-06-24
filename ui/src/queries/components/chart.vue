@@ -9,7 +9,7 @@
     class="d-flex justify-content-center align-items-center"
     style="height: 100%"
   >
-    No data
+    {{ i18n['no_data'] }}
   </div>
 </template>
 

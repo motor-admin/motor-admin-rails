@@ -2,7 +2,7 @@
   <div class="row mx-0 mx-md-2 mt-3 mb-2">
     <div class="col-2">
       <h1>
-        Reports
+        {{ i18n['reports'] }}
       </h1>
     </div>
     <div class="col-10 col-lg-10 text-end d-none d-md-block">
@@ -14,7 +14,7 @@
         class="me-2"
         :to="{ name: 'new_query' }"
       >
-        Add Query
+        {{ i18n['add_query'] }}
       </VButton>
       <VButton
         v-if="$can('create', 'Motor::Dashboard')"
@@ -24,7 +24,7 @@
         class="me-2"
         :to="{ name: 'new_dashboard' }"
       >
-        Add Dashboard
+        {{ i18n['add_dashboard'] }}
       </VButton>
       <VButton
         v-if="$can('create', 'Motor::Alert')"
@@ -33,7 +33,7 @@
         type="default"
         :to="{ name: 'new_alert' }"
       >
-        Add Alert
+        {{ i18n['add_alert'] }}
       </VButton>
     </div>
   </div>
@@ -54,7 +54,7 @@
       <VInput
         v-model="searchQuery"
         search
-        :placeholder="'Search'"
+        :placeholder="i18n['search']"
         size="large"
         class="mb-2"
       />
@@ -67,13 +67,13 @@
           v-else-if="!searchQuery && !selectedTags.length && !paginatedItems.length"
           class="text-center mt-2"
         >
-          Looks like you are new here 🙃
+          {{ i18n['looks_like_you_are_new_here'] }}
         </p>
         <p
           v-if="searchQuery && !paginatedItems.length"
           class="text-center mt-2"
         >
-          Not Found
+          {{ i18n['not_found'] }}
         </p>
         <div
           v-for="item in paginatedItems"
@@ -144,22 +144,22 @@ export default {
       return [
         {
           value: 'all',
-          label: 'All',
+          label: this.i18n.all,
           to: { name: 'reports', query }
         },
         this.$can('read', 'Motor::Query') && {
           value: 'queries',
-          label: 'Queries',
+          label: this.i18n.queries,
           to: { name: 'reports', params: { type: 'queries' }, query }
         },
         this.$can('read', 'Motor::Dashboard') && {
           value: 'dashboards',
-          label: 'Dashboards',
+          label: this.i18n.dashboards,
           to: { name: 'reports', params: { type: 'dashboards' }, query }
         },
         this.$can('read', 'Motor::Alert') && {
           value: 'alerts',
-          label: 'Alerts',
+          label: this.i18n.alerts,
           to: { name: 'reports', params: { type: 'alerts' }, query }
         }
       ].filter(Boolean)

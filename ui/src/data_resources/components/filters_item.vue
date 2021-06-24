@@ -133,8 +133,8 @@ export default {
     },
     actions () {
       const actions = [
-        { value: 'eq', label: 'is' },
-        { value: 'neq', label: 'is not' }
+        { value: 'eq', label: this.i18n.is },
+        { value: 'neq', label: this.i18n.is_not }
       ]
 
       if (!this.selectedColumn) {
@@ -143,8 +143,8 @@ export default {
 
       if (this.selectedColumn.is_array) {
         actions.push(
-          { value: 'includes', label: 'includes' },
-          { value: 'excludes', label: 'excludes' }
+          { value: 'includes', label: this.i18n.includes },
+          { value: 'excludes', label: this.i18n.excludes }
         )
 
         return actions
@@ -152,16 +152,16 @@ export default {
 
       if (this.selectedColumn.column_type === 'string') {
         actions.push(
-          { value: 'contains', label: 'contains' },
-          { value: 'starts_with', label: 'starts with' },
-          { value: 'ends_with', label: 'ends with' }
+          { value: 'contains', label: this.i18n.contains },
+          { value: 'starts_with', label: this.i18n.starts_with },
+          { value: 'ends_with', label: this.i18n.ends_with }
         )
       } else if (['integer', 'float', 'date', 'datetime'].includes(this.selectedColumn.column_type)) {
         actions.push(
-          { value: 'gt', label: 'greater than' },
-          { value: 'gte', label: 'greater or equal' },
-          { value: 'lt', label: 'less than' },
-          { value: 'lte', label: 'less or equal' }
+          { value: 'gt', label: this.i18n.greater_than },
+          { value: 'gte', label: this.i18n.greater_or_equal },
+          { value: 'lt', label: this.i18n.less_than },
+          { value: 'lte', label: this.i18n.less_or_equal }
         )
       }
 

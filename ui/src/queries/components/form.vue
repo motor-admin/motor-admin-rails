@@ -6,34 +6,34 @@
     label-position="top"
   >
     <FormItem
-      label="Name"
+      :label="i18n['name']"
       prop="name"
     >
       <VInput
         v-model="dataQuery.name"
         size="large"
-        placeholder="Query name"
+        :placeholder="i18n['query_name']"
       />
     </FormItem>
     <FormItem
-      label="Description"
+      :label="i18n['description']"
       prop="description"
     >
       <VInput
         v-model="dataQuery.description"
         type="textarea"
-        placeholder="Describe your query (optional)"
+        :placeholder="i18n['describe_your_query_optional']"
 
         :autosize="{ minRows: 3, maxRows: 7 }"
       />
     </FormItem>
     <FormItem
-      label="Tags"
+      :label="i18n['tags']"
       prop="tags"
     >
       <TagsSelect
         v-model="dataQuery.tags"
-        placeholder="Select query tags"
+        :placeholder="i18n['select_query_tags']"
       />
     </FormItem>
     <VButton
@@ -43,7 +43,7 @@
       type="primary"
       @click="submit"
     >
-      Save
+      {{ i18n['save'] }}
     </VButton>
   </VForm>
 </template>
@@ -51,6 +51,7 @@
 <script>
 import api from 'api'
 import TagsSelect from 'tags/components/select'
+import { fieldRequiredMessage } from 'utils/scripts/i18n'
 
 export default {
   name: 'QueryForm',
@@ -80,7 +81,7 @@ export default {
   computed: {
     rules () {
       return {
-        name: [{ required: true }]
+        name: [{ required: true, message: fieldRequiredMessage('name') }]
       }
     },
     apiRequest () {

@@ -10,19 +10,19 @@
       class="float-start"
       @click="$emit('cancel')"
     >
-      Cancel
+      {{ i18n['cancel'] }}
     </VButton>
     <VButton
       @click="$emit('apply', [])"
     >
-      Clear All
+      {{ i18n['clear_all'] }}
     </VButton>
     <VButton
       class="ms-2"
       type="primary"
       @click="$emit('apply', clearedFilters)"
     >
-      Apply
+      {{ i18n['apply'] }}
     </VButton>
   </div>
 </template>

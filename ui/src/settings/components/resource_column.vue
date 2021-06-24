@@ -80,7 +80,7 @@ export default {
   methods: {
     removeColumn () {
       this.$Dialog.confirm({
-        title: 'Are you sure?',
+        title: this.i18n.are_you_sure,
         closable: true,
         onOk: () => {
           const index = this.resource.columns.findIndex((column) => column.name === this.column.name)

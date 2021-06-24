@@ -51,7 +51,7 @@
           :resources="selectedRows"
           :with-deselect="true"
           :resource-name="model.name"
-          :label="`Actions (${selectedRows.length})`"
+          :label="`${i18n['actions']} (${selectedRows.length})`"
           @start-action="isLoading = true"
           @finish-action="onFinishAction"
         />
@@ -64,7 +64,7 @@
           v-model="searchQuery"
           style="max-width: 470px"
           class="me-1"
-          :placeholder="`Search ${(association?.display_name || model.display_name).toLowerCase()}...`"
+          :placeholder="`${i18n['search']} ${(association?.display_name || model.display_name).toLowerCase()}...`"
           @search="applySearch"
         />
         <Badge
@@ -404,7 +404,7 @@ export default {
           this.$Drawer.remove()
         }
       }, {
-        title: `${this.model.display_name} Filters`,
+        title: this.i18n.resource_filters.replace('%{resource}', this.model.display_name),
         className: 'drawer-no-bottom-padding',
         closable: true
       })

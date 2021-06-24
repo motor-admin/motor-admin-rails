@@ -9,7 +9,7 @@
     >
       <FormItem
         v-if="withName"
-        label="Name"
+        :label="i18n['name']"
         prop="display_name"
       >
         <VInput v-model="dataAction.display_name" />
@@ -18,12 +18,13 @@
       <div class="row">
         <div :class="dataAction.action_type && dataAction.action_type !== 'default' ? 'col-sm-4 pe-sm-1' : 'col-12'">
           <FormItem
-            label="Action type"
+            :label="i18n['action_type']"
             prop="action_type"
           >
             <MSelect
               v-model="dataAction.action_type"
               :options="actionTypes"
+              :placeholder="i18n['select']"
               @update:modelValue="dataAction.preferences = {}"
             />
           </FormItem>
@@ -34,14 +35,14 @@
         >
           <FormItem
             v-if="dataAction.action_type === 'form'"
-            label="Form"
+            :label="i18n['form']"
             prop="preferences.form_id"
           >
             <FormSelect v-model="dataAction.preferences.form_id" />
           </FormItem>
           <FormItem
             v-if="dataAction.action_type === 'method'"
-            label="Method"
+            :label="i18n['method']"
             prop="preferences.method_name"
           >
             <MethodSelect
@@ -51,7 +52,8 @@
           </FormItem>
           <FormItem
             v-if="dataAction.action_type === 'api'"
-            label="API path"
+            :label="i18n['api_path']"
+            :placeholder="'/api/path/{id}...'"
             prop="preferences.api_path"
           >
             <VInput v-model="dataAction.preferences.api_path" />
@@ -68,12 +70,12 @@
           class="me-2"
           @click="$emit('remove')"
         >
-          Remove
+          {{ i18n['remove'] }}
         </VButton>
         <VButton
           @click="$emit('cancel')"
         >
-          Cancel
+          {{ i18n['cancel'] }}
         </VButton>
       </div>
       <VButton
@@ -81,7 +83,7 @@
         :loading="isLoading"
         @click="submit"
       >
-        Save
+        {{ i18n['save'] }}
       </VButton>
     </div>
   </div>
@@ -90,6 +92,7 @@
 <script>
 import MethodSelect from './resource_method_select'
 import FormSelect from 'custom_forms/components/select'
+import { fieldRequiredMessage } from 'utils/scripts/i18n'
 
 export default {
   name: 'ResourceActionForm',
@@ -127,17 +130,26 @@ export default {
   computed: {
     rules () {
       const rules = {
-        action_type: [{ required: true }]
+        action_type: [{
+          required: true,
+          message: fieldRequiredMessage('action_type')
+        }]
       }
 
       const key = this.actionTypeKeys[this.dataAction.action_type]
 
       if (key) {
-        rules[`preferences.${key}`] = [{ required: true }]
+        rules[`preferences.${key}`] = [{
+          required: true,
+          message: fieldRequiredMessage(this.dataAction.action_type)
+        }]
       }
 
       if (this.withName) {
-        rules.display_name = [{ required: true }]
+        rules.display_name = [{
+          required: true,
+          message: fieldRequiredMessage('name')
+        }]
       }
 
       return rules
@@ -154,18 +166,18 @@ export default {
     },
     actionTypes () {
       const actions = [
-        { label: 'Form', value: 'form' }
+        { label: this.i18n.form, value: 'form' }
       ]
 
       if (!['create', 'edit'].includes(this.dataAction.name)) {
         actions.unshift(
-          { label: 'Method call', value: 'method' },
-          { label: 'API request', value: 'api' }
+          { label: this.i18n.method_call, value: 'method' },
+          { label: this.i18n.api_request, value: 'api' }
         )
       }
 
       if (this.isCrudAction) {
-        actions.unshift({ label: 'Default', value: 'default' })
+        actions.unshift({ label: this.i18n.default, value: 'default' })
       }
 
       return actions

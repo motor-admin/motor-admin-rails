@@ -6,7 +6,7 @@
     :options="forms"
     label-key="name"
     value-key="id"
-    :placeholder="'Select form'"
+    :placeholder="i18n['select_form']"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>

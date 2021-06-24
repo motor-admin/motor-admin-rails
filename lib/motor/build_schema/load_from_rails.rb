@@ -6,6 +6,8 @@ module Motor
       MUTEX = Mutex.new
       UNIFIED_TYPES = ActiveRecordUtils::Types::UNIFIED_TYPES
 
+      I18N_SCOPES_KEY = 'activerecord.scopes'
+
       module_function
 
       def call
@@ -46,7 +48,7 @@ module Motor
       def build_model_schema(model)
         model_name = model.name
 
-        return Motor::BuildSchema::ACTIVE_STORAGE_ATTACHMENT_SCHEMA if model_name == 'ActiveStorage::Attachment'
+        return Motor::BuildSchema::ActiveStorageAttachmentSchema.call if model_name == 'ActiveStorage::Attachment'
 
         {
           name: model_name.underscore,
@@ -54,14 +56,14 @@ module Motor
           table_name: model.table_name,
           class_name: model.name,
           primary_key: model.primary_key,
-          display_name: model_name.titleize.pluralize,
+          display_name: model.model_name.human(count: :many, default: model_name.titleize.pluralize),
           display_column: FindDisplayColumn.call(model),
           columns: fetch_columns(model),
           associations: fetch_associations(model),
-          icon: Motor::FindIcon.call(model.name.titleize),
+          icon: Motor::FindIcon.call(model_name),
           scopes: fetch_scopes(model),
-          actions: DEFAULT_ACTIONS,
-          tabs: DEFAULT_TABS,
+          actions: BuildSchema::Defaults.actions,
+          tabs: BuildSchema::Defaults.tabs,
           visible: true
         }.with_indifferent_access
       end
@@ -74,7 +76,9 @@ module Motor
 
           {
             name: scope_name,
-            display_name: scope_name.humanize,
+            display_name: I18n.t(scope_name,
+                                 scope: [I18N_SCOPES_KEY, model.name.underscore].join('.'),
+                                 default: scope_name.humanize),
             scope_type: DEFAULT_SCOPE_TYPE,
             visible: true,
             preferences: {}
@@ -102,9 +106,9 @@ module Motor
 
         {
           name: column.name,
-          display_name: Utils.humanize_column_name(column.name),
+          display_name: Utils.humanize_column_name(model.human_attribute_name(column.name)),
           column_type: is_enum ? 'string' : UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
-          is_array: column.respond_to?(:array?) && column.array?,
+          is_array: column.array?,
           access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
           default_value: default_attrs[column.name],
           validators: fetch_validators(model, column.name),
@@ -141,21 +145,21 @@ module Motor
 
         {
           name: column_name,
-          display_name: column_name.humanize,
+          display_name: model.human_attribute_name(name),
           column_type: is_attachment ? 'file' : 'integer',
           access_type: access_type,
           default_value: default_attrs[column_name],
           validators: fetch_validators(model, column_name, ref),
           format: {},
-          reference: build_reference(name, ref),
+          reference: build_reference(model, name, ref),
           virtual: false
         }
       end
 
-      def build_reference(name, reflection)
+      def build_reference(model, name, reflection)
         {
           name: name,
-          display_name: name.humanize,
+          display_name: model.human_attribute_name(name),
           model_name: reflection.polymorphic? ? nil : reflection.klass.name.underscore,
           reference_type: reflection.belongs_to? ? 'belongs_to' : 'has_one',
           foreign_key: reflection.foreign_key,
@@ -175,7 +179,7 @@ module Motor
 
           {
             name: name,
-            display_name: name.humanize,
+            display_name: model.human_attribute_name(name),
             slug: name.underscore,
             model_name: model_class.name.underscore,
             foreign_key: ref.foreign_key,

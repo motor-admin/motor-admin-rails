@@ -5,8 +5,8 @@
       v-model="selectedTab"
       :position="'center'"
       :tabs="[
-        { label: 'Visualization', value: 'visualization' },
-        { label: 'Variables', value: 'variables' },
+        { label: i18n['visualization'], value: 'visualization' },
+        { label: i18n['variables'], value: 'variables' },
       ]"
     />
     <div
@@ -30,7 +30,7 @@
       </template>
       <template v-else>
         <p class="fs-4 fw-bold my-1">
-          Display as
+          {{ i18n['display_as'] }}
         </p>
         <RadioGroup
           v-model="preferences.visualization"
@@ -53,14 +53,14 @@
             v-model="preferences.visualization_options.chart_values_axis"
             class="d-block"
           >
-            Values axis
+            {{ i18n['values_axis'] }}
           </Checkbox>
           <Checkbox
             v-if="['bar_chart', 'row_chart'].includes(preferences.visualization)"
             v-model="preferences.visualization_options.chart_stacked"
             class="d-block"
           >
-            Stacked bars
+            {{ i18n['stacked_bars'] }}
           </Checkbox>
         </template>
         <template v-if="!['table', 'markdown', 'value'].includes(preferences.visualization)">
@@ -86,7 +86,7 @@
         </template>
         <template v-if="!['table', 'markdown'].includes(preferences.visualization) && preferences.visualization_options.label_format === 'currency'">
           <p class="fs-4 fw-bold my-1">
-            Currency
+            {{ i18n['currency'] }}
           </p>
           <CurrencySelect
             v-model="preferences.visualization_options.label_format_options.currency"
@@ -100,7 +100,7 @@
         type="default"
         @click="$emit('close')"
       >
-        OK
+        {{ i18n['ok'] }}
       </VButton>
     </div>
   </div>
@@ -138,21 +138,21 @@ export default {
   computed: {
     visualizationOptions () {
       return [
-        { label: 'Table', value: 'table' },
-        { label: 'Value', value: 'value' },
-        { label: 'Markdown', value: 'markdown' },
-        { label: 'Line chart', value: 'line_chart' },
-        { label: 'Bar chart', value: 'bar_chart' },
-        { label: 'Row chart', value: 'row_chart' },
-        { label: 'Pie chart', value: 'pie_chart' },
-        { label: 'Funnel', value: 'funnel' }
+        { label: this.i18n.table, value: 'table' },
+        { label: this.i18n.value, value: 'value' },
+        { label: this.i18n.markdown, value: 'markdown' },
+        { label: this.i18n.line_chart, value: 'line_chart' },
+        { label: this.i18n.bar_chart, value: 'bar_chart' },
+        { label: this.i18n.row_chart, value: 'row_chart' },
+        { label: this.i18n.pie_chart, value: 'pie_chart' },
+        { label: this.i18n.funnel, value: 'funnel' }
       ]
     },
     formatOptions () {
       return [
-        { label: 'Decimal', value: 'decimal' },
-        { label: 'Percent', value: 'percent' },
-        { label: 'Currency', value: 'currency' }
+        { label: this.i18n.decimal, value: 'decimal' },
+        { label: this.i18n.percent, value: 'percent' },
+        { label: this.i18n.currency, value: 'currency' }
       ]
     }
   },

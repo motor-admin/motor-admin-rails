@@ -2,7 +2,7 @@
   <div class="row mx-0 mx-md-2 mt-3 mb-2">
     <div class="col-2">
       <h1 class="">
-        Forms
+        {{ i18n['forms'] }}
       </h1>
     </div>
     <div class="col-10 col-lg-10 text-end">
@@ -13,7 +13,7 @@
         type="default"
         :to="{ name: 'new_form' }"
       >
-        Add Form
+        {{ i18n['add_form'] }}
       </VButton>
     </div>
   </div>
@@ -30,7 +30,7 @@
       <VInput
         v-model="searchQuery"
         search
-        :placeholder="'Search'"
+        :placeholder="i18n['search']"
         size="large"
         class="mb-2"
       />
@@ -43,13 +43,13 @@
           v-else-if="!searchQuery && !selectedTags.length && !paginatedItems.length"
           class="text-center mt-2"
         >
-          Looks like you are new here 🙃
+          {{ i18n['looks_like_you_are_new_here'] }}
         </p>
         <p
           v-if="searchQuery && !paginatedItems.length"
           class="text-center mt-2"
         >
-          Not Found
+          {{ i18n['not_found'] }}
         </p>
         <div
           v-for="item in paginatedItems"

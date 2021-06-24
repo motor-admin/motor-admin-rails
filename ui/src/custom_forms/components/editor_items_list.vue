@@ -33,7 +33,7 @@
     <FieldForm
       :field="newField"
       :focus="true"
-      ok-text="Add"
+      :ok-text="i18n['add']"
       @submit="addField"
       @cancel="newField = null"
     />
@@ -46,7 +46,7 @@
     <GroupForm
       :group="newGroup"
       :focus="true"
-      ok-text="Add"
+      :ok-text="i18n['add']"
       @submit="addGroup"
       @cancel="newGroup = null"
     />
@@ -63,7 +63,7 @@
       class="me-1"
       @click="toggleNewField"
     >
-      Add Field
+      {{ i18n['add_field'] }}
     </VButton>
 
     <VButton
@@ -73,7 +73,7 @@
       class="ms-1"
       @click="toggleNewGroup"
     >
-      Add Group
+      {{ i18n['add_group'] }}
     </VButton>
   </div>
 </template>

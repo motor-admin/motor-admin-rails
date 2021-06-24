@@ -13,7 +13,7 @@
       v-else
       ref="formItem"
       :label="item.display_name"
-      :rules="item.validators"
+      :rules="buildValidationRules(item)"
       :prop="propPrefix ? `${propPrefix}.${item.name}` : item.name"
     >
       <FormInput
@@ -29,6 +29,7 @@
 import FormInput from 'data_forms/components/input'
 import { buildDefaultValues } from '../scripts/utils'
 import GroupItem from './group_item'
+import { i18nDict } from 'utils/scripts/i18n'
 
 export default {
   name: 'FormItems',
@@ -58,6 +59,16 @@ export default {
       handler (value) {
         this.$emit('update:form-data', buildDefaultValues(this.items))
       }
+    }
+  },
+  methods: {
+    buildValidationRules (item) {
+      return (item.validators || []).map((rule) => {
+        return {
+          ...rule,
+          message: i18nDict.field_is_required.replace('%{field}', item.display_name)
+        }
+      })
     }
   }
 }

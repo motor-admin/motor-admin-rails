@@ -15,7 +15,7 @@ module Motor
       def call(current_user = nil, current_ability = nil)
         cache_keys = LoadFromCache.load_cache_keys
 
-        CACHE_STORE.fetch("#{cache_keys.hash}#{current_user&.id}") do
+        CACHE_STORE.fetch("#{I18n.locale}#{cache_keys.hash}#{current_user&.id}") do
           CACHE_STORE.clear
 
           data = build_data(cache_keys, current_user, current_ability)
@@ -29,6 +29,7 @@ module Motor
           current_user: current_user&.as_json(only: %i[id email]),
           current_rules: current_ability.serialized_rules,
           audits_count: Motor::Audit.count,
+          i18n: i18n_data,
           base_path: Motor::Admin.routes.url_helpers.motor_path,
           schema: Motor::BuildSchema.call(cache_keys, current_ability),
           header_links: header_links_data_hash(cache_keys[:configs]),
@@ -40,6 +41,10 @@ module Motor
                                    current_ability),
           forms: forms_data_hash(build_cache_key(cache_keys, :forms, current_user, current_ability), current_ability)
         }
+      end
+
+      def i18n_data
+        I18n.t('motor', default: I18n.t('motor', locale: :en))
       end
 
       # @return [String]

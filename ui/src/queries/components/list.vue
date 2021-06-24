@@ -16,7 +16,7 @@
         v-if="searchQuery && !filteredItems.length"
         class="text-center mt-2"
       >
-        Not Found
+        {{ i18n['not_found'] }}
       </p>
       <div
         v-for="item in filteredItems"
@@ -62,7 +62,7 @@ export default {
       return queriesStore
     },
     searchPlaceholder () {
-      return 'Search Query'
+      return this.i18n.search_query
     },
     filteredItems () {
       return this.items.filter((item) => {

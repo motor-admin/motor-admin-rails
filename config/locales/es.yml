@@ -1,0 +1,301 @@
+es:
+  motor:
+    action_has_been_applied: ¡Acción aplicada!
+    action_has_failed_with_code: La acción falló con código
+    action_type: Tipo de acción
+    actions: Acciones
+    add: Añadir
+    add_action: Añadir Acción
+    add_alert: Añadir Alerta
+    add_column: Añadir Columna
+    add_dashboard: Añadir Dashboard
+    add_field: Añadir Campo
+    add_filter: Añadir Filtro
+    add_form: Añadir Formulario
+    add_group: Añadir Grupo
+    add_item: Añadir Elemento
+    add_link: Añadir Link
+    add_query: Añadir Consulta
+    add_scope: Añadir Alcance
+    add_tab: Añadir Pestaña
+    alert_email_has_been_sent: ¡Email de alerta enviado!
+    alert_has_been_activated: Alerta activada
+    alert_has_been_disabled: Alerta desactivada
+    alert_has_been_saved: ¡Alerta guardada!
+    alert_name: Nombre de la alerta
+    all_resources: Todos los Recursos
+    and: Y
+    api_path: Dirección en API
+    apply: Aplicar
+    are_you_sure: ¿Estás seguro?
+    associations: Asociaciones
+    bar_chart: Gráfico de barras
+    base: Base
+    cancel: Cancelar
+    clear_all: Quitar todos
+    clear_selection: Quitar selección
+    close: Cerrar
+    close_editor: Cerrar editor
+    close_settings: Cerrar Configuración
+    close_variables: Cerrar Variables
+    columns: Columnas
+    create: Crear
+    currency: Moneda
+    dashboard_has_been_saved: ¡Dashboard guardado!
+    dashboard_title: Título del dashboard
+    decimal: Decimal
+    default_value: Valor por defecto
+    describe_this_alert_optional: Describe esta alerta (opcional)
+    describe_your_dashboard_optional: Describe tu dashboard (opcional)
+    describe_your_form_optional: Describe tu formulario (opcional)
+    describe_your_query_optional: Describe tu consulta (opcional)
+    description: Descripción
+    deselect_all: Deseleccionar todo
+    disable: Desactivar
+    display_as: Mostrar como
+    edit: Editar
+    edit_sql: Editar SQL
+    emails: Emails
+    every_day_at_hh_mm: todos los días a las HH:mm PM...
+    field_name: Nombre del campo
+    filters: Filtros
+    form: Formulario
+    form_has_been_saved: ¡Formulario guardado!
+    form_has_been_submitted_successfully: ¡Formulario enviado con éxito!
+    form_name: Nombre del formulario
+    forms: Formularios
+    funnel: Embudo
+    group_name: Nombre del grupo
+    has_been_created: creado
+    has_been_removed_succesfully: eliminado con éxito
+    has_been_updated: actualizado
+    hello_admin: Hola Admin 👋
+    input_type: Tipo de campo
+    interval: Intervalo
+    items_has_been_removed: elementos fueron eliminados
+    label: Moneda
+    line_chart: Gráfico de líneas
+    link_name: Nombre del link
+    links: Links
+    load_initial_data: Cargar datos iniciales
+    loading: Cargando...
+    looks_like_you_are_new_here: Parece que eres nuevo aquí 🙃
+    markdown: Markdown
+    method: Método
+    multiple: Múltiple
+    name: Nombre
+    new_alert: Nueva alerta
+    new_dashboard: Nuevo dashboard
+    new_form: Nuevo formulario
+    new_query: Nueva consulta
+    no_data: Sin datos
+    not_found: Sin resultados
+    ok: OK
+    options_separated_with_new_line_or_comma: Las opciones van separadas con una nueva línea o una coma
+    param_name: Nombre del parámetro
+    path: Dirección
+    percent: Porcentaje
+    pie_chart: Gráfico circular
+    query: Consulta
+    query_has_been_saved: ¡Consulta guardada!
+    query_name: Nombre de la consulta
+    query_not_selected: Consulta no seleccionada
+    query_revisions: Revisiones de la consulta
+    reference: Referencia
+    reference_resource: Recurso de referencia
+    remove: Eliminar
+    reports: Reportes
+    request_param: Parametro de request
+    resources: Recursos
+    resubmit: Reenviar
+    revert: Revertir
+    revision_has_been_applied: Revisión aplicada
+    revisions: Revisiones
+    row_chart: Gráfico de filas
+    save: Guardar
+    save_and_create_new: Guardar y crear otro
+    save_as_new: Guardar como nuevo
+    save_dashboard: Guardar dashboard
+    save_form: Guardar formulario
+    save_query: Guardar consulta
+    scopes: Alcances
+    search: Buscar
+    search_placeholder: Buscar...
+    select_alert_tags: Etiquetas de alerta
+    select_dashboard: Seleccionar dashboard
+    select_dashboard_tags: Etiquetas de dashboard
+    select_form: Seleccionar formulario
+    select_form_tags: Etiquetas de formulario
+    select_options: Seleccionar opciones
+    select_placeholder: Seleccionar...
+    select_query: Seleccionar consulta
+    select_query_tags: Etiquetas de consulta
+    select_resource_placeholder: Seleccionar recurso...
+    selected_item_has_been_removed: El elemento seleccionado fue eliminado
+    selected_item_will_be_removed_are_you_sure: El elemento seleccionado será eliminado. ¿Estás seguro?
+    send_empty: ¿Enviar sin contenido?
+    send_now: Enviar ahora
+    send_to: Enviar a
+    set_tags: Seleccionar etiquetas
+    settings: Configuración
+    stacked_bars: Barras apiladas
+    submit: Enviar
+    tab_type: Tipo de pestaña
+    table: Tabla
+    tabs: Pestañas
+    tags: Etiquetas
+    timezone: Zona horaria
+    title: Título
+    type: Tipo
+    unable_to_load_form_data: No se pudieron cargar los datos del formulario
+    unable_to_remove_item: No se pudo eliminar el elemento
+    unable_to_remove_items: No se pudieron eliminar los elementos
+    unable_to_send_email: No se pudo enviar el email
+    unable_to_submit_form: No se pudo enviar el formulario
+    value: Valor
+    values_axis: Eje de valores
+    variables: Variables
+    visibility: Visibilidad
+    visualization: Visualización
+    alerts: Alertas
+    all: Todo
+    api: API
+    api_request: Request a una API
+    boolean: Booleano
+    cents: Centavos
+    checkbox: Checkbox
+    contains: Contiene
+    dashboard: Dashboard
+    dashboards: Dashboards
+    date: Fecha
+    date_and_time: Fecha y hora
+    default: Por defecto
+    details: Detalles
+    ends_with: Termina con
+    equal_to: Igual a
+    excludes: no contiene
+    field_is_not_a_number: '%{field} no es un número'
+    field_is_required: '%{field} es obligatorio'
+    field_list_cant_be_empty: "La lista %{field} no puede estar vacía"
+    field_must_be_exactly_in_length: '%{field} debe tener un largo de %{length} caracteres'
+    field_value_does_not_match_pattern: 'El valor de %{field} no coincide con %{pattern}'
+    file: Archivo
+    greater_or_equal: Mayor o igual
+    greater_than: Mayor que
+    greater_than_or_equal_to: Mayor o igual a
+    hidden: Esconder
+    image: Imagen
+    includes: Incluye
+    integer: Entero
+    is: Es
+    is_not: No es
+    items_will_be_removed: 'Se eliminarán %{count} elementos'
+    json: JSON
+    less_or_equal: Menor o igual
+    less_than: Menor que
+    less_than_or_equal_to: Menor o igual a
+    method_call: Llamado a método
+    number: Número
+    or: O
+    other_than: Otro que no sea
+    queries: Consultas
+    read_only: Sólo lectura
+    read_write: Lectura y escritura
+    required: Obligatorio
+    resource_filters: 'Filtros de %{resource}'
+    resource_settings: 'Configuración de %{resource}'
+    search_query: Buscar consulta
+    select: Selección
+    selected_item_will_be_removed: El elemento seleccionado será eliminado
+    should_be_a_valid_json: Debe ser un JSON válido
+    should_be_error_constraint: 'Debe ser %{error} %{constraint}'
+    starts_with: Empieza con
+    text: Texto
+    textarea: Área de texto
+    unit: Unidad
+    write_only: Sólo escritura
+    i:
+      locale: es
+      select:
+        placeholder: Seleccionar
+        noMatch: Sin coincidencias
+        loading: Cargando
+      table:
+        noDataText: Sin Datos
+        noFilteredDataText: Sin Datos para el filtro
+        confirmFilter: Aceptar
+        resetFilter: Quitar filtro
+        clearFilter: Todos
+        sumText: Suma
+      datepicker:
+        selectDate: Seleccionar fecha
+        selectTime: Seleccionar hora
+        startTime: Hora de inicio
+        endTime: Hora de fin
+        clear: Limpiar
+        ok: Aceptar
+        datePanelLabel: "[mmmm] [yyyy]"
+        month: Mes
+        month1: Enero
+        month2: Febrero
+        month3: Marzo
+        month4: Abril
+        month5: Mayo
+        month6: Junio
+        month7: Julio
+        month8: Augosto
+        month9: Septiembre
+        month10: Octubre
+        month11: Noviembre
+        month12: Diciembre
+        year: Año
+        weekStartDay: '1'
+        weeks:
+          sun: Dom
+          mon: Lun
+          tue: Mar
+          wed: Mié
+          thu: Jue
+          fri: Vie
+          sat: Sáb
+        months:
+          m1: Ene
+          m2: Feb
+          m3: Mar
+          m4: Abr
+          m5: May
+          m6: Jun
+          m7: Jul
+          m8: Ago
+          m9: Sep
+          m10: Oct
+          m11: Nov
+          m12: Dic
+      transfer:
+        titles:
+          source: Origen
+          target: Destino
+        filterPlaceholder: Buscar aquí
+        notFoundText: Sin resultados
+      modal:
+        okText: Aceptar
+        cancelText: Cancelar
+      poptip:
+        okText: Aceptar
+        cancelText: Cancelar
+      page:
+        prev: Página Anterior
+        next: Página Siguiente
+        total: Total
+        item: Elemento
+        items: Elementos
+        prev5: 5 Páginas Anteriores
+        next5: 5 Páginas Siguientes
+        page: "/page"
+        goto: Ir a
+        p: ''
+      rate:
+        star: Estrella
+        stars: Estrellas
+      tree:
+        emptyText: Sin Datos

@@ -24,7 +24,7 @@
       />
       <KeepAlive>
         <ResourcesMenu
-          v-if="selectedTabName === 'assiciations'"
+          v-if="selectedTabName === 'associations'"
           :key="'associations'"
           :resources="associations"
           :size="'small'"
@@ -161,8 +161,8 @@ export default {
 
       if (this.associations.length && widthLessThan('sm')) {
         tabs.splice(1, 0, {
-          name: 'assiciations',
-          display_name: 'Assiciations'
+          name: 'associations',
+          display_name: this.i18n.associations
         })
       }
 

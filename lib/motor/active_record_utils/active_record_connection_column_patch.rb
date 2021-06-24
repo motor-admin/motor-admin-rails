@@ -10,4 +10,5 @@ ActiveRecord::ConnectionAdapters::Column.class_eval do
   def array
     false
   end
+  alias_method :array?, :array
 end

@@ -4,7 +4,7 @@
       class="fs-4 fw-bold"
       style="margin: 25px 0 5px 0"
     >
-      Tags
+      {{ i18n['tags'] }}
     </p>
     <Tag
       v-for="tag in tags"
@@ -24,7 +24,7 @@
       size="small"
       @click="clearSelectedTags"
     >
-      Clear selection
+      {{ i18n['clear_selection'] }}
     </VButton>
   </div>
 </template>

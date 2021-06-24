@@ -8,14 +8,14 @@
       @submit.prevent="submit"
     >
       <FormItem
-        label="Name"
+        :label="i18n['name']"
         prop="display_name"
         :class="dataField.display_name && !isCustomName ? 'mb-0' : ''"
       >
         <VInput
           ref="nameInput"
           v-model="dataField.display_name"
-          placeholder="Field name"
+          :placeholder="i18n['field_name']"
           @drag.stop
         />
       </FormItem>
@@ -23,7 +23,7 @@
         v-if="!isCustomName && generatedParamName"
         style="margin-bottom: 6px; font-size: 12px"
       >
-        Param name: <code>{{ generatedParamName }}</code>
+        {{ i18n['param_name'] }}: <code>{{ generatedParamName }}</code>
         <Icon
           type="md-create"
           class="ms-1 cursor-pointer"
@@ -32,29 +32,29 @@
       </p>
       <FormItem
         v-if="isCustomName"
-        label="Param name"
+        :label="i18n['param_name']"
         prop="name"
       >
         <VInput
           v-model="dataField.name"
-          placeholder="Request param"
+          :placeholder="i18n['request_param']"
           @drag.stop
         />
       </FormItem>
       <FormItem
-        label="Type"
+        :label="i18n['type']"
         prop="field_type"
       >
         <MSelect
           v-model="dataField.field_type"
           :options="fieldTypes"
-          placeholder="Input type"
+          :placeholder="i18n['input_type']"
           @update:modelValue="onTypeChange"
         />
       </FormItem>
       <FormItem
         v-if="dataField.field_type === 'reference'"
-        label="Reference"
+        :label="i18n['reference']"
         prop="reference.model_name"
       >
         <MSelect
@@ -62,20 +62,20 @@
           :value-key="'name'"
           :label-key="'display_name'"
           :options="referenceModels"
-          placeholder="Select resource..."
+          :placeholder="i18n['select_resource_placeholder']"
           filterable
           @update:modelValue="dataField.default_value = ''"
         />
       </FormItem>
       <FormItem
         v-if="dataField.field_type === 'select'"
-        label="Select query"
+        :label="i18n['select_query']"
         prop="select_query_id"
       >
         <QuerySelect v-model="dataField.select_query_id" />
       </FormItem>
       <FormItem
-        label="Default value"
+        :label="i18n['default_value']"
         prop="default_value"
       >
         <FormInput
@@ -89,14 +89,14 @@
         class="d-block"
         @update:model-value="resetDefault"
       >
-        Multiple
+        {{ ' ' }} {{ i18n['multiple'] }}
       </Checkbox>
       <Checkbox
         :model-value="isRequired"
         class="d-block mb-3"
         @update:model-value="toggleRequired"
       >
-        Required
+        {{ ' ' }} {{ i18n['required'] }}
       </Checkbox>
     </VForm>
     <div class="d-flex justify-content-between">
@@ -108,12 +108,12 @@
           class="me-2"
           @click="$emit('remove')"
         >
-          Remove
+          {{ i18n['remove'] }}
         </VButton>
         <VButton
           @click="$emit('cancel')"
         >
-          Cancel
+          {{ i18n['cancel'] }}
         </VButton>
       </div>
       <VButton
@@ -132,6 +132,7 @@ import { underscore } from 'utils/scripts/string'
 import FormInput from 'data_forms/components/input'
 import QuerySelect from 'queries/components/select'
 import Validators from 'utils/scripts/validators'
+import { i18nDict, fieldRequiredMessage } from 'utils/scripts/i18n'
 
 const MULTIPLE_COLUMN_TYPES = ['input', 'number', 'select', 'reference']
 
@@ -149,7 +150,7 @@ export default {
     okText: {
       type: String,
       required: false,
-      default: 'OK'
+      default: i18nDict.ok
     },
     focus: {
       type: Boolean,
@@ -172,9 +173,18 @@ export default {
   computed: {
     rules () {
       const rules = {
-        display_name: [{ required: true }],
-        name: [{ required: true }],
-        field_type: [{ required: true }]
+        display_name: [{
+          required: true,
+          message: fieldRequiredMessage('name')
+        }],
+        name: [{
+          required: true,
+          message: fieldRequiredMessage('param_name')
+        }],
+        field_type: [{
+          required: true,
+          message: fieldRequiredMessage('field_type')
+        }]
       }
 
       if (this.dataField.field_type === 'json') {
@@ -182,11 +192,17 @@ export default {
       }
 
       if (this.dataField.field_type === 'reference') {
-        rules['reference.model_name'] = [{ required: true }]
+        rules['reference.model_name'] = [{
+          required: true,
+          message: fieldRequiredMessage('reference')
+        }]
       }
 
       if (this.dataField.field_type === 'select') {
-        rules.select_query_id = [{ required: true }]
+        rules.select_query_id = [{
+          required: true,
+          message: fieldRequiredMessage('query')
+        }]
       }
 
       return rules
@@ -205,16 +221,16 @@ export default {
     },
     fieldTypes () {
       return [
-        { label: 'Text', value: 'input' },
-        { label: 'Number', value: 'number' },
-        { label: 'Reference', value: 'reference' },
-        { label: 'Textarea', value: 'textarea' },
-        { label: 'Select', value: 'select' },
-        { label: 'Date and Time', value: 'datetime' },
-        { label: 'Date', value: 'date' },
-        { label: 'Checkbox', value: 'checkbox' },
-        { label: 'File', value: 'file' },
-        { label: 'JSON', value: 'json' }
+        { label: this.i18n.text, value: 'input' },
+        { label: this.i18n.number, value: 'number' },
+        { label: this.i18n.reference, value: 'reference' },
+        { label: this.i18n.textarea, value: 'textarea' },
+        { label: this.i18n.select, value: 'select' },
+        { label: this.i18n.date_and_time, value: 'datetime' },
+        { label: this.i18n.date, value: 'date' },
+        { label: this.i18n.checkbox, value: 'checkbox' },
+        { label: this.i18n.file, value: 'file' },
+        { label: this.i18n.json, value: 'json' }
       ]
     },
     showMultiple () {

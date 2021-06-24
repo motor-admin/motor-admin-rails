@@ -47,7 +47,7 @@ module Motor
       def add_password_column!(columns)
         columns << {
           name: 'password',
-          display_name: 'Password',
+          display_name: I18n.t('motor.password'),
           column_type: 'string',
           access_type: 'write_only',
           default_value: nil,

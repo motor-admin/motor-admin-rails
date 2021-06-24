@@ -20,7 +20,7 @@
     icon="md-add"
     @click="addNew"
   >
-    Add
+    {{ i18n['add'] }}
   </VButton>
 </template>
 

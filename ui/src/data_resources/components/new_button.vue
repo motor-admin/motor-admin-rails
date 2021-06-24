@@ -75,7 +75,7 @@ export default {
         formId: this.createAction.preferences.form_id,
         withFooterSubmit: true,
         onSuccess: (result) => {
-          this.$Message.info(`${this.resourceTitle} has been created`)
+          this.$Message.info(`${this.resourceTitle} ${this.i18n.has_been_created}`)
           this.$emit('success', result)
         }
       }
@@ -93,7 +93,7 @@ export default {
             this.$Drawer.remove()
           }
 
-          this.$Message.info(`${this.resourceTitle} has been created`)
+          this.$Message.info(`${this.resourceTitle} ${this.i18n.has_been_created}`)
           this.$emit('success', data)
         }
       }
@@ -105,7 +105,7 @@ export default {
       const props = this.createAction.action_type === 'default' ? this.defaultProps : this.customActionProps
 
       this.$Drawer.open(component, props, {
-        title: `Create ${this.resourceTitle}`,
+        title: `${this.i18n.create} ${this.resourceTitle}`,
         className: 'drawer-no-bottom-padding',
         closable: true
       })

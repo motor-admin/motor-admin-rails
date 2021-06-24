@@ -7,7 +7,7 @@
       <h1
         class="my-3 overflow-hidden text-truncate"
       >
-        {{ alert.name || cachedAlertName || 'New alert' }}
+        {{ alert.name || cachedAlertName || i18n['new_alert'] }}
       </h1>
     </div>
     <div class="col-5 col-md-4 d-flex align-items-center justify-content-end">
@@ -19,7 +19,7 @@
         :icon="alert.is_enabled ? 'md-close' : 'md-checkmark'"
         @click="toggleEnabled"
       >
-        {{ alert.is_enabled ? 'Disable' : 'Activate' }}
+        {{ alert.is_enabled ? i18n['disable'] : i18n['activate'] }}
       </VButton>
       <VButton
         v-if="alert.query_id && alert.to_emails.length && $can('manage', 'Motor::Alert')"
@@ -29,7 +29,7 @@
         class="bg-white ms-2 md-icon-only"
         @click="sendNow"
       >
-        Send Now
+        {{ i18n['send_now'] }}
       </VButton>
       <VButton
         v-if="isCanEdit"
@@ -39,7 +39,7 @@
         class="bg-white ms-2"
         @click="onSaveClick"
       >
-        Save
+        {{ i18n['save'] }}
       </VButton>
     </div>
   </div>
@@ -60,7 +60,7 @@
         class="d-flex justify-content-center align-items-center"
         style="height: 100%"
       >
-        No data
+        {{ i18n['no_data'] }}
       </div>
       <QueryResult
         v-else-if="alert.query_id"
@@ -74,7 +74,7 @@
         v-else-if="!isLoadingQuery && !isLoadingAlert"
         class="mt-5"
       >
-        Query not selected
+        {{ i18n['query_not_selected'] }}
       </p>
     </div>
     <div
@@ -173,10 +173,10 @@ export default {
           name: this.alert.name
         }
       }).then((result) => {
-        this.$Message.info('Alert email has been sent!')
+        this.$Message.info(this.i18n.alert_email_has_been_sent)
       }).catch((error) => {
         console.error(error)
-        this.$Message.error('Unable to send email')
+        this.$Message.error(this.i18n.unable_to_send_email)
       }).finally(() => {
         this.isSendingLoading = false
       })
@@ -191,7 +191,7 @@ export default {
       }).then((result) => {
         this.alert.is_enabled = result.data.data.is_enabled
 
-        this.$Message.info(`Alert has been ${this.alert.is_enabled ? 'activated' : 'disabled'}`)
+        this.$Message.info(this.alert.is_enabled ? this.i18n.alert_has_been_activated : this.i18n.alert_has_been_disabled)
       }).catch((error) => {
         if (error.response.data?.errors?.length) {
           this.$Message.error(error.response.data.errors.join('\n'))
@@ -230,7 +230,7 @@ export default {
 
         this.$router.push({ name: 'alert', params: { id: this.alert.id } })
 
-        this.$Message.info('Alert has been saved!')
+        this.$Message.info(this.i18n.alert_has_been_saved)
       }).catch((error) => {
         if (error.response?.data?.errors?.length) {
           this.$refs.form.$refs.form.setErrors(error.response.data.errors)

@@ -33,7 +33,7 @@
       icon="md-add"
       @click="addTab"
     >
-      Add Tab
+      {{ i18n['add_tab'] }}
     </VButton>
   </div>
 </template>

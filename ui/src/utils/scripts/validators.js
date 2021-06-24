@@ -1,3 +1,5 @@
+import { i18nDict } from 'utils/scripts/configs'
+
 const VALIDATORS = {
   greater_than: (option, value) => {
     return value > option
@@ -31,7 +33,7 @@ export default {
       }) || []
 
       if (error) {
-        return new Error(`should be ${error.replace('_', ' ')} ${constraint}`)
+        return new Error(i18nDict.should_be_error_constraint.replace('%{error}', i18nDict[error].toLowerCase()).replace('%{constraint}', constraint))
       } else {
         return true
       }
@@ -47,7 +49,7 @@ export default {
 
       return true
     } catch {
-      return new Error('should be a valid JSON')
+      return new Error(i18nDict.should_be_a_valid_json)
     }
   }
 }

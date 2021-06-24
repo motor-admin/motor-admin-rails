@@ -77,7 +77,7 @@ export default {
   methods: {
     removeScope () {
       this.$Dialog.confirm({
-        title: 'Are you sure?',
+        title: this.i18n.are_you_sure,
         closable: true,
         onOk: () => {
           const index = this.resource.scopes.findIndex((scope) => scope.name === this.scope.name)

@@ -53,7 +53,7 @@
               class="me-1"
               @click="formData.push(buildDefaultValues(item.items))"
             >
-              Add Item
+              {{ i18n['add_item'] }}
             </VButton>
           </div>
         </VueDraggableNext>

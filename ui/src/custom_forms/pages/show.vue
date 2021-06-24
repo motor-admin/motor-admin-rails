@@ -7,7 +7,7 @@
       <h1
         class="my-3 overflow-hidden text-truncate"
       >
-        {{ form.name || cachedFormName || (isExisting ? '' : 'New form') }}
+        {{ form.name || cachedFormName || (isExisting ? '' : i18n['new_form']) }}
       </h1>
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
@@ -18,7 +18,7 @@
         :icon="isEditorOpened ? 'md-close' : 'md-create'"
         @click="toggleEditor"
       >
-        {{ isEditorOpened ? 'Close editor' : 'Edit' }}
+        {{ isEditorOpened ? i18n['close_editor'] : i18n['edit'] }}
       </VButton>
       <VButton
         v-if="form.id && $can('create', 'Motor::Form')"
@@ -26,7 +26,7 @@
         class="bg-white ms-2 d-none d-sm-block"
         @click="saveAsNew"
       >
-        Save as new
+        {{ i18n['save_as_new'] }}
       </VButton>
       <VButton
         v-if="form.preferences.fields.length && canEdit"
@@ -36,7 +36,7 @@
         type="primary"
         @click="save"
       >
-        Save
+        {{ i18n['save'] }}
       </VButton>
       <VButton
         v-if="form.api_path"
@@ -45,7 +45,7 @@
         class="ms-2 d-none d-md-block"
         @click="submit"
       >
-        Submit
+        {{ i18n['submit'] }}
       </VButton>
     </div>
   </div>
@@ -178,7 +178,7 @@ export default {
       this.form = form
 
       this.$Modal.remove()
-      this.$Message.info('Form has been saved!')
+      this.$Message.info(this.i18n.form_has_been_saved)
 
       this.$router.push({ name: 'form', params: { id: form.id } })
 
@@ -196,7 +196,7 @@ export default {
           this.onSuccess(form)
         }
       }, {
-        title: 'Save form',
+        title: this.i18n.save_form,
         closable: true
       })
     },
@@ -210,7 +210,7 @@ export default {
           this.onSuccess(form)
         }
       }, {
-        title: 'Save form',
+        title: this.i18n.save_form,
         closable: true
       })
     }

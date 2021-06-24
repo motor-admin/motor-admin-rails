@@ -37,7 +37,7 @@
           class="header-btn ms-2"
           size="large"
         >
-          Reports
+          {{ i18n['reports'] }}
         </VButton>
         <VButton
           v-if="$can('read', 'Motor::Form')"
@@ -46,7 +46,7 @@
           size="large"
           :to="{ name: 'forms' }"
         >
-          Forms
+          {{ i18n['forms'] }}
         </VButton>
         <VButton
           :is="link.component"
@@ -116,25 +116,25 @@
               v-if="$can('create', 'Motor::Query')"
               @click="$router.push({ name: 'new_query' })"
             >
-              Add Query
+              {{ i18n['add_query'] }}
             </DropdownItem>
             <DropdownItem
               v-if="$can('create', 'Motor::Dashboard')"
               @click="$router.push({ name: 'new_dashboard' })"
             >
-              Add Dashboard
+              {{ i18n['add_dashboard'] }}
             </DropdownItem>
             <DropdownItem
               v-if="$can('create', 'Motor::Form')"
               @click="$router.push({ name: 'new_form'})"
             >
-              Add Form
+              {{ i18n['add_form'] }}
             </DropdownItem>
             <DropdownItem
               v-if="$can('create', 'Motor::Alert')"
               @click="$router.push({ name: 'new_alert' })"
             >
-              Add Alert
+              {{ i18n['add_alert'] }}
             </DropdownItem>
           </DropdownMenu>
         </template>
@@ -153,7 +153,7 @@
         <span
           v-if="isShowSettings"
           style="vertical-align: middle"
-        >Close Settings</span>
+        >{{ i18n['close_settings'] }}</span>
       </VButton>
     </div>
   </div>
@@ -229,7 +229,7 @@ export default {
     openSettingsDrawer,
     openSearch () {
       this.$Modal.open(Search, {
-        placeholder: 'Search...',
+        placeholder: this.i18n.search_placeholder,
         onSelected: (value) => {
           this.$Modal.remove()
         }
@@ -251,7 +251,7 @@ export default {
     openEditModal () {
       this.$Drawer.open(LinksEdit, {
       }, {
-        title: 'Links',
+        title: this.i18n.links,
         closable: true
       })
     },
