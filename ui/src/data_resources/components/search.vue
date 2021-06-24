@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import { i18nDict } from 'utils/scripts/configs'
+
 export default {
   name: 'ResourceSearch',
   props: {
@@ -19,7 +21,7 @@ export default {
     placeholder: {
       type: String,
       required: false,
-      default: 'Search...'
+      default: i18nDict.search_placeholder
     }
   },
   emits: ['search', 'update:modelValue'],

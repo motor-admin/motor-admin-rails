@@ -14,22 +14,24 @@
         @remove="removeFilter"
         @update:filter="updateFilter(key, $event)"
       />
-      <Tag
-        v-if="filter === 'OR'"
-        color="volcano"
-        class="ms-1 my-0"
-        @click="toggleOr(index)"
-      >
-        {{ filter }}
-      </Tag>
-      <Tag
-        v-else-if="index !== filters.length - 1 && filters[index + 1] !== 'OR'"
-        color="blue"
-        class="m-0"
-        @click="toggleOr(index)"
-      >
-        {{ i18n['and']?.toUpperCase() }}
-      </Tag>
+      <div style="max-width: 42px; text-align: center">
+        <Tag
+          v-if="filter === 'OR'"
+          color="volcano"
+          class="ms-1 my-0"
+          @click="toggleOr(index)"
+        >
+          {{ i18n[filter.toLowerCase()]?.toUpperCase() }}
+        </Tag>
+        <Tag
+          v-else-if="index !== filters.length - 1 && filters[index + 1] !== 'OR'"
+          color="blue"
+          class="m-0"
+          @click="toggleOr(index)"
+        >
+          {{ i18n['and']?.toUpperCase() }}
+        </Tag>
+      </div>
     </template>
     <div class="pb-2 pt-3 text-center">
       <VButton

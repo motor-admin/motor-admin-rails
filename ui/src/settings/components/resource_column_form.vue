@@ -110,6 +110,7 @@
 import FormInput from 'data_forms/components/input'
 import Validators from 'utils/scripts/validators'
 import CurrencySelect from 'utils/components/currency_select'
+import { fieldRequiredMessage } from 'utils/scripts/i18n'
 
 export default {
   name: 'ResourceColumnForm',
@@ -138,7 +139,10 @@ export default {
   computed: {
     rules () {
       const rules = {
-        display_name: [{ required: true }]
+        display_name: [{
+          required: true,
+          message: fieldRequiredMessage('name')
+        }]
       }
 
       if (this.dataColumn.column_type === 'json') {
@@ -149,30 +153,30 @@ export default {
     },
     currencyBaseOptions () {
       return [
-        { label: 'Unit', value: 'unit' },
-        { label: 'Cents', value: 'cents' }
+        { label: this.i18n.unit, value: 'unit' },
+        { label: this.i18n.cents, value: 'cents' }
       ]
     },
     columnTypes () {
       return [
-        { label: 'Text', value: 'string' },
-        { label: 'Integer', value: 'integer' },
-        { label: 'Decimal', value: 'float' },
-        { label: 'Currency', value: 'currency' },
-        { label: 'Date and Time', value: 'datetime' },
-        { label: 'Date', value: 'date' },
-        { label: 'Boolean', value: 'boolean' },
-        { label: 'Image', value: 'image' },
-        { label: 'File', value: 'file' },
-        { label: 'JSON', value: 'json' }
+        { label: this.i18n.text, value: 'string' },
+        { label: this.i18n.integer, value: 'integer' },
+        { label: this.i18n.decimal, value: 'float' },
+        { label: this.i18n.currency, value: 'currency' },
+        { label: this.i18n.date_and_time, value: 'datetime' },
+        { label: this.i18n.date, value: 'date' },
+        { label: this.i18n.boolean, value: 'boolean' },
+        { label: this.i18n.image, value: 'image' },
+        { label: this.i18n.file, value: 'file' },
+        { label: this.i18n.json, value: 'json' }
       ]
     },
     accessTypes () {
       return [
-        { label: 'Read-Write', value: 'read_write' },
-        { label: 'Read-Only', value: 'read_only' },
-        { label: 'Write-Only', value: 'write_only' },
-        { label: 'Hidden', value: 'hidden' }
+        { label: this.i18n.read_write, value: 'read_write' },
+        { label: this.i18n.read_only, value: 'read_only' },
+        { label: this.i18n.write_only, value: 'write_only' },
+        { label: this.i18n.hidden, value: 'hidden' }
       ]
     }
   },

@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import { fieldRequiredMessage } from 'utils/scripts/i18n'
+
 export default {
   name: 'LinkForm',
   props: {
@@ -80,8 +82,8 @@ export default {
   computed: {
     rules () {
       return {
-        name: [{ required: true }],
-        path: [{ required: true }]
+        name: [{ required: true, message: fieldRequiredMessage('name') }],
+        path: [{ required: true, message: fieldRequiredMessage('path') }]
       }
     }
   },

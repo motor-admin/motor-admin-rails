@@ -97,6 +97,7 @@
 <script>
 import api from 'api'
 import TagsSelect from 'tags/components/select'
+import { fieldRequiredMessage } from 'utils/scripts/i18n'
 
 export default {
   name: 'SaveCustomForm',
@@ -119,9 +120,9 @@ export default {
   computed: {
     rules () {
       return {
-        name: [{ required: true }],
-        api_path: [{ required: true }],
-        http_method: [{ required: true }]
+        name: [{ required: true, message: fieldRequiredMessage('name') }],
+        api_path: [{ required: true, message: fieldRequiredMessage('path') }],
+        http_method: [{ required: true, message: fieldRequiredMessage('method') }]
       }
     },
     apiRequest () {

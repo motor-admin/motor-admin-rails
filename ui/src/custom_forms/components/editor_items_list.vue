@@ -33,7 +33,7 @@
     <FieldForm
       :field="newField"
       :focus="true"
-      ok-text="Add"
+      :ok-text="i18n['add']"
       @submit="addField"
       @cancel="newField = null"
     />
@@ -46,7 +46,7 @@
     <GroupForm
       :group="newGroup"
       :focus="true"
-      ok-text="Add"
+      :ok-text="i18n['add']"
       @submit="addGroup"
       @cancel="newGroup = null"
     />

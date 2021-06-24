@@ -116,6 +116,7 @@ import { directive as clickOutside } from 'view3/src/directives/v-click-outside-
 import { getStyle } from 'view3/src/utils/assist'
 import throttle from 'view3/src/utils/throttle'
 import Popper from 'popper.js/dist/umd/popper.js'
+import { i18nDict } from 'utils/scripts/configs'
 
 const MAX_FILTER_ITEMS = 100
 const REMOTE_SEARCH_THROTTLE_DURATION = 500
@@ -184,7 +185,7 @@ export default {
     placeholder: {
       type: String,
       reqired: false,
-      default: 'Select'
+      default: i18nDict.search
     },
     labelKey: {
       type: [String, Number],

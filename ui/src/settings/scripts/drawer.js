@@ -1,5 +1,6 @@
 import ResourcesSettings from 'settings/components/resources_list'
 import DynamicDrawer from 'view3/src/plugins/dynamic-drawer'
+import { i18nDict } from 'utils/scripts/configs'
 
 function onChangeResource (resource) {
   DynamicDrawer.component.setTitle(drawerTitle(resource))
@@ -7,9 +8,9 @@ function onChangeResource (resource) {
 
 function drawerTitle (resource) {
   if (resource) {
-    return `${resource.display_name} Settings`
+    return i18nDict.resource_settings.replace('%{resource}', resource.display_name)
   } else {
-    return 'Settings'
+    return i18nDict.settings
   }
 }
 

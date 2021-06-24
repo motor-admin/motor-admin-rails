@@ -23,15 +23,22 @@ en:
     alert_has_been_disabled: Alert has been disabled
     alert_has_been_saved: Alert has been saved!
     alert_name: Alert name
+    alerts: Alerts
+    all: All
     all_resources: All Resources
     and: And
+    api: API
     api_path: API path
+    api_request: API request
     apply: Apply
     are_you_sure: Are you sure?
     associations: Associations
     bar_chart: Bar chart
     base: Base
+    boolean: Boolean
     cancel: Cancel
+    cents: Cents
+    checkbox: Checkbox
     clear_all: Clear All
     clear_selection: Clear selection
     close: Close
@@ -39,11 +46,17 @@ en:
     close_settings: Close Settings
     close_variables: Close Variables
     columns: Columns
+    contains: Contains
     create: Create
     currency: Currency
+    dashboard: Dashboard
     dashboard_has_been_saved: Dashboard has been saved!
     dashboard_title: Dashboard title
+    dashboards: Dashboards
+    date: Date
+    date_and_time: Date and Time
     decimal: Decimal
+    default: Default
     default_value: Default value
     describe_this_alert_optional: Describe this alert (optional)
     describe_your_dashboard_optional: Describe your dashboard (optional)
@@ -51,13 +64,23 @@ en:
     describe_your_query_optional: Describe your query (optional)
     description: Description
     deselect_all: Deselect All
+    details: Details
     disable: Disable
     display_as: Display as
     edit: Edit
     edit_sql: Edit SQL
     emails: Emails
+    ends_with: Ends with
+    equal_to: Equal to
     every_day_at_hh_mm: every day at HH:mm PM...
+    excludes: excludes
+    field_is_not_a_number: '%{field} is not a number'
+    field_is_required: '%{field} is required'
+    field_list_cant_be_empty: "%{field} list can't be empty"
+    field_must_be_exactly_in_length: '%{field} must be exactly %{length} in length'
     field_name: Field name
+    field_value_does_not_match_pattern: '%{field} value does not match %{pattern}'
+    file: File
     filters: Filters
     form: Form
     form_has_been_saved: Form has been saved!
@@ -65,15 +88,29 @@ en:
     form_name: Form name
     forms: Forms
     funnel: Funnel
+    greater_or_equal: Greater or equal
+    greater_than: Greater than
+    greater_than_or_equal_to: Greater than or equal to
     group_name: Group name
     has_been_created: has been created
     has_been_removed_succesfully: has been removed succesfully
     has_been_updated: has been updated
     hello_admin: Hello Admin 👋
+    hidden: Hidden
+    image: Image
+    includes: Includes
     input_type: Input type
+    integer: Integer
     interval: Interval
+    is: Is
+    is_not: Is not
     items_has_been_removed: items has been removed
+    items_will_be_removed: '%{count} items will be removed'
+    json: JSON
     label: Currency
+    less_or_equal: Less or equal
+    less_than: Less than
+    less_than_or_equal_to: Less than or equal to
     line_chart: Line chart
     link_name: Link name
     links: Links
@@ -82,6 +119,7 @@ en:
     looks_like_you_are_new_here: Looks like you are new here 🙃
     markdown: Markdown
     method: Method
+    method_call: Method call
     multiple: Multiple
     name: Name
     new_alert: New alert
@@ -90,22 +128,31 @@ en:
     new_query: New query
     no_data: No data
     not_found: Not Found
+    number: Number
     ok: OK
     options_separated_with_new_line_or_comma: Options separated with new line or comma
+    or: Or
+    other_than: Other than
     param_name: Param name
     path: Path
     percent: Percent
     pie_chart: Pie chart
+    queries: Queries
     query: Query
     query_has_been_saved: Query has been saved!
     query_name: Query name
     query_not_selected: Query not selected
     query_revisions: Query Revisions
+    read_only: Read-Only
+    read_write: Read-Write
     reference: Reference
     reference_resource: Reference resource
     remove: Remove
     reports: Reports
     request_param: Request param
+    required: Required
+    resource_filters: '%{resource} Filters'
+    resource_settings: '%{resource} Settings'
     resources: Resources
     resubmit: Resubmit
     revert: Revert
@@ -121,6 +168,8 @@ en:
     scopes: Scopes
     search: Search
     search_placeholder: Search...
+    search_query: Search Query
+    select: Select
     select_alert_tags: Select alert tags
     select_dashboard: Select dashboard
     select_dashboard_tags: Select dashboard tags
@@ -131,20 +180,25 @@ en:
     select_query: Select query
     select_query_tags: Select query tags
     select_resource_placeholder: Select resource...
-    select_resource_placeholder: Select resource...
     selected_item_has_been_removed: Selected item has been removed
+    selected_item_will_be_removed: Selected item will be removed
     selected_item_will_be_removed_are_you_sure: Selected item will be removed. Are you sure?
     send_empty: Send empty?
     send_now: Send Now
     send_to: Send to
     set_tags: Set tags
     settings: Settings
+    should_be_a_valid_json: Should be a valid JSON
+    should_be_error_constraint: 'Should be %{error} %{constraint}'
     stacked_bars: Stacked bars
+    starts_with: Starts with
     submit: Submit
     tab_type: Tab type
     table: Table
     tabs: Tabs
     tags: Tags
+    text: Text
+    textarea: Textarea
     timezone: Timezone
     title: Title
     type: Type
@@ -153,8 +207,10 @@ en:
     unable_to_remove_items: Unable to remove items
     unable_to_send_email: Unable to send email
     unable_to_submit_form: Unable to submit form
+    unit: Unit
     value: Value
     values_axis: Values axis
     variables: Variables
     visibility: Visibility
     visualization: Visualization
+    write_only: Write-Only

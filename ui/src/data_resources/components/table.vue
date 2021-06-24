@@ -404,7 +404,7 @@ export default {
           this.$Drawer.remove()
         }
       }, {
-        title: `${this.model.display_name} ${this.i18n.filters}`,
+        title: this.i18n.resource_filters.replace('%{resource}', this.model.display_name),
         className: 'drawer-no-bottom-padding',
         closable: true
       })

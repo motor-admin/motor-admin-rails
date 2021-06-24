@@ -29,7 +29,7 @@ module Motor
         updated_model = model.merge(configs.slice(*RESOURCE_ATTRS))
 
         merge_actions!(updated_model, configs)
-        merge_assiciations!(updated_model, configs)
+        merge_associations!(updated_model, configs)
         merge_columns!(updated_model, configs)
         merge_tabs!(updated_model, configs)
         merge_scopes!(updated_model, configs)
@@ -40,7 +40,7 @@ module Motor
       # @param model [HashWithIndifferentAccess]
       # @param configs [HashWithIndifferentAccess]
       # @return [HashWithIndifferentAccess]
-      def merge_assiciations!(model, configs)
+      def merge_associations!(model, configs)
         model[:associations] = merge_by_name(
           model[:associations],
           configs[:associations],

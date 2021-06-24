@@ -24,6 +24,7 @@
             <MSelect
               v-model="dataAction.action_type"
               :options="actionTypes"
+              :placeholder="i18n['select']"
               @update:modelValue="dataAction.preferences = {}"
             />
           </FormItem>
@@ -52,6 +53,7 @@
           <FormItem
             v-if="dataAction.action_type === 'api'"
             :label="i18n['api_path']"
+            :placeholder="'/api/path/{id}...'"
             prop="preferences.api_path"
           >
             <VInput v-model="dataAction.preferences.api_path" />
@@ -90,6 +92,7 @@
 <script>
 import MethodSelect from './resource_method_select'
 import FormSelect from 'custom_forms/components/select'
+import { fieldRequiredMessage } from 'utils/scripts/i18n'
 
 export default {
   name: 'ResourceActionForm',
@@ -127,17 +130,26 @@ export default {
   computed: {
     rules () {
       const rules = {
-        action_type: [{ required: true }]
+        action_type: [{
+          required: true,
+          message: fieldRequiredMessage('action_type')
+        }]
       }
 
       const key = this.actionTypeKeys[this.dataAction.action_type]
 
       if (key) {
-        rules[`preferences.${key}`] = [{ required: true }]
+        rules[`preferences.${key}`] = [{
+          required: true,
+          message: fieldRequiredMessage(this.dataAction.action_type)
+        }]
       }
 
       if (this.withName) {
-        rules.display_name = [{ required: true }]
+        rules.display_name = [{
+          required: true,
+          message: fieldRequiredMessage('name')
+        }]
       }
 
       return rules
@@ -154,18 +166,18 @@ export default {
     },
     actionTypes () {
       const actions = [
-        { label: 'Form', value: 'form' }
+        { label: this.i18n.form, value: 'form' }
       ]
 
       if (!['create', 'edit'].includes(this.dataAction.name)) {
         actions.unshift(
-          { label: 'Method call', value: 'method' },
-          { label: 'API request', value: 'api' }
+          { label: this.i18n.method_call, value: 'method' },
+          { label: this.i18n.api_request, value: 'api' }
         )
       }
 
       if (this.isCrudAction) {
-        actions.unshift({ label: 'Default', value: 'default' })
+        actions.unshift({ label: this.i18n.default, value: 'default' })
       }
 
       return actions

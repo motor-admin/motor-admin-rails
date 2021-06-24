@@ -57,6 +57,7 @@ import { interpolate, truncate } from 'utils/scripts/string'
 import CustomFormWrapper from 'custom_forms/components/form_wrapper'
 import singularize from 'inflected/src/singularize'
 import { loadCredentials } from 'utils/scripts/auth_credentials'
+import { i18nDict } from 'utils/scripts/configs'
 
 export default {
   name: 'ResourceActions',
@@ -87,7 +88,7 @@ export default {
     label: {
       type: String,
       required: false,
-      default: 'Actions'
+      default: i18nDict.actions
     }
   },
   emits: ['start-action', 'finish-action'],
@@ -236,8 +237,8 @@ export default {
       this.$Dialog.confirm({
         title: (
           this.resources.length > 1
-            ? `${this.resources.length} items will be removed. Are you sure?`
-            : 'Selected item will be removed. Are you sure?'
+            ? [this.i18n.items_will_be_removed.replace('%{count}', this.resources.length), this.i18n.are_you_sure].join('. ')
+            : [this.i18n.selected_item_will_be_removed, this.i18n.are_you_sure].join('. ')
         ),
         closable: true,
         onOk: () => {

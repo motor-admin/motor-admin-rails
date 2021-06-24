@@ -51,6 +51,7 @@
 <script>
 import api from 'api'
 import TagsSelect from 'tags/components/select'
+import { fieldRequiredMessage } from 'utils/scripts/i18n'
 
 export default {
   name: 'QueryForm',
@@ -80,7 +81,7 @@ export default {
   computed: {
     rules () {
       return {
-        name: [{ required: true }]
+        name: [{ required: true, message: fieldRequiredMessage('name') }]
       }
     },
     apiRequest () {
