@@ -165,7 +165,7 @@ export default {
     normalizeAlert (alert) {
       return {
         ...alert,
-        to_emails: alert.to_emails.split(','),
+        to_emails: alert.to_emails.split(',').filter(Boolean),
         tags: alert.tags.map((tag) => tag.name)
       }
     },

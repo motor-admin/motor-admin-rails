@@ -354,12 +354,14 @@ export default {
       }
     } else {
       this.optionsData = this.normalizeOptions(this.options)
-      this.assignSelectedFromValue(this.modelValue)
 
       if (this.multiple) {
         this.selectedOptionsData = [...this.selectedOptions]
+
+        this.assignSelectedFromValue(this.modelValue)
       } else {
-        this.selectedOptionData = this.selectedOption || this.selectedOptionData
+        this.selectedOptionData = this.selectedOption
+        this.assignSelectedFromValue(this.modelValue)
 
         this.searchInput = this.getLabel(this.selectedOptionData) || this.modelValue
       }
