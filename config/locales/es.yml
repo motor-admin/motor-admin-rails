@@ -121,15 +121,15 @@ es:
     scopes: Alcances
     search: Buscar
     search_placeholder: Buscar...
-    select_alert_tags: Seleccionar etiquetas de alerta
+    select_alert_tags: Etiquetas de alerta
     select_dashboard: Seleccionar dashboard
-    select_dashboard_tags: Seleccionar tags de dashboard
+    select_dashboard_tags: Etiquetas de dashboard
     select_form: Seleccionar formulario
-    select_form_tags: Select tags de formulario
+    select_form_tags: Etiquetas de formulario
     select_options: Seleccionar opciones
     select_placeholder: Seleccionar...
     select_query: Seleccionar consulta
-    select_query_tags: Seleccionar etiquetas de consulta
+    select_query_tags: Etiquetas de consulta
     select_resource_placeholder: Seleccionar recurso...
     selected_item_has_been_removed: El elemento seleccionado fue eliminado
     selected_item_will_be_removed_are_you_sure: El elemento seleccionado será eliminado. ¿Estás seguro?
@@ -157,63 +157,63 @@ es:
     variables: Variables
     visibility: Visibilidad
     visualization: Visualización
-    alerts: Alerts
-    all: All
+    alerts: Alertas
+    all: Todo
     api: API
-    api_request: API request
-    boolean: Boolean
-    cents: Cents
+    api_request: Request a una API
+    boolean: Booleano
+    cents: Centavos
     checkbox: Checkbox
-    contains: Contains
+    contains: Contiene
     dashboard: Dashboard
     dashboards: Dashboards
-    date: Date
-    date_and_time: Date and Time
-    default: Default
-    details: Details
-    ends_with: Ends with
-    equal_to: Equal to
-    excludes: excludes
-    field_is_not_a_number: '%{field} is not a number'
-    field_is_required: '%{field} is required'
-    field_list_cant_be_empty: "%{field} list can't be empty"
-    field_must_be_exactly_in_length: '%{field} must be exactly %{length} in length'
-    field_value_does_not_match_pattern: '%{field} value does not match %{pattern}'
-    file: File
-    greater_or_equal: Greater or equal
-    greater_than: Greater than
-    greater_than_or_equal_to: Greater than or equal to
-    hidden: Hidden
-    image: Image
-    includes: Includes
-    integer: Integer
-    is: Is
-    is_not: Is not
-    items_will_be_removed: '%{count} items will be removed'
+    date: Fecha
+    date_and_time: Fecha y hora
+    default: Por defecto
+    details: Detalles
+    ends_with: Termina con
+    equal_to: Igual a
+    excludes: no contiene
+    field_is_not_a_number: '%{field} no es un número'
+    field_is_required: '%{field} es obligatorio'
+    field_list_cant_be_empty: "La lista %{field} no puede estar vacía"
+    field_must_be_exactly_in_length: '%{field} debe tener un largo de %{length} caracteres'
+    field_value_does_not_match_pattern: 'El valor de %{field} no coincide con %{pattern}'
+    file: Archivo
+    greater_or_equal: Mayor o igual
+    greater_than: Mayor que
+    greater_than_or_equal_to: Mayor o igual a
+    hidden: Esconder
+    image: Imagen
+    includes: Incluye
+    integer: Entero
+    is: Es
+    is_not: No es
+    items_will_be_removed: 'Se eliminarán %{count} elementos'
     json: JSON
-    less_or_equal: Less or equal
-    less_than: Less than
-    less_than_or_equal_to: Less than or equal to
-    method_call: Method call
-    number: Number
-    or: Or
-    other_than: Other than
-    queries: Queries
-    read_only: Read-Only
-    read_write: Read-Write
-    required: Required
+    less_or_equal: Menor o igual
+    less_than: Menor que
+    less_than_or_equal_to: Menor o igual a
+    method_call: Llamado a método
+    number: Número
+    or: O
+    other_than: Otro que no sea
+    queries: Consultas
+    read_only: Sólo lectura
+    read_write: Lectura y escritura
+    required: Obligatorio
     resource_filters: 'Filtros de %{resource}'
-    resource_settings: '%{resource} Settings'
-    search_query: Search Query
-    select: Select
-    selected_item_will_be_removed: Selected item will be removed
-    should_be_a_valid_json: Should be a valid JSON
-    should_be_error_constraint: 'Should be %{error} %{constraint}'
-    starts_with: Starts with
-    text: Text
-    textarea: Textarea
-    unit: Unit
-    write_only: Write-Only
+    resource_settings: 'Configuración de %{resource}'
+    search_query: Buscar consulta
+    select: Selección
+    selected_item_will_be_removed: El elemento seleccionado será eliminado
+    should_be_a_valid_json: Debe ser un JSON válido
+    should_be_error_constraint: 'Debe ser %{error} %{constraint}'
+    starts_with: Empieza con
+    text: Texto
+    textarea: Área de texto
+    unit: Unidad
+    write_only: Sólo escritura
     i:
       locale: es
       select:
