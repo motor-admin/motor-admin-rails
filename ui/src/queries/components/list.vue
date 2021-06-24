@@ -11,7 +11,7 @@
       size="large"
       class="mb-2"
     />
-    <div :style="{ height: 'calc(var(--vh, 100vh) - 245px)', overflow: 'scroll' }">
+    <div :style="{ height: 'calc(var(--vh, 100vh) - 245px)', overflowY: 'auto' }">
       <p
         v-if="searchQuery && !filteredItems.length"
         class="text-center mt-2"

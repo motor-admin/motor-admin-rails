@@ -488,12 +488,10 @@ export default {
       })
     },
     loadQueryData () {
-      if (this.dataQuery.sql_body) {
-        if (this.isEdited || !this.query.id) {
-          return this.runQuery()
-        } else {
-          return this.runExistingQuery()
-        }
+      if (this.dataQuery.sql_body && (this.isEdited || !this.query.id)) {
+        return this.runQuery()
+      } else {
+        return this.runExistingQuery()
       }
     },
     runExistingQuery () {

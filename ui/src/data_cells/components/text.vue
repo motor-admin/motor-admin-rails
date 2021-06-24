@@ -29,7 +29,7 @@ export default {
         disabled: true, // !this.isTruncated,
         bodyStyle: {
           maxWidth: '350px',
-          overflowY: 'scroll',
+          overflowY: 'auto',
           maxHeight: '200px',
           whiteSpace: 'pre-wrap',
           lineBreak: 'anywhere'
@@ -43,7 +43,11 @@ export default {
 <style lang="scss">
 .text-cell {
   max-height: 150px;
-  overflow-y: auto;
+  overflow-y: hidden;
   line-break: normal;
+
+  &:hover {
+    overflow-y: auto;
+  }
 }
 </style>

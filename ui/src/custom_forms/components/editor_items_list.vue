@@ -2,8 +2,8 @@
   <VueDraggableNext
     :list="items"
     handle=".handle"
-    :group="{ name: 'g1' }"
-    style="min-height: 15px"
+    group="form"
+    :style="withMinHeight ? 'min-height: 15px' : null"
   >
     <div
       v-for="item in items"
@@ -116,6 +116,11 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    withMinHeight: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data () {

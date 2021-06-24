@@ -152,7 +152,7 @@ export default {
         subtract += 44
       }
 
-      return { height: `calc(${vh} - ${subtract}px)`, overflowY: this.isShowSettings ? 'hidden' : 'scroll' }
+      return { height: `calc(${vh} - ${subtract}px)`, overflowY: this.isShowSettings ? 'hidden' : 'auto' }
     },
     tabs () {
       const tabs = this.model.tabs.filter((tab) => {

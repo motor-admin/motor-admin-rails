@@ -8,7 +8,7 @@
       :model-value="isShowSiderScreen && isMenuSider"
       :collapsible="true"
       :collapsed-width="0"
-      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 60px)', overflowY: isShowSettings ? 'hidden' : 'scroll' }"
+      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 60px)', overflowY: isShowSettings ? 'hidden' : 'auto' }"
     >
       <ResourcesMenu
         :resources="visibleResources"

@@ -58,7 +58,7 @@
         size="large"
         class="mb-2"
       />
-      <div :style="{ height: 'calc(var(--vh, 100vh) - 274px)', overflow: 'scroll', position: 'relative', margin: '0 -12px', padding: '0 12px' }">
+      <div :style="{ height: 'calc(var(--vh, 100vh) - 274px)', overflowY: 'auto', position: 'relative' }">
         <Spin
           v-if="isLoading"
           fix

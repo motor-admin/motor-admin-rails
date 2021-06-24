@@ -195,3 +195,25 @@ h5 {
     }
   }
 }
+
+.ivu-layout-sider {
+  overflow-y: hidden !important;
+
+  &:hover {
+    overflow-y: auto !important;
+  }
+}
+
+.ivu-layout-sider::-webkit-scrollbar {
+  border-right: 1px solid #dee2e6;
+  height: 4px;
+  width: 4px;
+  z-index: 12;
+}
+
+.ivu-layout-sider::-webkit-scrollbar-thumb {
+  background-clip: padding-box;
+  background-color: #d3d3d3;
+  border-radius: 8px;
+  box-shadow: none;
+}

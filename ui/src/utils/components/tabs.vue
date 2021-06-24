@@ -9,7 +9,7 @@
           class="ivu-tabs-nav-wrap"
           style="position: relative;"
         >
-          <div style="overflow-x: scroll">
+          <div class="ivu-tabs-scroll">
             <div
               class="ivu-tabs-nav"
               :class="`text-${position} w-100`"
@@ -116,5 +116,13 @@ a.ivu-tabs-tab {
 
 .ivu-tabs-tab {
   user-select: none;
+}
+
+.ivu-tabs-scroll {
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>

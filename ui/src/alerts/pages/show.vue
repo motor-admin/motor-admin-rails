@@ -49,7 +49,7 @@
   >
     <div
       class="col-6 col-lg-7 d-none d-md-block p-0 text-center"
-      style="height: 100%; overflow: scroll; position: relative"
+      style="height: 100%; position: relative"
     >
       <Spin
         v-if="isLoadingQuery || isLoadingAlert"
@@ -79,7 +79,7 @@
     </div>
     <div
       class="col-12 col-md-6 col-lg-5 border-left bg-white p-3"
-      style="height: 100%; overflow: scroll; position: relative"
+      style="height: 100%; overflowY: auto; position: relative"
     >
       <Spin
         v-if="isLoadingAlert"

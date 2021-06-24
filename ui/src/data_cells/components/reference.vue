@@ -87,7 +87,7 @@ export default {
         placement: 'right',
         bodyStyle: {
           whiteSpace: 'break-spaces',
-          overflowY: 'scroll',
+          overflowY: 'auto',
           minHeight: '50px',
           maxHeight: '300px',
           maxWidth: '300px'

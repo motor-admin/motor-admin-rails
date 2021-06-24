@@ -3,7 +3,7 @@
     <Sider
       v-if="associations.length && !widthLessThan('sm')"
       class="border-top"
-      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 112px)', overflowY: isShowSettings ? 'hidden' : 'scroll' }"
+      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 112px)', overflowY: isShowSettings ? 'hidden' : 'auto' }"
     >
       <ResourcesMenu
         :resources="associations"

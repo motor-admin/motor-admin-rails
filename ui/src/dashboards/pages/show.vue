@@ -63,7 +63,7 @@
     <div
       :class="isSettingsOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
       class="position-relative"
-      :style="{ height: '100%', overflow: isSettingsOpened ? 'scroll' : 'unset' }"
+      :style="{ height: '100%', overflowY: isSettingsOpened ? 'auto' : 'unset' }"
     >
       <div
         v-if="variables.length"
@@ -90,7 +90,7 @@
     <div
       v-if="isSettingsOpened"
       class="col-12 col-md-6 col-lg-3 border-left bg-white p-0"
-      style="height: 100%; overflow: scroll"
+      style="height: 100%; overflowY: auto"
     >
       <Editor
         v-if="isEditorOpened"

@@ -11,7 +11,7 @@
       size="large"
       class="mb-2"
     />
-    <div style="min-height: 260px; max-height: 260px; overflow: scroll">
+    <div style="min-height: 260px; max-height: 260px; overflowY: auto">
       <span
         v-for="[icon, html] in icons"
         :key="icon"

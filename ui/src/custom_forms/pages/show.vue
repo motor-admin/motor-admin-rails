@@ -53,7 +53,7 @@
     class="row border-top m-0"
   >
     <div
-      :style="{ height: 'calc(var(--vh, 100vh) - 138px)', overflow: 'scroll' }"
+      :style="{ height: 'calc(var(--vh, 100vh) - 138px)', overflowY: 'auto' }"
       :class="isEditorOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
       class="pt-4 position-relative"
     >
@@ -76,7 +76,7 @@
     <div
       v-if="isEditorOpened"
       class="col-12 col-md-6 col-lg-3 border-left bg-white p-0"
-      style="height: 100%; overflow: scroll"
+      style="height: 100%; overflowY: auto"
     >
       <Editor :fields="form.preferences.fields" />
     </div>

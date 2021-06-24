@@ -12,7 +12,7 @@
     <div
       :style="{
         height: `calc(var(--vh, 100vh) - ${preferences.variables.length ? '224px' : '185px' })`,
-        overflowY: 'scroll'
+        overflowY: 'auto'
       }"
       class="p-2"
     >

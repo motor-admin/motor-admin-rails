@@ -69,6 +69,20 @@ export default {
 
 <style lang="scss">
 .markdown {
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    z-index: 12;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    box-shadow: none;
+    border-top: 1px solid #dee2e6;
+    background-color: #d3d3d3;
+    background-clip: padding-box;
+  }
+
   h6, h5, h4, h3, h2, h1 {
     margin-top: 0;
     margin-bottom: 0.5rem;

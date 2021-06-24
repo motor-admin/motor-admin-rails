@@ -26,6 +26,7 @@
         <LayoutItems
           v-if="!isForm"
           :items="group.items"
+          :with-min-height="true"
         />
         <GroupForm
           v-if="isForm"
