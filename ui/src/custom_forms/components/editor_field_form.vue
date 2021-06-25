@@ -225,6 +225,7 @@ export default {
         { label: this.i18n.number, value: 'number' },
         { label: this.i18n.reference, value: 'reference' },
         { label: this.i18n.textarea, value: 'textarea' },
+        { label: this.i18n.richtext, value: 'richtext' },
         { label: this.i18n.select, value: 'select' },
         { label: this.i18n.date_and_time, value: 'datetime' },
         { label: this.i18n.date, value: 'date' },

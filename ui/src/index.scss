@@ -35,6 +35,8 @@
 @import 'view3/src/styles/components/time-picker';
 @import 'view3/src/styles/components/collapse';
 
+@import 'utils/styles/richtext';
+
 .#{$spin-prefix-cls} {
   &-fix {
     background-color: rgba(255, 255, 255, 0.4);

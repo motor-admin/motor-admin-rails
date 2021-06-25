@@ -15,12 +15,15 @@
       :to="crumb.to"
       class="fs-4"
     >
-      {{ crumb.label }}
+      {{ truncate(sanitize(crumb.label), 22) }}
     </BreadcrumbItem>
   </Breadcrumb>
 </template>
 
 <script>
+import DOMPurify from 'dompurify'
+import { truncate } from 'utils/scripts/string'
+
 export default {
   name: 'AppBreadcrumbs',
   props: {
@@ -34,6 +37,16 @@ export default {
       default: false
     }
   },
-  emits: ['click-menu']
+  emits: ['click-menu'],
+  methods: {
+    truncate,
+    sanitize (label) {
+      if (label.includes('<')) {
+        return DOMPurify.sanitize(label, { ALLOWED_TAGS: [], KEEP_CONTENT: true }).replace('&nbsp;', '')
+      } else {
+        return label
+      }
+    }
+  }
 }
 </script>

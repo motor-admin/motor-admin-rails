@@ -40,6 +40,8 @@ module CapybaraHelpers
       field.fill_in(with: value)
     when /ivu-select/
       ivu_select(field, value)
+    when /trix-container/
+      field.find('trix-editor').native.send_keys(value)
     else
       raise ArgumentError, 'Unknown field type'
     end

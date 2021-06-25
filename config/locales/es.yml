@@ -214,6 +214,7 @@ es:
     textarea: Área de texto
     unit: Unidad
     write_only: Sólo escritura
+    richtext: Texto enriquecido
     i:
       locale: es
       select:

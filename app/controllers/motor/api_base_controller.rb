@@ -5,6 +5,12 @@ module Motor
     include Motor::CurrentUserMethod
     include Motor::CurrentAbility
 
+    if defined?(ActionText::Content)
+      before_action do
+        ActionText::Content.renderer = Motor::ApplicationController.renderer.new(request.env)
+      end
+    end
+
     unless Rails.env.test?
       rescue_from StandardError do |e|
         Rails.logger.error(e)

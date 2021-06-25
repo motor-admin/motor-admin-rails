@@ -8,6 +8,11 @@ module Motor
 
       I18N_SCOPES_KEY = 'activerecord.scopes'
 
+      ACTION_TEXT_REFLECTION_PREFIX = 'rich_text_'
+      ACTION_TEXT_COLUMN_SUFFIX = '_body'
+      ACTION_TEXT_SCOPE_PREFIX = 'with_rich_text_'
+      ACTIVE_STORAGE_SCOPE_PREFIX = 'with_attached_'
+
       module_function
 
       def call
@@ -40,6 +45,7 @@ module Motor
         models -= [ActiveRecord::SchemaMigration] if defined?(ActiveRecord::SchemaMigration)
         models -= [ActiveRecord::InternalMetadata] if defined?(ActiveRecord::InternalMetadata)
         models -= [ActiveStorage::Blob] if defined?(ActiveStorage::Blob)
+        models -= [ActionText::RichText] if defined?(ActionText::RichText)
         models -= [ActiveStorage::VariantRecord] if defined?(ActiveStorage::VariantRecord)
 
         models
@@ -72,7 +78,8 @@ module Motor
         model.defined_scopes.map do |scope_name|
           scope_name = scope_name.to_s
 
-          next if scope_name.starts_with?('with_attached')
+          next if scope_name.starts_with?(ACTIVE_STORAGE_SCOPE_PREFIX)
+          next if scope_name.starts_with?(ACTION_TEXT_SCOPE_PREFIX)
 
           {
             name: scope_name,
@@ -139,6 +146,8 @@ module Motor
       end
 
       def build_reflection_column(name, model, ref, default_attrs)
+        return build_action_text_column(name, model, ref) if ref.klass.name == 'ActionText::RichText'
+
         column_name = ref.belongs_to? ? ref.foreign_key.to_s : name
         is_attachment = !ref.polymorphic? && ref.klass.name == 'ActiveStorage::Attachment'
         access_type = ref.belongs_to? || is_attachment ? ColumnAccessTypes::READ_WRITE : ColumnAccessTypes::READ_ONLY
@@ -153,6 +162,22 @@ module Motor
           format: {},
           reference: build_reference(model, name, ref),
           virtual: false
+        }
+      end
+
+      def build_action_text_column(name, model, ref)
+        name = name.delete_prefix(ACTION_TEXT_REFLECTION_PREFIX)
+
+        {
+          name: name + ACTION_TEXT_COLUMN_SUFFIX,
+          display_name: model.human_attribute_name(name),
+          column_type: 'richtext',
+          access_type: BuildSchema::ColumnAccessTypes::READ_WRITE,
+          default_value: '',
+          validators: fetch_validators(model, name, ref),
+          format: {},
+          reference: nil,
+          virtual: true
         }
       end
 
