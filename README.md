@@ -27,6 +27,7 @@ $ rails motor:install && rake db:migrate
 
 * [Customizable CRUD](#customizable-crud)
 * [Custom actions](#custom-actions)
+* [Virtual attributes](#virtual-attributes)
 * [Forms builder](#forms-builder)
 * [SQL queries](#sql-queries)
 * [Data visualization](#data-visualization)
@@ -53,6 +54,22 @@ Data displayed on the resource page can be completely customized via [SQL querie
 ![Custom actions](https://user-images.githubusercontent.com/5418788/119266132-3c1dd580-bbf2-11eb-9666-09e1640eaf7b.png)
 
 Custom resource actions can be added via Active Record method call, API endpoint, or [custom forms](#forms-builder). Also, it's possible to override default create/update/delete actions.
+
+### Virtual attributes
+
+Any ActiveRecord model method or attribute can be exposed to the admin panel by adding a new column with the name that matches the method name from the resource model:
+
+```ruby
+class Customer < ApplicationRecord
+  has_many :orders
+
+  def lifetime_value
+    orders.sum(&:total_price)
+  end
+end
+```
+
+![Virtual attribute](https://user-images.githubusercontent.com/5418788/123373683-76321c80-d58e-11eb-914d-675444b7eb2a.png)
 
 ### Forms Builder
 
