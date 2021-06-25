@@ -139,7 +139,7 @@ export default {
       return this.type === 'file' || this.type === 'image'
     },
     isNumber () {
-      return ['integer', 'bigint', 'int', 'float', 'demical', 'double', 'number', 'currency'].includes(this.type)
+      return ['integer', 'bigint', 'int', 'float', 'decimal', 'double', 'number', 'currency'].includes(this.type)
     },
     isTextArea () {
       if (this.type === 'input' || this.column.name === 'password') {
