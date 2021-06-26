@@ -37,61 +37,56 @@ export default {
     disabledEditor: {
       type: Boolean,
       required: false,
-      default () {
-        return false
-      }
+      default: false
     },
     inputId: {
       type: String,
       required: false,
-      default () {
-        return ''
-      }
+      default: ''
     },
     inputName: {
       type: String,
       required: false,
-      default () {
-        return 'content'
-      }
+      default: 'content'
     },
     placeholder: {
       type: String,
       required: false,
-      default () {
-        return ''
-      }
+      default: ''
     },
     modelValue: {
       type: String,
       required: false,
-      default () {
-        return ''
-      }
+      default: ''
     },
     localStorage: {
       type: Boolean,
       required: false,
-      default () {
-        return false
-      }
+      default: false
     },
     autofocus: {
       type: Boolean,
       required: false,
-      default () {
-        return false
-      }
+      default: false
     },
     config: {
       type: Object,
       required: false,
-      default () {
-        return {}
-      }
+      default: () => ({})
     }
   },
-  emits: ['trix-attachment-add', 'trix-attachment-remove', 'trix-attachment-add', 'trix-file-accept', 'trix-initialize', 'trix-selection-change', 'trix-focus', 'trix-blur', 'update:modelValue', 'trix-initialize', 'update:modelValue'],
+  emits: [
+    'trix-attachment-add',
+    'trix-attachment-remove',
+    'trix-attachment-add',
+    'trix-file-accept',
+    'trix-initialize',
+    'trix-selection-change',
+    'trix-focus',
+    'trix-blur',
+    'trix-initialize',
+    'update:modelValue'
+  ],
   data () {
     return {
       editorContent: this.modelValue,
@@ -114,15 +109,24 @@ export default {
     }
   },
   watch: {
-    editorContent: {
-      handler: 'emitEditorState'
+    modelValue () {
+      if (this.modelValue !== this.editorContent) {
+        this.reloadEditorContent(this.modelValue)
+
+        this.editorContent = this.modelValue
+      }
     },
-    isDisabled: {
-      handler: 'decorateDisabledEditor'
+    editorContent () {
+      if (this.localStorage) {
+        localStorage.setItem(
+          this.storageId('VueTrix'),
+          JSON.stringify(this.$refs.trix.editor)
+        )
+      }
+      this.$emit('update:modelValue', this.editorContent)
     },
-    config: {
-      handler: 'overrideConfig',
-      deep: true
+    isDisabled (value) {
+      this.decorateDisabledEditor(value)
     }
   },
   mounted () {
@@ -186,15 +190,6 @@ export default {
       }
 
       this.$emit('trix-initialize', this.emitInitialize)
-    },
-    emitEditorState (value) {
-      if (this.localStorage) {
-        localStorage.setItem(
-          this.storageId('VueTrix'),
-          JSON.stringify(this.$refs.trix.editor)
-        )
-      }
-      this.$emit('update:modelValue', this.editorContent)
     },
     storageId (component) {
       if (this.inputId) {
