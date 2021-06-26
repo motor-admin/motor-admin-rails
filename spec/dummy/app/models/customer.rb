@@ -6,6 +6,8 @@ class Customer < ApplicationRecord
     vip
   ].freeze
 
+  has_rich_text :bio if defined?(ActionText)
+
   attribute :kind, :string, default: 'standard'
 
   has_many :orders, dependent: :destroy

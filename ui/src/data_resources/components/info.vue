@@ -108,7 +108,6 @@ import InfoCell from './info_cell'
 import ResourceActions from './actions'
 
 import { assignBreadcrumbLabel } from 'navigation/scripts/breadcrumb_store'
-import { truncate } from 'utils/scripts/string'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
 
 import { isShowSettings } from 'settings/scripts/toggle'
@@ -217,7 +216,7 @@ export default {
         assignBreadcrumbLabel(
           this.resourceName,
           this.resourceId,
-          `#${this.resourceId} ${truncate(this.resource[this.model.display_column] ?? '', 22)}`
+          `#${this.resourceId} ${this.resource[this.model.display_column]}`
         )
       }
     },

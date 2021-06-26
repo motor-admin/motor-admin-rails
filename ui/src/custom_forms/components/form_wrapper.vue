@@ -10,13 +10,13 @@
         :form="dataForm"
         :data="formData"
         :with-submit="!withFooterSubmit"
-        @success="$emit('success', $event)"
+        @success="onSuccess"
         @error="$emit('error', $event)"
         @reset="resetData"
         @submit="$emit('submit', $event)"
       />
       <div
-        v-if="withFooterSubmit"
+        v-if="withFooterSubmit && !isSuccess"
         class="sticky-footer"
       >
         <VButton
@@ -74,6 +74,7 @@ export default {
       formData: {},
       dataForm: {},
       variableWatchers: {},
+      isSuccess: false,
       isLoading: true
     }
   },
@@ -139,9 +140,15 @@ export default {
       })
     },
     resetData () {
+      this.isSuccess = false
       this.formData = { ...this.data }
 
       this.loadData()
+    },
+    onSuccess (data) {
+      this.isSuccess = true
+
+      this.$emit('success', data)
     },
     loadData () {
       const hasVariablesSet = this.intialDataVariables.every((variable) => {

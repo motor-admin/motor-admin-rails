@@ -4,6 +4,11 @@
     type="file"
     @change="onFile"
   >
+  <VueTrix
+    v-else-if="isRichtext"
+    :model-value="modelValue"
+    @update:modelValue="onRichtextUpdate"
+  />
   <ResourceSelect
     v-else-if="column.reference && column.reference.model_name"
     :model-value="modelValue"
@@ -69,6 +74,7 @@
 import Emitter from 'view3/src/mixins/emitter'
 import ResourceSelect from 'data_resources/components/select'
 import QueryValueSelect from 'queries/components/value_select'
+import VueTrix from 'utils/components/vue_trix'
 import { titleize } from 'utils/scripts/string'
 
 const SINGLE_LINE_INPUT_NAMES = [
@@ -91,7 +97,8 @@ export default {
   name: 'FormInput',
   components: {
     ResourceSelect,
-    QueryValueSelect
+    QueryValueSelect,
+    VueTrix
   },
   mixins: [Emitter],
   props: {
@@ -140,6 +147,9 @@ export default {
     },
     isNumber () {
       return ['integer', 'bigint', 'int', 'float', 'decimal', 'double', 'number', 'currency'].includes(this.type)
+    },
+    isRichtext () {
+      return this.type === 'richtext'
     },
     isTextArea () {
       if (this.type === 'input' || this.column.name === 'password') {
@@ -207,6 +217,12 @@ export default {
     onSelect (value) {
       this.$emit('update:modelValue', value)
       this.$emit('select')
+
+      this.dispatch('FormItem', 'on-form-change', value)
+    },
+    onRichtextUpdate (value) {
+      this.$emit('update:modelValue', value)
+
       this.dispatch('FormItem', 'on-form-change', value)
     },
     updateDateTime (datetime) {

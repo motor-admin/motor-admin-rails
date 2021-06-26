@@ -6,6 +6,7 @@ gemspec
 
 gem 'devise'
 gem 'faker'
+gem 'image_processing'
 gem 'mysql2'
 gem 'oj'
 gem 'pg'

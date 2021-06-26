@@ -34,7 +34,7 @@ module Motor
           { customer: { country_code: 'US' }, status: 'pending' }
       can :mark_as_shipped, Order, { status: 'pending' }
       can :manage, Country
-      can :manage, OrderNote
+      can :manage, Note
     end
 
     def motor_abilities
