@@ -37,6 +37,7 @@
       <DataCell
         v-if="isActiveStorage"
         :value="value?.path"
+        :text-truncate="false"
         :type="'string'"
       />
       <Reference

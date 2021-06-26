@@ -5,6 +5,7 @@
   />
   <DataImage
     v-else-if="isImage"
+    :photoswipe="!textTruncate"
     :value="stringValue"
   />
   <DataCurrency

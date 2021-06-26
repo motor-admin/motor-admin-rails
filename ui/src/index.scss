@@ -138,6 +138,10 @@ h5 {
   cursor: default;
 }
 
+.cursor-zoom-in {
+  cursor: zoom-in;
+}
+
 *[contenteditable]:focus {
   outline-color: transparent;
   outline-style: none;

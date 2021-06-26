@@ -5660,6 +5660,10 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
+"photoswipe@https://github.com/dimsemenov/PhotoSwipe#v5-beta":
+  version "5.0.3"
+  resolved "https://github.com/dimsemenov/PhotoSwipe#7c18ec37c2a8962ea775443d0f2999cfc7c970d7"
+
 picomatch@^2.0.5, picomatch@^2.2.1:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.2.2.tgz#21f333e9b6b8eaff02468f5146ea406d345f4dad"
