@@ -12,6 +12,7 @@ RSpec.describe 'Resources' do
       expect(page).to have_link 'Products', href: motor_ui_data_path('products')
       expect(page).to have_link 'Orders', href: motor_ui_data_path('orders')
       expect(page).to have_link 'Customers', href: motor_ui_data_path('customers')
+      expect(page).to have_link 'Notes', href: motor_ui_data_path('notes')
       expect(page).to have_link 'Reports', href: motor_ui_reports_path
       expect(page).to have_link 'Forms', href: motor_ui_forms_path
       expect(page).to have_link 'Sales Dashboard', href: motor_ui_dashboard_path(1)

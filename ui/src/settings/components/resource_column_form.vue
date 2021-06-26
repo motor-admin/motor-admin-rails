@@ -162,6 +162,7 @@ export default {
         { label: this.i18n.text, value: 'string' },
         { label: this.i18n.integer, value: 'integer' },
         { label: this.i18n.decimal, value: 'float' },
+        { label: this.i18n.richtext, value: 'richtext' },
         { label: this.i18n.currency, value: 'currency' },
         { label: this.i18n.date_and_time, value: 'datetime' },
         { label: this.i18n.date, value: 'date' },

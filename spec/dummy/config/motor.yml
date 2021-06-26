@@ -1,6 +1,6 @@
 ---
-engine_version: 0.1.61
-file_version: 2021-06-21 17:35:00.990272000 Z
+engine_version: 0.1.68
+file_version: 2021-06-25 18:17:51.809039000 Z
 resources:
 - name: country
   preferences: {}
@@ -84,10 +84,13 @@ resources:
       name: price
     - access_type: hidden
       name: slug
+    - column_type: richtext
+      default_value: ''
+      name: description
     associations:
     - visible: false
       name: line_items
-  updated_at: 2021-05-22 18:22:13.286210000 +00:00
+  updated_at: 2021-06-25 18:17:51.809039000 +00:00
 configs:
 - key: header.links
   value:

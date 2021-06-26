@@ -32,7 +32,7 @@ class OrdersController < ApplicationController
     order.status = :pending
     order.customer = Customer.find_by(email: customer_params[:email]) || Customer.new(customer_params)
     order.line_items = line_items_params.map { |attrs| LineItem.new(attrs) }
-    order.notes = notes_params.map { |attrs| OrderNote.new(attrs) }
+    order.notes = notes_params.map { |attrs| Note.new(attrs) }
   end
 
   def order_params

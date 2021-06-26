@@ -1,5 +1,8 @@
 <template>
-  <div class="d-flex align-items-center info-cell position-relative">
+  <div
+    class="d-flex align-items-center info-cell position-relative"
+    :class="isRichtext && isEdit ? 'flex-column' : 'flex-row'"
+  >
     <Spin
       v-if="isLoading"
       fix
@@ -34,6 +37,7 @@
       <DataCell
         v-if="isActiveStorage"
         :value="value?.path"
+        :text-truncate="false"
         :type="'string'"
       />
       <Reference
@@ -56,18 +60,39 @@
         :type="columnType"
       />
     </template>
-    <template v-if="isEdit">
+    <div
+      v-if="isEdit"
+      class="d-inline-flex"
+    >
       <VButton
+        v-if="isRichtext"
+        icon="md-close"
+        type="text"
+        @click="toggleEdit"
+      >
+        {{ i18n.cancel }}
+      </VButton>
+      <VButton
+        v-else
         icon="md-close"
         type="text"
         @click="toggleEdit"
       />
       <VButton
+        v-if="isRichtext"
+        icon="md-checkmark"
+        type="text"
+        @click="submit"
+      >
+        {{ i18n.submit }}
+      </VButton>
+      <VButton
+        v-else
         icon="md-checkmark"
         type="text"
         @click="submit"
       />
-    </template>
+    </div>
     <Icon
       v-else-if="isEditable"
       type="md-create"
@@ -160,6 +185,9 @@ export default {
         include: includeParams(this.model),
         data
       }
+    },
+    isRichtext () {
+      return this.column.column_type === 'richtext'
     },
     isJsonColumn () {
       return isJsonColumn(this.column, this.resource)

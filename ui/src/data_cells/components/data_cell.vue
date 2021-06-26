@@ -5,6 +5,7 @@
   />
   <DataImage
     v-else-if="isImage"
+    :photoswipe="!textTruncate"
     :value="stringValue"
   />
   <DataCurrency
@@ -35,6 +36,11 @@
     :truncate="textTruncate"
     :value="value"
   />
+  <DataRichtext
+    v-else-if="isRichtext"
+    :truncate="textTruncate"
+    :value="value"
+  />
   <DataText
     v-else
     :truncate="textTruncate"
@@ -52,6 +58,7 @@ import DataBoolean from './boolean'
 import DataEmail from './email'
 import DataPhone from './phone'
 import DataCurrency from './currency'
+import DataRichtext from './richtext'
 
 import DataTypes from '../scripts/data_types'
 
@@ -66,7 +73,8 @@ export default {
     DataBoolean,
     DataEmail,
     DataPhone,
-    DataCurrency
+    DataCurrency,
+    DataRichtext
   },
   props: {
     value: {
@@ -121,6 +129,9 @@ export default {
     isCurrency () {
       return this.type === 'currency'
     },
+    isRichtext () {
+      return this.type === 'richtext'
+    },
     isUrl () {
       return !!this.stringValue.match(/^https?:\/\//i)
     },
@@ -130,7 +141,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-
-</style>

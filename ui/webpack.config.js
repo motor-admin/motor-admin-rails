@@ -22,6 +22,11 @@ module.exports = (env = {}) => ({
         use: [
           {
             loader: 'vue-loader',
+            options: {
+              compilerOptions: {
+                isCustomElement: tag => tag === 'trix-editor'
+              }
+            }
           }
         ]
       },
