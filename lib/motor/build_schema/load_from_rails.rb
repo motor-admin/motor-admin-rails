@@ -146,7 +146,9 @@ module Motor
       end
 
       def build_reflection_column(name, model, ref, default_attrs)
-        return build_action_text_column(name, model, ref) if ref.klass.name == 'ActionText::RichText'
+        if !ref.polymorphic? && ref.klass.name == 'ActionText::RichText'
+          return build_action_text_column(name, model, ref)
+        end
 
         column_name = ref.belongs_to? ? ref.foreign_key.to_s : name
         is_attachment = !ref.polymorphic? && ref.klass.name == 'ActiveStorage::Attachment'

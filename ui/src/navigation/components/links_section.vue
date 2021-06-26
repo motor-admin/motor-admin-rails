@@ -6,7 +6,7 @@
   >
     <component
       :is="link.is"
-      v-if="link.to && canVisitLink(link.to)"
+      v-if="link.to"
       :to="link.to"
       :href="link.href"
       :target="link.target"
