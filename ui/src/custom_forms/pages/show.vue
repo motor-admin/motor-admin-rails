@@ -144,6 +144,7 @@ export default {
             display_name: column.display_name,
             default_value: column.default_value,
             field_type: columnTypeToFieldMap[column.column_type] || column.column_type,
+            is_array: column.is_array,
             validators: column.validators.filter((validator) => validator.required)
           }
 

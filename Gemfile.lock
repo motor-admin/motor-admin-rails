@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.1.72)
+    motor-admin (0.1.73)
       activerecord-filter (>= 5.2)
       ar_lazy_preload (~> 0.6)
       audited (~> 5.0)
@@ -348,4 +348,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.2.17
+   2.2.21

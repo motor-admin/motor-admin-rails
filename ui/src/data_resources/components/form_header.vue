@@ -124,7 +124,7 @@ export default {
 }
 
 .ivu-dropdown {
-  margin-top: -2px;
+  margin-top: -3px;
   max-height: 20px
 }
 </style>

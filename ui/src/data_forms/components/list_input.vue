@@ -46,7 +46,7 @@ export default {
   emits: ['update:modelValue'],
   data () {
     return {
-      value: [...this.modelValue]
+      value: [...(this.modelValue || [])]
     }
   },
   mounted () {

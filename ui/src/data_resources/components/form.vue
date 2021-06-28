@@ -12,7 +12,7 @@
       :prop="column.name"
     >
       <FormListInput
-        v-if="column.is_array"
+        v-if="column.is_array && !multipleValuesSelectorColumnTypes.includes(column.column_type)"
         v-model="resourceData[column.name]"
         :column="column"
       />
@@ -96,6 +96,9 @@ export default {
     }
   },
   computed: {
+    multipleValuesSelectorColumnTypes () {
+      return ['string', 'integer', 'float']
+    },
     rules () {
       return this.columns.reduce((acc, column) => {
         acc[column.name] = buildColumnValidator(column, this.resource)
