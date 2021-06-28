@@ -215,7 +215,7 @@ es:
     unit: Unidad
     write_only: Sólo escritura
     richtext: Texto enriquecido
-    adjust_form: Ajustar forma
+    adjust_form: Ajustar formulario
     adjust_fields: Ajustar campos
     build_custom_form: Crear formulario personalizado
     password: Contraseña
