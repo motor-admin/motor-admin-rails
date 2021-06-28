@@ -2859,9 +2859,9 @@ electron-to-chromium@^1.3.723:
   integrity sha512-ihL14knI9FikJmH2XUIDdZFWJxvr14rPSdOhJ7PpS27xbz8qmaRwCwyg/bmFwjWKmWK9QyamiCZVCvXm5CH//Q==
 
 element-resize-detector@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/element-resize-detector/-/element-resize-detector-1.2.2.tgz#bf7c3ff915957e4e62e86241ed2f9c86b078892b"
-  integrity sha512-+LOXRkCJc4I5WhEJxIDjhmE3raF8jtOMBDqSCgZTMz2TX3oXAX5pE2+MDeopJlGdXzP7KzPbBJaUGfNaP9HG4A==
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/element-resize-detector/-/element-resize-detector-1.2.3.tgz#5078d9b99398fe4c589f8c8df94ff99e5d413ff3"
+  integrity sha512-+dhNzUgLpq9ol5tyhoG7YLoXL3ssjfFW+0gpszXPwRU6NjGr1fVHMEAF8fVzIiRJq57Nre0RFeIjJwI8Nh2NmQ==
   dependencies:
     batch-processor "1.0.0"
 
@@ -7789,7 +7789,7 @@ vfile@^4.0.0:
 
 "view3@https://github.com/omohokcoj/view3#motor-admin":
   version "1.0.0"
-  resolved "https://github.com/omohokcoj/view3#4aedc2312593f2e57481f1af20386369e364b552"
+  resolved "https://github.com/omohokcoj/view3#4fc5cbe34e6f687deba013d337a5a118a96b808f"
   dependencies:
     async-validator "^3.5.1"
     clipboard "^2.0.6"

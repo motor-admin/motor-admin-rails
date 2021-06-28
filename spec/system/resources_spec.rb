@@ -154,6 +154,37 @@ RSpec.describe 'Resources' do
         expect(page).not_to have_content(customer.email)
         expect(page).to have_content(customer.reload.email)
       end
+
+      it 'buils custom form' do
+        ivu_dropdown_click 'Actions', 'Edit'
+
+        within '.ivu-drawer' do
+          find('.ivu-dropdown').click
+          find('li', text: 'Build custom form').click
+        end
+
+        within "[data-role='editor']" do
+          click_on 'Add Field'
+          ivu_fill_field 'Name', 'Test Field'
+          click_on 'Add'
+        end
+
+        click_on 'Save'
+
+        within '.ivu-modal' do
+          ivu_fill_field 'Path', '/test'
+
+          click_on 'Save'
+        end
+
+        page.driver.wait_for_network_idle
+
+        visit motor_ui_data_path(['customers', customer.id])
+
+        ivu_dropdown_click 'Actions', 'Edit'
+
+        expect(page).to have_content 'Test Field'
+      end
     end
   end
 end

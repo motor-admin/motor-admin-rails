@@ -9,9 +9,12 @@
 </template>
 
 <script>
+import { h } from 'vue'
+
 import { modelNameMap } from '../scripts/schema'
 
 import ResourceForm from './form'
+import FormHeader from './form_header'
 import CustomFormWrapper from 'custom_forms/components/form_wrapper'
 
 import singularize from 'inflected/src/singularize'
@@ -105,7 +108,9 @@ export default {
       const props = this.createAction.action_type === 'default' ? this.defaultProps : this.customActionProps
 
       this.$Drawer.open(component, props, {
-        title: `${this.i18n.create} ${this.resourceTitle}`,
+        slots: {
+          header: () => h(FormHeader, { resource: this.resource, resourceName: this.model.name, action: 'create' })
+        },
         className: 'drawer-no-bottom-padding',
         closable: true
       })

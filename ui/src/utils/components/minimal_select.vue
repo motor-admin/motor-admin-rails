@@ -19,7 +19,11 @@
       @click="toggleDropdown"
     >
       <div>
-        <template v-if="multiple">
+        <VueDraggableNext
+          v-if="multiple"
+          :list="selectedOptionsData"
+          @end="onOptionMove"
+        >
           <div
             v-for="option in selectedOptionsData"
             :key="getValue(option)"
@@ -31,7 +35,7 @@
               @click.stop="removeOption(option)"
             />
           </div>
-        </template>
+        </VueDraggableNext>
         <input
           v-if="remoteFunction || filterable || allowCreate"
           ref="input"
@@ -185,7 +189,7 @@ export default {
     placeholder: {
       type: String,
       reqired: false,
-      default: i18nDict.search
+      default: i18nDict.select
     },
     labelKey: {
       type: [String, Number],
@@ -359,6 +363,10 @@ export default {
       if (this.multiple) {
         this.selectedOptionsData = [...this.selectedOptions]
 
+        if (!this.options.length && this.allowCreate) {
+          this.optionsData = [...this.normalizeOptions(this.modelValue)]
+        }
+
         this.assignSelectedFromValue(this.modelValue)
       } else {
         this.selectedOptionData = this.selectedOption
@@ -395,15 +403,15 @@ export default {
         }
       }
     },
-    normalizeOptions () {
-      if (this.options.length === 0) {
+    normalizeOptions (options) {
+      if (options.length === 0) {
         return []
-      } else if (['string', 'number', 'boolean'].includes(typeof this.options[0])) {
-        return this.options.map(option => {
+      } else if (['string', 'number', 'boolean'].includes(typeof options[0])) {
+        return options.map(option => {
           return { value: option, label: option.toString() }
         })
       } else {
-        return [...this.options]
+        return [...options]
       }
     },
     getLabel (option) {
@@ -522,6 +530,10 @@ export default {
 
         this.closeDropdown()
       }
+    },
+    onOptionMove () {
+      this.$emit('update:modelValue', this.selectedOptionsData.map(this.getValue))
+      this.$emit('update:selectedOptions', this.selectedOptionsData)
     },
     removeOption (option) {
       this.selectedOptionsData.splice(this.selectedOptionsData.indexOf(option), 1)

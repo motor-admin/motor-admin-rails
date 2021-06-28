@@ -14,14 +14,14 @@
       class="w-100"
       :rules="rules"
       label-position="top"
-      @submit.prevent="submit"
+      @submit.prevent
     >
       <FormItem
         :prop="column.name"
         class="m-0"
       >
         <FormListInput
-          v-if="column.is_array"
+          v-if="column.is_array && !multipleValuesSelectorColumnTypes.includes(column.column_type)"
           v-model="resourceData[column.name]"
           :column="column"
         />
@@ -30,6 +30,7 @@
           v-model="resourceData[column.name]"
           :form-data="resource"
           :column="column"
+          @enter="submit"
         />
       </FormItem>
     </VForm>
@@ -159,6 +160,9 @@ export default {
     }
   },
   computed: {
+    multipleValuesSelectorColumnTypes () {
+      return ['string', 'integer', 'float']
+    },
     model () {
       return modelNameMap[this.resourceName]
     },

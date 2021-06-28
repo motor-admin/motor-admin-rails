@@ -18,6 +18,8 @@ en:
     add_query: Add Query
     add_scope: Add Scope
     add_tab: Add Tab
+    adjust_form: Adjust form
+    adjust_fields: Adjust fields
     alert_email_has_been_sent: Alert email has been sent!
     alert_has_been_activated: Alert has been activated
     alert_has_been_disabled: Alert has been disabled
@@ -36,6 +38,7 @@ en:
     bar_chart: Bar chart
     base: Base
     boolean: Boolean
+    build_custom_form: Build custom form
     cancel: Cancel
     cents: Cents
     checkbox: Checkbox
@@ -134,6 +137,7 @@ en:
     or: Or
     other_than: Other than
     param_name: Param name
+    password: Password
     path: Path
     percent: Percent
     pie_chart: Pie chart
@@ -158,6 +162,7 @@ en:
     revert: Revert
     revision_has_been_applied: Revision has been applied
     revisions: Revisions
+    richtext: Richtext
     row_chart: Row chart
     save: Save
     save_and_create_new: Save and Create New
@@ -214,4 +219,3 @@ en:
     visibility: Visibility
     visualization: Visualization
     write_only: Write-Only
-    richtext: Richtext

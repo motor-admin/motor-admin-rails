@@ -138,6 +138,10 @@ export default {
     toggleForm () {
       if (this.scope.scope_type === 'filter') {
         this.isForm = !this.isForm
+
+        this.$nextTick(() => {
+          this.$el.scrollIntoView({ inline: 'end', block: 'center', behavior: 'smooth' })
+        })
       }
     },
     updateScope (scope) {

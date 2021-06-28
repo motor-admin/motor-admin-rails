@@ -87,8 +87,18 @@
 import Editor from '../components/editor'
 import CustomFormWrapper from '../components/form_wrapper'
 import SaveForm from '../components/save_form'
-import { formsStore } from '../scripts/store'
+import { formsStore, loadForms } from '../scripts/store'
 import api from 'api'
+import { modelNameMap } from 'data_resources/scripts/schema'
+import singularize from 'inflected/src/singularize'
+
+const columnTypeToFieldMap = {
+  string: 'input',
+  integer: 'number',
+  float: 'number',
+  boolean: 'checkbox',
+  image: 'file'
+}
 
 const defaultFormParams = {
   tags: [],
@@ -116,6 +126,56 @@ export default {
   computed: {
     isExisting () {
       return this.$route.params.id
+    },
+    resourceName () {
+      return this.$route.query?.resource
+    },
+    resourceAction () {
+      return this.$route.query?.action
+    },
+    resourceModel () {
+      return modelNameMap[this.resourceName]
+    },
+    resourceDefaultFormParams () {
+      const fields = this.resourceModel.columns.map((column) => {
+        if (['read_write', 'write_only'].includes(column.access_type)) {
+          const field = {
+            name: column.name,
+            display_name: column.display_name,
+            default_value: column.default_value,
+            field_type: columnTypeToFieldMap[column.column_type] || column.column_type,
+            is_array: column.is_array,
+            validators: column.validators.filter((validator) => validator.required)
+          }
+
+          if (column.reference) {
+            field.reference = { model_name: column.reference.model_name }
+          }
+
+          return field
+        } else {
+          return null
+        }
+      }).filter(Boolean)
+
+      if (this.resourceAction === 'edit') {
+        fields.unshift({
+          name: 'id',
+          display_name: singularize(this.resourceModel.display_name),
+          default_value: '',
+          field_type: 'reference',
+          reference: { model_name: this.resourceModel.name },
+          validators: []
+        })
+      }
+
+      return {
+        ...defaultFormParams,
+        name: `${this.i18n[this.resourceAction]} ${this.resourceModel.display_name}`,
+        preferences: {
+          fields
+        }
+      }
     },
     canEdit () {
       if (this.isExisting) {
@@ -146,7 +206,11 @@ export default {
         this.loadForm()
       } else {
         this.isEditorOpened = true
-        this.form = JSON.parse(JSON.stringify(defaultFormParams))
+        if (this.resourceModel) {
+          this.form = JSON.parse(JSON.stringify(this.resourceDefaultFormParams))
+        } else {
+          this.form = JSON.parse(JSON.stringify(defaultFormParams))
+        }
       }
     },
     toggleEditor () {
@@ -180,9 +244,37 @@ export default {
       this.$Modal.remove()
       this.$Message.info(this.i18n.form_has_been_saved)
 
+      if (this.resourceModel && this.resourceAction) {
+        const action = this.resourceModel.actions.find((action) => action.name === this.resourceAction)
+        Object.assign(action, { action_type: 'form', preferences: { form_id: this.form.id } })
+
+        this.updateResourceAction(action)
+      }
+
+      loadForms()
+
       this.$router.push({ name: 'form', params: { id: form.id } })
 
       this.isEditorOpened = false
+    },
+    updateResourceAction (action) {
+      return api.post('resources', {
+        data: {
+          name: this.resourceModel.name,
+          preferences: {
+            actions: [{
+              name: action.name,
+              action_type: 'form',
+              preferences: {
+                form_id: this.form.id
+              }
+            }]
+          }
+        }
+      }).then((result) => {
+      }).catch((error) => {
+        console.error(error)
+      })
     },
     saveAsNew () {
       this.$Modal.open(SaveForm, {

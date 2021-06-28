@@ -155,6 +155,12 @@ export default {
     },
     toggleForm () {
       this.isForm = !this.isForm
+
+      if (this.isForm) {
+        this.$nextTick(() => {
+          this.$el.scrollIntoView({ inline: 'end', block: 'center', behavior: 'smooth' })
+        })
+      }
     },
     onTextClick (event) {
       if (!this.isCrudAction) {

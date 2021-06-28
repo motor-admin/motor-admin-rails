@@ -15,6 +15,8 @@ Customer.destroy_all
 Product.destroy_all
 Country.destroy_all
 
+ORDER_USED_IN_FORM_ID = 23
+
 %w[admin sales ops].each do |role|
   User.create!(
     email: "#{role}@example.com",
@@ -91,3 +93,5 @@ customers.each do |customer|
     end
   end
 end
+
+Order.find(ORDER_USED_IN_FORM_ID).update(customer: Customer.find_by(country_code: :US))

@@ -1,6 +1,7 @@
 <template>
   <div
     class="bg-white p-2"
+    data-role="editor"
     style="height: calc(var(--vh, 100vh) - 135px)"
   >
     <div>

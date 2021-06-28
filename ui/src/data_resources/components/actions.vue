@@ -51,8 +51,10 @@
 <script>
 import api from 'api'
 import axios from 'axios'
+import { h } from 'vue'
 import { modelNameMap } from '../scripts/schema'
 import ResourceForm from './form'
+import FormHeader from './form_header'
 import { interpolate, truncate } from 'utils/scripts/string'
 import CustomFormWrapper from 'custom_forms/components/form_wrapper'
 import singularize from 'inflected/src/singularize'
@@ -204,7 +206,9 @@ export default {
         onError: (result) => {
         }
       }, {
-        title: action.display_name,
+        slots: {
+          header: () => h(FormHeader, { resource: this.resource, resourceName: this.resourceName, action: action.name })
+        },
         closable: true
       })
     },
@@ -228,7 +232,9 @@ export default {
           this.$emit('finish-action', 'edit')
         }
       }, {
-        title: `${this.i18n.edit} ${resourceTitle}`,
+        slots: {
+          header: () => h(FormHeader, { resource: this.resource, resourceName: this.resourceName, action: 'edit' })
+        },
         className: 'drawer-no-bottom-padding',
         closable: true
       })

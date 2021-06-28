@@ -17,6 +17,7 @@
     v-if="newScope"
   >
     <ResourceScopeForm
+      ref="newForm"
       :scope="newScope"
       :resource="resource"
       @cancel="newScope = null"
@@ -71,6 +72,10 @@ export default {
   methods: {
     addScope () {
       this.newScope = { ...defaultScopeAttributes, virtual: true }
+
+      this.$nextTick(() => {
+        this.$refs.newForm.$el.scrollIntoView({ inline: 'end', block: 'center', behavior: 'smooth' })
+      })
     },
     onScopeSubmit (scope) {
       scope.name = underscore(scope.display_name)
