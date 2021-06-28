@@ -25,6 +25,7 @@ RSpec.describe 'Queries' do
           expect(page).to have_link(href: motor_ui_data_path(['customers', Customer.last.id]))
         end
 
+        click_on 'Settings'
         click_on 'Save'
 
         within '.ivu-modal' do
