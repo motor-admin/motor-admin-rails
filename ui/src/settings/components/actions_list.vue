@@ -17,6 +17,7 @@
     v-if="newAction"
   >
     <ActionForm
+      ref="newForm"
       :action="newAction"
       :resource="resource"
       :with-name="true"
@@ -72,6 +73,10 @@ export default {
   methods: {
     addAction () {
       this.newAction = { ...defaultActionAttributes }
+
+      this.$nextTick(() => {
+        this.$refs.newForm.$el.scrollIntoView({ inline: 'end', block: 'center', behavior: 'smooth' })
+      })
     },
     onActionSubmit (action) {
       action.name = underscore(action.display_name)

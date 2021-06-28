@@ -17,6 +17,7 @@
     v-if="newTab"
   >
     <TabForm
+      ref="newForm"
       :tab="newTab"
       :resource="resource"
       :with-name="true"
@@ -72,6 +73,10 @@ export default {
   methods: {
     addTab () {
       this.newTab = { ...defaultTabAttributes }
+
+      this.$nextTick(() => {
+        this.$refs.newForm.$el.scrollIntoView({ inline: 'end', block: 'center', behavior: 'smooth' })
+      })
     },
     onTabSubmit (tab) {
       tab.name = underscore(tab.display_name)

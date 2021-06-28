@@ -145,6 +145,12 @@ export default {
     },
     toggleForm () {
       this.isForm = !this.isForm
+
+      if (this.isForm) {
+        this.$nextTick(() => {
+          this.$el.scrollIntoView({ inline: 'end', block: 'center', behavior: 'smooth' })
+        })
+      }
     },
     updateName (event) {
       this.column.display_name = event.target.innerText

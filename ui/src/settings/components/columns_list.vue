@@ -17,6 +17,7 @@
     v-if="newColumn"
   >
     <ResourceColumnForm
+      ref="newForm"
       :column="newColumn"
       @cancel="newColumn = null"
       @submit="onColumnSubmit"
@@ -71,6 +72,10 @@ export default {
   methods: {
     addColumn () {
       this.newColumn = { ...defaultColumnAttributes, virtual: true }
+
+      this.$nextTick(() => {
+        this.$refs.newForm.$el.scrollIntoView({ inline: 'end', block: 'center', behavior: 'smooth' })
+      })
     },
     onColumnSubmit (column) {
       column.name = underscore(column.display_name)
