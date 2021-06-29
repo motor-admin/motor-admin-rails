@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-module CancanUtils
+module Motor
+  module CancanUtils
+  end
 end
 
 require_relative './cancan_utils/ability_patch'
