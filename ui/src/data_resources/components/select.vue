@@ -11,6 +11,7 @@
     :multiple="multiple"
     :value-key="valueKey"
     :label-function="labelFunction"
+    @select="$emit('select', $event)"
   />
 </template>
 
@@ -47,7 +48,7 @@ export default {
       default: null
     }
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'select'],
   data () {
     return {
       options: [],
@@ -74,7 +75,9 @@ export default {
           })
         }
       } else {
-        this.assignSelectedOption()
+        if (this.value !== value) {
+          this.assignSelectedOption()
+        }
       }
     },
     multiple () {

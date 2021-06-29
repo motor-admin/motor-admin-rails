@@ -93,7 +93,7 @@
         <VariablesForm
           v-model:data="variablesData"
           :variables="dataQuery.preferences.variables"
-          @submit="loadQueryData"
+          @submit="test"
         />
       </div>
 
@@ -210,6 +210,16 @@ export default {
     }
   },
   computed: {
+    queryParamsVariables () {
+      return this.$route.query || {}
+    },
+    defaultVariablesData () {
+      return (this.dataQuery.preferences.variables || []).reduce((acc, variable) => {
+        acc[variable.name] = variable.default_value ?? ''
+
+        return acc
+      }, {})
+    },
     defaultSplit () {
       return 0.35
     },
@@ -252,18 +262,19 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      if (to.name === 'query') {
-        const isNewQuery = to.params.id !== this.query.id?.toString()
+      const isQueryChanged = to.params.id?.toString() !== this.query.id?.toString()
 
-        if (isNewQuery) {
-          this.onMounted()
-        }
+      if (!isQueryChanged && (to.name === 'query' || to.name === 'new_query') && JSON.stringify(to.query) !== JSON.stringify(this.variablesData)) {
+        this.assignVariablesData()
+        this.loadQueryData()
+      }
+
+      if (isQueryChanged && to.name === 'query') {
+        this.onMounted()
       }
 
       if (to.name === 'new_query') {
-        const isNewQuery = to.params.id !== this.query.id?.toString()
-
-        if (isNewQuery) {
+        if (isQueryChanged) {
           this.dataQuery = { ...defaultQueryParams }
           this.query = { ...defaultQueryParams }
 
@@ -300,6 +311,9 @@ export default {
     this.onMounted()
   },
   methods: {
+    test () {
+      this.loadQueryData()
+    },
     widthLessThan,
     openRevisionsModal () {
       this.$Drawer.open(RevisionsModal, {
@@ -327,16 +341,14 @@ export default {
       this.dataQuery.preferences = { ...defaultQueryParams.preferences, ...this.dataQuery.preferences }
     },
     assignVariablesData () {
-      this.variablesData = (this.dataQuery.preferences.variables || []).reduce((acc, variable) => {
-        acc[variable.name] = variable.default_value
-
-        return acc
-      }, {})
+      this.variablesData = { ...this.defaultVariablesData, ...this.queryParamsVariables }
     },
     toggleSettings () {
       this.isSettingsOpened = !this.isSettingsOpened
     },
     onMounted () {
+      this.assignVariablesData()
+
       this.vSplit = 0
 
       if (this.$route.params.id) {
@@ -487,7 +499,28 @@ export default {
         closable: true
       })
     },
+    maybeUpdateVariablesQueryParams () {
+      const hashString = this.dataQueryString !== this.queryString ? this.queryDataLocationHashString : ''
+
+      if (Object.keys(this.defaultVariablesData).length) {
+        const nonDefaultVariablesData = Object.keys(this.defaultVariablesData).reduce((acc, key) => {
+          if ((this.variablesData[key] ?? '').toString() !== (this.defaultVariablesData[key] ?? '').toString()) {
+            acc[key] = this.variablesData[key]
+          }
+
+          return acc
+        }, {})
+
+        if (Object.keys(nonDefaultVariablesData).length) {
+          this.$router.replace({ query: { ...nonDefaultVariablesData }, hash: hashString })
+        } else if (Object.keys(this.queryParamsVariables).length) {
+          this.$router.replace({ query: null, hash: hashString })
+        }
+      }
+    },
     loadQueryData () {
+      this.maybeUpdateVariablesQueryParams()
+
       if (this.dataQuery.sql_body && (this.isEdited || !this.query.id)) {
         return this.runQuery()
       } else {

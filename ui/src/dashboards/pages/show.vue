@@ -186,6 +186,16 @@ export default {
 
         return acc
       }, {}))
+    },
+    queryParamsVariables () {
+      return this.$route.query || {}
+    },
+    defaultVariablesData () {
+      return this.variables.reduce((acc, variable) => {
+        acc[variable.name] = variable.default_value ?? ''
+
+        return acc
+      }, {})
     }
   },
   watch: {
@@ -202,6 +212,9 @@ export default {
           } else {
             this.isEditorOpened = true
           }
+        } else if (JSON.stringify(to.query) !== JSON.stringify(this.variablesData)) {
+          this.assignVariablesData()
+          this.refresh()
         }
       }
     }
@@ -214,6 +227,23 @@ export default {
     }
   },
   methods: {
+    maybeUpdateVariablesQueryParams () {
+      if (Object.keys(this.defaultVariablesData).length) {
+        const nonDefaultVariablesData = Object.keys(this.defaultVariablesData).reduce((acc, key) => {
+          if ((this.variablesData[key] ?? '').toString() !== (this.defaultVariablesData[key] ?? '').toString()) {
+            acc[key] = this.variablesData[key]
+          }
+
+          return acc
+        }, {})
+
+        if (Object.keys(nonDefaultVariablesData).length) {
+          this.$router.replace({ query: { ...nonDefaultVariablesData } })
+        } else if (Object.keys(this.queryParamsVariables).length) {
+          this.$router.replace({ query: null })
+        }
+      }
+    },
     toggleEditor () {
       this.isVariableSettingsOpened = false
       this.isEditorOpened = !this.isEditorOpened
@@ -233,10 +263,8 @@ export default {
 
       this.dashboard.queries.splice(index, 1)
     },
-    assignDefaultVariables () {
-      this.variables.forEach((variable) => {
-        this.variablesData[variable.name] ||= variable.default_value
-      })
+    assignVariablesData () {
+      this.variablesData = { ...this.defaultVariablesData, ...this.queryParamsVariables }
     },
     addQuery (queryId) {
       api.get(`queries/${queryId}`, {
@@ -252,6 +280,8 @@ export default {
       })
     },
     refresh () {
+      this.maybeUpdateVariablesQueryParams()
+
       this.$nextTick(() => {
         this.isLoading = true
 
@@ -272,7 +302,7 @@ export default {
         }
       }).then((result) => {
         this.dashboard = result.data.data
-        this.assignDefaultVariables()
+        this.assignVariablesData()
       }).catch((error) => {
         console.error(error)
 

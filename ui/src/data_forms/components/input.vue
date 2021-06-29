@@ -16,7 +16,8 @@
     :selected-resource="formData ? formData[column.reference.name] : null"
     :multiple="column.is_array"
     :primary-key="column.reference.association_primary_key"
-    @update:modelValue="onSelect"
+    @update:model-value="$emit('update:modelValue', $event)"
+    @select="onSelect"
   />
   <QueryValueSelect
     v-else-if="type === 'select' && column.select_query_id"
@@ -24,7 +25,8 @@
     :query-id="column.select_query_id"
     :form-data="formData"
     :multiple="column.is_array"
-    @update:modelValue="onSelect"
+    @update:modelValue="$emit('update:modelValue', $event)"
+    @select="onSelect"
   />
   <MSelect
     v-else-if="isTagSelect"
@@ -33,7 +35,8 @@
     :allow-create="!tagOptions.length"
     :multiple="column.is_array"
     :label-function="(option) => titleize(option.value.toString())"
-    @update:modelValue="onSelect"
+    @update:modelValue="$emit('update:modelValue', $event)"
+    @select="onSelect"
   />
   <Checkbox
     v-else-if="isBoolean"
@@ -215,10 +218,11 @@ export default {
       }
     },
     onSelect (value) {
-      this.$emit('update:modelValue', value)
-      this.$emit('select')
+      this.$nextTick(() => {
+        this.$emit('select')
 
-      this.dispatch('FormItem', 'on-form-change', value)
+        this.dispatch('FormItem', 'on-form-change', value)
+      })
     },
     onRichtextUpdate (value) {
       this.$emit('update:modelValue', value)

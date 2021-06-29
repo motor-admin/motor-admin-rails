@@ -96,7 +96,7 @@
           >
             <component
               :is="optionComponent"
-              v-if="optionComponent"
+              v-if="optionComponent && option"
               :option="option"
             />
             <template v-else>
@@ -540,7 +540,6 @@ export default {
 
       this.$emit('update:modelValue', this.selectedOptionsData.map(this.getValue))
       this.$emit('update:selectedOptions', this.selectedOptionsData)
-      this.$emit('select', this.selectedOptionsData)
     },
     maybeRemoveOption () {
       if (this.multiple && this.searchInput === '') {

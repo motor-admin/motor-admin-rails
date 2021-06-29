@@ -13,6 +13,7 @@
     :value-key="valueColumnIndex"
     :placeholder="i18n['select_placeholder']"
     @update:model-value="onUpdateValue"
+    @select="$emit('select', $event)"
   />
 </template>
 
