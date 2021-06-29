@@ -139,8 +139,21 @@ export default {
     }
   },
   computed: {
+    normalizedQueryParams () {
+      const params = {}
+
+      if (this.selectedTags.length) {
+        params.tags = this.selectedTags.join(',')
+      }
+
+      if (this.searchQuery) {
+        params.q = this.searchQuery
+      }
+
+      return params
+    },
     tabs () {
-      const query = this.selectedTags.length ? { tags: this.selectedTags.join(',') } : {}
+      const query = this.normalizedQueryParams
 
       return [
         {
@@ -227,17 +240,7 @@ export default {
       this.updateQueryParams()
     },
     updateQueryParams () {
-      const params = {}
-
-      if (this.selectedTags.length) {
-        params.tags = this.selectedTags.join(',')
-      }
-
-      if (this.searchQuery) {
-        params.q = this.searchQuery
-      }
-
-      this.$router.replace({ query: params })
+      this.$router.replace({ query: this.normalizedQueryParams })
     },
     reloadItems () {
       this.isLoading = true
