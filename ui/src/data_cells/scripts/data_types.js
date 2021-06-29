@@ -3,7 +3,7 @@ const DataTypes = {
   DATE_TIME: 'datetime',
   TAG: 'tag',
   BOOLEAN: 'boolean',
-  TIMESTAMP: 'timestamp'
+  DATE: 'date'
 }
 
 export default DataTypes

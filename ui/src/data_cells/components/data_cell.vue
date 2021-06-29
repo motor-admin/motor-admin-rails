@@ -2,6 +2,7 @@
   <DateTime
     v-if="isDateTime"
     :value="stringValue"
+    :display-time="type !== 'date'"
   />
   <DataImage
     v-else-if="isImage"
@@ -109,7 +110,7 @@ export default {
       }
     },
     isDateTime () {
-      return this.type === DataTypes.DATE_TIME || this.type === DataTypes.TIMESTAMP
+      return this.type === DataTypes.DATE_TIME || this.type === DataTypes.DATE
     },
     isTag () {
       return this.type === DataTypes.TAG
