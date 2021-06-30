@@ -37,6 +37,7 @@
   >
     <FormItems
       v-model:form-data="formData"
+      :variables-data="formData"
       :items="fields"
     />
     <VButton

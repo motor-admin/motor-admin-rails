@@ -7,6 +7,7 @@
       v-if="item.items"
       v-model:form-data="formData[item.name]"
       :item="item"
+      :variables-data="variablesData"
       :prop-prefix="propPrefix ? `${propPrefix}.${item.name}` : item.name"
     />
     <FormItem
@@ -19,7 +20,7 @@
       <FormInput
         v-model="formData[item.name]"
         :column="item"
-        :form-data="formData"
+        :form-data="{ ...variablesData, ...formData }"
       />
     </FormItem>
   </div>
@@ -41,6 +42,11 @@ export default {
     formData: {
       type: Object,
       required: true
+    },
+    variablesData: {
+      type: Object,
+      required: false,
+      default: () => ({})
     },
     propPrefix: {
       type: String,

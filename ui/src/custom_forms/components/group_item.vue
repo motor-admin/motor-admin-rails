@@ -39,6 +39,7 @@
               <FormItems
                 v-model:form-data="formData[index]"
                 :items="item.items"
+                :variables-data="{ ...variablesData, ...formData[index] }"
                 :prop-prefix="propPrefix ? `${propPrefix}.${index}` : `${item.name}.${index}`"
               />
             </div>
@@ -61,6 +62,7 @@
           v-else
           v-model:form-data="formData"
           :items="item.items"
+          :variables-data="{ ...variablesData, ...formData }"
           :prop-prefix="propPrefix ? propPrefix : item.name"
         />
       </template>
@@ -83,6 +85,11 @@ export default {
     formData: {
       type: Object,
       required: true
+    },
+    variablesData: {
+      type: Object,
+      required: false,
+      default: () => ({})
     },
     propPrefix: {
       type: String,
