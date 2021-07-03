@@ -44,7 +44,7 @@ export default {
 <style lang="scss" scoped>
 .ivu-progress {
   position: unset;
-  min-width: 180px;
+  width: 180px;
 
   :deep(&-inner) {
     position: unset;
@@ -52,7 +52,6 @@ export default {
 
   :deep(&-bg) {
     position: unset;
-    max-width: 100% !important
   }
 }
 </style>

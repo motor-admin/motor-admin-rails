@@ -212,7 +212,7 @@ export default {
           } else {
             this.isEditorOpened = true
           }
-        } else if (JSON.stringify(to.query) !== JSON.stringify(this.variablesData)) {
+        } else if (JSON.stringify(to.query) !== JSON.stringify(from.query)) {
           this.assignVariablesData()
           this.refresh()
         }

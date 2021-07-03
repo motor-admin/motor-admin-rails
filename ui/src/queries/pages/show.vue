@@ -264,7 +264,7 @@ export default {
     '$route' (to, from) {
       const isQueryChanged = to.params.id?.toString() !== this.query.id?.toString()
 
-      if (!isQueryChanged && (to.name === 'query' || to.name === 'new_query') && JSON.stringify(to.query) !== JSON.stringify(this.variablesData)) {
+      if (!isQueryChanged && (to.name === 'query' || to.name === 'new_query') && JSON.stringify(to.query) !== JSON.stringify(from.query)) {
         this.assignVariablesData()
         this.loadQueryData()
       }

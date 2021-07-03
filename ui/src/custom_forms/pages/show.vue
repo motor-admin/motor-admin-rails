@@ -97,7 +97,14 @@ const columnTypeToFieldMap = {
   integer: 'number',
   float: 'number',
   boolean: 'checkbox',
-  image: 'file'
+  image: 'file',
+  tag: 'input',
+  currency: 'number',
+  percentage: 'number',
+  change: 'number',
+  chart: 'number',
+  link: 'input',
+  color: 'input'
 }
 
 const defaultFormParams = {
