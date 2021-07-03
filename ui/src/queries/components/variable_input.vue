@@ -43,7 +43,7 @@ export default {
 
       if (variableType === 'select') {
         if (this.variable.select_options?.length) {
-          props.validators = [{ includes: this.variable.select_options }]
+          props.format = { select_options: this.variable.select_options }
         } else {
           props.column_type = 'input'
         }

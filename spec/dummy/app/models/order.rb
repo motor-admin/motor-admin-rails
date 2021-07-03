@@ -30,4 +30,8 @@ class Order < ApplicationRecord
       shipped_at: Time.current
     )
   end
+
+  def map_link
+    "https://www.google.com/maps?q=#{address_state},US"
+  end
 end

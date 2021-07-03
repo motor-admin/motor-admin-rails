@@ -31,7 +31,7 @@ export default {
       if (this.value?.includes('data-trix-attachment')) {
         return Trix.DocumentView.render(Trix.Document.fromHTML(this.value)).innerHTML
       } else {
-        return this.value
+        return DOMPurify.sanitize(this.value)
       }
     },
     truncatedValue () {

@@ -46,6 +46,7 @@ import Split from 'view3/src/components/split'
 import DatePicker from 'view3/src/components/date-picker'
 import Badge from 'view3/src/components/badge'
 import Collapse from 'view3/src/components/collapse'
+import Progress from 'view3/src/components/progress'
 
 import { VueDraggableNext } from 'vue-draggable-next'
 import MinimalSelect from 'utils/components/minimal_select'
@@ -99,6 +100,7 @@ app.component('Badge', Badge)
 app.component('Collapse', Collapse)
 app.component('VueDraggableNext', VueDraggableNext)
 app.component('Contenteditable', Contenteditable)
+app.component('Progress', Progress)
 
 app.use(router)
 

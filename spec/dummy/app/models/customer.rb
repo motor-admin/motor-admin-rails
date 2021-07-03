@@ -9,6 +9,7 @@ class Customer < ApplicationRecord
   has_rich_text :bio if defined?(ActionText)
 
   attribute :kind, :string, default: 'standard'
+  attribute :reputation, :integer, default: 0
 
   has_many :orders, dependent: :destroy
   has_many :notes, through: :orders, dependent: :destroy
@@ -28,5 +29,20 @@ class Customer < ApplicationRecord
 
   def lifetime_value
     orders.sum(&:total_price)
+  end
+
+  def monthly_sales_diff
+    (orders.select { |o| Time.current.all_month.cover?(o.created_at) }.sum(&:total_price) -
+     orders.select { |o| 1.month.ago.all_month.cover?(o.created_at) }.sum(&:total_price)) / 100
+  end
+
+  def sales_per_year
+    dates = (0..12).map { |i| [i.month.ago.beginning_of_month, 0] }.reverse.to_h
+
+    orders.each_with_object(dates) do |order, acc|
+      next unless acc[order.created_at.beginning_of_month]
+
+      acc[order.created_at.beginning_of_month] += order.total_price
+    end.values
   end
 end

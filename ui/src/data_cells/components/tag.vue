@@ -1,5 +1,13 @@
 <template>
+  <template v-if="Array.isArray(value)">
+    <DataTag
+      v-for="(val, index) in value"
+      :key="index"
+      :value="val"
+    />
+  </template>
   <div
+    v-else-if="value"
     class="ivu-tag ivu-tag-size-default ivu-tag-checked"
     :class="colorClass"
     :style="bgStyle"
@@ -40,8 +48,9 @@ export default {
   name: 'DataTag',
   props: {
     value: {
-      type: String,
-      required: true
+      type: [String, Array],
+      required: false,
+      default: () => []
     }
   },
   computed: {

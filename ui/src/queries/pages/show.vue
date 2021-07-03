@@ -467,7 +467,7 @@ export default {
           this.$Modal.remove()
           this.$Message.info(this.i18n.query_has_been_saved)
 
-          this.$router.push({ name: 'query', params: { id: result.id } })
+          this.$router.push({ name: 'query', params: { id: result.id }, query: this.$route.query })
         }
       }, {
         title: this.i18n.save_query,
@@ -492,7 +492,7 @@ export default {
           this.$Modal.remove()
           this.$Message.info(this.i18n.query_has_been_saved)
 
-          this.$router.push({ name: 'query', params: { id: result.id } })
+          this.$router.push({ name: 'query', params: { id: result.id }, query: this.$route.query })
         }
       }, {
         title: this.i18n.save_query,

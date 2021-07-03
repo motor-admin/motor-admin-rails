@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20_200_714_081_950) do
     t.string 'reset_password_token'
     t.string 'role', null: false
     t.string 'groups', array: ENV['DATABASE_TYPE'].blank?
+    t.string 'color'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
 
@@ -116,6 +117,7 @@ ActiveRecord::Schema.define(version: 20_200_714_081_950) do
     t.boolean 'email_subscriber', null: false, default: true
     t.text 'kind', null: false
     t.text 'country_code', null: false
+    t.integer 'reputation', null: false
   end
 
   create_table 'products', force: :cascade do |t|

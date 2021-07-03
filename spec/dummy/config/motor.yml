@@ -1,6 +1,6 @@
 ---
-engine_version: 0.1.68
-file_version: 2021-06-25 18:17:51.809039000 Z
+engine_version: 0.1.75
+file_version: 2021-07-03 10:36:19.303186000 Z
 resources:
 - name: country
   preferences: {}
@@ -21,6 +21,23 @@ resources:
       name: country_code
     - display_name: Type
       name: kind
+    - name: sales_per_year
+      display_name: Sales per year
+      column_type: chart
+      access_type: read_only
+      default_value: ''
+      virtual: true
+      format: {}
+    - name: monthly_sales_diff
+      display_name: Monthly sales diff
+      column_type: change
+      access_type: read_only
+      default_value: ''
+      virtual: true
+      format: {}
+    - column_type: percentage
+      default_value: ''
+      name: reputation
     scopes:
     - display_name: VIP
       name: vip
@@ -30,7 +47,7 @@ resources:
       tab_type: dashboard
       preferences:
         dashboard_id: 2
-  updated_at: 2021-05-23 16:37:14.758438000 +00:00
+  updated_at: 2021-07-03 10:36:19.303186000 +00:00
 - name: line_item
   preferences:
     columns:
@@ -68,7 +85,15 @@ resources:
       format:
         currency: USD
         currency_base: cents
-  updated_at: 2021-06-20 17:59:52.060401000 +00:00
+    - name: map_link
+      display_name: Map link
+      column_type: link
+      access_type: read_write
+      default_value: ''
+      virtual: true
+      format:
+        link_text: "\U0001F4CD Map"
+  updated_at: 2021-07-03 10:31:29.965132000 +00:00
 - name: order_note
   preferences:
     display_name: Notes
@@ -91,6 +116,13 @@ resources:
     - visible: false
       name: line_items
   updated_at: 2021-06-25 18:17:51.809039000 +00:00
+- name: user
+  preferences:
+    columns:
+    - column_type: tag
+      default_value: ''
+      name: groups
+  updated_at: 2021-07-03 10:20:04.175648000 +00:00
 configs:
 - key: header.links
   value:
@@ -129,10 +161,14 @@ configs:
   - email
   - lifetime_value
   - kind
+  - sales_per_year
+  - monthly_sales_diff
+  - reputation
   - email_subscriber
+  - bio_body
   - updated_at
   - created_at
-  updated_at: 2021-05-20 22:03:37.941000000 +00:00
+  updated_at: 2021-07-03 10:36:14.837953000 +00:00
 - key: resources.customer.scopes.order
   value:
   - vip
@@ -172,10 +208,11 @@ configs:
   - address_state
   - address_zip
   - status
+  - map_link
   - shipped_at
   - updated_at
   - created_at
-  updated_at: 2021-05-20 16:48:42.325155000 +00:00
+  updated_at: 2021-07-03 10:30:22.826480000 +00:00
 - key: resources.order.scopes.order
   value:
   - pending

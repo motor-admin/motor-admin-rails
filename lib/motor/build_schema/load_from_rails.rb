@@ -13,6 +13,11 @@ module Motor
       ACTION_TEXT_SCOPE_PREFIX = 'with_rich_text_'
       ACTIVE_STORAGE_SCOPE_PREFIX = 'with_attached_'
 
+      DEFAULT_CURRENCY_FORMAT_HASH = {
+        currency: 'USD',
+        currency_base: 'units'
+      }.freeze
+
       module_function
 
       def call
@@ -109,20 +114,38 @@ module Motor
       end
 
       def build_table_column(column, model, default_attrs)
-        is_enum = model.defined_enums[column.name]
-
         {
           name: column.name,
           display_name: Utils.humanize_column_name(model.human_attribute_name(column.name)),
-          column_type: is_enum ? 'string' : UNIFIED_TYPES[column.type.to_s] || column.type.to_s,
+          column_type: fetch_column_type(column, model),
           is_array: column.array?,
           access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
           default_value: default_attrs[column.name],
           validators: fetch_validators(model, column.name),
           reference: nil,
-          format: {},
+          format: fetch_format_hash(column, model),
           virtual: false
         }
+      end
+
+      def fetch_format_hash(column, model)
+        return DEFAULT_CURRENCY_FORMAT_HASH if column.name == 'price'
+
+        inclusion_validator, = model.validators_on(column.name).grep(ActiveModel::Validations::InclusionValidator)
+        return { select_options: inclusion_validator.send(:delimiter) } if inclusion_validator
+
+        {}
+      end
+
+      def fetch_column_type(column, model)
+        return ColumnTypes::CURRENCY if column.name == 'price'
+        return ColumnTypes::COLOR if %w[hex color].include?(column.name)
+        return ColumnTypes::TAG if model.defined_enums[column.name]
+        return ColumnTypes::TAG if model.validators_on(column.name).any?(ActiveModel::Validations::InclusionValidator)
+        return ColumnTypes::RICHTEXT if column.name.ends_with?('_html')
+        return ColumnTypes::COLOR if column.name.match?(/_(color|hex)\z/)
+
+        UNIFIED_TYPES[column.type.to_s] || column.type.to_s
       end
 
       def fetch_reference_columns(model)
@@ -157,7 +180,7 @@ module Motor
         {
           name: column_name,
           display_name: model.human_attribute_name(name),
-          column_type: is_attachment ? 'file' : 'integer',
+          column_type: is_attachment ? ColumnTypes::FILE : ColumnTypes::INTEGER,
           access_type: access_type,
           default_value: default_attrs[column_name],
           validators: fetch_validators(model, column_name, ref),
@@ -173,8 +196,8 @@ module Motor
         {
           name: name + ACTION_TEXT_COLUMN_SUFFIX,
           display_name: model.human_attribute_name(name),
-          column_type: 'richtext',
-          access_type: BuildSchema::ColumnAccessTypes::READ_WRITE,
+          column_type: ColumnTypes::RICHTEXT,
+          access_type: ColumnAccessTypes::READ_WRITE,
           default_value: '',
           validators: fetch_validators(model, name, ref),
           format: {},

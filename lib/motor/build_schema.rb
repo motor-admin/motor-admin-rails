@@ -11,6 +11,29 @@ module Motor
       ].freeze
     end
 
+    module ColumnTypes
+      ALL = [
+        STRING = 'string',
+        INTEGER = 'integer',
+        DECIMAL = 'float',
+        DATETIME = 'datetime',
+        DATE = 'date',
+        BOOLEAN = 'boolean',
+        TEXTAREA = 'textarea',
+        RICHTEXT = 'richtext',
+        CURRENCY = 'currency',
+        PERCENTAGE = 'percentage',
+        CHANGE = 'change',
+        CHART = 'chart',
+        TAG = 'tag',
+        LINK = 'link',
+        COLOR = 'color',
+        IMAGE = 'image',
+        FILE = 'file',
+        JSON = 'json'
+      ].freeze
+    end
+
     SEARCHABLE_COLUMN_TYPES = %i[citext text string bitstring].freeze
 
     COLUMN_NAME_ACCESS_TYPES = {

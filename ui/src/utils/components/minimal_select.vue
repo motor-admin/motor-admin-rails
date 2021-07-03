@@ -22,6 +22,7 @@
         <VueDraggableNext
           v-if="multiple"
           :list="selectedOptionsData"
+          class="d-inline"
           @end="onOptionMove"
         >
           <div
@@ -404,7 +405,7 @@ export default {
       }
     },
     normalizeOptions (options) {
-      if (options.length === 0) {
+      if (!options?.length) {
         return []
       } else if (['string', 'number', 'boolean'].includes(typeof options[0])) {
         return options.map(option => {

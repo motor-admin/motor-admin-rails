@@ -152,8 +152,6 @@ import { includeParams, fieldsParams } from '../scripts/query_utils'
 import { isShowSettings } from 'settings/scripts/toggle'
 import SettingsMask from 'settings/components/mask'
 
-import DataTypes from 'data_cells/scripts/data_types'
-
 const defaultPaginationParams = {
   current: 1,
   pageSize: 20,
@@ -341,8 +339,6 @@ export default {
     },
     columns () {
       return this.model.columns.map((column) => {
-        const type = column.validators.find((v) => v.includes?.length) ? DataTypes.TAG : column.column_type
-
         if (column.reference?.model_name !== modelNameMap[this.resourceName].name &&
             ['read_only', 'read_write'].includes(column.access_type)) {
           return {
@@ -351,7 +347,7 @@ export default {
             reference: column.reference,
             format: column.format,
             sortable: !column.virtual,
-            type
+            type: column.column_type
           }
         } else {
           return null

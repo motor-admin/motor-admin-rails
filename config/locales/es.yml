@@ -219,6 +219,14 @@ es:
     adjust_fields: Ajustar campos
     build_custom_form: Crear formulario personalizado
     password: Contraseña
+    long_text: Texto largo
+    percentage: Porcentaje
+    change: Cambia
+    chart: Gráfico
+    tag: Etiqueta
+    link: Enlace
+    color: Color
+    link_text: Texto del enlace
     i:
       locale: es
       select:

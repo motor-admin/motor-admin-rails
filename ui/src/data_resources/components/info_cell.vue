@@ -106,7 +106,6 @@
 <script>
 import DataCell from 'data_cells/components/data_cell'
 import FormInput from 'data_forms/components/input'
-import DataTypes from 'data_cells/scripts/data_types'
 import Reference from 'data_cells/components/reference'
 import FormListInput from 'data_forms/components/list_input'
 import { modelNameMap } from 'data_resources/scripts/schema'
@@ -161,7 +160,7 @@ export default {
   },
   computed: {
     multipleValuesSelectorColumnTypes () {
-      return ['string', 'integer', 'float']
+      return ['string', 'integer', 'float', 'tag']
     },
     model () {
       return modelNameMap[this.resourceName]
@@ -203,7 +202,7 @@ export default {
       return this.editable && (this.column.access_type === 'read_write' || this.isActiveStorage)
     },
     columnType () {
-      return this.column.validators.find((v) => v.includes?.length) ? DataTypes.TAG : this.column.column_type
+      return this.column.column_type
     },
     referenceId () {
       if (this.column.reference.reference_type === 'belongs_to') {

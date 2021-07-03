@@ -53,14 +53,14 @@
             v-model="preferences.visualization_options.chart_values_axis"
             class="d-block"
           >
-            {{ i18n['values_axis'] }}
+            {{ ' ' }} {{ i18n['values_axis'] }}
           </Checkbox>
           <Checkbox
             v-if="['bar_chart', 'row_chart'].includes(preferences.visualization)"
             v-model="preferences.visualization_options.chart_stacked"
             class="d-block"
           >
-            {{ i18n['stacked_bars'] }}
+            {{ ' ' }} {{ i18n['stacked_bars'] }}
           </Checkbox>
         </template>
         <template v-if="!['table', 'markdown', 'value'].includes(preferences.visualization)">

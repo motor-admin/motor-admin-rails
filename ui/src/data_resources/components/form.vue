@@ -97,7 +97,7 @@ export default {
   },
   computed: {
     multipleValuesSelectorColumnTypes () {
-      return ['string', 'integer', 'float']
+      return ['string', 'integer', 'float', 'tag']
     },
     rules () {
       return this.columns.reduce((acc, column) => {

@@ -68,6 +68,24 @@
         </div>
       </div>
       <FormItem
+        v-if="dataColumn.column_type === 'tag' && dataColumn.virtual"
+        :label="i18n['select_options']"
+        prop="format.select_options"
+      >
+        <OptionsInput
+          v-model="dataColumn.format.select_options"
+        />
+      </FormItem>
+      <FormItem
+        v-if="dataColumn.column_type === 'link'"
+        :label="i18n['link_text']"
+        prop="format.link_text"
+      >
+        <VInput
+          v-model="dataColumn.format.link_text"
+        />
+      </FormItem>
+      <FormItem
         v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !['image', 'file'].includes(dataColumn.column_type)"
         :label="i18n['default_value']"
         prop="default_value"
@@ -110,13 +128,15 @@
 import FormInput from 'data_forms/components/input'
 import Validators from 'utils/scripts/validators'
 import CurrencySelect from 'utils/components/currency_select'
+import OptionsInput from 'utils/components/options_input'
 import { fieldRequiredMessage } from 'utils/scripts/i18n'
 
 export default {
   name: 'ResourceColumnForm',
   components: {
     FormInput,
-    CurrencySelect
+    CurrencySelect,
+    OptionsInput
   },
   props: {
     column: {
@@ -162,11 +182,18 @@ export default {
         { label: this.i18n.text, value: 'string' },
         { label: this.i18n.integer, value: 'integer' },
         { label: this.i18n.decimal, value: 'float' },
-        { label: this.i18n.richtext, value: 'richtext' },
-        { label: this.i18n.currency, value: 'currency' },
         { label: this.i18n.date_and_time, value: 'datetime' },
         { label: this.i18n.date, value: 'date' },
         { label: this.i18n.boolean, value: 'boolean' },
+        { label: this.i18n.long_text, value: 'textarea' },
+        { label: this.i18n.richtext, value: 'richtext' },
+        { label: this.i18n.currency, value: 'currency' },
+        { label: this.i18n.percentage, value: 'percentage' },
+        { label: this.i18n.change, value: 'change' },
+        { label: this.i18n.chart, value: 'chart' },
+        { label: this.i18n.tag, value: 'tag' },
+        { label: this.i18n.link, value: 'link' },
+        { label: this.i18n.color, value: 'color' },
         { label: this.i18n.image, value: 'image' },
         { label: this.i18n.file, value: 'file' },
         { label: this.i18n.json, value: 'json' }

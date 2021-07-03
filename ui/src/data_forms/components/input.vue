@@ -9,6 +9,12 @@
     :model-value="modelValue"
     @update:modelValue="onRichtextUpdate"
   />
+  <ColorPicker
+    v-else-if="isColor"
+    :model-value="modelValue || '#ffffff'"
+    :placement="'bottom-start'"
+    @update:modelValue="$emit('update:modelValue', $event)"
+  />
   <ResourceSelect
     v-else-if="column.reference && column.reference.model_name"
     :model-value="modelValue"
@@ -38,6 +44,10 @@
     @update:modelValue="$emit('update:modelValue', $event)"
     @select="onSelect"
   />
+  <OptionsInput
+    v-else-if="isTextareaList"
+    :model-value="modelValue"
+  />
   <Checkbox
     v-else-if="isBoolean"
     :model-value="modelValue"
@@ -58,7 +68,7 @@
     @update:modelValue="updateDateTime"
   />
   <VInput
-    v-else-if="isTextArea"
+    v-else-if="isTextarea"
     :model-value="modelValue"
     type="textarea"
     :autosize="{ minRows: 1, maxRows: 7 }"
@@ -79,29 +89,17 @@ import ResourceSelect from 'data_resources/components/select'
 import QueryValueSelect from 'queries/components/value_select'
 import VueTrix from 'utils/components/vue_trix'
 import { titleize } from 'utils/scripts/string'
-
-const SINGLE_LINE_INPUT_NAMES = [
-  'name',
-  'title',
-  'brand',
-  'make',
-  'model',
-  'phone',
-  'email',
-  'company',
-  'url',
-  'link',
-  'domain'
-]
-
-const SINGLE_LINE_INPUT_REGEXP = new RegExp(SINGLE_LINE_INPUT_NAMES.join('|'))
+import OptionsInput from 'utils/components/options_input'
+import ColorPicker from 'view3/src/components/color-picker'
 
 export default {
   name: 'FormInput',
   components: {
     ResourceSelect,
     QueryValueSelect,
-    VueTrix
+    VueTrix,
+    OptionsInput,
+    ColorPicker
   },
   mixins: [Emitter],
   props: {
@@ -127,14 +125,17 @@ export default {
     }
   },
   computed: {
+    valueType () {
+      return typeof this.modelValue
+    },
     type () {
       return this.column.column_type || this.column.field_type
     },
     isTagSelect () {
-      return this.tagOptions.length || this.column.is_array
+      return this.type === 'tag' || this.tagOptions.length || (this.column.is_array && ['input', 'number', 'string', 'float', 'integer'].includes(this.type))
     },
     tagOptions () {
-      return this.column.validators?.find((validator) => validator.includes?.length)?.includes || []
+      return this.column.format?.select_options || []
     },
     isBoolean () {
       return typeof this.modelValue === 'boolean' || this.type === 'boolean' || this.type === 'checkbox'
@@ -149,23 +150,19 @@ export default {
       return this.type === 'file' || this.type === 'image'
     },
     isNumber () {
-      return ['integer', 'bigint', 'int', 'float', 'decimal', 'double', 'number', 'currency'].includes(this.type)
+      return ['integer', 'bigint', 'int', 'float', 'decimal', 'double', 'number', 'currency', 'change', 'percentage'].includes(this.type)
     },
     isRichtext () {
       return this.type === 'richtext'
     },
-    isTextArea () {
-      if (this.type === 'input' || this.column.name === 'password') {
-        return false
-      }
-
-      if (this.type === 'json' || this.type === 'textarea') {
-        return true
-      } else if (!this.column.name.match(SINGLE_LINE_INPUT_REGEXP)) {
-        return true
-      } else {
-        return false
-      }
+    isColor () {
+      return this.type === 'color' && (!this.modelValue || this.modelValue.match(/#\w{3,6}/))
+    },
+    isTextarea () {
+      return this.type === 'json' || this.type === 'textarea' || (this.valueType === 'string' && this.modelValue.includes('\n'))
+    },
+    isTextareaList () {
+      return this.type === 'chart'
     }
   },
   watch: {

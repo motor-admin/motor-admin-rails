@@ -25,5 +25,6 @@ FactoryBot.define do
     sequence(:email) { Faker::Internet.safe_email }
     sequence(:country_code) { Country.pluck(:code).sample }
     sequence(:kind) { Customer::KINDS.sample }
+    sequence(:reputation) { (20..90).to_a.sample }
   end
 end

@@ -219,3 +219,11 @@ en:
     visibility: Visibility
     visualization: Visualization
     write_only: Write-Only
+    long_text: Long text
+    percentage: Percentage
+    change: Change
+    chart: Chart
+    tag: Tag
+    link: Link
+    color: Color
+    link_text: Link text
