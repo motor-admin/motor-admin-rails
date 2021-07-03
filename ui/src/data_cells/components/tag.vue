@@ -22,6 +22,7 @@
 <script>
 import { colorsForTag } from '../scripts/tag_colors'
 import { titleize } from 'utils/scripts/string'
+import { copyToClipboard } from '../mixins/copy_to_clipboard'
 
 const COLORS = {
   ok: 'ivu-tag-green',
@@ -68,7 +69,8 @@ export default {
     }
   },
   methods: {
-    titleize
+    titleize,
+    copyToClipboard
   }
 }
 </script>

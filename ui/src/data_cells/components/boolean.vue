@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { copyToClipboard } from '../mixins/copy_to_clipboard'
+
 export default {
   name: 'DataBoolean',
   props: {
@@ -24,6 +26,9 @@ export default {
   computed: {
   },
   mounted () {
+  },
+  methods: {
+    copyToClipboard
   }
 }
 </script>

@@ -124,7 +124,7 @@ RSpec.describe 'Resources' do
         expect(page).to have_content(customer.name)
 
         cell = find(:xpath, "//div[./b[starts-with(text(), 'Name')]]")
-        cell.find('.edit-button', visible: false).click
+        cell.find('[data-role="edit"]', visible: false).click
 
         within cell do
           fill_in with: 'test'

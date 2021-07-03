@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { copyToClipboard } from '../mixins/copy_to_clipboard'
+
 export default {
   name: 'ChartCell',
   props: {
@@ -36,6 +38,9 @@ export default {
         return `${index * this.stepX},${102 - (this.maxValue ? parseInt((val * 100) / this.maxValue) : 0)}`
       }).join('\n')
     }
+  },
+  methods: {
+    copyToClipboard
   }
 }
 </script>

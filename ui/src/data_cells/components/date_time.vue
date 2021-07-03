@@ -41,6 +41,11 @@ export default {
     timeAgo () {
       return timeDiff(this.value, new Date())
     }
+  },
+  methods: {
+    copyToClipboard () {
+      return navigator.clipboard.writeText(this.formattedDate)
+    }
   }
 }
 </script>

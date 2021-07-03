@@ -29,6 +29,8 @@ import PhotoSwipe from 'photoswipe/dist/photoswipe.esm.js'
 
 import 'photoswipe/dist/photoswipe.css'
 
+import { copyToClipboard } from '../mixins/copy_to_clipboard'
+
 export default {
   name: 'DataImage',
   props: {
@@ -53,6 +55,9 @@ export default {
 
       lightbox.init()
     }
+  },
+  methods: {
+    copyToClipboard
   }
 }
 </script>

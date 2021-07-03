@@ -32,6 +32,11 @@ export default {
 
       return parseInt((value / successValue) * 100)
     }
+  },
+  methods: {
+    copyToClipboard () {
+      return navigator.clipboard.writeText(this.percent + '%')
+    }
   }
 }
 </script>

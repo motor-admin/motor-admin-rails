@@ -10,6 +10,7 @@
 
 <script>
 import Truncate from '../mixins/truncate'
+import { copyToClipboard } from '../mixins/copy_to_clipboard'
 
 export default {
   name: 'TextCell',
@@ -36,6 +37,9 @@ export default {
         }
       }
     }
+  },
+  methods: {
+    copyToClipboard
   }
 }
 </script>

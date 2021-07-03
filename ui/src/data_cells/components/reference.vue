@@ -105,7 +105,12 @@ export default {
       return this.model.slug
     }
   },
-  methods: { truncate }
+  methods: {
+    truncate,
+    copyToClipboard () {
+      return navigator.clipboard.writeText(this.referenceId)
+    }
+  }
 }
 </script>
 

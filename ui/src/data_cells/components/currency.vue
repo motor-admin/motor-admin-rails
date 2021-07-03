@@ -23,6 +23,11 @@ export default {
 
       return Intl.NumberFormat(navigator.language || 'en-US', { style: 'currency', currency: this.format.currency || 'USD' }).format(value)
     }
+  },
+  methods: {
+    copyToClipboard () {
+      return navigator.clipboard.writeText(this.formattedValue)
+    }
   }
 }
 </script>

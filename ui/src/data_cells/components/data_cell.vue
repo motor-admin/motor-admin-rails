@@ -1,66 +1,80 @@
 <template>
   <DateTime
     v-if="isDateTime"
+    ref="cell"
     :value="stringValue"
     :display-time="type !== 'date'"
   />
   <DataRichtext
     v-else-if="isRichtext"
+    ref="cell"
     :truncate="textTruncate"
     :value="value"
   />
   <DataPercentage
     v-else-if="isPercentage"
+    ref="cell"
     :value="value"
   />
   <DataColor
     v-else-if="isColor"
+    ref="cell"
     :value="value"
   />
   <DataChange
     v-else-if="isChange"
+    ref="cell"
     :value="value"
   />
   <DataChart
     v-else-if="isChart"
+    ref="cell"
     :value="value"
   />
   <DataCurrency
     v-else-if="isCurrency"
+    ref="cell"
     :value="value"
     :format="format"
   />
   <DataTag
     v-else-if="isTag"
+    ref="cell"
     :value="value"
   />
   <DataImage
     v-else-if="isImage"
+    ref="cell"
     :photoswipe="!textTruncate"
     :value="stringValue"
   />
   <DataLink
     v-else-if="isUrl || isPath"
+    ref="cell"
     :truncate="textTruncate"
     :format="format"
     :value="stringValue"
   />
   <DataBoolean
     v-else-if="isBoolean"
+    ref="cell"
     :value="value"
   />
   <DataEmail
     v-else-if="isEmail"
+    ref="cell"
     :truncate="textTruncate"
     :value="value"
   />
   <DataPhone
     v-else-if="isPhone"
+    ref="cell"
     :truncate="textTruncate"
     :value="value"
   />
   <DataText
     v-else
+    ref="cell"
     :truncate="textTruncate"
     :value="stringValue"
   />

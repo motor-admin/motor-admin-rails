@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import { copyToClipboard } from '../mixins/copy_to_clipboard'
+
 export default {
   name: 'ColorCell',
   props: {
@@ -16,6 +18,9 @@ export default {
     }
   },
   computed: {
+  },
+  methods: {
+    copyToClipboard
   }
 }
 </script>

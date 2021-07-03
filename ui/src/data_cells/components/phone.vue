@@ -11,6 +11,7 @@
 
 <script>
 import Truncate from '../mixins/truncate'
+import { copyToClipboard } from '../mixins/copy_to_clipboard'
 
 export default {
   name: 'DataPhone',
@@ -23,6 +24,9 @@ export default {
     }
   },
   computed: {
+  },
+  methods: {
+    copyToClipboard
   }
 }
 </script>

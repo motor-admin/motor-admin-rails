@@ -9,6 +9,7 @@
 <script>
 import DOMPurify from 'dompurify'
 import Trix from 'trix'
+import { copyToClipboard } from '../mixins/copy_to_clipboard'
 
 const MAX_LENGTH = 60 // chars
 
@@ -58,6 +59,9 @@ export default {
         }
       }
     }
+  },
+  methods: {
+    copyToClipboard
   }
 }
 </script>

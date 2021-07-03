@@ -227,6 +227,7 @@ es:
     link: Enlace
     color: Color
     link_text: Texto del enlace
+    copied_to_the_clipboard: Copiado al portapapeles
     i:
       locale: es
       select:

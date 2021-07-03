@@ -53,7 +53,7 @@ RSpec.describe 'Authorization' do
 
         it "doesn't show actions" do
           expect(page).not_to have_content 'Actions'
-          expect(page).not_to have_selector '.edit-button', visible: false
+          expect(page).not_to have_selector '[data-role="edit"]', visible: false
         end
       end
 

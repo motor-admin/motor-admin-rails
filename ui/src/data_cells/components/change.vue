@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import { copyToClipboard } from '../mixins/copy_to_clipboard'
+
 export default {
   name: 'ChangeCell',
   props: {
@@ -21,6 +23,9 @@ export default {
     isPositiveChange () {
       return !this.value.toString().match(/^-/)
     }
+  },
+  methods: {
+    copyToClipboard
   }
 }
 </script>
