@@ -177,6 +177,12 @@ export default {
   computed: {
     isShowSettings,
     currentUser: () => currentUser,
+    canReadReports () {
+      return this.$can('read', 'Motor::Query') || this.$can('read', 'Motor::Dashboard') || this.$can('read', 'Motor::Alert')
+    },
+    isShowCreateButton () {
+      return this.$can('create', 'Motor::Query') || this.$can('create', 'Motor::Dashboard') || this.$can('create', 'Motor::Alert') || this.$can('create', 'Motor::Form')
+    },
     links () {
       return linksStore
     },
@@ -234,12 +240,6 @@ export default {
           this.$Modal.remove()
         }
       })
-    },
-    canReadReports () {
-      return this.$can('read', 'Motor::Query') || this.$can('read', 'Motor::Dashboard') || this.$can('read', 'Motor::Alert')
-    },
-    isShowCreateButton () {
-      return this.$can('create', 'Motor::Query') || this.$can('create', 'Motor::Dashboard') || this.$can('create', 'Motor::Alert') || this.$can('create', 'Motor::Form')
     },
     openGuides () {
       this.$Modal.open(Guides, {

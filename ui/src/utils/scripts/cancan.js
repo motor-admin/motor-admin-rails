@@ -16,8 +16,8 @@ function fetchRules (action, subject) {
   }
 }
 
-function checkAction (abilityAction, checkedAction) {
-  return abilityAction === 'manage' || abilityAction === checkedAction
+function checkAction (abilityAction, checkedAction, isCannot) {
+  return abilityAction === 'manage' || abilityAction === checkedAction || (isCannot && checkedAction === 'manage')
 }
 
 function checkSubject (abilitySubject, checkedSubject) {
@@ -45,7 +45,7 @@ function checkCondition (resource, key, value) {
 function relevantRules (rules, action, subject) {
   return rules.filter((rule) => {
     return rule.subjects.find((ruleSubject) => checkSubject(ruleSubject, subject)) &&
-      rule.actions.find((ruleAction) => checkAction(ruleAction, action)) &&
+      rule.actions.find((ruleAction) => checkAction(ruleAction, action, !rule.base_behavior)) &&
       (rule.base_behavior || !rule.attributes.length || Object.keys(rule.conditions).length)
   })
 }
@@ -83,6 +83,10 @@ export default {
     const rule = fetchRules(action, subject).find((rule) => {
       return resource ? checkConditions(rule.conditions, resource) : true
     })
+
+    if (action === 'manage' && subject === 'all') {
+      return rule ? rule.base_behavior && !canCanRules.some((r) => !r.base_behavior) : false
+    }
 
     return rule ? rule.base_behavior : false
   },

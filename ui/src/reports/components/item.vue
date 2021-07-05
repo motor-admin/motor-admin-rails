@@ -8,6 +8,7 @@
         <Icon :type="iconClass" />
         {{ item.name || item.title }}
         <VButton
+          v-if="$can('destroy', itemModelClass, item)"
           class="text-dark float-end pb-2"
           type="text"
           icon="md-trash"
@@ -37,6 +38,9 @@ export default {
   },
   emits: ['remove'],
   computed: {
+    itemModelClass () {
+      return `Motor::${titleize(this.itemType)}`
+    },
     iconClass () {
       return {
         query: 'md-list',
