@@ -260,7 +260,7 @@ module Motor
       end
 
       def build_validator_hash(validator)
-        options = validator.options.reject { |_, v| v.is_a?(Proc) }
+        options = validator.options.reject { |_, v| v.is_a?(Proc) || v.is_a?(Symbol) }
 
         case validator
         when ActiveModel::Validations::InclusionValidator
