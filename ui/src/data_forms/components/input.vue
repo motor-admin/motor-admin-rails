@@ -229,8 +229,11 @@ export default {
     updateDateTime (datetime) {
       if (datetime) {
         this.$emit('update:modelValue', new Date(datetime.getTime() - datetime.getTimezoneOffset() * 60000))
-        this.$emit('select')
+      } else {
+        this.$emit('update:modelValue', '')
       }
+
+      this.$emit('select')
     }
   }
 }
