@@ -491,8 +491,11 @@ export default {
       }).then((result) => {
         this.rows = result.data.data
       }).catch((error) => {
-        console.error(error)
-        this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
+        if (error.response) {
+          this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
+        } else {
+          this.$Message.error(error.message)
+        }
       }).finally(() => {
         this.$nextTick(() => {
           this.isLoading = false

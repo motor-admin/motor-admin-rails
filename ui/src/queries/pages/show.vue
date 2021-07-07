@@ -93,7 +93,7 @@
         <VariablesForm
           v-model:data="variablesData"
           :variables="dataQuery.preferences.variables"
-          @submit="test"
+          @submit="loadQueryData"
         />
       </div>
 
@@ -311,9 +311,6 @@ export default {
     this.onMounted()
   },
   methods: {
-    test () {
-      this.loadQueryData()
-    },
     widthLessThan,
     openRevisionsModal () {
       this.$Drawer.open(RevisionsModal, {
@@ -396,10 +393,10 @@ export default {
 
         this.assignVariablesData()
       }).catch((error) => {
-        console.error(error)
-
-        if (error.response.data?.errors) {
+        if (error.response?.data?.errors) {
           this.$Message.error(error.response.data.errors.join('\n'))
+        } else {
+          this.$Message.error(error.message)
         }
       }).finally(() => {
         this.isLoadingQuery = false
@@ -523,7 +520,7 @@ export default {
 
       if (this.dataQuery.sql_body && (this.isEdited || !this.query.id)) {
         return this.runQuery()
-      } else {
+      } else if (this.query.id) {
         return this.runExistingQuery()
       }
     },
@@ -558,7 +555,11 @@ export default {
           this.data = result.data.data
           this.columns = result.data.meta.columns
         }).catch((error) => {
-          this.errors = error.response.data?.errors
+          if (error.response) {
+            this.errors = error.response.data?.errors
+          } else {
+            this.$Message.error(error.message)
+          }
         }).finally(() => {
           this.isLoading = false
         })

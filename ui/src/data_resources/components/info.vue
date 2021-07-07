@@ -228,10 +228,12 @@ export default {
       }).then((result) => {
         this.assignResource(result.data.data)
       }).catch((error) => {
-        if (error.response.status === 404) {
+        if (error.response?.status === 404) {
           this.notFound = true
         } else {
           console.error(error)
+
+          this.$Message.error(error.message)
         }
       }).finally(() => {
         this.isLoading = false
