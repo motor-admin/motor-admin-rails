@@ -143,6 +143,7 @@
             :query-id="query.id"
             :with-alert="!!query.id && $can('create', 'Motor::Alert')"
             :with-settings="isCanEdit"
+            :with-table-toggle="true"
             :show-markdown-table="!widthLessThan('md') && isEdit"
             :preferences="dataQuery.preferences"
             @settings="toggleSettings"

@@ -19,7 +19,7 @@
     :data="paginatedData"
   />
   <div
-    v-else-if="isTable || isMarkdown"
+    v-else-if="isTable || isMarkdown || isTableToggle"
     class="d-flex"
     :style="{ height: 'calc(100% - 34px)' }"
   >
@@ -37,8 +37,8 @@
       />
     </div>
     <div
-      v-if="isTable || showMarkdownTable"
-      :style="{ width: isTable ? '100%' : '50%' }"
+      v-if="isTable || isTableToggle || showMarkdownTable"
+      :style="{ width: isTable || isTableToggle ? '100%' : '50%' }"
     >
       <DataTable
         :data="paginatedData"
@@ -106,6 +106,14 @@
       class="d-flex justify-content-end"
       style="width: 15%"
     >
+      <VButton
+        v-if="withTableToggle && !isMarkdown && !isTable && !isValue"
+        :icon="isTableToggle ? 'md-analytics' : 'md-grid'"
+        type="text"
+        size="small"
+        style="height: 24px"
+        @click="toggleTable"
+      />
       <VButton
         v-if="withAlert"
         icon="md-notifications"
@@ -177,6 +185,11 @@ export default {
       required: false,
       default: ''
     },
+    withTableToggle: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     withAlert: {
       type: Boolean,
       required: false,
@@ -228,6 +241,7 @@ export default {
     return {
       sortParams: {},
       hSplit: 0.5,
+      isTableToggle: false,
       paginationParams: {
         current: 1,
         pageSize: this.defaultPageSize
@@ -327,6 +341,9 @@ export default {
   methods: {
     assignSortParams (params) {
       this.sortParams = params
+    },
+    toggleTable () {
+      this.isTableToggle = !this.isTableToggle
     },
     download () {
       const fileType = this.$refs.chart ? 'png' : 'csv'

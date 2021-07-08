@@ -49,6 +49,7 @@
       :default-page-size="pageSizesMap[item.size[1]]"
       :borderless="true"
       :with-settings="false"
+      :with-table-toggle="true"
       :compact="true"
     />
   </div>
