@@ -76,7 +76,6 @@
     >
       <Settings
         :preferences="dataQuery.preferences"
-        :data="data"
         :columns="columns"
         style="height: 100%"
         @close="toggleSettings"

@@ -1,7 +1,6 @@
 <template>
   <div class="bg-white">
     <Tabs
-      v-if="preferences.variables.length"
       v-model="selectedTab"
       :position="'center'"
       :tabs="[
@@ -11,22 +10,25 @@
     />
     <div
       :style="{
-        height: `calc(var(--vh, 100vh) - ${preferences.variables.length ? '224px' : '185px' })`,
+        height: `calc(var(--vh, 100vh) - 224px)`,
         overflowY: 'auto'
       }"
       class="p-2"
     >
       <template v-if="selectedTab === 'variables'">
-        <Card
-          v-for="variable in preferences.variables"
-          :key="variable.name"
-          class="my-2"
-        >
-          <div class="fw-bold mb-3">
-            {{ variable.display_name }}
-          </div>
-          <VariableSettings :variable="variable" />
-        </Card>
+        <template v-if="preferences.variables.length">
+          <Card
+            v-for="variable in preferences.variables"
+            :key="variable.name"
+            class="my-2"
+          >
+            <div class="fw-bold mb-3">
+              {{ variable.display_name }}
+            </div>
+            <VariableSettings :variable="variable" />
+          </Card>
+        </template>
+        <VariablesHint v-else />
       </template>
       <template v-else>
         <p class="fs-4 fw-bold my-1">
@@ -110,13 +112,15 @@
 import CurrencySelect from 'utils/components/currency_select'
 import Tabs from 'utils/components/tabs'
 import VariableSettings from '../components/variable_settings'
+import VariablesHint from './variables_hint'
 
 export default {
   name: 'QuerySettings',
   components: {
     CurrencySelect,
     Tabs,
-    VariableSettings
+    VariableSettings,
+    VariablesHint
   },
   props: {
     preferences: {
