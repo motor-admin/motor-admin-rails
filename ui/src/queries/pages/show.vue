@@ -520,7 +520,7 @@ export default {
 
       if (this.dataQuery.sql_body && (this.isEdited || !this.query.id)) {
         return this.runQuery()
-      } else if (this.query.id) {
+      } else if (this.$route.params.id) {
         return this.runExistingQuery()
       }
     },
