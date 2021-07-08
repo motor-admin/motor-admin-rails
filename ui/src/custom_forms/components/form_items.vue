@@ -17,7 +17,14 @@
       :rules="buildValidationRules(item)"
       :prop="propPrefix ? `${propPrefix}.${item.name}` : item.name"
     >
+      <FormListInput
+        v-if="item.is_array && ['file', 'json', 'textarea'].includes(item.field_type)"
+        v-model="formData[item.name]"
+        :column="item"
+        :form-data="{ ...variablesData, ...formData }"
+      />
       <FormInput
+        v-else
         v-model="formData[item.name]"
         :column="item"
         :form-data="{ ...variablesData, ...formData }"
@@ -27,6 +34,7 @@
 </template>
 
 <script>
+import FormListInput from 'data_forms/components/list_input'
 import FormInput from 'data_forms/components/input'
 import { buildDefaultValues } from '../scripts/utils'
 import GroupItem from './group_item'
@@ -35,6 +43,7 @@ import { i18nDict } from 'utils/scripts/i18n'
 export default {
   name: 'FormItems',
   components: {
+    FormListInput,
     FormInput,
     GroupItem
   },

@@ -1,6 +1,6 @@
 ---
-engine_version: 0.1.75
-file_version: 2021-07-03 10:36:19.303186000 Z
+engine_version: 0.1.80
+file_version: 2021-07-08 06:14:54.311735000 Z
 resources:
 - name: country
   preferences: {}
@@ -59,6 +59,14 @@ resources:
       name: unit_price
     visible: false
   updated_at: 2021-05-20 16:41:09.374872000 +00:00
+- name: note
+  preferences:
+    actions:
+    - action_type: form
+      preferences:
+        form_id: 4
+      name: create
+  updated_at: 2021-07-08 06:14:31.509240000 +00:00
 - name: order
   preferences:
     actions:
@@ -761,6 +769,43 @@ forms:
   tags:
   - Orders
   updated_at: 2021-06-21 13:29:50.410041000 +00:00
+- id: 4
+  name: Create Notes
+  http_method: POST
+  api_path: "/notes"
+  description:
+  preferences:
+    fields:
+    - name: record_id
+      display_name: Record
+      default_value:
+      field_type: number
+      validators:
+      - required: true
+      reference:
+        model_name:
+    - name: record_type
+      display_name: Record type
+      default_value:
+      field_type: input
+      is_array: false
+      validators:
+      - required: true
+    - name: body
+      display_name: Body
+      default_value:
+      field_type: input
+      is_array: false
+      validators:
+      - required: true
+    - display_name: Images
+      name: images
+      field_type: file
+      default_value: []
+      validators: []
+      is_array: true
+  tags: []
+  updated_at: 2021-07-08 06:14:54.311735000 +00:00
 alerts:
 - id: 1
   name: New customers email

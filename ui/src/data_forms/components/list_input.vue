@@ -4,10 +4,11 @@
     :key="index"
     class="mb-2 d-flex"
   >
-    <Input
+    <FormInput
       v-model="value[index]"
       :column="column"
-      class="me-2"
+      :form-data="formData"
+      class="me-2 w-100"
       @update:model-value="emitUpdate"
     />
     <VButton
@@ -25,18 +26,23 @@
 </template>
 
 <script>
-import Input from './input'
+import FormInput from './input'
 
 export default {
   name: 'ListInput',
   components: {
-    Input
+    FormInput
   },
   props: {
     modelValue: {
       type: Array,
       required: false,
       default: () => []
+    },
+    formData: {
+      type: Object,
+      required: false,
+      default: () => ({})
     },
     column: {
       type: Object,

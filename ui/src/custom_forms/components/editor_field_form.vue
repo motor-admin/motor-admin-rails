@@ -134,7 +134,7 @@ import QuerySelect from 'queries/components/select'
 import Validators from 'utils/scripts/validators'
 import { i18nDict, fieldRequiredMessage } from 'utils/scripts/i18n'
 
-const MULTIPLE_COLUMN_TYPES = ['input', 'number', 'select', 'reference']
+const MULTIPLE_COLUMN_TYPES = ['input', 'number', 'select', 'reference', 'file', 'json', 'textarea']
 
 export default {
   name: 'FieldForm',
