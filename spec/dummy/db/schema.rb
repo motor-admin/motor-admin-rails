@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 20_200_714_081_950) do
     t.bigint 'record_id', null: false
     t.string 'record_type', null: false
     t.text 'body', null: false
+    t.integer 'sentiment', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
   end

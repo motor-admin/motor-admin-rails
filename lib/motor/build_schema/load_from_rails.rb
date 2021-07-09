@@ -132,7 +132,12 @@ module Motor
         return DEFAULT_CURRENCY_FORMAT_HASH if column.name == 'price'
 
         inclusion_validator, = model.validators_on(column.name).grep(ActiveModel::Validations::InclusionValidator)
+
         return { select_options: inclusion_validator.send(:delimiter) } if inclusion_validator
+
+        enum = model.defined_enums[column.name]
+
+        return { select_options: enum.keys } if enum
 
         {}
       end
