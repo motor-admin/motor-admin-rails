@@ -32,7 +32,7 @@
       {{ i18n['cancel'] }}
     </VButton>
     <VButton
-      v-if="action === 'new'"
+      v-if="withSaveAndCreateNew && action === 'new'"
       type="primary"
       ghost
       class="bg-white me-2"
@@ -81,6 +81,11 @@ export default {
       validator (value) {
         return ['edit', 'new'].includes(value)
       }
+    },
+    withSaveAndCreateNew: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     resourceName: {
       type: String,
@@ -193,13 +198,15 @@ export default {
     },
     async handleSubmit (eventData = {}) {
       try {
-        await this.apiRequest
+        const result = await this.apiRequest
+
+        this.$emit('success', result)
 
         if (eventData.button === 'save_and_create') {
           this.resourceData = this.normalizeResourceData(this.resource)
+        } else {
+          this.$emit('close')
         }
-
-        this.$emit('success', eventData)
       } catch (error) {
         if (error.response?.data?.errors) {
           this.$refs.form.setErrors(error.response.data.errors)

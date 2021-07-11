@@ -9,16 +9,24 @@
     :options="options"
     :loading="isLoading"
     :multiple="multiple"
+    :with-create-button="canCreateNew"
     :value-key="valueKey"
     :label-function="labelFunction"
     @select="$emit('select', $event)"
+    @click-create="onCreateClick"
   />
 </template>
 
 <script>
 import api from 'api'
 import { modelNameMap } from '../scripts/schema'
+import { buildDefaultValues } from '../scripts/form_utils'
 import { truncate } from 'utils/scripts/string'
+import { defineAsyncComponent } from 'vue'
+import singularize from 'inflected/src/singularize'
+
+const ResourceForm = defineAsyncComponent(() => import('./form'))
+const CustomFormWrapper = defineAsyncComponent(() => import('custom_forms/components/form_wrapper'))
 
 export default {
   name: 'ResourceSelect',
@@ -62,8 +70,44 @@ export default {
     model () {
       return modelNameMap[this.resourceName]
     },
+    canCreateNew () {
+      return !!this.createAction?.visible
+    },
+    createAction () {
+      return this.model.actions.find((a) => a.name === 'create')
+    },
     valueKey () {
       return this.primaryKey || this.model.primary_key
+    },
+    customCreateActionProps () {
+      return {
+        data: buildDefaultValues(this.model),
+        formId: this.createAction.preferences.form_id,
+        withFooterSubmit: true,
+        withSuccessMessage: false,
+        onClose: () => {
+          this.$Modal.remove()
+        },
+        onSuccess: (result) => {
+          this.onCreateSuccess(result.data.data || result.data[this.model.name] || result.data)
+
+          this.$Modal.remove()
+        }
+      }
+    },
+    defaultCreateProps () {
+      return {
+        action: 'new',
+        resource: buildDefaultValues(this.model),
+        resourceName: this.model.name,
+        withSaveAndCreateNew: false,
+        onClose: () => {
+          this.$Modal.remove()
+        },
+        onSuccess: (result) => {
+          this.onCreateSuccess(result.data.data)
+        }
+      }
     }
   },
   watch: {
@@ -113,6 +157,20 @@ export default {
     }
   },
   methods: {
+    onCreateSuccess (data) {
+      this.selectedOption = data
+
+      this.value = data[this.valueKey]
+    },
+    onCreateClick () {
+      const component = this.createAction.action_type === 'default' ? ResourceForm : CustomFormWrapper
+      const props = this.createAction.action_type === 'default' ? this.defaultCreateProps : this.customCreateActionProps
+
+      this.$Modal.open(component, props, {
+        title: `${this.createAction.display_name} ${singularize(this.model.display_name)}`,
+        closable: true
+      })
+    },
     resetData () {
       this.value = this.multiple ? [] : ''
 

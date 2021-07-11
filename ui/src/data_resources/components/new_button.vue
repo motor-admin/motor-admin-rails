@@ -12,6 +12,7 @@
 import { h } from 'vue'
 
 import { modelNameMap } from '../scripts/schema'
+import { buildDefaultValues } from '../scripts/form_utils'
 
 import ResourceForm from './form'
 import FormHeader from './form_header'
@@ -42,22 +43,13 @@ export default {
     resourceTitle () {
       return singularize(this.model.display_name)
     },
-    defaultValues () {
-      return this.model.columns.reduce((acc, column) => {
-        if (column.default_value !== null) {
-          acc[column.name] = column.default_value
-        }
-
-        return acc
-      }, {})
-    },
     createAction () {
       return this.model.actions.find((action) => {
         return action.name === 'create' && action.visible
       })
     },
     resource () {
-      const resource = JSON.parse(JSON.stringify(this.defaultValues))
+      const resource = buildDefaultValues(this.model)
 
       if (this.association?.polymorphic) {
         resource[this.association.foreign_key] = parseInt(this.parentResource.id)
@@ -91,13 +83,9 @@ export default {
         onClose: () => {
           this.$Drawer.remove()
         },
-        onSuccess: (data) => {
-          if (data.button === 'save') {
-            this.$Drawer.remove()
-          }
-
+        onSuccess: (result) => {
           this.$Message.info(`${this.resourceTitle} ${this.i18n.has_been_created}`)
-          this.$emit('success', data)
+          this.$emit('success', result)
         }
       }
     }

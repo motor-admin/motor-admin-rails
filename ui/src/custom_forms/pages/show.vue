@@ -103,8 +103,7 @@ const columnTypeToFieldMap = {
   percentage: 'number',
   change: 'number',
   chart: 'number',
-  link: 'input',
-  color: 'input'
+  link: 'input'
 }
 
 const defaultFormParams = {

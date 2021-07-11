@@ -230,6 +230,7 @@ export default {
         { label: this.i18n.date_and_time, value: 'datetime' },
         { label: this.i18n.date, value: 'date' },
         { label: this.i18n.checkbox, value: 'checkbox' },
+        { label: this.i18n.color, value: 'color' },
         { label: this.i18n.file, value: 'file' },
         { label: this.i18n.json, value: 'json' }
       ]

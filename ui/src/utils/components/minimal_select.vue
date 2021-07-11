@@ -72,10 +72,10 @@
         class="ivu-select-dropdown"
       >
         <ul
-          v-show="notFound"
+          v-if="notFound && !withCreateButton"
           class="ivu-select-not-found"
         >
-          <li>No Results</li>
+          <li>{{ i18n.not_found }}</li>
         </ul>
         <ul class="ivu-select-dropdown-list">
           <li
@@ -104,13 +104,22 @@
               {{ getLabel(option) }}
             </template>
           </li>
+          <li
+            v-if="withCreateButton"
+            class="ivu-select-item text-center"
+            :class="{ 'ivu-select-item-focus': focusIndex === optionsToRender.length }"
+            @click.stop="$emit('click-create')"
+          >
+            <Icon type="md-add" />
+            {{ i18n.create_new }}
+          </li>
         </ul>
-        <ul
+        <div
           v-show="isLoading"
           class="ivu-select-loading"
         >
           {{ i18n['loading'] }}
-        </ul>
+        </div>
       </div>
     </transition>
   </div>
@@ -175,6 +184,11 @@ export default {
       required: false,
       default: false
     },
+    withCreateButton: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     createFunction: {
       type: Function,
       required: false,
@@ -233,7 +247,7 @@ export default {
       default: null
     }
   },
-  emits: ['update:modelValue', 'update:selectedOptions', 'update:selectedOption', 'search', 'select'],
+  emits: ['update:modelValue', 'update:selectedOptions', 'update:selectedOption', 'search', 'select', 'click-create'],
   data () {
     return {
       isLoading: false,
@@ -438,7 +452,7 @@ export default {
       this.$emit('search', this.searchInput)
     },
     moveFocus: throttle(function (index) {
-      const maxLength = this.displayCreate ? (this.optionsToRender.length + 1) : this.optionsToRender.length
+      const maxLength = this.displayCreate || this.withCreateButton ? (this.optionsToRender.length + 1) : this.optionsToRender.length
       const nextIndex = this.focusIndex + index
       if (nextIndex >= maxLength) {
         this.focusIndex = 0
@@ -457,6 +471,8 @@ export default {
         this.createOption(this.searchInput)
 
         this.toggleDropdown()
+      } else if (this.withCreateButton && this.focusIndex === this.optionsToRender.length) {
+        this.$emit('click-create')
       } else {
         const index = this.displayCreate ? this.focusIndex + 1 : this.focusIndex
         const option = this.optionsToRender[index]

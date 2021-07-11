@@ -10,6 +10,7 @@
         :form="dataForm"
         :data="formData"
         :with-submit="!withFooterSubmit"
+        :with-success-message="withSuccessMessage"
         @success="onSuccess"
         @error="$emit('error', $event)"
         @reset="resetData"
@@ -61,6 +62,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    withSuccessMessage: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     formId: {
       type: Number,

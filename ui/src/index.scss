@@ -164,6 +164,12 @@ h5 {
   width: 100%;
 }
 
+.ivu-modal-body {
+  .sticky-footer {
+    padding: 10px 0 0;
+  }
+}
+
 .ivu-badge-count {
   box-shadow: none;
   font-family: inherit;

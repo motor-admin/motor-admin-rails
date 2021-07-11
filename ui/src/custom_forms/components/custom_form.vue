@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isSuccess">
+  <div v-if="isSuccess && withSuccessMessage">
     <p class="fs-2 fw-bold text-center mb-2">
       <Icon
         type="md-checkmark-circle-outline"
@@ -80,6 +80,11 @@ export default {
     form: {
       type: Object,
       required: true
+    },
+    withSuccessMessage: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     withSubmit: {
       type: Boolean,

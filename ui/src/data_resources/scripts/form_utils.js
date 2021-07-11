@@ -70,4 +70,14 @@ function buildColumnValidator (column, resource) {
   return validators
 }
 
-export { isJsonColumn, buildColumnValidator }
+function buildDefaultValues (model) {
+  return model.columns.reduce((acc, column) => {
+    if (column.default_value !== null) {
+      acc[column.name] = column.default_value
+    }
+
+    return acc
+  }, {})
+}
+
+export { isJsonColumn, buildColumnValidator, buildDefaultValues }
