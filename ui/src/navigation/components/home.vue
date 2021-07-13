@@ -18,7 +18,7 @@
       <LinksSection />
     </div>
   </div>
-  <div class="mx-2 mx-md-3">
+  <div class="mx-2 mx-md-3 position-relative">
     <h1
       v-if="widthLessThan('sm')"
       class="mt-3 mb-2"
@@ -42,14 +42,14 @@
         @click="isEdit = !isEdit"
       />
     </div>
+    <Spin
+      v-if="isLoading"
+      fix
+    />
     <div
       v-if="isEdit"
-      style="max-width: 450px; margin: auto; position: relative"
+      style="max-width: 450px; margin: auto;"
     >
-      <Spin
-        v-if="isLoading"
-        fix
-      />
       <DashboardSelect v-model="selectedDashboardId" />
       <div class="text-center">
         <VButton
@@ -136,7 +136,11 @@ export default {
   },
   watch: {
     dashboardId () {
-      this.loadDashboard()
+      if (this.dashboardId) {
+        this.loadDashboard()
+      } else {
+        this.dashboard = null
+      }
     }
   },
   created () {
@@ -179,9 +183,14 @@ export default {
       }).then((result) => {
         homepageStore.splice(0, homepageStore.length, ...result.data.data.value)
 
-        this.loadDashboard().finally(() => {
+        if (this.dashboardId) {
+          this.loadDashboard().finally(() => {
+            this.isEdit = false
+          })
+        } else {
           this.isEdit = false
-        })
+          this.isLoading = false
+        }
       }).catch((error) => {
         console.error(error)
 
