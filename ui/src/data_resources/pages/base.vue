@@ -45,47 +45,7 @@
           @click-menu="toggleResourcesMenu"
         />
       </template>
-      <template v-else>
-        <div
-          v-if="widthLessThan('sm')"
-          class="row mx-0 mx-md-2"
-        >
-          <h1 class="mt-3 mb-2">
-            {{ i18n['hello_admin'] }}
-          </h1>
-          <LinksSection />
-        </div>
-        <div class="row mx-0 mx-md-2">
-          <h1
-            v-if="widthLessThan('sm')"
-            class="mt-3 mb-2"
-          >
-            Resources
-          </h1>
-          <h1
-            v-else
-            class="mt-3 mb-2"
-          >
-            {{ i18n['hello_admin'] }}
-          </h1>
-          <div
-            v-for="resource in visibleResources"
-            :key="resource.slug"
-            class="col-12 col-md-6 col-lg-4 col-xl-3"
-          >
-            <RouterLink
-              class="ivu-card ivu-card-bordered my-2"
-              :to="{ name: 'resources', params: { fragments: [resource.slug] }}"
-            >
-              <div class="ivu-card-body">
-                <p class="fs-4 fw-bold text-dark">
-                  {{ resource.display_name.replace('/', '\u200B/') }}
-                </p>
-              </div>
-            </RouterLink>
-          </div>
-        </div>
-      </template>
+      <Home v-else />
     </Layout>
   </Layout>
 </template>
@@ -96,7 +56,7 @@ import Resource from '../components/resource'
 import ResourceTable from '../components/table'
 import Breadcrumbs from 'navigation/components/breadcrumbs'
 import ResourcesMenu from 'navigation/components/resources'
-import LinksSection from 'navigation/components/links_section'
+import Home from 'navigation/components/home'
 import { widthLessThan } from 'utils/scripts/dimensions'
 
 import { breadcrumbStore } from 'navigation/scripts/breadcrumb_store'
@@ -110,7 +70,7 @@ export default {
     Resource,
     Breadcrumbs,
     ResourcesMenu,
-    LinksSection,
+    Home,
     SettingsMask
   },
   data () {

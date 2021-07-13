@@ -25,6 +25,8 @@ module Motor
 
       # @return [Hash]
       def build_data(cache_keys = {}, current_user = nil, current_ability = nil)
+        configs_cache_key = cache_keys[:configs]
+
         {
           current_user: current_user&.as_json(only: %i[id email]),
           current_rules: current_ability.serialized_rules,
@@ -32,7 +34,8 @@ module Motor
           i18n: i18n_data,
           base_path: Motor::Admin.routes.url_helpers.motor_path,
           schema: Motor::BuildSchema.call(cache_keys, current_ability),
-          header_links: header_links_data_hash(cache_keys[:configs]),
+          header_links: header_links_data_hash(configs_cache_key),
+          homepage_layout: homepage_layout_data_hash(configs_cache_key),
           queries: queries_data_hash(build_cache_key(cache_keys, :queries, current_user, current_ability),
                                      current_ability),
           dashboards: dashboards_data_hash(build_cache_key(cache_keys, :dashboards, current_user, current_ability),
@@ -56,6 +59,12 @@ module Motor
         configs = Motor::Configs::LoadFromCache.load_configs(cache_key: cache_key)
 
         configs.find { |c| c.key == 'header.links' }&.value || []
+      end
+
+      def homepage_layout_data_hash(cache_key = nil)
+        configs = Motor::Configs::LoadFromCache.load_configs(cache_key: cache_key)
+
+        configs.find { |c| c.key == 'homepage.layout' }&.value || []
       end
 
       def queries_data_hash(cache_key = nil, current_ability = nil)

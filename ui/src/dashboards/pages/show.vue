@@ -123,7 +123,7 @@
             icon="md-close"
             @click="toggleVariablesSettings"
           >
-            Close
+            {{ i18n.close }}
           </VButton>
         </div>
       </div>
