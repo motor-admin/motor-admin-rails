@@ -3,40 +3,42 @@
     v-for="item in items"
     :key="item.name"
   >
-    <GroupItem
-      v-if="item.items"
-      v-model:form-data="formData[item.name]"
-      :item="item"
-      :variables-data="variablesData"
-      :prop-prefix="propPrefix ? `${propPrefix}.${item.name}` : item.name"
-    />
-    <FormItem
-      v-else
-      ref="formItem"
-      :label="item.display_name"
-      :rules="buildValidationRules(item)"
-      :prop="propPrefix ? `${propPrefix}.${item.name}` : item.name"
-    >
-      <FormListInput
-        v-if="item.is_array && ['file', 'json', 'textarea'].includes(item.field_type)"
-        v-model="formData[item.name]"
-        :column="item"
-        :form-data="{ ...variablesData, ...formData }"
+    <template v-if="checkConditions(item.conditions, mergedVariablesFormData)">
+      <GroupItem
+        v-if="item.items"
+        v-model:form-data="formData[item.name]"
+        :item="item"
+        :variables-data="variablesData"
+        :prop-prefix="propPrefix ? `${propPrefix}.${item.name}` : item.name"
       />
-      <FormInput
+      <FormItem
         v-else
-        v-model="formData[item.name]"
-        :column="item"
-        :form-data="{ ...variablesData, ...formData }"
-      />
-    </FormItem>
+        ref="formItem"
+        :label="item.display_name"
+        :rules="buildValidationRules(item)"
+        :prop="propPrefix ? `${propPrefix}.${item.name}` : item.name"
+      >
+        <FormListInput
+          v-if="item.is_array && ['file', 'json', 'textarea'].includes(item.field_type)"
+          v-model="formData[item.name]"
+          :column="item"
+          :form-data="mergedVariablesFormData"
+        />
+        <FormInput
+          v-else
+          v-model="formData[item.name]"
+          :column="item"
+          :form-data="mergedVariablesFormData"
+        />
+      </FormItem>
+    </template>
   </div>
 </template>
 
 <script>
 import FormListInput from 'data_forms/components/list_input'
 import FormInput from 'data_forms/components/input'
-import { buildDefaultValues } from '../scripts/utils'
+import { buildDefaultValues, checkConditions } from '../scripts/utils'
 import GroupItem from './group_item'
 import { i18nDict } from 'utils/scripts/i18n'
 
@@ -68,6 +70,11 @@ export default {
     }
   },
   emits: ['update:form-data'],
+  computed: {
+    mergedVariablesFormData () {
+      return { ...this.variablesData, ...this.formData }
+    }
+  },
   watch: {
     items: {
       deep: true,
@@ -77,6 +84,7 @@ export default {
     }
   },
   methods: {
+    checkConditions,
     buildValidationRules (item) {
       return (item.validators || []).map((rule) => {
         return {

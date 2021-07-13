@@ -232,6 +232,11 @@ es:
     syntax_is_used_for_if_and_if_not_conditions_html: "<code>{{#variable}} ... {{/variable}}</code> and <code>{{^variable}} ... {{variable}}</code> syntax is used for <code>if</code> and <code>if not</code> conditions respectively:"
     current_user_variables_are_always_passed_explicitly_and_can_he_used_html: "<code>{{current_user_id}}</code> and <code>{{current_user_email}}</code> variables are always passed explicitly, and can be used to decide which data should be displayed for certain user:"
     create_new: Crear nuevo
+    conditional: Condicional
+    condition: Condicion
+    field: Campo
+    empty: Vacío
+    not_empty: No vacío
     i:
       locale: es
       select:

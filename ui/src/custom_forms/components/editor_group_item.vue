@@ -26,12 +26,14 @@
         <LayoutItems
           v-if="!isForm"
           :items="group.items"
+          :condition-fields="conditionFields"
           :with-min-height="true"
         />
         <GroupForm
           v-if="isForm"
           :group="JSON.parse(JSON.stringify(group))"
           class="py-3"
+          :condition-fields="conditionFields"
           :with-remove="true"
           @cancel="toggleForm"
           @remove="onRemove"
@@ -58,6 +60,11 @@ export default {
     group: {
       type: Object,
       required: true
+    },
+    conditionFields: {
+      type: Array,
+      required: false,
+      default: () => []
     }
   },
   emits: ['replace', 'remove'],

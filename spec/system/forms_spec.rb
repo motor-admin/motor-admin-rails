@@ -85,7 +85,8 @@ RSpec.describe 'Forms' do
           it 'creates new order' do
             ivu_fill_field 'Address line one', order_attrs[:address_line_one]
             ivu_fill_field 'Address line two', order_attrs[:address_line_two]
-            ivu_fill_field 'Address state', Faker::Address.state
+            ivu_fill_field 'Region', 'Midwest'
+            ivu_fill_field 'Address state', 'Michigan'
             ivu_fill_field 'Address city', order_attrs[:address_city]
             ivu_fill_field 'Address ZIP', order_attrs[:address_zip]
             ivu_fill_field 'Email', customer_attrs[:email]

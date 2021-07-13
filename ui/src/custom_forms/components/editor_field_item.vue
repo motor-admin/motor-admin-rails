@@ -27,6 +27,7 @@
           v-if="isForm"
           :field="JSON.parse(JSON.stringify(field))"
           class="py-3"
+          :condition-fields="conditionFields"
           :with-remove="true"
           @cancel="toggleForm"
           @remove="onRemove"
@@ -49,6 +50,11 @@ export default {
     field: {
       type: Object,
       required: true
+    },
+    conditionFields: {
+      type: Array,
+      required: false,
+      default: () => []
     }
   },
   emits: ['replace', 'remove'],

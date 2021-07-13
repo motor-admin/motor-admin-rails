@@ -1,6 +1,6 @@
 ---
-engine_version: 0.1.80
-file_version: 2021-07-08 06:14:54.311735000 Z
+engine_version: 0.1.85
+file_version: 2021-07-13 11:15:14.374208000 Z
 resources:
 - name: country
   preferences: {}
@@ -665,6 +665,10 @@ forms:
       validators:
       - required: true
       select_query_id: 13
+      conditions:
+      - field: region
+        action: nempty
+        value: ''
     - display_name: Address city
       name: address_city
       field_type: input
@@ -742,7 +746,7 @@ forms:
       is_array: true
   tags:
   - Orders
-  updated_at: 2021-06-20 17:52:47.807307000 +00:00
+  updated_at: 2021-07-13 11:15:14.374208000 +00:00
 - id: 3
   name: Update order line items
   http_method: PUT

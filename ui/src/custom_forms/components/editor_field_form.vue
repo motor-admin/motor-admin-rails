@@ -93,11 +93,23 @@
       </Checkbox>
       <Checkbox
         :model-value="isRequired"
-        class="d-block mb-3"
+        class="d-block"
         @update:model-value="toggleRequired"
       >
         {{ ' ' }} {{ i18n['required'] }}
       </Checkbox>
+      <Checkbox
+        :model-value="isConditional"
+        class="d-block mb-3"
+        @update:model-value="toggleConditional"
+      >
+        {{ ' ' }} {{ i18n['conditional'] }}
+      </Checkbox>
+      <FieldCondition
+        v-if="isConditional"
+        v-model="dataField.conditions[0]"
+        :fields="filteredConditionFields"
+      />
     </VForm>
     <div class="d-flex justify-content-between">
       <div>
@@ -133,6 +145,7 @@ import FormInput from 'data_forms/components/input'
 import QuerySelect from 'queries/components/select'
 import Validators from 'utils/scripts/validators'
 import { i18nDict, fieldRequiredMessage } from 'utils/scripts/i18n'
+import FieldCondition from './editor_field_condition'
 
 const MULTIPLE_COLUMN_TYPES = ['input', 'number', 'select', 'reference', 'file', 'json', 'textarea']
 
@@ -140,7 +153,8 @@ export default {
   name: 'FieldForm',
   components: {
     FormInput,
-    QuerySelect
+    QuerySelect,
+    FieldCondition
   },
   props: {
     field: {
@@ -157,6 +171,11 @@ export default {
       required: false,
       default: false
     },
+    conditionFields: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
     withRemove: {
       type: Boolean,
       required: false,
@@ -171,6 +190,11 @@ export default {
     }
   },
   computed: {
+    filteredConditionFields () {
+      return this.conditionFields.filter((field) => {
+        return field.value !== this.field.name
+      })
+    },
     rules () {
       const rules = {
         display_name: [{
@@ -240,6 +264,9 @@ export default {
     },
     isRequired () {
       return !!this.dataField.validators?.find((validator) => validator.required)
+    },
+    isConditional () {
+      return !!this.dataField.conditions?.length
     }
   },
   mounted () {
@@ -282,6 +309,10 @@ export default {
             this.dataField.name = this.generatedParamName
           }
 
+          if (this.dataField.conditions && !this.dataField.conditions[0]?.field) {
+            this.dataField.conditions = []
+          }
+
           this.$emit('submit', this.dataField)
         }
       })
@@ -290,6 +321,15 @@ export default {
       this.isCustomName = true
 
       this.dataField.name = this.generatedParamName
+    },
+    toggleConditional () {
+      this.dataField.conditions ||= []
+
+      if (this.isConditional) {
+        this.dataField.conditions = []
+      } else {
+        this.dataField.conditions = [{ field: '', action: 'eq', value: '' }]
+      }
     },
     toggleRequired () {
       this.dataField.validators ||= []

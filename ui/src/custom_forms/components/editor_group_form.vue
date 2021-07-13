@@ -43,10 +43,22 @@
       </FormItem>
       <Checkbox
         v-model="dataGroup.is_array"
-        class="d-block mb-3"
+        class="d-block"
       >
         {{ ' ' }} {{ i18n['multiple'] }}
       </Checkbox>
+      <Checkbox
+        :model-value="isConditional"
+        class="d-block mb-3"
+        @update:model-value="toggleConditional"
+      >
+        {{ ' ' }} {{ i18n['conditional'] }}
+      </Checkbox>
+      <FieldCondition
+        v-if="isConditional"
+        v-model="dataGroup.conditions[0]"
+        :fields="conditionFields"
+      />
     </VForm>
     <div class="d-flex justify-content-between">
       <div>
@@ -78,10 +90,12 @@
 <script>
 import { underscore } from 'utils/scripts/string'
 import { i18nDict, fieldRequiredMessage } from 'utils/scripts/i18n'
+import FieldCondition from './editor_field_condition'
 
 export default {
   name: 'GroupForm',
   components: {
+    FieldCondition
   },
   props: {
     group: {
@@ -92,6 +106,11 @@ export default {
       type: String,
       required: false,
       default: i18nDict.ok
+    },
+    conditionFields: {
+      type: Array,
+      required: false,
+      default: () => []
     },
     focus: {
       type: Boolean,
@@ -117,6 +136,9 @@ export default {
         display_name: [{ required: true, message: fieldRequiredMessage('name') }],
         name: [{ required: true, message: fieldRequiredMessage('param_name') }]
       }
+    },
+    isConditional () {
+      return !!this.dataGroup.conditions?.length
     },
     generatedParamName () {
       const name = underscore(this.dataGroup.display_name)
@@ -144,9 +166,22 @@ export default {
             this.dataGroup.name = this.generatedParamName
           }
 
+          if (this.dataGroup.conditions && !this.dataGroup.conditions[0]?.field) {
+            this.dataGroup.conditions = []
+          }
+
           this.$emit('submit', this.dataGroup)
         }
       })
+    },
+    toggleConditional () {
+      this.dataGroup.conditions ||= []
+
+      if (this.isConditional) {
+        this.dataGroup.conditions = []
+      } else {
+        this.dataGroup.conditions = [{ field: '', action: 'eq', value: '' }]
+      }
     },
     toggleCustomParam () {
       this.isCustomName = true

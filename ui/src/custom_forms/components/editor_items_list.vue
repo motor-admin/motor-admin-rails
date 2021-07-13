@@ -13,6 +13,7 @@
         v-if="item.field_type"
         :field="item"
         class="mb-2"
+        :condition-fields="listConditionFieldOptions"
         @remove="removeItem"
         @replace="replaceItem"
       />
@@ -20,6 +21,7 @@
         v-if="Array.isArray(item.items)"
         :group="item"
         class="mb-2"
+        :condition-fields="listConditionFieldOptions"
         @remove="removeItem"
         @replace="replaceItem"
       />
@@ -34,6 +36,7 @@
       :field="newField"
       :focus="true"
       :ok-text="i18n['add']"
+      :condition-fields="listConditionFieldOptions"
       @submit="addField"
       @cancel="newField = null"
     />
@@ -110,12 +113,17 @@ export default {
     items: {
       type: Array,
       required: false,
-      default: () => ([])
+      default: () => []
     },
     withButtons: {
       type: Boolean,
       required: false,
       default: true
+    },
+    conditionFields: {
+      type: Array,
+      required: false,
+      default: () => []
     },
     withMinHeight: {
       type: Boolean,
@@ -127,6 +135,20 @@ export default {
     return {
       newField: null,
       newGroup: null
+    }
+  },
+  computed: {
+    listConditionFieldOptions () {
+      return [
+        ...this.items.map((item) => {
+          if (item.field_type) {
+            return { label: item.display_name, value: item.name, field: item }
+          } else {
+            return false
+          }
+        }).filter(Boolean),
+        ...this.conditionFields
+      ]
     }
   },
   methods: {
