@@ -60,6 +60,12 @@
           {{ getLabel(selectedOptionData) }}
         </span>
         <i
+          v-if="selectedOptionData"
+          class="ivu-select-icon ion ion-ios-close-circle ivu-select-custom-icon"
+          @click.stop="deselect"
+        />
+        <i
+          v-else
           class="ivu-select-icon"
           :class="icon ? `ion ion-${icon} ivu-select-custom-icon` : `ion ion-ios-arrow-down ivu-select-arrow`"
         />
@@ -513,6 +519,13 @@ export default {
         return false
       }
     },
+    deselect () {
+      this.selectedOptionData = null
+      this.searchInput = ''
+      this.$emit('update:modelValue', '')
+      this.$emit('update:selectedOption', null)
+      this.$emit('select', null)
+    },
     selectOption (option) {
       if (this.multiple) {
         const existingOption = this.selectedOptionsData.find((opt) => this.getValue(opt) === this.getValue(option))
@@ -598,13 +611,12 @@ export default {
 
 <style lang="scss" scoped>
 .ivu-select-custom-icon {
+  color: #808695;
+  font-size: 14px;
+  line-height: 1;
   position: absolute;
   right: 8px;
-  top: 50%;
-  color: #808695;
-  font-size: 18px;
-  line-height: 1;
-  transform: translateY(-50%);
+  top: 25%;
 }
 
 .ivu-select-no-border {
