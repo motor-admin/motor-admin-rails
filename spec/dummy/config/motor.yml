@@ -1,10 +1,15 @@
 ---
-engine_version: 0.1.85
-file_version: 2021-07-13 11:15:14.374208000 Z
+engine_version: 0.1.87
+file_version: 2021-07-14 07:25:20.791589000 Z
 resources:
 - name: country
-  preferences: {}
-  updated_at: 2021-05-22 16:22:23.404294000 +00:00
+  preferences:
+    tabs:
+    - tab_type: query
+      preferences:
+        query_id: 17
+      name: details
+  updated_at: 2021-07-14 07:11:47.431489000 +00:00
 - name: customer
   preferences:
     columns:
@@ -558,6 +563,38 @@ queries:
   tags:
   - Selector
   updated_at: 2021-06-21 17:35:00.990272000 +00:00
+- id: 17
+  name: Country details
+  sql_body: "SELECT co.*, count(cs.id) as customers_count \nFROM countries as co\nJOIN
+    customers as cs ON co.code = cs.country_code\nWHERE co.id = {{country_id}}\nGROUP
+    BY co.id"
+  description:
+  preferences:
+    visualization: markdown
+    visualization_options:
+      label_format: decimal
+      label_format_options: {}
+      markdown: |-
+        ## Country #{{id}}
+
+        __Name__:<br>
+        {{name}}
+
+        __Code__:<br>
+        <a href="/data/customers?filter%5B0%5D%5Bterritory%5D%5Bcode%5D%5Beq%5D={{code}}">{{code}}</a>
+
+        __Total customers__:<br>
+        {{customers_count}}
+
+        <a href="https://www.google.com/maps/?q={{name}}" class="ivu ivu-btn"><i class="ion ion-md-map"></i> Google Maps</a>
+    variables:
+    - name: country_id
+      display_name: Country
+      variable_type: reference
+      reference_resource: country
+  tags:
+  - Details
+  updated_at: 2021-07-14 07:25:20.791589000 +00:00
 dashboards:
 - id: 1
   title: Sales dashboard
