@@ -55,6 +55,7 @@ es:
     display_as: Mostrar como
     edit: Editar
     edit_sql: Editar SQL
+    edit_markdown: Editar Markdown
     emails: Emails
     every_day_at_hh_mm: todos los días a las HH:mm PM...
     field_name: Nombre del campo

@@ -72,6 +72,7 @@ en:
     display_as: Display as
     edit: Edit
     edit_sql: Edit SQL
+    edit_markdown: Edit Markdown
     emails: Emails
     ends_with: Ends with
     equal_to: Equal to

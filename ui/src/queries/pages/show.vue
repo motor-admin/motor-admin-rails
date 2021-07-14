@@ -27,7 +27,7 @@
         :icon="isMarkdownEditor ? 'md-code-working' : 'logo-markdown'"
         @click="isMarkdownEditor = !isMarkdownEditor"
       >
-        {{ isMarkdownEditor ? i18n['edit_sql'] : i18n['edit_makrdown'] }}
+        {{ isMarkdownEditor ? i18n['edit_sql'] : i18n['edit_markdown'] }}
       </VButton>
       <VButton
         v-if="vSplit === 0 && $can('edit', 'Motor::Query', query)"
