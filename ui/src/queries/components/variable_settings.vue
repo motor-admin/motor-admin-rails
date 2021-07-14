@@ -12,6 +12,7 @@
       <MSelect
         v-model="variable.variable_type"
         :options="variableTypes"
+        :with-deselect="false"
         @update:model-value="onTypeChange"
       />
     </FormItem>
@@ -22,6 +23,7 @@
     >
       <MSelect
         v-model="variable.reference_resource"
+        :with-deselect="false"
         label-key="display_name"
         value-key="name"
         :placeholder="i18n['select_resource_placeholder']"

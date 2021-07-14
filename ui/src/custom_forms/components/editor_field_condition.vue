@@ -8,6 +8,7 @@
       class="mb-2"
       :placeholder="i18n.field"
       :options="fields"
+      :with-deselect="false"
       @update:model-value="modelValue.value = ''"
     />
     <MSelect
@@ -15,6 +16,7 @@
       data-role="condition-action"
       class="mb-2"
       filterable
+      :with-deselect="false"
       :placeholder="i18n.condition"
       :options="actions"
     />

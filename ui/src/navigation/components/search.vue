@@ -8,6 +8,7 @@
     :value-function="(option) => [option.value, option.type].join('::')"
     filterable
     label-key="value"
+    :with-deselect="false"
     :option-component="optionComponent"
     :remote-function="onSearch"
     @select="onSelect"

@@ -3,6 +3,7 @@
     v-model="modelValue"
     filterable
     :options="options"
+    :with-deselect="false"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
 </template>

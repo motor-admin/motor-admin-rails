@@ -3,6 +3,7 @@
     :model-value="modelValue"
     filterable
     :options="currencyOptions"
+    :with-deselect="false"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>

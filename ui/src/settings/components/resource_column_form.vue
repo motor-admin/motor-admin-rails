@@ -21,6 +21,7 @@
           >
             <MSelect
               v-model="dataColumn.access_type"
+              :with-deselect="false"
               :options="accessTypes"
             />
           </FormItem>
@@ -36,6 +37,7 @@
             <MSelect
               v-model="dataColumn.column_type"
               :options="columnTypes"
+              :with-deselect="false"
               @update:modelValue="assignDefaultFormat"
             />
           </FormItem>
@@ -62,6 +64,7 @@
           >
             <MSelect
               v-model="dataColumn.format.currency_base"
+              :with-deselect="false"
               :options="currencyBaseOptions"
             />
           </FormItem>

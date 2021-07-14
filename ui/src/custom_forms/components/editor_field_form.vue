@@ -48,6 +48,7 @@
         <MSelect
           v-model="dataField.field_type"
           :options="fieldTypes"
+          :with-deselect="false"
           :placeholder="i18n['input_type']"
           @update:modelValue="onTypeChange"
         />
@@ -61,6 +62,7 @@
           v-model="dataField.reference.model_name"
           :value-key="'name'"
           :label-key="'display_name'"
+          :with-deselect="false"
           :options="referenceModels"
           :placeholder="i18n['select_resource_placeholder']"
           filterable

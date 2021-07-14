@@ -60,7 +60,7 @@
           {{ getLabel(selectedOptionData) }}
         </span>
         <i
-          v-if="selectedOptionData"
+          v-if="withDeselect && selectedOptionData"
           class="ivu-select-icon ion ion-ios-close-circle ivu-select-custom-icon"
           @click.stop="deselect"
         />
@@ -194,6 +194,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    withDeselect: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     createFunction: {
       type: Function,
@@ -616,7 +621,7 @@ export default {
   line-height: 1;
   position: absolute;
   right: 8px;
-  top: 25%;
+  top: calc(50% - 7px);
 }
 
 .ivu-select-no-border {

@@ -24,6 +24,7 @@
             <MSelect
               v-model="dataTab.tab_type"
               :options="tabTypes"
+              :with-deselect="false"
               @update:modelValue="dataTab.preferences = {}"
             />
           </FormItem>

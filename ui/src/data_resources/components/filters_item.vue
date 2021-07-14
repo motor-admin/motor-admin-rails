@@ -8,6 +8,7 @@
         v-model="dataFilter.key"
         data-role="filter-field"
         filterable
+        :with-deselect="false"
         style="margin-left: 50px; width: calc(100% - 50px)"
         :options="columns"
         @update:modelValue="onKeyChange"
@@ -18,6 +19,7 @@
       <MSelect
         v-model="dataFilter.action"
         data-role="filter-condition"
+        :with-deselect="false"
         :options="actions"
       />
     </div>

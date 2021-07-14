@@ -24,6 +24,7 @@
       >
         <MSelect
           v-model="dataForm.http_method"
+          :with-deselect="false"
           :options="['POST', 'PUT']"
         />
       </FormItem>
