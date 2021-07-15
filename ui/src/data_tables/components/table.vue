@@ -213,10 +213,10 @@ export default {
   },
   methods: {
     getReferenceId (column, row) {
-      if (column.reference.reference_type === 'has_one') {
-        const referenceModel = modelNameMap[column.reference.model_name]
+      const referenceModel = modelNameMap[column.reference.model_name]
 
-        return row[column.key][referenceModel.primary_key]
+      if (referenceModel) {
+        return row[column.key][referenceModel.primary_key] || row[column.key]
       } else {
         return row[column.key]
       }

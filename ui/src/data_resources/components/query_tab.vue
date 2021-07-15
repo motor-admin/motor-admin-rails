@@ -30,8 +30,7 @@
         :title="query.name"
         :columns="columns"
         :query-id="query.id"
-        :with-alert="false"
-        :with-settings="false"
+        :with-footer="false"
         :header-border="showVariablesForm"
         :preferences="query.preferences"
       />

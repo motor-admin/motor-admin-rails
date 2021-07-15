@@ -42,7 +42,7 @@ Naming/MethodParameterName:
   MinNameLength: 2
 
 Metrics/ModuleLength:
-  Max: 250
+  Max: 300
 
 Rails/Date:
   Enabled: false

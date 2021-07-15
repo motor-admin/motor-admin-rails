@@ -11,10 +11,30 @@
         { label: i18n['associations'], value: 'associations' }
       ]"
     />
-    <ResourceColumnsList
+    <template
       v-if="selectedTab === 'columns'"
-      :resource="resource"
-    />
+    >
+      <Collapse
+        v-model="collapseValue"
+        simple
+        class="mb-3"
+        style="margin: 0 -16px"
+      >
+        <Panel name="1">
+          {{ i18n.query_editor }}
+          <template #content>
+            <ResourceQueryForm
+              v-if="collapseValue.includes('1')"
+              :resource="resource"
+              @close="collapseValue = []"
+            />
+          </template>
+        </Panel>
+      </Collapse>
+      <ResourceColumnsList
+        :resource="resource"
+      />
+    </template>
     <AssociationsList
       v-else-if="selectedTab === 'associations'"
       :resource="resource"
@@ -50,6 +70,7 @@ import AssociationsList from './associations_list'
 import ActionsList from './actions_list'
 import TabsList from './tabs_list'
 import ScopesList from './scopes_list'
+import ResourceQueryForm from './resource_query_form'
 import Tabs from 'utils/components/tabs'
 
 export default {
@@ -60,7 +81,8 @@ export default {
     ActionsList,
     ScopesList,
     TabsList,
-    Tabs
+    Tabs,
+    ResourceQueryForm
   },
   props: {
     resource: {
@@ -76,6 +98,7 @@ export default {
   emits: ['back'],
   data () {
     return {
+      collapseValue: [],
       selectedTab: this.activeTab || 'columns'
     }
   }

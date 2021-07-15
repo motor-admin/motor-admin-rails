@@ -84,12 +84,13 @@ module Motor
       # @return [Hash]
       def build_columns_hash(result)
         result.columns.map do |column_name|
-          column_type_class = result.column_types[column_name].class
+          column_type = result.column_types[column_name]
 
           {
             name: column_name,
             display_name: column_name.humanize,
-            column_type: ActiveRecordUtils::Types.find_name_for_class(column_type_class)
+            column_type: ActiveRecordUtils::Types.find_name_for_type(column_type),
+            is_array: column_type.class.to_s == 'ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array'
           }
         end
       end

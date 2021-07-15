@@ -21,7 +21,7 @@
     :resource-name="column.reference.model_name"
     :selected-resource="formData ? formData[column.reference.name] : null"
     :multiple="column.is_array"
-    :primary-key="column.reference.association_primary_key"
+    :primary-key="column.reference.primary_key"
     @update:model-value="$emit('update:modelValue', $event)"
     @select="onSelect"
   />

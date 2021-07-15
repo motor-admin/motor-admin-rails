@@ -78,7 +78,7 @@ module Motor
 
           next if !is_permitted_all && permitted_attributes.exclude?(field_symbol)
 
-          if column_names.include?(field_symbol)
+          if model.columns_hash[field]
             acc['only'] << field
           elsif instance_methods.include?(field_symbol)
             acc['methods'] << field

@@ -34,6 +34,7 @@
         <ColumnForm
           v-if="isForm"
           :column="column"
+          :resource-name="resourceName"
           class="py-3"
           :with-remove="column.virtual"
           @cancel="toggleForm"

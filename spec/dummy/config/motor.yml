@@ -1,6 +1,6 @@
 ---
-engine_version: 0.1.87
-file_version: 2021-07-14 07:25:20.791589000 Z
+engine_version: 0.1.88
+file_version: 2021-07-17 11:38:08.095291000 Z
 resources:
 - name: country
   preferences:
@@ -9,19 +9,52 @@ resources:
       preferences:
         query_id: 17
       name: details
-  updated_at: 2021-07-14 07:11:47.431489000 +00:00
+    columns:
+    - name: customer_id
+      display_name: Customer
+      column_type: reference
+      access_type: read_only
+      reference:
+        name: customer
+        display_name: Customer
+        model_name: customer
+        reference_type: belongs_to
+        foreign_key: customer_id
+        primary_key: id
+        options: {}
+        polymorphic: false
+        virtual: true
+      virtual: false
+      format: {}
+    associations:
+    - name: customers
+      display_name: Customers
+      model_name: customer
+      icon: user-check
+      foreign_key: country_code
+      primary_key: code
+      virtual: true
+      polymorphic: false
+      slug: customers
+    - name: orders
+      display_name: Orders
+      model_name: order
+      foreign_key: customer_id
+      primary_key: id
+      options:
+        through: customers
+        source: orders
+      virtual: true
+      polymorphic: false
+      slug: orders
+    custom_sql: |-
+      SELECT co.*, count(cs.id) as customers_count FROM countries as co
+      JOIN customers as cs ON cs.country_code = co.code
+      GROUP BY co.id
+  updated_at: 2021-07-17 11:38:08.095291000 +00:00
 - name: customer
   preferences:
     columns:
-    - name: lifetime_value
-      display_name: Lifetime value
-      column_type: currency
-      access_type: read_only
-      default_value: ''
-      virtual: true
-      format:
-        currency: USD
-        currency_base: cents
     - display_name: Country
       name: country_code
     - display_name: Type
@@ -43,6 +76,14 @@ resources:
     - column_type: percentage
       default_value: ''
       name: reputation
+    - name: lifetime_value
+      display_name: Lifetime value
+      column_type: currency
+      access_type: read_only
+      virtual: false
+      format:
+        currency: USD
+        currency_base: cents
     scopes:
     - display_name: VIP
       name: vip
@@ -52,7 +93,12 @@ resources:
       tab_type: dashboard
       preferences:
         dashboard_id: 2
-  updated_at: 2021-07-03 10:36:19.303186000 +00:00
+    custom_sql: |-
+      SELECT cs.*, sum(li.quantity * li.unit_price) as lifetime_value FROM customers as cs
+      LEFT JOIN orders as od ON od.customer_id = cs.id
+      LEFT JOIN line_items as li ON od.id = li.order_id
+      GROUP BY cs.id
+  updated_at: 2021-07-15 17:23:20.368063000 +00:00
 - name: line_item
   preferences:
     columns:
@@ -106,7 +152,16 @@ resources:
       virtual: true
       format:
         link_text: "\U0001F4CD Map"
-  updated_at: 2021-07-03 10:31:29.965132000 +00:00
+    associations:
+    - name: notes
+      display_name: Notes
+      model_name: note
+      foreign_key: record_id
+      primary_key: id
+      virtual: true
+      polymorphic: true
+      slug: notes
+  updated_at: 2021-07-17 10:40:50.495370000 +00:00
 - name: order_note
   preferences:
     display_name: Notes
@@ -135,7 +190,25 @@ resources:
     - column_type: tag
       default_value: ''
       name: groups
-  updated_at: 2021-07-03 10:20:04.175648000 +00:00
+    - name: customer
+      display_name: Customer
+      column_type: reference
+      access_type: read_only
+      default_value: ''
+      reference:
+        name: customer
+        display_name: Customer
+        model_name: customer
+        reference_type: has_one
+        foreign_key: email
+        association_primary_key: email
+        options: {}
+        polymorphic: false
+        virtual: true
+        primary_key: email
+      virtual: true
+      format: {}
+  updated_at: 2021-07-15 13:55:50.216297000 +00:00
 configs:
 - key: header.links
   value:
@@ -157,9 +230,10 @@ configs:
   - id
   - name
   - code
+  - customers_count
   - updated_at
   - created_at
-  updated_at: 2021-05-23 16:32:56.385918000 +00:00
+  updated_at: 2021-07-15 09:43:36.040697000 +00:00
 - key: resources.customer.associations.order
   value:
   - orders
@@ -178,10 +252,10 @@ configs:
   - monthly_sales_diff
   - reputation
   - email_subscriber
-  - bio_body
+  - bio
   - updated_at
   - created_at
-  updated_at: 2021-07-03 10:36:14.837953000 +00:00
+  updated_at: 2021-07-15 17:23:43.174013000 +00:00
 - key: resources.customer.scopes.order
   value:
   - vip

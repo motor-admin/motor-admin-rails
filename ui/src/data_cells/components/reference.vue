@@ -73,20 +73,35 @@ export default {
       }
     },
     popoverParams () {
+      const tab = this.model.tabs.find((t) => t.name === 'details')
+
       return {
         trigger: 'mouseenter',
         render: (h) => {
-          return h(require('data_resources/components/info').default, {
-            resourceName: this.model.name,
-            resourceId: this.referenceId,
-            oneColumn: true,
-            referencePopover: false
-          })
+          if (tab?.tab_type === 'query') {
+            return h(require('data_resources/components/query_tab').default, {
+              tab: tab,
+              style: 'min-width: 250px',
+              class: 'richtext-no-padding',
+              variables: {
+                id: this.referenceId,
+                [`${this.model.name}_id`]: this.referenceId,
+                ...this.referenceData
+              }
+            })
+          } else {
+            return h(require('data_resources/components/info').default, {
+              resourceName: this.model.name,
+              resourceId: this.referenceId,
+              oneColumn: true,
+              referencePopover: false
+            })
+          }
         },
         disabled: !this.showPopover || !this.referenceId,
         placement: 'right',
         bodyStyle: {
-          whiteSpace: 'break-spaces',
+          whiteSpace: tab?.tab_type === 'query' ? '' : 'break-spaces',
           overflowY: 'auto',
           minHeight: '50px',
           maxHeight: '300px',
@@ -118,6 +133,12 @@ export default {
 .ivu-poptip-popper[x-placement="right"] .ivu-poptip-arrow {
   margin-top: -7px;
   top: 7%;
+}
+
+.richtext-no-padding {
+  .richtext {
+    padding: 0 !important
+  }
 }
 </style>
 

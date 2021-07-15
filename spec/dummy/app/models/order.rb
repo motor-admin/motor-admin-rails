@@ -6,7 +6,6 @@ class Order < ApplicationRecord
   belongs_to :customer
 
   has_many :line_items, dependent: :destroy
-  has_many :notes, as: :record, dependent: :destroy
 
   validates :address_line_one, presence: true
   validates :address_line_two, presence: true

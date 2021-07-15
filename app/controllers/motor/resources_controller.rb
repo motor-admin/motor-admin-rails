@@ -11,7 +11,7 @@ module Motor
     end
 
     def create
-      Motor::BuildSchema::PersistResourceConfigs.call(@resource)
+      Motor::Resources::PersistConfigs.call(@resource)
       Motor::Configs::WriteToFile.call
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params, current_ability) }

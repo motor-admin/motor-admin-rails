@@ -7,7 +7,7 @@ class OrdersCancelController < ApplicationController
   def create
     ApplicationRecord.transaction do
       @order.update!(status: :canceled)
-      @order.notes.create!(body: params.dig(:data, :reason))
+      Note.create!(body: params.dig(:data, :reason), record: @order)
     end
 
     head :ok

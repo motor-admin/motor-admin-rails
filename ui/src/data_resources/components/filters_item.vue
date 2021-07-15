@@ -98,9 +98,9 @@ export default {
             const referenceModel = modelNameMap[column.reference.model_name]
 
             return referenceModel.columns.map((refColumn) => {
-              if (!refColumn.virtual && ['read_write', 'read_only'].includes(refColumn.access_type)) {
+              if (!refColumn.virtual && refColumn.column_source !== 'query' && ['read_write', 'read_only'].includes(refColumn.access_type)) {
                 return {
-                  ...(refColumn.name === column.reference.association_primary_key ? column : refColumn),
+                  ...(refColumn.name === column.reference.primary_key ? column : refColumn),
                   value: `${column.reference.name}.${refColumn.name}`,
                   label: `${column.reference.display_name} - ${refColumn.display_name}`
                 }
@@ -117,7 +117,7 @@ export default {
             const assocModel = modelNameMap[assoc.model_name]
 
             return assocModel.columns.map((column) => {
-              if (!column.virtual && ['read_write', 'read_only'].includes(column.access_type)) {
+              if (!column.virtual && column.column_source !== 'query' && ['read_write', 'read_only'].includes(column.access_type)) {
                 return {
                   ...column,
                   value: `${assoc.name}.${column.name}`,
@@ -158,7 +158,7 @@ export default {
           { value: 'starts_with', label: this.i18n.starts_with },
           { value: 'ends_with', label: this.i18n.ends_with }
         )
-      } else if (['integer', 'float', 'date', 'datetime'].includes(this.selectedColumn.column_type)) {
+      } else if (['integer', 'float', 'date', 'datetime', 'currency'].includes(this.selectedColumn.column_type)) {
         actions.push(
           { value: 'gt', label: this.i18n.greater_than },
           { value: 'gte', label: this.i18n.greater_or_equal },

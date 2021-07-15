@@ -238,3 +238,14 @@ en:
     field: Field
     empty: Empty
     not_empty: Not empty
+    general: General
+    run: Run
+    use_default: Use Default
+    query_editor: Query Editor
+    polymorphic: Polymorphic
+    foreign_key: Foreign key
+    primary_key: Primary key
+    through: Through
+    source: Source
+    resource: Resource
+    add_association: Add Association

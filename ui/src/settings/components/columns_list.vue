@@ -19,6 +19,7 @@
     <ResourceColumnForm
       ref="newForm"
       :column="newColumn"
+      :resource-name="resource.name"
       @cancel="newColumn = null"
       @submit="onColumnSubmit"
     />
@@ -80,7 +81,6 @@ export default {
     onColumnSubmit (column) {
       column.name = underscore(column.display_name)
 
-      this.resource.columns.push(column)
       this.newColumn = null
 
       return api.post('resources', {
@@ -93,6 +93,7 @@ export default {
           }
         }
       }).then((result) => {
+        this.resource.columns.push(column)
       }).catch((error) => {
         console.error(error)
       })

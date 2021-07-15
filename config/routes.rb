@@ -11,12 +11,13 @@ Motor::Admin.routes.draw do
       resources :configs, only: %i[index create]
       resources :resources, only: %i[index create]
       resources :resource_methods, only: %i[show], param: 'resource'
+      resources :resource_default_queries, only: %i[show], param: 'resource'
+      resources :schema, only: %i[index show], param: 'resource'
       resources :dashboards, only: %i[index show create update destroy]
       resources :forms, only: %i[index show create update destroy]
       resources :alerts, only: %i[index show create update destroy]
       resources :icons, only: %i[index]
       resources :active_storage_attachments, only: %i[create], path: 'data/active_storage__attachments'
-      resource :schema, only: %i[show update]
       resources :audits, only: %i[index]
       resources :resources, path: '/data/:resource',
                             only: %i[index show update create destroy],

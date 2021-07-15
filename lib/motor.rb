@@ -25,6 +25,7 @@ module Motor
         next if f.ends_with?('alerts/scheduled_alerts_cache.rb')
         next if f.ends_with?('configs/load_from_cache.rb')
         next if f.ends_with?('configs/sync_from_file.rb')
+        next if f.ends_with?('resources/custom_sql_columns_cache.rb')
 
         load f
       end
@@ -62,6 +63,7 @@ require 'motor/queries'
 require 'motor/dashboards'
 require 'motor/forms'
 require 'motor/alerts'
+require 'motor/resources'
 require 'motor/hash_serializer'
 require 'motor/net_http_utils'
 require 'motor/railtie'

@@ -18,6 +18,8 @@ class OrdersController < ApplicationController
     assign_order_attributes(@order)
 
     if @order.save
+      notes_params.each { |attrs| Note.create(attrs.merge(record: @order)) }
+
       render html: helpers.link_to(nil, motor_ui_data_path(['orders', @order.id]))
     else
       render json: { errors: @order.errors }, status: :unprocessable_entity
@@ -32,7 +34,6 @@ class OrdersController < ApplicationController
     order.status = :pending
     order.customer = Customer.find_by(email: customer_params[:email]) || Customer.new(customer_params)
     order.line_items = line_items_params.map { |attrs| LineItem.new(attrs) }
-    order.notes = notes_params.map { |attrs| Note.new(attrs) }
   end
 
   def order_params

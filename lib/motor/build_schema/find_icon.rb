@@ -114,12 +114,12 @@ module Motor
       'status' => 'hash'
     }.freeze
 
-    DEFAULT_ICON = 'database'
+    DEFAULT_ICON = BuildSchema::DEFAULT_ICON
 
     module_function
 
     def call(text)
-      text = text.downcase
+      text = text.underscore
       icon = ICONS_MAP[text] || ICONS_MAP[text.singularize]
 
       icon ||=

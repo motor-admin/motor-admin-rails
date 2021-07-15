@@ -238,6 +238,17 @@ es:
     field: Campo
     empty: Vacío
     not_empty: No vacío
+    general: General
+    run: Ejecutar
+    use_default: Uso por defecto
+    query_editor: Editor de consultas
+    polymorphic: Polimórfico
+    foreign_key: Clave externa
+    primary_key: Clave primaria
+    through: Mediante
+    source: Fuente
+    resource: Recurso
+    add_association: Añadir Asociación
     i:
       locale: es
       select:

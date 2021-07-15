@@ -13,7 +13,10 @@ module Motor
 
     def resource_class
       @resource_class ||=
-        Motor::BuildSchema::Utils.classify_slug(resource_name_prefix + params[:resource])
+        Motor::Resources::FetchConfiguredModel.call(
+          Motor::BuildSchema::Utils.classify_slug(resource_name_prefix + params[:resource]),
+          cache_key: Motor::Resource.maximum(:updated_at)
+        )
     end
 
     def resource_name_prefix
@@ -40,8 +43,6 @@ module Motor
       ).load_and_authorize_resource
     rescue ActiveRecord::RecordNotFound
       head :not_found
-    rescue StandardError => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
 
     def load_and_authorize_association
@@ -63,8 +64,6 @@ module Motor
       end
     rescue ActiveRecord::RecordNotFound
       head :not_found
-    rescue StandardError => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
   end
 end

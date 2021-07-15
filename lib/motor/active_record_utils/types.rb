@@ -36,8 +36,9 @@ module Motor
         all.invert[name.to_s]
       end
 
-      def find_name_for_class(klass)
-        name = all[klass.to_s]
+      def find_name_for_type(type)
+        name   = all[type.subtype.class.to_s] if type.respond_to?(:subtype)
+        name ||= all[type.class.to_s]
 
         return UNIFIED_TYPES.fetch(name, name) if name
 

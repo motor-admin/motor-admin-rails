@@ -43,7 +43,7 @@ module Motor
       def models
         eager_load_models!
 
-        models = ActiveRecord::Base.descendants.reject(&:abstract_class)
+        models = ActiveRecord::Base.descendants.reject { |k| k.abstract_class || k.anonymous? }
 
         models -= Motor::ApplicationRecord.descendants
         models -= [Motor::Audit]
@@ -75,6 +75,7 @@ module Motor
           scopes: fetch_scopes(model),
           actions: BuildSchema::Defaults.actions,
           tabs: BuildSchema::Defaults.tabs,
+          custom_sql: nil,
           visible: true
         }.with_indifferent_access
       end
@@ -91,7 +92,7 @@ module Motor
             display_name: I18n.t(scope_name,
                                  scope: [I18N_SCOPES_KEY, model.name.underscore].join('.'),
                                  default: scope_name.humanize),
-            scope_type: DEFAULT_SCOPE_TYPE,
+            scope_type: DEFAULT_TYPE,
             visible: true,
             preferences: {}
           }
@@ -118,6 +119,7 @@ module Motor
           name: column.name,
           display_name: Utils.humanize_column_name(model.human_attribute_name(column.name)),
           column_type: fetch_column_type(column, model),
+          column_source: ColumnSources::TABLE,
           is_array: column.array?,
           access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
           default_value: default_attrs[column.name],
@@ -173,6 +175,7 @@ module Motor
         end.compact
       end
 
+      # rubocop:disable Metrics/AbcSize
       def build_reflection_column(name, model, ref, default_attrs)
         if !ref.polymorphic? && ref.klass.name == 'ActionText::RichText'
           return build_action_text_column(name, model, ref)
@@ -181,11 +184,14 @@ module Motor
         column_name = ref.belongs_to? ? ref.foreign_key.to_s : name
         is_attachment = !ref.polymorphic? && ref.klass.name == 'ActiveStorage::Attachment'
         access_type = ref.belongs_to? || is_attachment ? ColumnAccessTypes::READ_WRITE : ColumnAccessTypes::READ_ONLY
+        column_type = is_attachment ? ColumnTypes::FILE : ColumnTypes::REFERENCE
+        column_source = model.columns_hash[column_name] ? ColumnSources::TABLE : ColumnSources::REFLECTION
 
         {
           name: column_name,
           display_name: model.human_attribute_name(name),
-          column_type: is_attachment ? ColumnTypes::FILE : ColumnTypes::INTEGER,
+          column_type: column_type,
+          column_source: column_source,
           access_type: access_type,
           default_value: default_attrs[column_name],
           validators: fetch_validators(model, column_name, ref),
@@ -194,6 +200,7 @@ module Motor
           virtual: false
         }
       end
+      # rubocop:enable Metrics/AbcSize
 
       def build_action_text_column(name, model, ref)
         name = name.delete_prefix(ACTION_TEXT_REFLECTION_PREFIX)
@@ -202,6 +209,7 @@ module Motor
           name: name + ACTION_TEXT_COLUMN_SUFFIX,
           display_name: model.human_attribute_name(name),
           column_type: ColumnTypes::RICHTEXT,
+          column_source: ColumnSources::REFLECTION,
           access_type: ColumnAccessTypes::READ_WRITE,
           default_value: '',
           validators: fetch_validators(model, name, ref),
@@ -218,11 +226,14 @@ module Motor
           model_name: reflection.polymorphic? ? nil : reflection.klass.name.underscore,
           reference_type: reflection.belongs_to? ? 'belongs_to' : 'has_one',
           foreign_key: reflection.foreign_key,
-          association_primary_key: reflection.polymorphic? ? 'id' : reflection.association_primary_key,
-          polymorphic: reflection.polymorphic?
+          primary_key: reflection.polymorphic? ? 'id' : reflection.active_record_primary_key,
+          options: reflection.options.slice(:through, :source),
+          polymorphic: reflection.polymorphic?,
+          virtual: false
         }
       end
 
+      # rubocop:disable Metrics/AbcSize
       def fetch_associations(model)
         model.reflections.map do |name, ref|
           next if ref.has_one? || ref.belongs_to?
@@ -238,12 +249,16 @@ module Motor
             slug: name.underscore,
             model_name: model_class.name.underscore,
             foreign_key: ref.foreign_key,
+            primary_key: ref.active_record_primary_key,
             polymorphic: ref.options[:as].present?,
             icon: Motor::FindIcon.call(name),
+            options: ref.options.slice(:through, :source),
+            virtual: false,
             visible: true
           }
         end.compact
       end
+      # rubocop:enable Metrics/AbcSize
 
       def fetch_validators(model, column_name, reflection = nil)
         validators =

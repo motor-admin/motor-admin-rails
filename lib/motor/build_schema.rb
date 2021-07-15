@@ -15,7 +15,8 @@ module Motor
       ALL = [
         STRING = 'string',
         INTEGER = 'integer',
-        DECIMAL = 'float',
+        FLOAT = 'float',
+        REFERENCE = 'reference',
         DATETIME = 'datetime',
         DATE = 'date',
         BOOLEAN = 'boolean',
@@ -34,7 +35,18 @@ module Motor
       ].freeze
     end
 
+    module ColumnSources
+      ALL = [
+        TABLE = 'table',
+        QUERY = 'query',
+        REFLECTION = 'reflection'
+      ].freeze
+    end
+
     SEARCHABLE_COLUMN_TYPES = %i[citext text string bitstring].freeze
+
+    DEFAULT_TYPE = 'default'
+    DEFAULT_ICON = 'database'
 
     COLUMN_NAME_ACCESS_TYPES = {
       id: ColumnAccessTypes::READ_ONLY,
@@ -43,7 +55,37 @@ module Motor
       deleted_at: ColumnAccessTypes::READ_ONLY
     }.with_indifferent_access.freeze
 
-    DEFAULT_SCOPE_TYPE = 'default'
+    COLUMN_DEFAULTS = {
+      access_type: ColumnAccessTypes::READ_WRITE,
+      column_source: ColumnSources::TABLE,
+      default_value: nil,
+      reference: nil,
+      format: {},
+      validators: []
+    }.with_indifferent_access
+
+    ACTION_DEFAULTS = {
+      visible: true,
+      preferences: {}
+    }.with_indifferent_access
+
+    TAB_DEFAULTS = {
+      visible: true,
+      tab_type: DEFAULT_TYPE,
+      preferences: {}
+    }.with_indifferent_access
+
+    SCOPE_DEFAULTS = {
+      visible: true,
+      scope_type: DEFAULT_TYPE,
+      preferences: {}
+    }.with_indifferent_access
+
+    ASSOCIATION_DEFAULTS = {
+      visible: true,
+      icon: DEFAULT_ICON,
+      options: {}
+    }.with_indifferent_access
 
     module_function
 
@@ -62,7 +104,6 @@ require_relative './build_schema/adjust_devise_model_schema'
 require_relative './build_schema/load_from_rails'
 require_relative './build_schema/find_display_column'
 require_relative './build_schema/find_icon'
-require_relative './build_schema/persist_resource_configs'
 require_relative './build_schema/reorder_schema'
 require_relative './build_schema/merge_schema_configs'
 require_relative './build_schema/apply_permissions'

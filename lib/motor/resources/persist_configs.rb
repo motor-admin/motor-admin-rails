@@ -1,39 +1,13 @@
 # frozen_string_literal: true
 
 module Motor
-  module BuildSchema
-    module PersistResourceConfigs
-      RESOURCE_ATTRS = %w[display_name icon visible].freeze
-      COLUMN_ATTRS = %w[name display_name column_type access_type default_value virtual format].freeze
-      ASSOCIATION_ATTRS = %w[name display_name icon visible].freeze
-      SCOPE_ATTRS = %w[name display_name scope_type preferences visible].freeze
-      ACTION_ATTRS = %w[name display_name action_type preferences visible].freeze
-      TAB_ATTRS = %w[name display_name tab_type preferences visible].freeze
-
-      COLUMN_DEFAULTS = {
-        access_type: 'read_write',
-        default_value: nil,
-        reference: nil,
-        format: {},
-        validators: []
-      }.with_indifferent_access
-
-      ACTION_DEFAULTS = {
-        visible: true,
-        preferences: {}
-      }.with_indifferent_access
-
-      TAB_DEFAULTS = {
-        visible: true,
-        tab_type: 'default',
-        preferences: {}
-      }.with_indifferent_access
-
-      SCOPE_DEFAULTS = {
-        visible: true,
-        scope_type: 'default',
-        preferences: {}
-      }.with_indifferent_access
+  module Resources
+    module PersistConfigs
+      COLUMN_DEFAULTS = BuildSchema::COLUMN_DEFAULTS
+      ACTION_DEFAULTS = BuildSchema::ACTION_DEFAULTS
+      TAB_DEFAULTS = BuildSchema::TAB_DEFAULTS
+      SCOPE_DEFAULTS = BuildSchema::SCOPE_DEFAULTS
+      ASSOCIATION_DEFAULTS = BuildSchema::ASSOCIATION_DEFAULTS
 
       module_function
 
@@ -206,12 +180,15 @@ module Motor
       def normalize_associations(default_assocs, existing_assocs, new_assocs)
         (existing_assocs.pluck(:name) + new_assocs.pluck(:name)).uniq.map do |name|
           new_assoc = safe_fetch_by_name(new_assocs, name)
+
+          next if new_assoc[:_remove]
+
           existing_assoc = safe_fetch_by_name(existing_assocs, name)
           default_assoc = safe_fetch_by_name(default_assocs, name)
           assoc_attrs = new_assoc.slice(*ASSOCIATION_ATTRS)
 
           normalized_assoc = existing_assoc.merge(assoc_attrs)
-          normalized_assoc = reject_default(default_assoc, normalized_assoc)
+          normalized_assoc = reject_default(default_assoc.presence || ASSOCIATION_DEFAULTS, normalized_assoc)
 
           normalized_assoc.merge(name: name) if normalized_assoc.present?
         end.compact.presence
@@ -230,7 +207,9 @@ module Motor
       # @param resource_name [String]
       # @return [HashWithIndifferentAccess]
       def fetch_default_schema(resource_name)
-        LoadFromRails.build_model_schema(resource_name.classify.constantize)
+        model = resource_name.classify.constantize
+
+        BuildSchema::LoadFromRails.build_model_schema(model).merge(custom_sql: model.all.to_sql)
       end
 
       # @param default [HashWithIndifferentAccess]
@@ -240,7 +219,12 @@ module Motor
         return new unless default
 
         new.reject do |key, value|
-          default[key].to_json == value.to_json
+          default[key].to_json ==
+            if value.is_a?(Hash) || value.is_a?(ActiveSupport::HashWithIndifferentAccess)
+              value.select { |_, v| v.present? }.to_json
+            else
+              value.to_json
+            end
         end
       end
     end

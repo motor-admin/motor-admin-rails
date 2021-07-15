@@ -3,12 +3,6 @@
 module Motor
   module BuildSchema
     module MergeSchemaConfigs
-      RESOURCE_ATTRS = PersistResourceConfigs::RESOURCE_ATTRS
-      COLUMN_DEFAULTS = PersistResourceConfigs::COLUMN_DEFAULTS
-      ACTION_DEFAULTS = PersistResourceConfigs::ACTION_DEFAULTS
-      TAB_DEFAULTS = PersistResourceConfigs::TAB_DEFAULTS
-      SCOPE_DEFAULTS = PersistResourceConfigs::SCOPE_DEFAULTS
-
       module_function
 
       # @param schema [Array<HashWithIndifferentAccess>]
@@ -26,7 +20,7 @@ module Motor
       # @param configs [HashWithIndifferentAccess]
       # @return [HashWithIndifferentAccess]
       def merge_model(model, configs)
-        updated_model = model.merge(configs.slice(*RESOURCE_ATTRS))
+        updated_model = model.merge(configs.slice(*Resources::RESOURCE_ATTRS))
 
         merge_actions!(updated_model, configs)
         merge_associations!(updated_model, configs)
@@ -44,8 +38,8 @@ module Motor
         model[:associations] = merge_by_name(
           model[:associations],
           configs[:associations],
-          {},
-          ->(_) { true }
+          ASSOCIATION_DEFAULTS,
+          ->(scope) { !scope[:virtual] }
         )
 
         model
@@ -56,7 +50,7 @@ module Motor
       # @return [HashWithIndifferentAccess]
       def merge_columns!(model, configs)
         model[:columns] = merge_by_name(
-          model[:columns],
+          merge_custom_sql_columns(model[:columns], configs[:custom_sql]),
           configs[:columns],
           COLUMN_DEFAULTS,
           ->(scope) { !scope[:virtual] }
@@ -119,6 +113,34 @@ module Motor
 
           (default_item || default_attrs).merge(config_item || {})
         end.compact
+      end
+
+      # @param columns [Array<HashWithIndifferentAccess>]
+      # @param sql [String]
+      # @return [Array<HashWithIndifferentAccess>]
+      def merge_custom_sql_columns(columns, sql)
+        return columns if sql.blank?
+
+        query_columns = Resources::CustomSqlColumnsCache.call(sql)
+
+        columns_index = columns.index_by { |e| e[:name] }
+
+        merged_columns =
+          query_columns.map do |column|
+            existing_column = columns_index.delete(column[:name])
+
+            next existing_column if existing_column
+
+            column.merge(COLUMN_DEFAULTS).merge(
+              access_type: ColumnAccessTypes::READ_ONLY,
+              column_source: ColumnSources::QUERY,
+              virtual: false
+            )
+          end
+
+        reflection_columns = columns_index.values.select { |c| c[:column_source] == ColumnSources::REFLECTION }
+
+        reflection_columns + merged_columns
       end
 
       # @param cache_keys [Hash]

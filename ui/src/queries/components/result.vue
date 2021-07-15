@@ -14,14 +14,14 @@
   </div>
   <ValueResult
     v-else-if="isValue"
-    :style="{ height: showFooter || !data.length ? 'calc(100% - 34px)' : '100%' }"
+    :style="{ height: (withFooter && showFooter) || !data.length ? 'calc(100% - 34px)' : '100%' }"
     :loading="loading"
     :data="paginatedData"
   />
   <div
     v-else-if="isTable || isMarkdown || isTableToggle"
     class="d-flex"
-    :style="{ height: 'calc(100% - 34px)' }"
+    :style="{ height: withFooter ? 'calc(100% - 34px)' : '100%' }"
   >
     <div
       v-if="isMarkdown"
@@ -67,7 +67,7 @@
     />
   </div>
   <div
-    v-if="showFooter"
+    v-if="withFooter && showFooter"
     class="d-flex justify-content-center text-center border-top bg-white p-1"
   >
     <div
@@ -221,6 +221,11 @@ export default {
       default: false
     },
     withSettings: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    withFooter: {
       type: Boolean,
       required: false,
       default: true

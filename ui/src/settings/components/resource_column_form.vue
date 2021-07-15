@@ -38,7 +38,8 @@
               v-model="dataColumn.column_type"
               :options="columnTypes"
               :with-deselect="false"
-              @update:modelValue="assignDefaultFormat"
+              :disabled="dataColumn.reference?.virtual === false"
+              @update:modelValue="assignDefaultData"
             />
           </FormItem>
         </div>
@@ -70,6 +71,11 @@
           </FormItem>
         </div>
       </div>
+      <ReferenceForm
+        v-if="dataColumn.access_type !== 'hidden' && ['reference'].includes(dataColumn.column_type) && dataColumn.reference && dataColumn.reference.virtual"
+        :resource-name="resourceName"
+        :reference="dataColumn.reference"
+      />
       <FormItem
         v-if="dataColumn.column_type === 'tag' && dataColumn.virtual"
         :label="i18n['select_options']"
@@ -132,18 +138,26 @@ import FormInput from 'data_forms/components/input'
 import Validators from 'utils/scripts/validators'
 import CurrencySelect from 'utils/components/currency_select'
 import OptionsInput from 'utils/components/options_input'
+import ReferenceForm from './resource_reference_form'
 import { fieldRequiredMessage } from 'utils/scripts/i18n'
+import { modelNameMap } from 'data_resources/scripts/schema'
+import { underscore } from 'utils/scripts/string'
 
 export default {
   name: 'ResourceColumnForm',
   components: {
     FormInput,
     CurrencySelect,
-    OptionsInput
+    OptionsInput,
+    ReferenceForm
   },
   props: {
     column: {
       type: Object,
+      required: true
+    },
+    resourceName: {
+      type: String,
       required: true
     },
     withRemove: {
@@ -172,6 +186,15 @@ export default {
         rules.default_value = [{ validator: Validators.json }]
       }
 
+      if (this.dataColumn.column_type === 'reference') {
+        if (!this.dataColumn.reference?.polymorphic) {
+          rules['reference.model_name'] = [{ required: true, message: fieldRequiredMessage('reference_resource') }]
+        }
+
+        rules['reference.foreign_key'] = [{ required: true, message: fieldRequiredMessage('foreign_key') }]
+        rules['reference.primary_key'] = [{ required: true, message: fieldRequiredMessage('primary_key') }]
+      }
+
       return rules
     },
     currencyBaseOptions () {
@@ -185,6 +208,7 @@ export default {
         { label: this.i18n.text, value: 'string' },
         { label: this.i18n.integer, value: 'integer' },
         { label: this.i18n.decimal, value: 'float' },
+        { label: this.i18n.reference, value: 'reference' },
         { label: this.i18n.date_and_time, value: 'datetime' },
         { label: this.i18n.date, value: 'date' },
         { label: this.i18n.boolean, value: 'boolean' },
@@ -226,10 +250,30 @@ export default {
     this.dataColumn = this.normalizeDataColumn()
   },
   methods: {
-    assignDefaultFormat () {
+    assignDefaultData () {
+      if (this.column.reference) {
+        if (this.column.reference.virtual) {
+          this.dataColumn.reference = null
+        } else {
+          this.dataColumn.reference = JSON.parse(JSON.stringify(this.column.reference))
+        }
+      }
+
       if (this.dataColumn.column_type === 'currency') {
         this.dataColumn.format.currency ||= 'USD'
         this.dataColumn.format.currency_base ||= 'unit'
+      } else if (this.dataColumn.column_type === 'reference') {
+        this.dataColumn.reference = {
+          name: '',
+          display_name: '',
+          model_name: (modelNameMap[this.column.name] || modelNameMap[this.column.name.replace(/_id$/, '')])?.name,
+          reference_type: this.column.virtual ? 'has_one' : 'belongs_to',
+          foreign_key: this.column.virtual ? '' : this.column.name,
+          primary_key: 'id',
+          options: {},
+          polymorphic: false,
+          virtual: true
+        }
       }
     },
     normalizeDataColumn (column) {
@@ -248,6 +292,11 @@ export default {
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          if (this.dataColumn.reference) {
+            this.dataColumn.reference.name ||= underscore(this.dataColumn.display_name)
+            this.dataColumn.reference.display_name ||= this.dataColumn.display_name
+          }
+
           this.$emit('submit', this.dataColumn)
         }
       })

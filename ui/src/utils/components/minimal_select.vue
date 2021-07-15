@@ -6,6 +6,7 @@
       'ivu-select-visible': isOpen,
       [`ivu-select-${size}`]: true,
       'ivu-select-multiple': multiple,
+      'ivu-select-disabled': disabled,
       'ivu-select-single': !multiple
     }"
     @keydown.enter.stop="applyFocused"
@@ -45,6 +46,7 @@
           :placeholder="selectedOptionsData.length ? '' : placeholder"
           autocomplete="off"
           spellcheck="false"
+          :disabled="disabled"
           class="ivu-select-input"
           :class="{ 'ivu-input-no-border': !border }"
           @keydown.down="isOpen = true"
@@ -233,6 +235,11 @@ export default {
       default: null
     },
     focusFirst: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       required: false,
       default: false
@@ -593,22 +600,24 @@ export default {
       })
     },
     toggleDropdown () {
-      this.isOpen = !this.isOpen
+      if (!this.disabled) {
+        this.isOpen = !this.isOpen
 
-      this.popper ||= new Popper(this.$el, this.$refs.dropdown, {
-        placement: 'bottom-start',
-        modifiers: {
-          computeStyle: {
-            gpuAcceleration: false
-          },
-          preventOverflow: {
-            boundariesElement: 'window'
+        this.popper ||= new Popper(this.$el, this.$refs.dropdown, {
+          placement: 'bottom-start',
+          modifiers: {
+            computeStyle: {
+              gpuAcceleration: false
+            },
+            preventOverflow: {
+              boundariesElement: 'window'
+            }
           }
-        }
-      })
+        })
 
-      this.popper.update()
-      this.$refs.input?.focus()
+        this.popper.update()
+        this.$refs.input?.focus()
+      }
     }
   }
 }
