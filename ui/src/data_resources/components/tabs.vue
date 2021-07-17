@@ -15,10 +15,10 @@
     <div
       :style="style"
       class="position-relative"
-      :class="isDefaultDetails ? 'bg-white' : 'bg-body'"
+      :class="isDefaultDetails || isQueryDetails ? 'bg-white' : 'bg-body'"
     >
       <SettingsMask
-        v-if="isShowSettings && !isDefaultDetails"
+        v-if="isShowSettings && !isDefaultDetails && !isQueryDetails"
         :settings-type="selectedTab.tab_type"
         :preferences="selectedTab.preferences"
       />
@@ -43,6 +43,15 @@
           :with-actions="true"
           :editable="true"
           :one-column="!minimized"
+          @remove="$emit('remove')"
+        />
+        <ResourceInfoQuery
+          v-else-if="isQueryDetails"
+          :key="selectedTab.tab_type + selectedTab.preferences.query_id"
+          ref="query"
+          class="px-3 pt-3"
+          :resource-name="resourceName"
+          :resource-id="resourceId"
           @remove="$emit('remove')"
         />
         <FormTab
@@ -73,6 +82,7 @@
 <script>
 import TabsComponent from 'utils/components/tabs'
 import ResourceInfo from './info'
+import ResourceInfoQuery from './info_query'
 import { modelNameMap } from '../scripts/schema'
 import QueryTab from './query_tab'
 import FormTab from './form_tab'
@@ -101,7 +111,8 @@ export default {
     FormTab,
     DashboardTab,
     ResourcesMenu,
-    SettingsMask
+    SettingsMask,
+    ResourceInfoQuery
   },
   props: {
     resourceName: {
@@ -143,6 +154,9 @@ export default {
     },
     isDefaultDetails () {
       return this.selectedTabName === 'details' && this.selectedTab.tab_type === 'default'
+    },
+    isQueryDetails () {
+      return this.selectedTabName === 'details' && this.selectedTab.tab_type === 'query'
     },
     style () {
       const vh = this.minimized ? '(var(--vh) / 2)' : 'var(--vh)'

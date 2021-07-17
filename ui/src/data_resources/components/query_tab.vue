@@ -24,7 +24,7 @@
         {{ i18n['no_data'] }}
       </div>
       <QueryResult
-        v-else
+        v-if="data.length"
         :data="data"
         :errors="errors"
         :title="query.name"
