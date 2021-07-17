@@ -186,6 +186,7 @@ export default {
         })
       } else {
         this.value = this.modelValue ?? ''
+        this.selectedOption = null
       }
     },
     labelFunction (option) {

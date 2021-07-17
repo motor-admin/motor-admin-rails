@@ -59,7 +59,7 @@ export default {
           resource.name = this.association.name.replace(/_attachments?$/, '')
         }
       } else if (this.parentResource) {
-        resource[`${this.parentResource.name}_id`] = parseInt(this.parentResource.id)
+        resource[this.association.foreign_key] = this.parentResource[this.association.primary_key]
       }
 
       return resource
