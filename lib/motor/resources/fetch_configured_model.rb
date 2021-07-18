@@ -10,6 +10,8 @@ module Motor
       def call(model, cache_key:)
         configs = Motor::Configs::LoadFromCache.load_resources(cache_key: cache_key)
 
+        return model if configs.blank?
+
         maybe_fetch_from_cache(
           model,
           cache_key,
