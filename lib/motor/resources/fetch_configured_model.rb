@@ -176,7 +176,7 @@ module Motor
       end
 
       def maybe_fetch_from_cache(model, cache_key, miss_cache_block, postprocess_block)
-        return yield unless cache_key
+        return miss_cache_block.call unless cache_key
 
         if CACHE_HASH[model.name] && CACHE_HASH[model.name][:key] == cache_key
           CACHE_HASH[model.name][:value]
