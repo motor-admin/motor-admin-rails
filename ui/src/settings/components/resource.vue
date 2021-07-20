@@ -119,6 +119,8 @@ export default {
   z-index: 1;
   padding-top: 2px;
   background: white;
+  margin-left: -16px;
+  margin-right: -16px;
 }
 
 :deep(.ivu-tabs-bar) {

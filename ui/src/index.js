@@ -55,6 +55,7 @@ import CanCan from 'utils/scripts/cancan'
 
 import enDict from 'view3/src/locale/lang/en-US'
 import { i18nDict } from 'utils/scripts/configs'
+import smoothscroll from 'smoothscroll-polyfill'
 
 if (i18nDict.i) {
   Object.assign(enDict, { i: i18nDict.i })
@@ -112,5 +113,6 @@ app.use(DynamicMessage)
 app.use(CanCan)
 
 document.addEventListener('DOMContentLoaded', () => {
+  smoothscroll.polyfill()
   app.mount('#app')
 })
