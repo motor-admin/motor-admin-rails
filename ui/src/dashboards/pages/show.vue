@@ -3,14 +3,25 @@
     class="row mx-0 mx-md-2"
     style="min-height: 74px"
   >
-    <div class="col-7 col-md-8 d-flex align-items-center">
-      <h1
-        class="my-3 overflow-hidden text-truncate"
-      >
-        {{ dashboard.title || cachedDashboardTitle || (isExisting ? '' : i18n['new_dashboard']) }}
-      </h1>
+    <div class="col-8">
+      <div class="row">
+        <div class="col d-flex align-items-center">
+          <h1
+            class="my-3 overflow-hidden text-truncate"
+          >
+            {{ dashboard.title || cachedDashboardTitle || (isExisting ? '' : i18n['new_dashboard']) }}
+          </h1>
+        </div>
+        <UnsavedChanges
+          ref="unsavedChanges"
+          :key="dashboard.id || 'new'"
+          v-model="dashboard"
+          :storage-key="`dashboard:${dashboard.id || 'new'}`"
+          class="col d-none d-xl-flex"
+        />
+      </div>
     </div>
-    <div class="col-5 col-md-4 d-flex align-items-center justify-content-end">
+    <div class="col-4 d-flex align-items-center justify-content-end">
       <VButton
         v-if="variables.length && isCanEdit"
         size="large"
@@ -51,6 +62,7 @@
         size="large"
         type="primary"
         :loading="isLoading"
+        class="d-none d-sm-block"
         icon="md-refresh"
         @click="refresh"
       />
@@ -138,6 +150,7 @@ import DashboardForm from '../components/form'
 import VariablesForm from 'queries/components/variables_form'
 import VariableSettings from 'queries/components/variable_settings'
 import { dashboardsStore } from 'reports/scripts/store'
+import UnsavedChanges from 'utils/components/unsaved_changes'
 import api from 'api'
 
 export default {
@@ -146,7 +159,8 @@ export default {
     Editor,
     DashboardLayout,
     VariablesForm,
-    VariableSettings
+    VariableSettings,
+    UnsavedChanges
   },
   data () {
     return {
@@ -314,7 +328,8 @@ export default {
       })
     },
     onSuccess (dashboard) {
-      Object.assign(this.dashboard, dashboard)
+      this.$refs.unsavedChanges.resetWithDefaultValue(dashboard)
+      this.dashboard = dashboard
 
       this.$Modal.remove()
       this.$Message.info(this.i18n.dashboard_has_been_saved)

@@ -79,7 +79,10 @@ export default {
     apiRequest () {
       const params = {
         data: this.dataBoard,
-        include: 'tags'
+        include: 'tags,queries',
+        fields: {
+          queries: 'id,name,preferences'
+        }
       }
 
       if (this.board.id) {

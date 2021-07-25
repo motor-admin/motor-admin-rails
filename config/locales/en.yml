@@ -249,3 +249,6 @@ en:
     source: Source
     resource: Resource
     add_association: Add Association
+    there_are_unsaved_changes_from: "There are unsaved changes from %{timestamp}"
+    clear: Clear
+    restore: Restore

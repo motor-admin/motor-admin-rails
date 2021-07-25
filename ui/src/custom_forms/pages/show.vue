@@ -3,12 +3,23 @@
     class="row mx-0 mx-md-2"
     style="min-height: 74px"
   >
-    <div class="col-8 d-flex align-items-center">
-      <h1
-        class="my-3 overflow-hidden text-truncate"
-      >
-        {{ form.name || cachedFormName || (isExisting ? '' : i18n['new_form']) }}
-      </h1>
+    <div class="col-8">
+      <div class="row">
+        <div class="col d-flex align-items-center">
+          <h1
+            class="my-3 overflow-hidden text-truncate"
+          >
+            {{ form.name || cachedFormName || (isExisting ? '' : i18n['new_form']) }}
+          </h1>
+        </div>
+        <UnsavedChanges
+          ref="unsavedChanges"
+          :key="form.id || 'new'"
+          v-model="form"
+          :storage-key="`form:${form.id || 'new'}`"
+          class="col d-none d-xl-flex"
+        />
+      </div>
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
       <VButton
@@ -91,6 +102,7 @@ import { formsStore, loadForms } from '../scripts/store'
 import api from 'api'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import singularize from 'inflected/src/singularize'
+import UnsavedChanges from 'utils/components/unsaved_changes'
 
 const columnTypeToFieldMap = {
   string: 'input',
@@ -119,7 +131,8 @@ export default {
   name: 'FromShow',
   components: {
     Editor,
-    CustomFormWrapper
+    CustomFormWrapper,
+    UnsavedChanges
   },
   data () {
     return {
@@ -245,6 +258,8 @@ export default {
       this.$refs.customFormWrapper.submit()
     },
     onSuccess (form) {
+      this.$refs.unsavedChanges.resetWithDefaultValue(form)
+
       this.form = form
 
       this.$Modal.remove()
