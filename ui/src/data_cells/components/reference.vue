@@ -134,12 +134,6 @@ export default {
   margin-top: -7px;
   top: 7%;
 }
-
-.richtext-no-padding {
-  .richtext {
-    padding: 0 !important
-  }
-}
 </style>
 
 <style lang="scss" scoped>

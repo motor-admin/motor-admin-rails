@@ -104,4 +104,16 @@ export default {
     }
   }
 }
+
+.richtext-no-padding {
+  .richtext {
+    padding: 0 !important
+  }
+}
+
+.richtext-no-scroll {
+  .richtext {
+    overflow: initial !important
+  }
+}
 </style>

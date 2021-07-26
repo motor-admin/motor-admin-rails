@@ -14,9 +14,9 @@
         </div>
         <UnsavedChanges
           ref="unsavedChanges"
-          :key="dashboard.id || 'new'"
+          :key="$route.params.id || 'new'"
           v-model="dashboard"
-          :storage-key="`dashboard:${dashboard.id || 'new'}`"
+          :storage-key="`dashboard:${$route.params.id || 'new'}`"
           class="col d-none d-xl-flex"
         />
       </div>

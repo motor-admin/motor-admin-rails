@@ -127,7 +127,7 @@
     </div>
     <div
       v-else
-      :style="{ height: height, paddingBottom: '1px', position: 'relative' }"
+      :style="{ height: height.replace(/\)$/, ' + 34px)'), paddingBottom: '1px', position: 'relative' }"
     >
       <Spin
         fix

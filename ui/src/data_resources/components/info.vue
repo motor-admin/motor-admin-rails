@@ -1,6 +1,7 @@
 <template>
   <div
     :style="{ position: 'relative' }"
+    :class="{ 'h-100': isLoading }"
   >
     <Spin
       v-if="isLoading || isReloading"
@@ -10,6 +11,10 @@
       v-if="!isLoading"
       class="d-flex flex-column h-100"
     >
+      <div
+        ref="observerElement"
+        style="height: 7px"
+      />
       <div
         ref="title"
         class="d-flex"
@@ -27,7 +32,7 @@
           </p>
           <h2
             v-else
-            class="mb-3"
+            style="margin: 9px 0"
           >
             {{ title }}
           </h2>
@@ -38,7 +43,7 @@
         </div>
         <div
           v-if="withActions && !notFound"
-          class="d-flex justify-content-end"
+          class="d-flex justify-content-end align-items-center"
           style="width: 100px"
         >
           <SettingsMask
@@ -198,8 +203,18 @@ export default {
       }
     }
   },
+  beforeUnmount () {
+    this.titleObserver?.disconnect()
+  },
   mounted () {
-    this.loadData()
+    this.loadData().then(() => {
+      this.titleObserver = new IntersectionObserver(
+        ([e]) => this.$refs.title.classList.toggle('pinned-resource-title', e.intersectionRatio < 1),
+        { threshold: 1.0 }
+      )
+
+      this.titleObserver.observe(this.$refs.observerElement)
+    })
   },
   methods: {
     onFinisAction (action) {
@@ -223,7 +238,7 @@ export default {
     loadData () {
       this.isReloading = true
 
-      api.get(`data/${this.model.slug}/${this.resourceId}`, {
+      return api.get(`data/${this.model.slug}/${this.resourceId}`, {
         params: this.queryParams
       }).then((result) => {
         this.assignResource(result.data.data)
@@ -243,3 +258,17 @@ export default {
   }
 }
 </script>
+
+<style>
+@import 'src/utils/styles/variables';
+
+.pinned-resource-title {
+  position: sticky;
+  top: 0;
+  margin: 0 -16px;
+  padding: 0 16px;
+  background: #fff;
+  z-index: 1;
+  border-bottom: 1px solid $border-color-base;
+}
+</style>

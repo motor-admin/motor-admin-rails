@@ -102,7 +102,15 @@ export default {
       this.isUnsavedResolved = true
     },
     saveInLocalStorage () {
-      localStorage.setItem(this.storageKey, JSON.stringify({ timestamp: new Date(), value: this.modelValue }))
+      const timestamp = new Date()
+
+      localStorage.setItem(
+        this.storageKey,
+        JSON.stringify({
+          timestamp: new Date(timestamp.getTime() - timestamp.getTimezoneOffset() * 60000),
+          value: this.modelValue
+        })
+      )
     }
   }
 }

@@ -7794,7 +7794,7 @@ vfile@^4.0.0:
 
 "view3@https://github.com/omohokcoj/view3#motor-admin":
   version "1.0.0"
-  resolved "https://github.com/omohokcoj/view3#c86cdfa8078f121fdb96cdafb9d3d997121d5d71"
+  resolved "https://github.com/omohokcoj/view3#be347199a82b5a148dbc1f6de3ad76a588daba6a"
   dependencies:
     async-validator "^3.5.1"
     clipboard "^2.0.6"

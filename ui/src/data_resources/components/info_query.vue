@@ -15,7 +15,7 @@
         >
           <QueryTab
             ref="query"
-            class="richtext-no-padding"
+            class="richtext-no-padding richtext-no-scroll"
             :tab="detailsTab"
             :variables="queryVariables"
           />
