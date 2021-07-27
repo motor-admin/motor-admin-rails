@@ -14,7 +14,7 @@
         </div>
         <UnsavedChanges
           ref="unsavedChanges"
-          :key="$route.params.id || 'new'"
+          :key="form.id || 'new'"
           v-model="form"
           :storage-key="`form:${$route.params.id || 'new'}`"
           class="col d-none d-xl-flex"
