@@ -40,6 +40,7 @@
           :resource-name="resourceName"
           :resource-id="resourceId"
           :with-actions="true"
+          :with-sticky-title="true"
           :editable="true"
           :one-column="!minimized"
           @remove="$emit('remove')"

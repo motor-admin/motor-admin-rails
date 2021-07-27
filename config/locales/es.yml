@@ -252,6 +252,7 @@ es:
     there_are_unsaved_changes_from: "Hay cambios sin guardar de %{timestamp}"
     clear: Quitar
     restore: Restaurar
+    more: Más
     i:
       locale: es
       select:

@@ -12,6 +12,7 @@
       class="d-flex flex-column h-100"
     >
       <div
+        v-if="withStickyTitle"
         ref="observerElement"
         style="height: 7px"
       />
@@ -22,7 +23,7 @@
         <div
           class="position-relative"
           style="min-width: 250px"
-          :style="withActions && !notFound ? 'width: calc(100% - 100px)' : 'width: 100%'"
+          :style="withActions && !notFound ? (widthLessThan('lg') ? 'width: calc(100% - 100px)' : 'width: 50%') : 'width: 100%'"
         >
           <p
             v-if="notFound"
@@ -32,7 +33,7 @@
           </p>
           <h2
             v-else
-            style="margin: 9px 0"
+            :style="withStickyTitle ? 'margin: 9px 0' : 'margin-bottom: 9px'"
           >
             {{ title }}
           </h2>
@@ -44,7 +45,7 @@
         <div
           v-if="withActions && !notFound"
           class="d-flex justify-content-end align-items-center"
-          style="width: 100px"
+          :style="widthLessThan('lg') ? 'width: 100px' : 'width: 50%'"
         >
           <SettingsMask
             v-if="isShowSettings"
@@ -59,6 +60,8 @@
             :button-type="'primary'"
             :button-ghost="false"
             :label="i18n['actions']"
+            :with-buttons="!widthLessThan('lg')"
+            :placement="'bottom-end'"
             @start-action="isReloading = true"
             @finish-action="onFinisAction"
           />
@@ -114,6 +117,7 @@ import ResourceActions from './actions'
 
 import { assignBreadcrumbLabel } from 'navigation/scripts/breadcrumb_store'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
+import { widthLessThan } from 'utils/scripts/dimensions'
 
 import { isShowSettings } from 'settings/scripts/toggle'
 import SettingsMask from 'settings/components/mask'
@@ -135,6 +139,11 @@ export default {
       required: true
     },
     withActions: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    withStickyTitle: {
       type: Boolean,
       required: false,
       default: false
@@ -208,15 +217,21 @@ export default {
   },
   mounted () {
     this.loadData().then(() => {
+      if (this.withStickyTitle) {
+        this.initializeTitleObserver()
+      }
+    })
+  },
+  methods: {
+    widthLessThan,
+    initializeTitleObserver () {
       this.titleObserver = new IntersectionObserver(
         ([e]) => this.$refs.title.classList.toggle('pinned-resource-title', e.intersectionRatio < 1),
         { threshold: 1.0 }
       )
 
       this.titleObserver.observe(this.$refs.observerElement)
-    })
-  },
-  methods: {
+    },
     onFinisAction (action) {
       if (action === 'remove') {
         this.$emit('remove', this.resource)

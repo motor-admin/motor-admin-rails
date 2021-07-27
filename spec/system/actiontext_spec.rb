@@ -11,7 +11,7 @@ RSpec.describe 'Actiontext' do
     before do
       visit motor_ui_data_path(['customers', customer.id])
 
-      ivu_dropdown_click 'Actions', 'Edit'
+      click_on 'Edit'
     end
 
     it 'updates field' do
@@ -33,7 +33,7 @@ RSpec.describe 'Actiontext' do
     before do
       visit motor_ui_data_path(['products', product.id])
 
-      ivu_dropdown_click 'Actions', 'Edit'
+      click_on 'Edit'
     end
 
     it 'updates field' do

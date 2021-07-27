@@ -1,35 +1,52 @@
 <template>
+  <template v-if="withButtons">
+    <VButton
+      v-for="(action, index) in buttonActions"
+      :key="action.name"
+      :class="index !== (buttonActions.length - 1) || dropdownActions.length ? 'me-2' : ''"
+      :type="buttonTypes[action.name]"
+      :ghost="!!buttonTypes[action.name]"
+      @click="applyAction(action)"
+    >
+      {{ action.display_name }}
+    </VButton>
+  </template>
   <Dropdown
-    v-if="withDeselect || hasActions"
+    v-if="(withDeselect || hasActions) && dropdownActions.length"
     trigger="click"
+    :placement="placement"
   >
     <VButton
       :ghost="buttonGhost"
       :type="buttonType"
       :class="{ 'bg-white': buttonGhost }"
     >
-      {{ label }}
+      {{ dropdownLabel }}
       <Icon type="ios-arrow-down" />
     </VButton>
     <template #list>
       <DropdownMenu>
-        <DropdownItem
+        <template
           v-for="action in customActions"
           :key="action.name"
-          :disabled="resources.length > 1 && action.action_type === 'form'"
-          @click="applyAction(action)"
         >
-          {{ action.display_name }}
-        </DropdownItem>
+          <DropdownItem
+            v-if="dropdownActions.indexOf(action) !== -1"
+            :disabled="resources.length > 1 && action.action_type === 'form'"
+            @click="applyAction(action)"
+          >
+            {{ action.display_name }}
+          </DropdownItem>
+        </template>
         <DropdownItem
-          v-if="editAction && canEdit"
+          v-if="editAction && canEdit && dropdownActions.indexOf(editAction) !== -1"
           :disabled="resources.length > 1"
           @click="applyAction(editAction)"
         >
           {{ i18n['edit'] }}
         </DropdownItem>
         <DropdownItem
-          v-if="removeAction && canRemove"
+          v-if="removeAction && canRemove && dropdownActions.indexOf(removeAction) !== -1"
           :divided="!!editAction"
           class="text-danger"
           @click="applyAction(removeAction)"
@@ -61,6 +78,8 @@ import singularize from 'inflected/src/singularize'
 import { loadCredentials } from 'utils/scripts/auth_credentials'
 import { i18nDict } from 'utils/scripts/configs'
 
+const MAX_BUTTONS_LENGTH = 50
+
 export default {
   name: 'ResourceActions',
   props: {
@@ -83,6 +102,16 @@ export default {
       required: false,
       default: false
     },
+    withButtons: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    placement: {
+      type: String,
+      required: false,
+      default: 'bottom'
+    },
     resourceName: {
       type: String,
       required: true
@@ -95,6 +124,53 @@ export default {
   },
   emits: ['start-action', 'finish-action'],
   computed: {
+    dropdownLabel () {
+      if (this.i18n.actions !== this.label) {
+        return this.label
+      } else {
+        return this.buttonActions.length ? this.i18n.more : this.i18n.actions
+      }
+    },
+    buttonTypes () {
+      return {
+        edit: 'primary',
+        remove: 'error'
+      }
+    },
+    partitionedActions () {
+      return this.permittedActions.reduce(([buttonActions, dropdownActions, len], action) => {
+        if (len < MAX_BUTTONS_LENGTH) {
+          len += action.display_name.length + 6
+          buttonActions.push(action)
+        } else {
+          dropdownActions.push(action)
+        }
+
+        return [buttonActions, dropdownActions, len]
+      }, [[], [], 0]).slice(0, 2)
+    },
+    buttonActions () {
+      if (!this.withButtons) {
+        return []
+      }
+
+      if (this.partitionedActions[1].length > 1) {
+        return this.partitionedActions[0]
+      } else {
+        return this.permittedActions
+      }
+    },
+    dropdownActions () {
+      if (!this.withButtons) {
+        return this.permittedActions
+      }
+
+      if (this.partitionedActions[1].length > 1) {
+        return this.partitionedActions[1]
+      } else {
+        return []
+      }
+    },
     resource () {
       return this.resources[0]
     },
@@ -118,8 +194,13 @@ export default {
       return this.canEdit || this.canRemove || this.customActions.length > 0
     },
     customActions () {
+      return this.permittedActions.filter((action) => {
+        return !['create', 'edit', 'remove'].includes(action.name)
+      })
+    },
+    permittedActions () {
       return this.model.actions.filter((action) => {
-        return !['create', 'edit', 'remove'].includes(action.name) && action.visible && this.resources.some((res) => {
+        return action.name !== 'create' && action.visible && this.resources.some((res) => {
           return this.$can(action.name, this.model.class_name, res)
         })
       })

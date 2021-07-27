@@ -141,7 +141,7 @@ RSpec.describe 'Resources' do
       it 'updates record' do
         expect(page).to have_content(customer.email)
 
-        ivu_dropdown_click 'Actions', 'Edit'
+        click_on 'Edit'
 
         within '.ivu-drawer' do
           ivu_fill_field 'Email', 'test@test.com'
@@ -156,7 +156,7 @@ RSpec.describe 'Resources' do
       end
 
       it 'buils custom form' do
-        ivu_dropdown_click 'Actions', 'Edit'
+        click_on 'Edit'
 
         within '.ivu-drawer' do
           find('.ivu-dropdown').click
@@ -181,7 +181,7 @@ RSpec.describe 'Resources' do
 
         visit motor_ui_data_path(['customers', customer.id])
 
-        ivu_dropdown_click 'Actions', 'Edit'
+        click_on 'Edit'
 
         expect(page).to have_content 'Test Field'
       end

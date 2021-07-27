@@ -66,7 +66,7 @@ RSpec.describe 'Authorization' do
         end
 
         it "doesn't show customer field" do
-          ivu_dropdown_click 'Actions', 'Edit'
+          click_on 'Edit'
 
           within '.ivu-drawer' do
             expect(page).not_to have_content 'Customer'
