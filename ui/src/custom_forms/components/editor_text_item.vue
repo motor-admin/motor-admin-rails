@@ -76,12 +76,12 @@ export default {
     onRemove () {
       this.isForm = false
 
-      this.$emit('remove', this.field)
+      this.$emit('remove', this.item)
     },
-    onSubmit (updatedField) {
+    onSubmit (updatedItem) {
       this.isForm = false
 
-      this.$emit('replace', [this.field, updatedField])
+      this.$emit('replace', [this.item, updatedItem])
     }
   }
 }
