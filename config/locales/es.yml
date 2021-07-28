@@ -253,6 +253,9 @@ es:
     clear: Quitar
     restore: Restaurar
     more: Más
+    add_text: Añadir Texto
+    edit_text: Editar Texto
+    open_in_markdown_editor: Abrir en el editor de markdown
     i:
       locale: es
       select:

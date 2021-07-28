@@ -19,9 +19,7 @@ function titleize (string) {
 }
 
 function interpolate (string, params) {
-  return string.replace(/{{?(\w+)}}?/g, (expr, key) => {
-    return params[key]
-  })
+  return string.replace(/{{?(\w+)}}?/g, (expr, key) => params[key] || expr)
 }
 
 function naiveMustache (string, data) {

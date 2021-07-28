@@ -137,7 +137,7 @@
 <script>
 import DataTable from 'data_tables/components/table'
 import Chart from './chart'
-import Markdown from './markdown'
+import Markdown from 'utils/components/markdown'
 import ValueResult from './value'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import csv from 'view3/src/utils/csv'

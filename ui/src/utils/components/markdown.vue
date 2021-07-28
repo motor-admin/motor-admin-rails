@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="isNoData ? 'd-flex align-items-center justify-content-center' : 'bg-white'"
+    :class="isNoData && !withoutData ? 'd-flex align-items-center justify-content-center' : 'bg-white'"
     class="richtext"
     v-html="sanitizedHtml"
   />
@@ -26,6 +26,16 @@ export default {
       required: false,
       default: false
     },
+    withoutData: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    renderMustache: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     data: {
       type: Object,
       required: false,
@@ -49,8 +59,8 @@ export default {
       }
     },
     sanitizedHtml () {
-      if (!this.isNoData) {
-        return DOMPurify.sanitize(marked(this.mustacheRendered))
+      if (this.withoutData || !this.isNoData) {
+        return DOMPurify.sanitize(marked(this.renderMustache ? this.mustacheRendered : this.dataMarkdown))
       } else {
         return this.loading ? '' : 'No data'
       }

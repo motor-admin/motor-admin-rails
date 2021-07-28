@@ -4,8 +4,14 @@
     :key="item.name"
   >
     <template v-if="checkConditions(item.conditions, mergedVariablesFormData)">
+      <Markdown
+        v-if="item.markdown"
+        :markdown="item.markdown"
+        :data="mergedVariablesFormData"
+        :without-data="true"
+      />
       <GroupItem
-        v-if="item.items"
+        v-else-if="item.items"
         v-model:form-data="formData[item.name]"
         :item="item"
         :variables-data="variablesData"
@@ -14,7 +20,7 @@
       <FormItem
         v-else
         ref="formItem"
-        :label="item.display_name"
+        :label="interpolate(item.display_name, mergedVariablesFormData)"
         :rules="buildValidationRules(item)"
         :prop="propPrefix ? `${propPrefix}.${item.name}` : item.name"
       >
@@ -38,6 +44,8 @@
 <script>
 import FormListInput from 'data_forms/components/list_input'
 import FormInput from 'data_forms/components/input'
+import Markdown from 'utils/components/markdown'
+import { interpolate } from 'utils/scripts/string'
 import { buildDefaultValues, checkConditions } from '../scripts/utils'
 import GroupItem from './group_item'
 import { i18nDict } from 'utils/scripts/i18n'
@@ -47,7 +55,8 @@ export default {
   components: {
     FormListInput,
     FormInput,
-    GroupItem
+    GroupItem,
+    Markdown
   },
   props: {
     formData: {
@@ -85,6 +94,7 @@ export default {
   },
   methods: {
     checkConditions,
+    interpolate,
     buildValidationRules (item) {
       return (item.validators || []).map((rule) => {
         return {

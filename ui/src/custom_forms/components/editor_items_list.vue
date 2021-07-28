@@ -9,6 +9,14 @@
       v-for="item in items"
       :key="item.name"
     >
+      <TextItem
+        v-if="item.markdown"
+        :item="item"
+        class="mb-2"
+        :condition-fields="listConditionFieldOptions"
+        @remove="removeItem"
+        @replace="replaceItem"
+      />
       <FieldItem
         v-if="item.field_type"
         :field="item"
@@ -21,6 +29,7 @@
         v-if="Array.isArray(item.items)"
         :group="item"
         class="mb-2"
+        :nesting-level="nestingLevel + 1"
         :condition-fields="listConditionFieldOptions"
         @remove="removeItem"
         @replace="replaceItem"
@@ -50,8 +59,23 @@
       :group="newGroup"
       :focus="true"
       :ok-text="i18n['add']"
+      :condition-fields="listConditionFieldOptions"
       @submit="addGroup"
       @cancel="newGroup = null"
+    />
+  </Card>
+  <Card
+    v-if="newTextItem"
+    ref="newTextForm"
+    class="mb-2"
+  >
+    <TextForm
+      :item="newTextItem"
+      :condition-fields="listConditionFieldOptions"
+      :focus="true"
+      :ok-text="i18n['add']"
+      @submit="addTextItem"
+      @cancel="newTextItem = null"
     />
   </Card>
 
@@ -70,6 +94,7 @@
     </VButton>
 
     <VButton
+      v-if="nestingLevel < 3"
       long
       type="text"
       icon="md-add"
@@ -78,6 +103,31 @@
     >
       {{ i18n['add_group'] }}
     </VButton>
+    <Dropdown
+      trigger="click"
+      class="ms-1 text-start float-end"
+      :placement="'bottom-end'"
+      style="position: absolute; bottom: 7px; right: 0px"
+    >
+      <VButton
+        long
+        type="text"
+        icon="md-more"
+      />
+      <template #list>
+        <DropdownMenu>
+          <DropdownItem
+            v-if="nestingLevel >= 3"
+            @click="toggleNewGroup"
+          >
+            {{ i18n['add_group'] }}
+          </DropdownItem>
+          <DropdownItem @click="toggleNewTextItem">
+            {{ i18n['add_text'] }}
+          </DropdownItem>
+        </DropdownMenu>
+      </template>
+    </Dropdown>
   </div>
 </template>
 
@@ -86,6 +136,8 @@ import GroupForm from './editor_group_form'
 import FieldForm from './editor_field_form'
 import FieldItem from './editor_field_item'
 import GroupItem from './editor_group_item'
+import TextItem from './editor_text_item'
+import TextForm from './editor_text_form'
 
 const defaultFieldParams = {
   display_name: '',
@@ -101,13 +153,21 @@ const defaultGroupParams = {
   items: []
 }
 
+const defaultTextItemParams = {
+  display_name: '',
+  name: '',
+  markdown: ''
+}
+
 export default {
   name: 'LayoutItemsList',
   components: {
     GroupForm,
     FieldForm,
     FieldItem,
-    GroupItem
+    GroupItem,
+    TextItem,
+    TextForm
   },
   props: {
     items: {
@@ -119,6 +179,11 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    nestingLevel: {
+      type: Number,
+      required: false,
+      default: 0
     },
     conditionFields: {
       type: Array,
@@ -134,10 +199,14 @@ export default {
   data () {
     return {
       newField: null,
-      newGroup: null
+      newGroup: null,
+      newTextItem: null
     }
   },
   computed: {
+    fieldItems () {
+      return this.items.filter((e) => e.field_type)
+    },
     listConditionFieldOptions () {
       return [
         ...this.items.map((item) => {
@@ -163,6 +232,17 @@ export default {
         })
       }
     },
+    toggleNewTextItem () {
+      if (this.newTextItem) {
+        this.newTextItem = null
+      } else {
+        this.newTextItem = { ...defaultTextItemParams }
+
+        this.$nextTick(() => {
+          this.$refs.newTextForm.$el.scrollIntoView({ inline: 'end', block: 'center', behavior: 'smooth' })
+        })
+      }
+    },
     toggleNewGroup () {
       if (this.newGroup) {
         this.newGroup = null
@@ -178,6 +258,11 @@ export default {
       this.items.push(field)
 
       this.newField = null
+    },
+    addTextItem (item) {
+      this.items.push(item)
+
+      this.newTextItem = null
     },
     addGroup (group) {
       this.items.push(group)

@@ -69,7 +69,7 @@
 
 <script>
 import api from 'api'
-import CodeEditor from 'queries/components/code_editor'
+import CodeEditor from 'utils/components/code_editor'
 import QueryResult from 'queries/components/result'
 
 export default {

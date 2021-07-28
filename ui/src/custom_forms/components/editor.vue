@@ -34,6 +34,23 @@
       >
         {{ i18n['add_group'] }}
       </VButton>
+      <Dropdown
+        trigger="click"
+        class="ms-1 text-start"
+      >
+        <VButton
+          long
+          type="default"
+          icon="md-more"
+        />
+        <template #list>
+          <DropdownMenu>
+            <DropdownItem @click="toggleNewTextItem">
+              {{ i18n['add_text'] }}
+            </DropdownItem>
+          </DropdownMenu>
+        </template>
+      </Dropdown>
     </div>
   </div>
 </template>
@@ -58,15 +75,6 @@ export default {
       showFooter: true
     }
   },
-  computed: {
-    rules () {
-      return {
-        name: [{ required: true }],
-        api_path: [{ required: true }],
-        http_method: [{ required: true }]
-      }
-    }
-  },
   mounted () {
     watch(
       () => !this.$refs.itemsList.newField && !this.$refs.itemsList.newGroup,
@@ -76,6 +84,9 @@ export default {
     )
   },
   methods: {
+    toggleNewTextItem () {
+      this.$refs.itemsList.toggleNewTextItem()
+    },
     toggleNewField () {
       this.$refs.itemsList.toggleNewField()
     },

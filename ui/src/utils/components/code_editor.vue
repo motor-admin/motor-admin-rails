@@ -1,12 +1,13 @@
 <template>
   <v-ace-editor
-    v-model:value="modelValue"
+    :value="modelValue"
     :lang="language"
     class="code-editor"
     :wrap="true"
     style="height: 100%"
     theme="motor"
     @init="editorInit"
+    @update:value="$emit('update:modelValue', $event)"
   />
 </template>
 
@@ -179,11 +180,6 @@ export default {
     }
   },
   emits: ['update:modelValue', 'run'],
-  data () {
-    return {
-      dataValue: ''
-    }
-  },
   computed: {
     completions () {
       if (this.language === 'markdown') {
@@ -232,17 +228,7 @@ export default {
       }, [])
     }
   },
-  watch: {
-    modelValue (value) {
-      this.dataValue = value
-    },
-    dataValue (value) {
-      this.$emit('update:modelValue', value)
-    }
-  },
   mounted () {
-    this.dataValue = this.modelValue
-
     this.$el.querySelector('textarea').addEventListener('keydown', this.onCmdEnter)
   },
   beforeUnmount () {

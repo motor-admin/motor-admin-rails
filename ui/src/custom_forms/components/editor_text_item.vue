@@ -16,23 +16,16 @@
             <p
               class="fs-5 fw-bold"
             >
-              {{ group.display_name }}
+              {{ item.display_name }}
             </p>
           </div>
           <div class="d-flex align-items-center">
             <Icon :type="isForm ? 'ios-arrow-up' : 'ios-arrow-down'" />
           </div>
         </div>
-        <LayoutItems
-          v-if="!isForm"
-          :items="group.items"
-          :nesting-level="nestingLevel"
-          :condition-fields="conditionFields"
-          :with-min-height="true"
-        />
-        <GroupForm
+        <TextForm
           v-if="isForm"
-          :group="JSON.parse(JSON.stringify(group))"
+          :item="JSON.parse(JSON.stringify(item))"
           class="py-3"
           :condition-fields="conditionFields"
           :with-remove="true"
@@ -46,26 +39,17 @@
 </template>
 
 <script>
-import GroupForm from './editor_group_form'
-import { defineAsyncComponent } from 'vue'
-
-const LayoutItems = defineAsyncComponent(() => import('./editor_items_list'))
+import TextForm from './editor_text_form'
 
 export default {
-  name: 'FieldItem',
+  name: 'TextItem',
   components: {
-    LayoutItems,
-    GroupForm
+    TextForm
   },
   props: {
-    group: {
+    item: {
       type: Object,
       required: true
-    },
-    nestingLevel: {
-      type: Number,
-      required: false,
-      default: 0
     },
     conditionFields: {
       type: Array,
@@ -92,12 +76,12 @@ export default {
     onRemove () {
       this.isForm = false
 
-      this.$emit('remove', this.group)
+      this.$emit('remove', this.field)
     },
-    onSubmit (updatedGroup) {
+    onSubmit (updatedField) {
       this.isForm = false
 
-      this.$emit('replace', [this.group, updatedGroup])
+      this.$emit('replace', [this.field, updatedField])
     }
   }
 }

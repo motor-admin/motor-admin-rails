@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import CodeEditor from '../components/code_editor'
+import CodeEditor from 'utils/components/code_editor'
 import QueryResult from '../components/result'
 import QueryForm from '../components/form'
 import Settings from '../components/settings'

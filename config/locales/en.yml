@@ -253,3 +253,6 @@ en:
     clear: Clear
     restore: Restore
     more: More
+    add_text: Add Text
+    edit_text: Edit Text
+    open_in_markdown_editor: Open in markdown editor
