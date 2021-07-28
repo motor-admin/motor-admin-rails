@@ -242,7 +242,7 @@ export default {
     assignResource (data) {
       this.resource = data
 
-      if (this.model.display_column) {
+      if (this.model.display_column && this.resource[this.model.display_column]) {
         assignBreadcrumbLabel(
           this.resourceName,
           this.resourceId,
