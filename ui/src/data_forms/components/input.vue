@@ -40,7 +40,7 @@
     :options="tagOptions"
     :allow-create="!tagOptions.length"
     :multiple="column.is_array"
-    :label-function="tagOptions.length ? (option) => titleize(option.value.toString()) : () => option.value.toString()"
+    :label-function="tagOptions.length ? (option) => titleize(option.value.toString()) : (option) => option.value.toString()"
     @update:modelValue="$emit('update:modelValue', $event)"
     @select="onSelect"
   />
