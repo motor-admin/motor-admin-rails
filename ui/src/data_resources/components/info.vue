@@ -68,6 +68,7 @@
         </div>
       </div>
       <div
+        v-if="!notFound"
         class="row position-relative"
         :style="{
           maxWidth: oneColumn && !notFound ? '500px' : '',

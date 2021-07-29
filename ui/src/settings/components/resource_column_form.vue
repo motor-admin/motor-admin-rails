@@ -77,7 +77,7 @@
         :reference="dataColumn.reference"
       />
       <FormItem
-        v-if="dataColumn.column_type === 'tag' && dataColumn.virtual"
+        v-if="dataColumn.column_type === 'tag'"
         :label="i18n['select_options']"
         prop="format.select_options"
       >

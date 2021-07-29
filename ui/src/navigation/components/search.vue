@@ -22,6 +22,7 @@ import { formsStore, loadForms } from 'custom_forms/scripts/store'
 import throttle from 'view3/src/utils/throttle'
 import singularize from 'inflected/src/singularize'
 import SearchOption from './search_option'
+import transliterate from 'inflected/src/transliterate'
 
 const recentlySelectedStore = {
   get KEY () {
@@ -67,10 +68,12 @@ export default {
       return SearchOption
     },
     visibleModels () {
-      return schema.filter((model) => model.visible)
+      return schema.filter((model) => model.visible).map((model) => {
+        return { ...model, normalizedName: transliterate(model.display_name.toLowerCase()) }
+      })
     },
     normalizedValue () {
-      return this.value.toLowerCase().trim()
+      return transliterate(this.value.toLowerCase().trim())
     },
     withId () {
       return this.foundResources.length && this.cleanedValue.match(/^\d+$/) && parseInt(this.cleanedValue) > 0
@@ -87,24 +90,18 @@ export default {
     foundResources () {
       if (this.value) {
         let array = this.visibleModels.filter((e) => {
-          const name = e.display_name.toLowerCase()
-
-          return !!name.match(new RegExp(`\\b${this.normalizedValue}`))
+          return e.normalizedName.match(new RegExp(`\\b${this.normalizedValue}`))
         })
 
         if (!array.length) {
           array = this.visibleModels.filter((e) => {
-            const name = e.display_name.toLowerCase()
-
-            return !!name.match(new RegExp(`\\b${this.normalizedValue.replace(/\s["#\w]+$/, '')}`))
+            return e.normalizedName.match(new RegExp(`\\b${this.normalizedValue.replace(/\s["#\w]+$/, '')}`))
           })
         }
 
         if (!array.length) {
           array = this.visibleModels.filter((e) => {
-            const name = e.display_name.toLowerCase()
-
-            return this.normalizedValue.includes(name.replace(/e?s\b/, ''))
+            return this.normalizedValue.includes(e.normalizedName.replace(/e?s\b/, ''))
           })
         }
 
@@ -115,20 +112,22 @@ export default {
     },
     foundAssets () {
       return this.allAssets.filter((e) => {
-        return (e.name || e.title).toLowerCase().includes(this.normalizedValue)
+        return e.normalizedName.includes(this.normalizedValue)
       }).slice(0, MAX_ASSET_ITEMS)
     },
     allAssets () {
       return [...itemsStore, ...formsStore.map((form) => {
         return { ...form, type: 'form' }
-      })]
+      })].map((item) => {
+        return { ...item, normalizedName: transliterate((item.name || item.title).toLowerCase()) }
+      })
     },
     pages () {
       return [
-        { value: 'New Query', type: 'new_query' },
-        { value: 'New Dashboard', type: 'new_dashboard' },
-        { value: 'New Alert', type: 'new_alert' },
-        { value: 'New Form', type: 'new_form' }
+        { value: this.i18n.new_query, type: 'new_query' },
+        { value: this.i18n.new_dashboard, type: 'new_dashboard' },
+        { value: this.i18n.new_alert, type: 'new_alert' },
+        { value: this.i18n.new_form, type: 'new_form' }
       ]
     },
     foundPages () {
