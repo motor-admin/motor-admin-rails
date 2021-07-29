@@ -9,10 +9,10 @@ module Motor
     def index
       data = CACHE_STORE.fetch('icons') do
         Motor::Assets.icons.map do |icon|
-          svg = Motor::Assets.load_asset("icons/#{icon}", gzip: !Motor.development?)
+          svg = Motor::Assets.load_asset(icon, gzip: !Motor.development?)
           svg = ActiveSupport::Gzip.decompress(svg) unless Motor.development?
 
-          [icon, svg]
+          [icon.split('/').last, svg]
         end
       end
 
