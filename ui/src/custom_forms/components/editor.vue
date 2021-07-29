@@ -77,7 +77,7 @@ export default {
   },
   mounted () {
     watch(
-      () => !this.$refs.itemsList.newField && !this.$refs.itemsList.newGroup,
+      () => !this.$refs.itemsList.newField && !this.$refs.itemsList.newGroup && !this.$refs.itemsList.newTextItem,
       (newValue) => {
         this.showFooter = newValue
       }
