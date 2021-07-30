@@ -1,6 +1,7 @@
 <template>
   <v-ace-editor
     :value="modelValue"
+    :placeholder="placeholder"
     :lang="language"
     class="code-editor"
     :wrap="true"
@@ -39,6 +40,16 @@ color: slategray;
 }
 .ace-motor .ace_invisible {
 color: rgb(191, 191, 191);
+}
+.ace-motor .ace_placeholder {
+background-color: #edf2f5;
+font-family: Fira code, Fira Mono, Consolas, Menlo, Courier, monospace;
+letter-spacing: inherit;
+line-height: inherit;
+font-size: 14px;
+opacity: 0.35;
+margin: 0 5px;
+transform: none;
 }
 .ace-motor .ace_constant.ace_buildin {
 color: rgb(88, 72, 246);
@@ -160,6 +171,11 @@ export default {
   },
   props: {
     modelValue: {
+      type: String,
+      required: false,
+      default: ''
+    },
+    placeholder: {
       type: String,
       required: false,
       default: ''

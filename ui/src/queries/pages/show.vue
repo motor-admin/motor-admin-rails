@@ -109,6 +109,7 @@
               v-model="dataQuery.preferences.visualization_options.markdown"
               language="markdown"
               :columns="columns"
+              :placeholder="'## Heading'"
               :variables="dataQuery.preferences.variables"
               @run="loadQueryData"
             />
@@ -116,6 +117,7 @@
               v-else
               v-model="dataQuery.sql_body"
               language="pgsql"
+              placeholder="SELECT * FROM ..."
               :variables="dataQuery.preferences.variables"
               @run="loadQueryData"
             />

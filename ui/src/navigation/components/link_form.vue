@@ -50,14 +50,14 @@
         :loading="isLoading"
         @click="submit"
       >
-        {{ i18n['save'] }}
+        {{ submitText }}
       </VButton>
     </div>
   </div>
 </template>
 
 <script>
-import { fieldRequiredMessage } from 'utils/scripts/i18n'
+import { i18nDict, fieldRequiredMessage } from 'utils/scripts/i18n'
 
 export default {
   name: 'LinkForm',
@@ -65,6 +65,11 @@ export default {
     link: {
       type: Object,
       required: true
+    },
+    submitText: {
+      type: String,
+      required: false,
+      default: i18nDict.save
     },
     withRemove: {
       type: Boolean,

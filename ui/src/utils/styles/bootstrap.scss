@@ -1,6 +1,7 @@
 $primary: #408ccf;
 $dark: #515a6e;
 $body-bg: #f9fbfc;
+$body-color: #f9fbfc;
 
 $font-sizes: (
   1: 26px,
@@ -15,6 +16,7 @@ $font-sizes: (
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
 
+@import '~bootstrap/scss/root';
 @import '~bootstrap/scss/grid';
 @import '~bootstrap/scss/containers';
 @import '~bootstrap/scss/utilities';

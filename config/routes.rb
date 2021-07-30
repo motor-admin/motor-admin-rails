@@ -21,7 +21,8 @@ Motor::Admin.routes.draw do
       resources :audits, only: %i[index]
       resources :resources, path: '/data/:resource',
                             only: %i[index show update create destroy],
-                            controller: 'data' do
+                            controller: 'data',
+                            constraints: { id: %r{[^/]+} } do
         put '/:method', to: 'data#execute'
         resources :association, path: '/:association',
                                 only: %i[index create],

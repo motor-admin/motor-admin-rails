@@ -3,7 +3,6 @@
 module Motor
   module Configs
     module SyncFromFile
-      FILE_PATH = Motor::Configs::FILE_PATH
       MUTEXT = Mutex.new
       FILE_TIMESTAMPS_STORE = ActiveSupport::Cache::MemoryStore.new(size: 1.megabyte)
 
@@ -11,7 +10,7 @@ module Motor
 
       def call(with_exception: false)
         MUTEXT.synchronize do
-          file = Rails.root.join(FILE_PATH)
+          file = Pathname.new(Motor::Configs.file_path)
 
           file_timestamp =
             begin

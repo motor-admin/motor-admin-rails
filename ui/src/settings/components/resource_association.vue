@@ -139,19 +139,19 @@ export default {
       }
     },
     updateAssociation (assoc) {
-      Object.assign(this.association, assoc)
-
-      this.persistChanges()
+      this.persistChanges(assoc).then(() => {
+        Object.assign(this.association, assoc)
+      })
 
       this.isForm = false
     },
-    persistChanges () {
+    persistChanges (association) {
       return api.post('resources', {
         data: {
           name: this.resourceName,
           preferences: {
             associations: [
-              this.association
+              association || this.association
             ]
           }
         }

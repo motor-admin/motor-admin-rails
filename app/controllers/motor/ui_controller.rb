@@ -4,7 +4,9 @@ module Motor
   class UiController < ApplicationController
     layout 'motor/application'
 
-    helper_method :current_user, :current_ability
+    helper_method :current_user, :current_ability, :cache_keys
+
+    before_action :set_i18n_locale
 
     def index
       render_ui
@@ -26,6 +28,16 @@ module Motor
       Motor::Configs::SyncFromFile.call
 
       render :show
+    end
+
+    def set_i18n_locale
+      configs = Motor::Configs::LoadFromCache.load_configs(cache_key: cache_keys[:configs])
+
+      I18n.locale = configs.find { |c| c.key == 'language' }&.value || I18n.locale
+    end
+
+    def cache_keys
+      @cache_keys ||= Configs::LoadFromCache.load_cache_keys
     end
   end
 end

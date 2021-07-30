@@ -18,7 +18,7 @@
     "scroll-behavior-polyfill": "^2.0.13",
     "trix": "^1.3.1",
     "view3": "https://github.com/omohokcoj/view3#motor-admin",
-    "vue": "^3.1.0",
+    "vue": "^3.2.0",
     "vue-draggable-next": "^2.0.1",
     "vue-router": "^4.0.0",
     "vue3-ace-editor": "^2.0.2"

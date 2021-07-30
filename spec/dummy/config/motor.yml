@@ -152,15 +152,6 @@ resources:
       virtual: true
       format:
         link_text: "\U0001F4CD Map"
-    associations:
-    - name: notes
-      display_name: Notes
-      model_name: note
-      foreign_key: record_id
-      primary_key: id
-      virtual: true
-      polymorphic: true
-      slug: notes
   updated_at: 2021-07-17 10:40:50.495370000 +00:00
 - name: order_note
   preferences:

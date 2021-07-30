@@ -117,7 +117,7 @@ module Motor
 
       def define_belongs_to_reflection(klass, config)
         klass.belongs_to(config[:name].to_sym,
-                         class_name: config[:model_name].classify,
+                         class_name: config[:model_name]&.classify,
                          foreign_key: config[:foreign_key],
                          polymorphic: config[:polymorphic],
                          primary_key: config[:primary_key],
@@ -163,18 +163,27 @@ module Motor
 
       def define_associations(klass, config)
         config.fetch(:associations, []).each do |association|
-          is_virtual, is_polymorphic = association.values_at(:virtual, :polymorphic)
+          next unless association[:virtual]
 
-          next unless is_virtual
+          options = normalize_association_params(association)
 
-          options = association.slice(:foreign_key, :primary_key)
-          options[:class_name] = association[:model_name].classify
-          options[:as] = association[:foreign_key].delete_suffix('_id') if is_polymorphic
+          filters = options.delete(:filters)
 
-          options = options.merge(association[:options] || {})
-
-          klass.has_many(association[:name].to_sym, **options.symbolize_keys)
+          if filters.present?
+            klass.has_many(association[:name].to_sym, -> { filter(filters).tap(&:arel) }, **options.symbolize_keys)
+          else
+            klass.has_many(association[:name].to_sym, **options.symbolize_keys)
+          end
         end
+      end
+
+      def normalize_association_params(params)
+        options = params.slice(:foreign_key, :primary_key).merge(dependent: :destroy)
+
+        options[:class_name] = params[:model_name].classify
+        options[:as] = params[:foreign_key].delete_suffix('_id') if params[:polymorphic]
+
+        options.merge(params[:options] || {})
       end
 
       def maybe_fetch_from_cache(model, cache_key, miss_cache_block, postprocess_block)

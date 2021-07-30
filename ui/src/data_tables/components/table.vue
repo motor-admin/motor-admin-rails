@@ -174,6 +174,11 @@ export default {
       required: false,
       default: true
     },
+    scrollToTopOnDataUpdate: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     compact: {
       type: Boolean,
       required: false,
@@ -205,13 +210,18 @@ export default {
       this.dataSort = value
     },
     data () {
-      this.$refs.wrapper.scrollTop = 0
+      if (this.scrollToTopOnDataUpdate) {
+        this.scrollToTop()
+      }
     }
   },
   mounted () {
     this.dataSort = this.sortParams
   },
   methods: {
+    scrollToTop () {
+      this.$refs.wrapper.scrollTop = 0
+    },
     getReferenceId (column, row) {
       const referenceModel = modelNameMap[column.reference.model_name]
 

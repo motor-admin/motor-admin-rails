@@ -5,6 +5,7 @@ module Motor
     extend ActiveSupport::Concern
 
     INSTANCE_VARIABLE_NAME = 'resource'
+    ASSOCIATION_INSTANCE_VARIABLE_NAME = 'associated_resource'
 
     included do
       before_action :load_and_authorize_resource
@@ -26,7 +27,7 @@ module Motor
     def load_and_authorize_resource
       options = {
         class: resource_class,
-        parent: false,
+        parent: params[:association].present?,
         instance_name: INSTANCE_VARIABLE_NAME
       }
 
@@ -57,7 +58,7 @@ module Motor
           parent: false,
           through: :resource,
           through_association: params[:association].to_sym,
-          instance_name: INSTANCE_VARIABLE_NAME
+          instance_name: params[:action] == 'create' ? ASSOCIATION_INSTANCE_VARIABLE_NAME : INSTANCE_VARIABLE_NAME
         ).load_and_authorize_resource
       else
         render json: { message: 'Unknown association' }, status: :not_found

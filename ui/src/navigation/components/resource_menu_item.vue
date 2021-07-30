@@ -27,11 +27,13 @@
     :name="resource.slug"
     :to="{ name: 'resources', params: { fragments: [...fragments, resource.slug] } }"
   >
-    <CustomIcon
-      :type="resource.icon"
-      :size="iconSize"
-    />
-    {{ resource.display_name.replace('/', '\u200B/') }}
+    <div class="ivu-menu-item-text">
+      <CustomIcon
+        :type="resource.icon"
+        :size="iconSize"
+      />
+      {{ resource.display_name.replace('/', '\u200B/') }}
+    </div>
   </MenuItem>
 </template>
 
@@ -81,3 +83,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+@import 'utils/styles/variables';
+
+@media screen and (min-width: $breakpoint-sm) {
+  .ivu-menu-item-text {
+    width: 164px
+  }
+}
+</style>

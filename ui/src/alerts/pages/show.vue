@@ -169,7 +169,7 @@ export default {
       api.post('send_alerts', {
         data: {
           query_id: this.alert.query_id,
-          to_emails: this.alert.to_emails.join(','),
+          to_emails: this.alert.to_emails,
           name: this.alert.name
         }
       }).then((result) => {

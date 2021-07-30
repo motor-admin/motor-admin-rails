@@ -185,10 +185,10 @@ export default {
       })
     },
     canEdit () {
-      return this.resources.some((res) => this.$can('edit', this.model.class_name, res))
+      return this.model.primary_key && this.resources.some((res) => this.$can('edit', this.model.class_name, res))
     },
     canRemove () {
-      return this.resources.some((res) => this.$can('destroy', this.model.class_name, res))
+      return this.model.primary_key && this.resources.some((res) => this.$can('destroy', this.model.class_name, res))
     },
     hasActions () {
       return this.canEdit || this.canRemove || this.customActions.length > 0
@@ -333,7 +333,7 @@ export default {
 
           Promise.all(this.resources.map(this.removeRequest)).then((result) => {
             if (this.resources.length > 1) {
-              this.$Message.info(`${this.resources.length} ${this.i18n.items_has_been_removed}`)
+              this.$Message.info(`${this.resources.length} ${this.i18n.items_have_been_removed}`)
             } else {
               this.$Message.info(this.i18n.selected_item_has_been_removed)
             }

@@ -64,12 +64,43 @@
           v-if="isLoading"
           fix
         />
-        <p
+        <div
           v-else-if="!searchQuery && !selectedTags.length && !paginatedItems.length"
           class="text-center mt-2"
         >
-          {{ i18n['looks_like_you_are_new_here'] }}
-        </p>
+          <div class="mb-3">
+            {{ i18n['looks_like_you_are_new_here'] }}
+          </div>
+          <VButton
+            v-if="selectedType === 'dashboards' && $can('create', 'Motor::Dashboard')"
+            icon="md-add"
+            size="large"
+            type="default"
+            class="me-2"
+            :to="{ name: 'new_dashboard' }"
+          >
+            {{ i18n['add_dashboard'] }}
+          </VButton>
+          <VButton
+            v-else-if="selectedType === 'alerts' && $can('create', 'Motor::Alert')"
+            icon="md-add"
+            size="large"
+            type="default"
+            :to="{ name: 'new_alert' }"
+          >
+            {{ i18n['add_alert'] }}
+          </VButton>
+          <VButton
+            v-else
+            icon="md-add"
+            size="large"
+            type="default"
+            class="me-2"
+            :to="{ name: 'new_query' }"
+          >
+            {{ i18n['add_query'] }}
+          </VButton>
+        </div>
         <p
           v-if="searchQuery && !paginatedItems.length"
           class="text-center mt-2"

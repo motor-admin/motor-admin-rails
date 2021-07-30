@@ -90,6 +90,21 @@ export default {
     resourceName: {
       type: String,
       required: true
+    },
+    parentResourceName: {
+      type: String,
+      required: false,
+      default: null
+    },
+    parentResourceId: {
+      type: [Number, String],
+      required: false,
+      default: null
+    },
+    associationName: {
+      type: String,
+      required: false,
+      default: null
     }
   },
   emits: ['close', 'success'],
@@ -138,6 +153,8 @@ export default {
     apiRequest () {
       if (this.action === 'edit') {
         return api.put(`data/${this.model.slug}/${this.resource[this.model.primary_key]}`, this.requestParams)
+      } else if (this.action === 'new' && this.parentResourceName) {
+        return api.post(`data/${modelNameMap[this.parentResourceName].slug}/${this.parentResourceId}/${this.associationName}`, this.requestParams)
       } else if (this.action === 'new') {
         return api.post(`data/${this.model.slug}`, this.requestParams)
       } else {
@@ -186,7 +203,7 @@ export default {
         const value = resource[column.name]
 
         if (isJsonColumn(column, this.resource)) {
-          data[column.name] = JSON.stringify(value || {}, null, '  ')
+          data[column.name] = JSON.stringify(value ?? {}, null, '  ')
         } else if (value && typeof value === 'object') {
           data[column.name] = JSON.parse(JSON.stringify(value))
         } else {

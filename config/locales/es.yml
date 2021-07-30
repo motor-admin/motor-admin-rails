@@ -59,6 +59,7 @@ es:
     emails: Emails
     every_day_at_hh_mm: todos los días a las HH:mm PM...
     field_name: Nombre del campo
+    filter: Filtrar
     filters: Filtros
     form: Formulario
     form_has_been_saved: ¡Formulario guardado!
@@ -73,7 +74,7 @@ es:
     hello_admin: Hola Admin 👋
     input_type: Tipo de campo
     interval: Intervalo
-    items_has_been_removed: elementos fueron eliminados
+    items_have_been_removed: elementos fueron eliminados
     label: Moneda
     line_chart: Gráfico de líneas
     link_name: Nombre del link
@@ -258,6 +259,9 @@ es:
     add_text: Añadir Texto
     edit_text: Editar Texto
     open_in_markdown_editor: Abrir en el editor de markdown
+    activate: Activar
+    load_existing_options_from_database: Cargar las opciones existentes de la base de datos
+    add_database: Añadir base de datos
     i:
       locale: es
       select:

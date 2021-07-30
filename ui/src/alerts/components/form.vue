@@ -12,6 +12,7 @@
       <VInput
         v-model="dataAlert.name"
         size="large"
+        :autofocus="!dataAlert.id"
         :placeholder="i18n['alert_name']"
       />
     </FormItem>

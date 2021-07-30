@@ -219,12 +219,12 @@ export default {
       return this.column.column_type
     },
     referenceId () {
-      if (this.column.reference.reference_type === 'belongs_to') {
-        return this.value
-      } else {
-        const referenceModel = modelNameMap[this.column.reference.model_name]
+      const referenceModel = modelNameMap[this.column.reference.model_name]
 
-        return this.value[referenceModel.primary_key]
+      if (referenceModel) {
+        return this.value[referenceModel.primary_key] || this.value
+      } else {
+        return this.value
       }
     },
     isActiveStorage () {

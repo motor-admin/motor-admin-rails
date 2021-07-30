@@ -1,9 +1,12 @@
 <template>
-  <Layout :has-sider="!!associations.length">
+  <Layout
+    :has-sider="!!associations.length"
+    class="position-relative"
+  >
     <Sider
       v-if="associations.length && !widthLessThan('sm')"
       class="border-top"
-      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 112px)', overflowY: isShowSettings ? 'hidden' : 'auto' }"
+      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 112px)' }"
     >
       <ResourcesMenu
         :resources="associations"
@@ -13,12 +16,13 @@
         :active-name="associationName"
         :style="{ minHeight: '100%' }"
       />
-      <SettingsMask
-        v-if="isShowSettings"
-        :settings-type="'associations'"
-        :resource="model"
-      />
     </Sider>
+    <SettingsMask
+      v-if="isShowSettings && associations.length && !widthLessThan('sm')"
+      :settings-type="'associations'"
+      :resource="model"
+      style="width: 200px"
+    />
     <Layout>
       <ResourceTabs
         v-if="!showTable || !isFullscreenTable"
@@ -36,7 +40,7 @@
         :height="isFullscreenTable ? 'calc(var(--vh, 100vh) - 199px)' : 'calc((var(--vh) / 2) - 108px)'"
         :with-resize="true"
         :resource-name="resourceName"
-        :with-title="!widthLessThan('sm')"
+        :with-title="true"
         class="border-top"
         :association-params="{ name: associationName, id: resourceId }"
         @action-applied="reloadTabs"

@@ -21,7 +21,19 @@ module Motor
     end
 
     def create
-      @resource.save!
+      if @associated_resource
+        if @resource_class.reflections[params[:association]].through_reflection?
+          @associated_resource.save!
+
+          @resource = @associated_resource
+        else
+          @resource.public_send(params[:association].to_sym).create!(@associated_resource.attributes) do |resource|
+            @resource = resource
+          end
+        end
+      else
+        @resource.save!
+      end
 
       render json: { data: Motor::ApiQuery::BuildJson.call(@resource, params, current_ability) }
     rescue ActiveRecord::RecordInvalid
@@ -61,7 +73,7 @@ module Motor
 
     def resource_params
       if params[:data].present?
-        params.require(:data).except(resource_class.primary_key).permit!
+        params.require(:data).permit!
       else
         {}
       end

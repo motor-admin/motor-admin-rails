@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.license     = 'MIT'
 
   spec.files = Dir[
-    '{app,config,db,lib}/**/*',
+    '{app,config,lib}/**/*',
     'ui/dist/icons/*.gz',
     'ui/dist/fonts/*.woff2',
     'ui/dist/*.{gz,json}',

@@ -48,12 +48,15 @@ export default {
         return action.name === 'create' && action.visible
       })
     },
+    parentModel () {
+      return modelNameMap[this.parentResource.name]
+    },
     resource () {
       const resource = buildDefaultValues(this.model)
 
       if (this.association?.polymorphic) {
         resource[this.association.foreign_key] = parseInt(this.parentResource.id)
-        resource[this.association.foreign_key.replace('_id', '_type')] = modelNameMap[this.parentResource.name].class_name
+        resource[this.association.foreign_key.replace('_id', '_type')] = this.parentModel.class_name
 
         if (this.association.model_name === 'active_storage/attachment') {
           resource.name = this.association.name.replace(/_attachments?$/, '')
@@ -80,6 +83,9 @@ export default {
         action: 'new',
         resource: this.resource,
         resourceName: this.model.name,
+        parentResourceName: this.parentResource?.name,
+        parentResourceId: this.parentResource?.id,
+        associationName: this.association?.name,
         onClose: () => {
           this.$Drawer.remove()
         },

@@ -69,10 +69,11 @@
       </div>
       <div
         v-if="!notFound"
-        class="row position-relative"
+        class="position-relative"
         :style="{
           maxWidth: oneColumn && !notFound ? '500px' : '',
-          overflow: isShowSettings ? 'hidden' : ''
+          overflow: isShowSettings ? 'hidden' : '',
+          height: isShowSettings ? Math.min($refs.columnsWrapper.offsetHeight, $parent.$parent.$el.offsetHeight - 110) + 'px' : 'auto'
         }"
       >
         <SettingsMask
@@ -80,29 +81,34 @@
           :resource="model"
           :settings-type="'columns'"
         />
-        <template
-          v-for="column in columns"
-          :key="column.name"
+        <div
+          ref="columnsWrapper"
+          class="row"
         >
-          <div
-            :class="oneColumn ? 'col-12' : 'col-xxl-3 col-xl-6 col-md-12 col-12'"
-            class="mb-3"
+          <template
+            v-for="column in columns"
+            :key="column.name"
           >
-            <b>
-              {{ column.display_name }}:
-            </b>
-            <br>
-            <InfoCell
-              :resource="resource"
-              :column="column"
-              :resource-name="resourceName"
-              :editable="editable && $can('edit', model.class_name, resource)"
-              :reference-popover="referencePopover"
-              :reference-size="oneColumn ? 30 : 20"
-              @update="assignResource"
-            />
-          </div>
-        </template>
+            <div
+              :class="oneColumn ? 'col-12' : 'col-xxl-3 col-xl-6 col-md-12 col-12'"
+              class="mb-3"
+            >
+              <b>
+                {{ column.display_name }}:
+              </b>
+              <br>
+              <InfoCell
+                :resource="resource"
+                :column="column"
+                :resource-name="resourceName"
+                :editable="editable && $can('edit', model.class_name, resource)"
+                :reference-popover="referencePopover"
+                :reference-size="oneColumn ? 30 : 20"
+                @update="assignResource"
+              />
+            </div>
+          </template>
+        </div>
       </div>
     </div>
   </div>
@@ -122,6 +128,7 @@ import { widthLessThan } from 'utils/scripts/dimensions'
 
 import { isShowSettings } from 'settings/scripts/toggle'
 import SettingsMask from 'settings/components/mask'
+import throttle from 'view3/src/utils/throttle'
 
 export default {
   name: 'ResourceInfo',
@@ -177,7 +184,10 @@ export default {
   computed: {
     isShowSettings,
     title () {
-      return `${singularize(this.model.display_name)} #${this.resource[this.model.primary_key]}`
+      const primaryKeyValue = this.resource[this.model.primary_key]
+      const isNumber = primaryKeyValue.toString().match(/^\d+$/)
+
+      return `${singularize(this.model.display_name)}${isNumber ? ' #' : ': '}${primaryKeyValue}`
     },
     model () {
       return modelNameMap[this.resourceName]
@@ -206,11 +216,9 @@ export default {
   watch: {
     columns: {
       deep: true,
-      handler (newValue, oldValue) {
-        if (newValue.length > oldValue.length) {
-          this.loadData()
-        }
-      }
+      handler: throttle(async function () {
+        this.loadData()
+      }, 3000)
     }
   },
   beforeUnmount () {

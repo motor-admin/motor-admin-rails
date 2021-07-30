@@ -12,6 +12,7 @@
       <VInput
         v-model="dataBoard.title"
         size="large"
+        :autofocus="true"
         :placeholder="i18n['dashboard_title']"
       />
     </FormItem>

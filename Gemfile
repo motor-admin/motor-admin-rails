@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'bootsnap', require: false
 gem 'devise'
 gem 'faker'
 gem 'image_processing'

@@ -63,15 +63,15 @@ module Motor
         result = nil
         statement = prepare_sql_statement(query, limit, variables_hash, filters)
 
-        ActiveRecord::Base.transaction do
+        connection_class.transaction do
           result =
-            case ActiveRecord::Base.connection.class.name
+            case connection_class.connection.class.name
             when 'ActiveRecord::ConnectionAdapters::PostgreSQLAdapter'
-              PostgresqlExecQuery.call(ActiveRecord::Base.connection, statement)
+              PostgresqlExecQuery.call(connection_class.connection, statement)
             else
               statement = normalize_statement_for_sql(statement)
 
-              ActiveRecord::Base.connection.exec_query(*statement)
+              connection_class.connection.exec_query(*statement)
             end
 
           raise ActiveRecord::Rollback
@@ -171,6 +171,10 @@ module Motor
 
           acc[variable[:name]] ||= variables_hash[variable[:name]] || variable[:default_value]
         end
+      end
+
+      def connection_class
+        defined?(ResourceRecord) ? ResourceRecord : ActiveRecord::Base
       end
     end
   end

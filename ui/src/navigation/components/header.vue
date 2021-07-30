@@ -83,6 +83,18 @@
         />
       </VButton>
       <VButton
+        v-if="!isShowSettings && adminSettingsPath && $can('manage', 'all')"
+        type="primary"
+        size="large"
+        class="header-btn"
+        :to="adminSettingsPath"
+      >
+        <Icon
+          type="md-person-add"
+          size="large"
+        />
+      </VButton>
+      <VButton
         v-if="!isShowSettings"
         type="primary"
         size="large"
@@ -165,7 +177,7 @@ import Guides from './guides'
 import LinksEdit from './links_edit'
 import { modelSlugMap, modelNameMap } from 'data_resources/scripts/schema'
 import { linksStore } from '../scripts/links_store'
-import { basePath } from 'utils/scripts/configs'
+import { basePath, adminSettingsPath } from 'utils/scripts/configs'
 import { widthLessThan } from 'utils/scripts/dimensions'
 import { isShowSettings, toggleSettings } from 'settings/scripts/toggle'
 import { openSettingsDrawer } from 'settings/scripts/drawer'
@@ -177,6 +189,7 @@ export default {
   computed: {
     isShowSettings,
     currentUser: () => currentUser,
+    adminSettingsPath: () => adminSettingsPath,
     canReadReports () {
       return this.$can('read', 'Motor::Query') || this.$can('read', 'Motor::Dashboard') || this.$can('read', 'Motor::Alert')
     },
@@ -293,6 +306,9 @@ export default {
   }
   .ion-md-help {
     font-size: 24px;
+  }
+  .ion-md-person-add {
+    font-size: 26px;
   }
   .ion-md-close {
     font-size: 20px;

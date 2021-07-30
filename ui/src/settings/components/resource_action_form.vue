@@ -93,6 +93,7 @@
 import MethodSelect from './resource_method_select'
 import FormSelect from 'custom_forms/components/select'
 import { fieldRequiredMessage } from 'utils/scripts/i18n'
+import { isStandalone } from 'utils/scripts/configs'
 
 export default {
   name: 'ResourceActionForm',
@@ -170,8 +171,13 @@ export default {
       ]
 
       if (!['create', 'edit'].includes(this.dataAction.name)) {
+        if (!isStandalone) {
+          actions.unshift(
+            { label: this.i18n.method_call, value: 'method' }
+          )
+        }
+
         actions.unshift(
-          { label: this.i18n.method_call, value: 'method' },
           { label: this.i18n.api_request, value: 'api' }
         )
       }

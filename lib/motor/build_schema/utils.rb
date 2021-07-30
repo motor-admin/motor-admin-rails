@@ -5,6 +5,7 @@ module Motor
     module Utils
       ABBREVIATIONS = {
         'Id' => 'ID',
+        'Uuid' => 'UUID',
         'Url' => 'URL',
         'Iso' => 'ISO',
         'vip' => 'VIP',

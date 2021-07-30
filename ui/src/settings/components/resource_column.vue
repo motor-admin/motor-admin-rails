@@ -107,8 +107,8 @@ export default {
         }
       })
     },
-    persistChanges () {
-      const dataColumn = { ...this.column }
+    persistChanges (column = null) {
+      const dataColumn = { ...(column || this.column) }
 
       if (dataColumn.name) {
         dataColumn._update = dataColumn.name
@@ -157,9 +157,9 @@ export default {
       this.column.display_name = event.target.innerText
     },
     updateColumn (column) {
-      Object.assign(this.column, column)
-
-      this.persistChanges()
+      this.persistChanges(column).then(() => {
+        Object.assign(this.column, column)
+      })
 
       this.isForm = false
     }

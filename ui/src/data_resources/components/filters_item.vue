@@ -25,7 +25,7 @@
     </div>
     <div class="d-flex col-5 ps-2 pe-0">
       <FormInput
-        v-if="selectedColumn && !['contains', 'starts_with', 'ends_with'].includes(dataFilter.action)"
+        v-if="selectedColumn && !['contains', 'starts_with', 'ends_with'].includes(dataFilter.action) && selectedColumn.column_type !== 'richtext'"
         v-model="dataFilter.value"
         data-role="filter-value"
         :column="selectedColumn"

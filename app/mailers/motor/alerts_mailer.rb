@@ -26,7 +26,7 @@ module Motor
     end
 
     def from_address
-      from = ENV['MOTOR_ALERTS_FROM_ADDRESS'].presence
+      from = ENV['MOTOR_ALERTS_FROM_ADDRESS'].presence || ENV['MOTOR_EMAIL_ADDRESS'].presence
 
       from ||= application_mailer_default_from
       from ||= mailer_config_from_address

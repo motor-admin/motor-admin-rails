@@ -95,19 +95,28 @@
           </FormItem>
         </div>
         <div
-          class="col-sm-12"
+          class="col-sm-12 mb-2"
         >
-          <FormItem
-            :label="i18n['polymorphic']"
-            prop="polymorphic"
+          <Checkbox
+            v-model="dataAssoc.polymorphic"
+            @update:model-value="onPolymorphicChange"
           >
-            <Checkbox
-              v-model="dataAssoc.polymorphic"
-              @update:model-value="onPolymorphicChange"
-            />
-          </FormItem>
+            {{ ' ' }}{{ i18n['polymorphic'] }}
+          </Checkbox>
+          <br>
+          <Checkbox
+            :model-value="!!dataAssoc.options.filters"
+            @update:model-value="onFiltersToggle"
+          >
+            {{ ' ' }}{{ i18n['filter'] }}
+          </Checkbox>
         </div>
       </div>
+      <Filters
+        v-if="!!dataAssoc.options.filters"
+        v-model:filters="dataAssoc.options.filters"
+        :model="associationModel || throughModel"
+      />
     </VForm>
     <div class="d-flex justify-content-between">
       <div>
@@ -138,12 +147,14 @@
 </template>
 
 <script>
+import Filters from 'data_resources/components/filters'
 import { fieldRequiredMessage } from 'utils/scripts/i18n'
 import { schema, modelNameMap } from 'data_resources/scripts/schema'
 
 export default {
   name: 'ResourceAssociationForm',
   components: {
+    Filters
   },
   props: {
     association: {
@@ -196,11 +207,20 @@ export default {
         ...this.model.associations.filter((assoc) => assoc.display_name !== this.dataAssoc.display_name)
       ]
     },
-    throughReferences () {
+    associationModel () {
+      return modelNameMap[this.dataAssoc.model_name]
+    },
+    throughModel () {
       const reference = this.resourceReferences.find((c) => c.name === this.dataAssoc.options.through)
 
-      if (reference) {
-        return modelNameMap[reference.model_name].associations
+      return modelNameMap[reference?.model_name]
+    },
+    throughReferences () {
+      if (this.throughModel) {
+        return [
+          ...this.throughModel.associations,
+          ...this.throughModel.columns.map((column) => column.reference).filter(Boolean)
+        ]
       } else {
         return []
       }
@@ -232,6 +252,13 @@ export default {
         this.dataAssoc.primary_key = null
         this.dataAssoc.foreign_key = null
         this.dataAssoc.model_name = null
+      }
+    },
+    onFiltersToggle (value) {
+      if (value) {
+        this.dataAssoc.options.filters = []
+      } else {
+        delete this.dataAssoc.options.filters
       }
     },
     onPolymorphicChange (value) {

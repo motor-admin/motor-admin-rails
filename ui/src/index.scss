@@ -35,6 +35,7 @@
 @import 'view3/src/styles/components/time-picker';
 @import 'view3/src/styles/components/collapse';
 @import 'view3/src/styles/components/progress';
+@import 'view3/src/styles/components/switch';
 @import 'view3/src/styles/components/color-picker';
 
 @import 'utils/styles/richtext';
@@ -138,6 +139,10 @@ h5 {
 
 .cursor-default {
   cursor: default;
+}
+
+.cursor-unset {
+  cursor: unset;
 }
 
 .cursor-zoom-in {

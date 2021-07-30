@@ -22,9 +22,9 @@ module Motor
 
       def call
         models.map do |model|
-          Object.const_get(model.name)
+          model = Object.const_get(model.name)
 
-          next unless ActiveRecord::Base.connection.table_exists?(model.table_name)
+          next unless model.table_exists?
 
           schema = build_model_schema(model)
 
@@ -37,7 +37,7 @@ module Motor
           Rails.logger.error(e)
 
           next
-        end.compact
+        end.compact.uniq
       end
 
       def models
@@ -225,8 +225,8 @@ module Motor
           display_name: model.human_attribute_name(name),
           model_name: reflection.polymorphic? ? nil : reflection.klass.name.underscore,
           reference_type: reflection.belongs_to? ? 'belongs_to' : 'has_one',
-          foreign_key: reflection.foreign_key,
-          primary_key: reflection.polymorphic? ? 'id' : reflection.active_record_primary_key,
+          foreign_key: reflection.join_foreign_key,
+          primary_key: reflection.polymorphic? ? 'id' : reflection.join_primary_key,
           options: reflection.options.slice(:through, :source),
           polymorphic: reflection.polymorphic?,
           virtual: false
@@ -248,8 +248,8 @@ module Motor
             display_name: model.human_attribute_name(name),
             slug: name.underscore,
             model_name: model_class.name.underscore,
-            foreign_key: ref.foreign_key,
-            primary_key: ref.active_record_primary_key,
+            foreign_key: ref.join_primary_key,
+            primary_key: ref.join_foreign_key,
             polymorphic: ref.options[:as].present?,
             icon: Motor::FindIcon.call(name),
             options: ref.options.slice(:through, :source),

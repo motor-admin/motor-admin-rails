@@ -18,6 +18,7 @@
   >
     <LinkForm
       :link="newLink"
+      :submit-text="i18n.add_link"
       @cancel="newLink = null"
       @submit="pushNewLink"
     />

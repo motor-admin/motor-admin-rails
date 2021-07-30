@@ -37,6 +37,7 @@
             <MSelect
               v-model="dataColumn.column_type"
               :options="columnTypes"
+              filterable
               :with-deselect="false"
               :disabled="dataColumn.reference?.virtual === false"
               @update:modelValue="assignDefaultData"
@@ -84,6 +85,15 @@
         <OptionsInput
           v-model="dataColumn.format.select_options"
         />
+        <div class="text-center">
+          <VButton
+            v-if="!dataColumn.format.select_options?.length"
+            type="text"
+            @click="loadSelectOptions"
+          >
+            {{ i18n.load_existing_options_from_database }}
+          </VButton>
+        </div>
       </FormItem>
       <FormItem
         v-if="dataColumn.column_type === 'link'"
@@ -142,6 +152,7 @@ import ReferenceForm from './resource_reference_form'
 import { fieldRequiredMessage } from 'utils/scripts/i18n'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import { underscore } from 'utils/scripts/string'
+import api from 'api'
 
 export default {
   name: 'ResourceColumnForm',
@@ -289,11 +300,22 @@ export default {
 
       return dataColumn
     },
+    loadSelectOptions () {
+      const sqlBody = `SELECT DISTINCT(${this.dataColumn.name}) FROM ${modelNameMap[this.resourceName].table_name}`
+
+      api.post('run_queries', {
+        sql_body: sqlBody
+      }).then((result) => {
+        this.dataColumn.format.select_options = result.data.data.flat()
+      })
+    },
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {
           if (this.dataColumn.reference) {
-            this.dataColumn.reference.name ||= underscore(this.dataColumn.display_name)
+            const idSuffixRegexp = new RegExp(`_${this.dataColumn.reference.primary_key}$`)
+
+            this.dataColumn.reference.name ||= underscore(this.dataColumn.display_name).replace(idSuffixRegexp, '')
             this.dataColumn.reference.display_name ||= this.dataColumn.display_name
           }
 

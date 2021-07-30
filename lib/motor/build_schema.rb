@@ -51,7 +51,11 @@ module Motor
     COLUMN_NAME_ACCESS_TYPES = {
       id: ColumnAccessTypes::READ_ONLY,
       created_at: ColumnAccessTypes::READ_ONLY,
+      created_on: ColumnAccessTypes::READ_ONLY,
+      inserted_at: ColumnAccessTypes::READ_ONLY,
       updated_at: ColumnAccessTypes::READ_ONLY,
+      updated_on: ColumnAccessTypes::READ_ONLY,
+      modified_at: ColumnAccessTypes::READ_ONLY,
       deleted_at: ColumnAccessTypes::READ_ONLY
     }.with_indifferent_access.freeze
 

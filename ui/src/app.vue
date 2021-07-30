@@ -11,6 +11,7 @@ import Welcome from 'navigation/components/welcome'
 import AppHeader from 'navigation/components/header'
 
 import { currentUser } from 'navigation/scripts/user_store'
+import { windowHeight } from 'utils/scripts/dimensions'
 
 export default {
   name: 'App',
@@ -18,20 +19,24 @@ export default {
     AppHeader
   },
   computed: {
+    windowHeight () {
+      return windowHeight.value
+    }
+  },
+  watch: {
+    windowHeight () {
+      this.setVh()
+    }
   },
   mounted () {
     document.addEventListener('keydown', this.processKey)
 
-    window.addEventListener('load', this.setVh)
-    window.addEventListener('resize', this.setVh)
-
+    this.setVh()
     this.maybeShowWelcomeModal()
   },
   methods: {
     setVh () {
-      const vh = window.innerHeight
-
-      document.documentElement.style.setProperty('--vh', `${vh}px`)
+      document.documentElement.style.setProperty('--vh', `${windowHeight.value}px`)
     },
     maybeShowWelcomeModal () {
       if (currentUser.showWelcome) {

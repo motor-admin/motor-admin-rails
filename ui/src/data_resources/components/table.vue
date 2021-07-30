@@ -5,7 +5,7 @@
       :style="{ margin: '10px 0' }"
     >
       <div
-        v-if="withTitle || selectedRows.length"
+        v-if="(withTitle && !widthLessThan('sm')) || selectedRows.length"
         class="col-6 d-flex align-items-center pe-0"
       >
         <VButton
@@ -39,7 +39,7 @@
           :resource="model"
         />
         <span
-          v-if="withTitle && !selectedRows.length"
+          v-if="withTitle && !widthLessThan('sm') && !selectedRows.length"
           class="fs-4 fw-bold nowrap overflow-hidden text-truncate"
         >{{ title }}
           <template v-if="currentScope">
@@ -58,7 +58,7 @@
       </div>
       <div
         class="d-flex justify-content-end"
-        :class="withTitle || selectedRows.length ? 'col-6' : 'col-12'"
+        :class="(withTitle && !widthLessThan('sm')) || selectedRows.length ? 'col-6' : 'col-12'"
       >
         <ResourceSearch
           v-model="searchQuery"
@@ -101,10 +101,13 @@
         fix
       />
       <DataTable
+        ref="table"
         :data="rows"
         :columns="columns"
         :style="{ height: height }"
         :sort-params="sortParams"
+        :scroll-to-top-on-data-update="false"
+        :click-rows="!!model.primary_key"
         @sort-change="applySort"
         @row-click="onRowClick"
       />
@@ -146,22 +149,19 @@ import ResourceActions from './actions'
 import NewResourceButton from './new_button'
 import FiltersModal from './filters_modal'
 
+import { widthLessThan } from 'utils/scripts/dimensions'
 import { truncate } from 'utils/scripts/string'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
 
 import { isShowSettings } from 'settings/scripts/toggle'
 import SettingsMask from 'settings/components/mask'
+import throttle from 'view3/src/utils/throttle'
 
 const defaultPaginationParams = {
   current: 1,
   pageSize: 20,
   total: 0,
   pageSizeOpts: [20, 50, 100, 250, 500]
-}
-
-const defaultSortParams = {
-  order: 'desc',
-  key: 'id'
 }
 
 const itemsCountCache = reactive({})
@@ -212,7 +212,7 @@ export default {
       isLoading: true,
       isReloading: true,
       rows: [],
-      sortParams: { ...defaultSortParams },
+      sortParams: { ...this.defaultSortParams },
       filterParams: [],
       searchQuery: '',
       paginationParams: { ...defaultPaginationParams }
@@ -220,6 +220,16 @@ export default {
   },
   computed: {
     isShowSettings,
+    defaultSortParams () {
+      if (this.model.primary_key) {
+        return {
+          order: this.model.columns.find((c) => c.name === this.model.primary_key).column_type === 'integer' ? 'desc' : 'asc',
+          key: this.model.primary_key
+        }
+      } else {
+        return {}
+      }
+    },
     currentScope () {
       return this.model.scopes.find((scope) => scope.name === this.$route.query?.scope)
     },
@@ -231,8 +241,8 @@ export default {
       }
 
       if (this.sortParams?.key &&
-        (this.sortParams.key !== defaultSortParams.key ||
-        this.sortParams.order !== defaultSortParams.order)) {
+        (this.sortParams.key !== this.defaultSortParams.key ||
+        this.sortParams.order !== this.defaultSortParams.order)) {
         query.sort = `${this.sortParams.order === 'desc' ? '-' : ''}${this.sortParams.key}`
       }
 
@@ -362,16 +372,24 @@ export default {
         JSON.stringify(to.params.fragments) === JSON.stringify(from.params.fragments) &&
         (JSON.stringify(to.query) !== JSON.stringify(from.query))) {
         this.assignFromQueryParams(to.query)
-        this.loadDataAndCount()
+        this.loadDataAndCount().then(() => {
+          this.$refs.table.scrollToTop()
+        })
       }
+    },
+    association: {
+      deep: true,
+      handler: throttle(async function (value) {
+        if (value.virtual) {
+          this.loadDataAndCount()
+        }
+      }, 3000)
     },
     columns: {
       deep: true,
-      handler (newValue, oldValue) {
-        if (newValue.length > oldValue.length) {
-          this.loadData()
-        }
-      }
+      handler: throttle(async function () {
+        this.loadData()
+      }, 3000)
     }
   },
   mounted () {
@@ -380,6 +398,7 @@ export default {
     this.loadDataAndCount()
   },
   methods: {
+    widthLessThan,
     onFinishAction (value) {
       this.loadDataAndCount()
 
@@ -396,7 +415,9 @@ export default {
           this.filterParams = filters
           this.paginationParams.current = 1
           this.pushQueryParams()
-          this.loadDataAndCount()
+          this.loadDataAndCount().then(() => {
+            this.$refs.table.scrollToTop()
+          })
           this.$Drawer.remove()
         }
       }, {
@@ -415,7 +436,7 @@ export default {
           key: query.sort.replace(/^-/, '')
         }
       } else {
-        this.sortParams = { ...defaultSortParams }
+        this.sortParams = { ...this.defaultSortParams }
       }
 
       this.paginationParams.current = parseInt(query.page) || 1
@@ -436,7 +457,9 @@ export default {
     },
     onPageChange () {
       this.pushQueryParams()
-      this.loadData()
+      this.loadData().then(() => {
+        this.$refs.table.scrollToTop()
+      })
     },
     onPageSizeChange () {
       this.pushQueryParams()
@@ -447,7 +470,9 @@ export default {
 
       this.pushQueryParams()
 
-      this.loadDataAndCount()
+      this.loadDataAndCount().then(() => {
+        this.$refs.table.scrollToTop()
+      })
     },
     applySort (sort) {
       this.sortParams = sort
@@ -459,12 +484,14 @@ export default {
       this.$router.push({ query: this.routeQueryParams, params: { doNotWatch: true } })
     },
     onRowClick (value) {
-      this.$router.push({
-        name: 'resources',
-        params: {
-          fragments: [...this.$route.params.fragments, value.id]
-        }
-      })
+      if (this.model.primary_key) {
+        this.$router.push({
+          name: 'resources',
+          params: {
+            fragments: [...this.$route.params.fragments, value[this.model.primary_key]]
+          }
+        })
+      }
     },
     loadItemsCount () {
       return api.get(this.queryPath, {

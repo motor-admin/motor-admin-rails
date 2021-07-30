@@ -1,14 +1,14 @@
 <template>
   <Layout
     :has-sider="true"
-    :style="{ height: 'calc(var(--vh, 100vh) - 60px)' }"
+    :style="{ height: 'calc(var(--vh, 100vh) - 60px)', position: 'relative' }"
   >
     <Sider
       v-if="!isShowSiderScreen || fragments[0]"
       :model-value="isShowSiderScreen && isMenuSider"
       :collapsible="true"
       :collapsed-width="0"
-      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 60px)', overflowY: isShowSettings ? 'hidden' : 'auto' }"
+      :style="{ background: '#fff', maxHeight: 'calc(var(--vh, 100vh) - 60px)' }"
     >
       <ResourcesMenu
         :resources="visibleResources"
@@ -16,8 +16,11 @@
         :style="{ minHeight: '100%' }"
         @select="onMenuSelect"
       />
-      <SettingsMask v-if="isShowSettings" />
     </Sider>
+    <SettingsMask
+      v-if="!isShowSiderScreen && isShowSettings"
+      style="width: 200px"
+    />
     <Layout class="d-block">
       <template v-if="fragments && fragments.length">
         <template v-if="fragments.length > 1 || (isShowSiderScreen && fragments.length > 1) || widthLessThan('sm')">
@@ -124,7 +127,7 @@ export default {
     associationName () {
       const last = this.fragments[this.fragments.length - 1]
 
-      if (this.fragments.length > 2 && !last.match(/^\d+$/)) {
+      if (this.fragments.length > 2 && this.fragments.length % 2 === 1) {
         return last
       } else {
         return null
@@ -159,7 +162,7 @@ export default {
             fragments[i].association?.display_name ||
             fragments[i].model?.display_name ||
             ((!widthLessThan('sm') && breadcrumbStore[fragments[i - 1]?.model.name]) || {})[this.fragments[i]] ||
-            `#${this.fragments[i]}`
+            `${this.fragments[i].match(/^\d+$/) ? '#' : ''}${this.fragments[i]}`
           )
         }
 
@@ -183,7 +186,7 @@ export default {
       const index = this.associationName ? 2 : 1
       const last = this.fragments[this.fragments.length - index]
 
-      if (last && last.match(/^\d+$/)) {
+      if (last && this.fragments.length > 1) {
         return last
       } else {
         return null

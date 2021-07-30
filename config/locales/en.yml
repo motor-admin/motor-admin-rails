@@ -87,6 +87,7 @@ en:
     field_name: Field name
     field_value_does_not_match_pattern: '%{field} value does not match %{pattern}'
     file: File
+    filter: Filter
     filters: Filters
     form: Form
     form_has_been_saved: Form has been saved!
@@ -110,7 +111,7 @@ en:
     interval: Interval
     is: Is
     is_not: Is not
-    items_has_been_removed: items has been removed
+    items_have_been_removed: items have been removed
     items_will_be_removed: '%{count} items will be removed'
     json: JSON
     label: Currency
@@ -258,3 +259,6 @@ en:
     add_text: Add Text
     edit_text: Edit Text
     open_in_markdown_editor: Open in markdown editor
+    activate: Activate
+    load_existing_options_from_database: Load existing options from the database
+    add_database: Add Database

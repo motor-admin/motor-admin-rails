@@ -14,5 +14,17 @@ if Rails::VERSION::MAJOR == 6
       build_filters(arel, my_alias_tracker)
       arel
     end
+
+    def build_filters(manager, alias_tracker)
+      where_clause = nil
+
+      @filters.each do |filters|
+        where_clause = filter_clause_factory.build(filters, alias_tracker)
+
+        manager.where(where_clause.ast)
+      end
+
+      @values[:where] = where_clause
+    end
   end
 end

@@ -95,6 +95,28 @@
           </div>
         </RouterLink>
       </div>
+      <div
+        v-if="!schema.length && databaseSettingsPath"
+        class="text-center mb-4"
+      >
+        <VButton
+          icon="md-add"
+          size="large"
+          :to="databaseSettingsPath"
+        >
+          {{ i18n.add_database }}
+        </VButton>
+      </div>
+    </div>
+    <div
+      v-if="!isEdit"
+      class="text-center"
+      style="bottom: 0"
+    >
+      <a
+        href="https://github.com/omohokcoj/motor-admin"
+        target="_blank"
+      >Motor Admin v{{ version }}</a>
     </div>
   </div>
 </template>
@@ -107,6 +129,7 @@ import DashboardLayout from 'dashboards/components/layout'
 import { widthLessThan } from 'utils/scripts/dimensions'
 import { schema } from 'data_resources/scripts/schema'
 import { homepageStore } from '../scripts/homepage_store'
+import { version, adminSettingsPath } from 'utils/scripts/configs'
 
 export default {
   name: 'Home',
@@ -124,11 +147,16 @@ export default {
     }
   },
   computed: {
+    version: () => version,
+    schema: () => schema,
     homepageStore () {
       return homepageStore
     },
     dashboardId () {
       return homepageStore[0]?.id
+    },
+    databaseSettingsPath () {
+      return adminSettingsPath?.replace('general', 'database')
     },
     visibleResources () {
       return schema.filter((model) => model.visible)

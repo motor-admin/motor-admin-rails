@@ -92,7 +92,7 @@ module Motor
       def find_key_in_params(params, key)
         params = params['include']
 
-        return if params.blank?
+        return {} if params.blank?
         return params[key] if params[key]
 
         params.keys.reduce(nil) do |acc, k|

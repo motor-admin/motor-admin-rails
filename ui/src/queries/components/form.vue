@@ -12,6 +12,7 @@
       <VInput
         v-model="dataQuery.name"
         size="large"
+        :autofocus="true"
         :placeholder="i18n['query_name']"
       />
     </FormItem>

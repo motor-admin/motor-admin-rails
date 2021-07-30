@@ -40,12 +40,24 @@
           v-if="isLoading"
           fix
         />
-        <p
+        <div
           v-else-if="!searchQuery && !selectedTags.length && !paginatedItems.length"
           class="text-center mt-2"
         >
-          {{ i18n['looks_like_you_are_new_here'] }}
-        </p>
+          <div class="mb-3">
+            {{ i18n['looks_like_you_are_new_here'] }}
+          </div>
+
+          <VButton
+            v-if="$can('create', 'Motor::Form')"
+            icon="md-add"
+            size="large"
+            type="default"
+            :to="{ name: 'new_form' }"
+          >
+            {{ i18n['add_form'] }}
+          </VButton>
+        </div>
         <p
           v-if="searchQuery && !paginatedItems.length"
           class="text-center mt-2"

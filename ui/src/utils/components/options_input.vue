@@ -37,6 +37,15 @@ export default {
       }
     }
   },
+  watch: {
+    modelValue () {
+      if (this.modelValue) {
+        this.optionsString = this.modelValue.join('\n')
+      } else {
+        this.optionsString = ''
+      }
+    }
+  },
   created () {
     this.optionsString = Array(this.modelValue).flat().join('\n')
   }

@@ -5,7 +5,7 @@ function isJsonColumn (column, resource) {
   return (column.column_type === 'json' ||
     (resource[column.name] instanceof Object &&
       resource[column.name].constructor === Object)) &&
-    !['file', 'image'].includes(column.column_type)
+    !['file', 'image', 'reference'].includes(column.column_type)
 }
 
 function buildColumnValidator (column, resource) {

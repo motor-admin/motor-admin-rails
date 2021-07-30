@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.1.104)
+    motor-admin (0.2.0)
       activerecord-filter (>= 5.2)
       ar_lazy_preload (~> 0.6)
       audited (~> 5.0)
@@ -101,6 +101,8 @@ GEM
     aws-sigv4 (1.2.4)
       aws-eventstream (~> 1, >= 1.0.2)
     bcrypt (3.1.16)
+    bootsnap (1.7.7)
+      msgpack (~> 1.0)
     brakeman (5.1.1)
     builder (3.2.4)
     cancancan (3.3.0)
@@ -147,7 +149,7 @@ GEM
       concurrent-ruby (~> 1.1)
       websocket-driver (>= 0.6, < 0.8)
     ffi (1.15.3)
-    fugit (1.5.1)
+    fugit (1.5.0)
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
     globalid (0.5.1)
@@ -177,6 +179,7 @@ GEM
     mini_magick (4.11.0)
     mini_mime (1.1.0)
     minitest (5.14.4)
+    msgpack (1.4.2)
     mysql2 (0.5.3)
     nio4r (2.5.7)
     nokogiri (1.11.7-x86_64-darwin)
@@ -321,6 +324,7 @@ PLATFORMS
 
 DEPENDENCIES
   aws-sdk-s3
+  bootsnap
   brakeman
   capybara
   cuprite

@@ -8,12 +8,12 @@
   </template>
   <div
     v-else-if="value"
-    class="ivu-tag ivu-tag-size-default ivu-tag-checked"
+    class="ivu-tag ivu-tag-size-default ivu-tag-checked cursor-unset"
     :class="colorClass"
     :style="bgStyle"
   >
     <span
-      class="ivu-tag-text ivu-tag-color-white"
+      class="ivu-tag-text ivu-tag-color-white cursor-unset"
       :style="textStyle"
     >{{ titleize(value) }}</span>
   </div>

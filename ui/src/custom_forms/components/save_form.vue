@@ -12,6 +12,7 @@
       <VInput
         v-model="dataForm.name"
         size="large"
+        :autofocus="true"
         :placeholder="i18n['form_name']"
       />
     </FormItem>

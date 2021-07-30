@@ -4,6 +4,7 @@
       v-model="sqlBody"
       style="height: 140px"
       language="pgsql"
+      placeholder="SELECT * FROM ..."
       @run="runQuery"
     />
     <div
