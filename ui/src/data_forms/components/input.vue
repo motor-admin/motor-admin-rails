@@ -171,6 +171,11 @@ export default {
       this.$emit('update:modelValue', '')
     }
   },
+  created () {
+    if (this.modelValue && (this.isDateTime || this.isDate)) {
+      this.dataValue = new Date(new Date(this.modelValue).getTime())
+    }
+  },
   methods: {
     titleize,
     onFile (event) {
@@ -228,7 +233,11 @@ export default {
     },
     updateDateTime (datetime) {
       if (datetime) {
-        this.$emit('update:modelValue', new Date(datetime.getTime() - datetime.getTimezoneOffset() * 60000))
+        if (this.isDateTime) {
+          this.$emit('update:modelValue', datetime)
+        } else {
+          this.$emit('update:modelValue', new Date(datetime.getTime() - datetime.getTimezoneOffset() * 60000))
+        }
       } else {
         this.$emit('update:modelValue', '')
       }

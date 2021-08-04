@@ -14,7 +14,7 @@ function formatDate (date, options, displayTime) {
   }
 
   if (dateTime.toLocaleString) {
-    return new Date(dateTime.getTime() + dateTime.getTimezoneOffset() * 60000).toLocaleString('en-US', options)
+    return dateTime.toLocaleString('en-US', options)
   } else {
     return dateTime.toString()
   }
