@@ -11,7 +11,7 @@ class Product < ApplicationRecord
 
   validates :description, presence: true
   validates :name, presence: true
-  validates :price, presence: true
+  validates :price, presence: true, numericality: true
   validates :release_year,
             numericality: {
               less_than_or_equal_to: ->(_) { Time.current.year }

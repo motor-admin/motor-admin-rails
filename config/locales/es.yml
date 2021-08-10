@@ -208,8 +208,8 @@ es:
     search_query: Buscar consulta
     select: Selección
     selected_item_will_be_removed: El elemento seleccionado será eliminado
-    should_be_a_valid_json: Debe ser un JSON válido
-    should_be_error_constraint: 'Debe ser %{error} %{constraint}'
+    should_be_a_valid_json: '%{field} debe ser un JSON válido'
+    should_be_error_constraint: '%{field} debe ser %{error} %{constraint}'
     starts_with: Empieza con
     text: Texto
     textarea: Área de texto

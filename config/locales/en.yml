@@ -194,8 +194,8 @@ en:
     send_to: Send to
     set_tags: Set tags
     settings: Settings
-    should_be_a_valid_json: Should be a valid JSON
-    should_be_error_constraint: 'Should be %{error} %{constraint}'
+    should_be_a_valid_json: '%{field} should be a valid JSON'
+    should_be_error_constraint: '%{field} should be %{error} %{constraint}'
     stacked_bars: Stacked bars
     starts_with: Starts with
     submit: Submit

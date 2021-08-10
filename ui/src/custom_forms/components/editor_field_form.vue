@@ -214,7 +214,7 @@ export default {
       }
 
       if (this.dataField.field_type === 'json') {
-        rules.default_value = [{ validator: Validators.json }]
+        rules.default_value = [{ validator: Validators.json, fullField: this.i18n.default_value }]
       }
 
       if (this.dataField.field_type === 'reference') {

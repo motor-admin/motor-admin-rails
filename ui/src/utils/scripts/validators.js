@@ -33,12 +33,23 @@ export default {
       }) || []
 
       if (error) {
-        return new Error(i18nDict.should_be_error_constraint.replace('%{error}', i18nDict[error].toLowerCase()).replace('%{constraint}', constraint))
+        return new Error(i18nDict.should_be_error_constraint.replace('%{field}', rule.fullField).replace('%{error}', i18nDict[error].toLowerCase()).replace('%{constraint}', constraint))
       } else {
         return true
       }
     } else {
       return true
+    }
+  },
+  number (rule, value, callbacks, source, options) {
+    const valueType = typeof value
+
+    if (valueType === 'number') {
+      return true
+    } else if (valueType === 'string' && value.match(/^\d+(?:\.\d+)?$/)) {
+      return true
+    } else {
+      return new Error(i18nDict.field_is_not_a_number.replace('%{field}', rule.fullField))
     }
   },
   json (rule, value, callbacks) {
@@ -49,7 +60,7 @@ export default {
 
       return true
     } catch {
-      return new Error(i18nDict.should_be_a_valid_json)
+      return new Error(i18nDict.should_be_a_valid_json.replace('%{field}', rule.fullField))
     }
   }
 }

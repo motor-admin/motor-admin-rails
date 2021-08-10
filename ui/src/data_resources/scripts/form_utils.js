@@ -37,8 +37,8 @@ function buildColumnValidator (column, resource) {
     } else if (validator.numeric) {
       return [
         {
-          type: 'number',
-          message: i18nDict.field_is_not_a_number.replace('%{field}', column.display_name)
+          validator: Validators.number,
+          fullField: column.display_name
         },
         {
           required: !validator.numeric.allow_nil,
@@ -47,6 +47,7 @@ function buildColumnValidator (column, resource) {
         {
           required: !validator.numeric.allow_nil,
           validator: Validators.numeric,
+          fullField: column.display_name,
           options: validator.numeric
         }
       ]
@@ -60,11 +61,14 @@ function buildColumnValidator (column, resource) {
   }
 
   if (isJsonColumn(column, resource)) {
-    validators.push({ validator: Validators.json })
+    validators.push({ validator: Validators.json, fullField: column.display_name })
   }
 
   if (!column.reference && ['integer', 'float'].includes(column.column_type)) {
-    validators.push({ type: 'number' })
+    validators.push({
+      validator: Validators.number,
+      fullField: column.display_name
+    })
   }
 
   return validators
