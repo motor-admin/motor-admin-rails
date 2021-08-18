@@ -3,7 +3,7 @@
 class Product < ApplicationRecord
   CATEGORIES = %w[fanfiction humor mythology fantasy].freeze
 
-  has_one_attached :image
+  has_one_attached :image, service: :product_assets
 
   has_many :line_items, dependent: :destroy
   has_many :orders, through: :line_items, dependent: :destroy

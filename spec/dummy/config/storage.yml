@@ -6,13 +6,16 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
+product_assets:
+  service: Disk
+  root: <%= Rails.root.join("storage/product_assets") %>
+
 amazon:
   service: S3
   access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
   secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
   region: <%= ENV['AWS_REGION'] %>
   bucket: <%= ENV['S3_ATTACHMENTS_BUCKET'] %>
-
 # Remember not to checkin your GCS keyfile to a repository
 # google:
 #   service: GCS
