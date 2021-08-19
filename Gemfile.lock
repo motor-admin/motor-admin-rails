@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.1.101)
+    motor-admin (0.1.102)
       activerecord-filter (>= 5.2)
       ar_lazy_preload (~> 0.6)
       audited (~> 5.0)
@@ -147,7 +147,7 @@ GEM
       concurrent-ruby (~> 1.1)
       websocket-driver (>= 0.6, < 0.8)
     ffi (1.15.3)
-    fugit (1.5.0)
+    fugit (1.5.1)
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
     globalid (0.5.1)
