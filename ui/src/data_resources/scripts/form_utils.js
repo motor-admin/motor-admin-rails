@@ -31,8 +31,9 @@ function buildColumnValidator (column, resource) {
       }
     } else if (validator.length) {
       return {
-        len: validator.length,
-        message: i18nDict.field_must_be_exactly_in_length.replace('%{field}', column.display_name)
+        validator: Validators.length,
+        fullField: column.display_name,
+        options: validator.length
       }
     } else if (validator.numeric) {
       return [

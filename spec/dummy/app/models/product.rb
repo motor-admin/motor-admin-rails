@@ -16,6 +16,7 @@ class Product < ApplicationRecord
             numericality: {
               less_than_or_equal_to: ->(_) { Time.current.year }
             },
+            length: { is: 4 },
             allow_blank: true
   validates :slug, uniqueness: true
   validate :valid_slug

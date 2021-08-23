@@ -179,6 +179,8 @@ es:
     field_is_required: '%{field} es obligatorio'
     field_list_cant_be_empty: "La lista %{field} no puede estar vacía"
     field_must_be_exactly_in_length: '%{field} debe tener un largo de %{length} caracteres'
+    field_must_be_less_in_length: '%{field} debe tener una longitud inferior a %{length}'
+    field_must_be_more_in_length: '%{field} debe tener una longitud superior a %{length}'
     field_value_does_not_match_pattern: 'El valor de %{field} no coincide con %{pattern}'
     file: Archivo
     greater_or_equal: Mayor o igual

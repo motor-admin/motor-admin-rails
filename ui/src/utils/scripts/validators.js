@@ -52,6 +52,29 @@ export default {
       return new Error(i18nDict.field_is_not_a_number.replace('%{field}', rule.fullField))
     }
   },
+  length (rule, value, callbacks, source, options) {
+    const stringValue = value.toString()
+    const normalizedOptions = { ...rule.options }
+
+    if (normalizedOptions.in) {
+      normalizedOptions.minimum = normalizedOptions.in[0]
+      normalizedOptions.maximum = normalizedOptions.in[1]
+
+      delete normalizedOptions.in
+    }
+
+    return Object.entries(normalizedOptions).reduce((acc, [key, value]) => {
+      if (key === 'is' && stringValue.length !== value) {
+        return new Error(i18nDict.field_must_be_exactly_in_length.replace('%{field}', rule.fullField).replace('%{length}', value))
+      } else if (key === 'minimum' && stringValue.length < value) {
+        return new Error(i18nDict.field_must_be_more_in_length.replace('%{field}', rule.fullField).replace('%{length}', value))
+      } else if (key === 'maximum' && stringValue.length > value) {
+        return new Error(i18nDict.field_must_be_less_in_length.replace('%{field}', rule.fullField).replace('%{length}', value))
+      }
+
+      return acc
+    }, true)
+  },
   json (rule, value, callbacks) {
     try {
       if (value) {
