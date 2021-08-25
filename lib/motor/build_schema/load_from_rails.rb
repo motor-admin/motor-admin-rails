@@ -290,10 +290,18 @@ module Motor
         when ActiveModel::Validations::FormatValidator
           { format: JsRegex.new(options[:with]).to_h.slice(:source, :options) }
         when ActiveRecord::Validations::LengthValidator
-          { length: options }
+          { length: normalize_length_validation_options(options) }
         when ActiveModel::Validations::NumericalityValidator
           { numeric: options }
         end
+      end
+
+      def normalize_length_validation_options(options)
+        return options if options[:in].blank?
+
+        in_range = options[:in]
+
+        options.merge(in: in_range.minmax)
       end
 
       def valid_reflection?(reflection)

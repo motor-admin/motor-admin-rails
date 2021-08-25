@@ -82,6 +82,8 @@ en:
     field_is_required: '%{field} is required'
     field_list_cant_be_empty: "%{field} list can't be empty"
     field_must_be_exactly_in_length: '%{field} must be exactly %{length} in length'
+    field_must_be_less_in_length: '%{field} must be less than %{length} in length'
+    field_must_be_more_in_length: '%{field} must be more than %{length} in length'
     field_name: Field name
     field_value_does_not_match_pattern: '%{field} value does not match %{pattern}'
     file: File

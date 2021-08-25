@@ -3,7 +3,7 @@
 class Product < ApplicationRecord
   CATEGORIES = %w[fanfiction humor mythology fantasy].freeze
 
-  has_one_attached :image
+  has_one_attached :image, **(Rails::VERSION::MAJOR > 5 ? { service: :product_assets } : {})
 
   has_many :line_items, dependent: :destroy
   has_many :orders, through: :line_items, dependent: :destroy
@@ -16,6 +16,7 @@ class Product < ApplicationRecord
             numericality: {
               less_than_or_equal_to: ->(_) { Time.current.year }
             },
+            length: { is: 4 },
             allow_blank: true
   validates :slug, uniqueness: true
   validate :valid_slug
