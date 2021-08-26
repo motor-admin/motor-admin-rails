@@ -1,4 +1,4 @@
-pt-BR:
+pt:
   motor:
     action_has_been_applied: "A ação foi aplicada!"
     action_has_failed_with_code: "A ação falhou com o código"
@@ -256,3 +256,88 @@ pt-BR:
     visibility: "Visibilidade"
     visualization: "Visualização"
     write_only: "Somente gravação"
+    i:
+      locale: pt
+      select:
+        placeholder: Selecionar
+        noMatch: Sem correspondências
+        loading: Carregando
+      table:
+        noDataText: Sem dados
+        noFilteredDataText: Sem dados para o filtro
+        confirmFilter: Aceitar
+        resetFilter: Resetar filtro
+        clearFilter: Limpar
+        sumText: Soma
+      datepicker:
+        selectDate: Selecionar data
+        selectTime: Selecionar hora
+        startTime: Horário de início
+        endTime: Horário de final
+        clear: Limpar
+        ok: Aceitar
+        datePanelLabel: "[mmmm] [yyyy]"
+        month: Mês
+        month1: Janeiro
+        month2: Fevereiro
+        month3: Março
+        month4: Abril
+        month5: Maio
+        month6: Junho
+        month7: Julho
+        month8: Agosto
+        month9: Setembro
+        month10: Outubro
+        month11: Novembro
+        month12: Dezembro
+        year: Ano
+        weekStartDay: '1'
+        weeks:
+          sun: Dom
+          mon: Seg
+          tue: Ter
+          wed: Qua
+          thu: Qui
+          fri: Sex
+          sat: Sab
+        months:
+          m1: Jan
+          m2: Fev
+          m3: Mar
+          m4: Abr
+          m5: Mai
+          m6: Jun
+          m7: Jul
+          m8: Ago
+          m9: Set
+          m10: Out
+          m11: Nov
+          m12: Dez
+      transfer:
+        titles:
+          source: Origem
+          target: Destino
+        filterPlaceholder: Buscar aqui
+        notFoundText: Sem resultados
+      modal:
+        okText: Aceitar
+        cancelText: Cancelar
+      poptip:
+        okText: Aceitar
+        cancelText: Cancelar
+      page:
+        prev: Página Anterior
+        next: Página Seguinte
+        total: Total
+        item: Elemento
+        items: Elementos
+        prev5: 5 Páginas Anteriores
+        next5: 5 Páginas Seguintes
+        page: "/pag"
+        goto: Ir a
+        p: ''
+      rate:
+        star: Estrela
+        stars: Estrelas
+      tree:
+        emptyText: Sem Dados
