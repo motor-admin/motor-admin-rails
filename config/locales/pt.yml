@@ -96,6 +96,8 @@ pt:
     field_is_required: "%{field} é obrigatório"
     field_list_cant_be_empty: "A lista %{field} não pode estar vazia"
     field_must_be_exactly_in_length: "%{field} deve ter exatamente %{length} de comprimento"
+    field_must_be_less_in_length: '%{campo} deve ser menor que %{comprimento} em comprimento'
+    field_must_be_more_in_length: '%{campo} deve ter mais do que %{comprimento} de comprimento'
     field_name: "Nome do campo"
     field_value_does_not_match_pattern: "%{field} valor não corresponde %{pattern}"
     file: "Arquivo"
@@ -333,7 +335,7 @@ pt:
         items: Elementos
         prev5: 5 Páginas Anteriores
         next5: 5 Páginas Seguintes
-        page: "/pag"
+        page: "/page"
         goto: Ir a
         p: ''
       rate:
