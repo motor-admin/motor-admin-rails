@@ -1,0 +1,343 @@
+pt:
+  motor:
+    action_has_been_applied: "A ação foi aplicada!"
+    action_has_failed_with_code: "A ação falhou com o código"
+    action_type: "Tipo de ação"
+    actions: "Ações"
+    add: "Adicionar"
+    add_action: "Adicionar ação"
+    add_alert: "Adicionar alerta"
+    add_association: "Adicionar associação"
+    add_column: "Adicionar Coluna"
+    add_dashboard: "Adicionar painel"
+    add_field: "Adicionar campo"
+    add_filter: "Adicionar filtro"
+    add_form: "Adicionar formulário"
+    add_group: "Adicionar grupo"
+    add_item: "Adicionar item"
+    add_link: "Adicionar link"
+    add_query: "Adicionar consulta"
+    add_scope: "Adicionar escopo"
+    add_tab: "Adicionar guia"
+    add_text: "Adicionar texto"
+    adjust_fields: "Ajustar campos"
+    adjust_form: "Ajustar formulário"
+    alert_email_has_been_sent: "E-mail de alerta foi enviado!"
+    alert_has_been_activated: "O alerta foi ativado"
+    alert_has_been_disabled: "O alerta foi desativado"
+    alert_has_been_saved: "O alerta foi salvo!"
+    alert_name: "Nome do alerta"
+    alerts: "Alertas"
+    all: "Todos"
+    all_resources: "Todos os recursos"
+    and: "e"
+    api: "API"
+    api_path: "Caminho da API"
+    api_request: "Solicitação de API"
+    apply: "Aplicar"
+    are_you_sure: "Tem certeza?"
+    associations: "Associações"
+    bar_chart: "Gráfico de barras"
+    base: "Base"
+    boolean: "Booleano"
+    build_custom_form: "Crie um formulário personalizado"
+    cancel: "Cancelar"
+    cents: "Centavos"
+    change: "Alterar"
+    chart: "Gráfico"
+    checkbox: "Caixa de seleção"
+    clear: "Limpar"
+    clear_all: "Limpar tudo"
+    clear_selection: "Limpar seleção"
+    close: "Fechar"
+    close_editor: "Fechar editor"
+    close_settings: "Fechar ajustes"
+    close_variables: "Fechar variáveis"
+    color: "Cor"
+    columns: "Colunas"
+    condition: "Condição"
+    conditional: "Condicional"
+    contains: "Contém"
+    copied_to_the_clipboard: "Copiado para a área de transferência"
+    create: "Criar"
+    create_new: "Criar novo"
+    currency: "Moeda"
+    current_user_variables_are_always_passed_explicitly_and_can_he_used_html: "<code>{{current_user_id}}</code> e <code>{{current_user_email}}</code> variáveis são sempre passadas explicitamente e podem ser usadas para decidir quais dados devem ser exibidos para determinado usuário:"
+    dashboard: "Painel"
+    dashboard_has_been_saved: "O painel foi salvo!"
+    dashboard_title: "Título do painel"
+    dashboards: "Painéis"
+    date: "Data"
+    date_and_time: "Data e hora"
+    decimal: "Decimal"
+    default: "Padrão"
+    default_value: "Valor predefinido"
+    describe_this_alert_optional: "Descreva este alerta (opcional)"
+    describe_your_dashboard_optional: "Descreva seu painel (opcional)"
+    describe_your_form_optional: "Descreva seu formulário (opcional)"
+    describe_your_query_optional: "Descreva sua consulta (opcional)"
+    description: "Descrição"
+    deselect_all: "Desmarcar tudo"
+    details: "Detalhes"
+    disable: "Desabilitar"
+    display_as: "Exibir como"
+    edit: "Editar"
+    edit_markdown: "Editar markdown"
+    edit_sql: "Editar SQL"
+    edit_text: "Editar texto"
+    emails: "E-mails"
+    empty: "Vazio"
+    ends_with: "Termina com"
+    equal_to: "É igual a"
+    every_day_at_hh_mm: "todos os dias em HH:mm PM..."
+    excludes: "exclui"
+    field: "Campo"
+    field_is_not_a_number: "% {field} não é um número"
+    field_is_required: "%{field} é obrigatório"
+    field_list_cant_be_empty: "A lista %{field} não pode estar vazia"
+    field_must_be_exactly_in_length: "%{field} deve ter exatamente %{length} de comprimento"
+    field_name: "Nome do campo"
+    field_value_does_not_match_pattern: "%{field} valor não corresponde %{pattern}"
+    file: "Arquivo"
+    filters: "Filtros"
+    foreign_key: "Foreign key"
+    form: "Formulário"
+    form_has_been_saved: "O formulário foi salvo!"
+    form_has_been_submitted_successfully: "O formulário foi enviado com sucesso!"
+    form_name: "Nome do formulário"
+    forms: "Formulários"
+    funnel: "Funil"
+    general: "Geral"
+    greater_or_equal: "Maior ou igual"
+    greater_than: "Maior do que"
+    greater_than_or_equal_to: "Maior que ou igual a"
+    group_name: "Nome do grupo"
+    has_been_created: "foi criado"
+    has_been_removed_succesfully: "foi removido com sucesso"
+    has_been_updated: "foi atualizado"
+    hello_admin: "Olá Admin \U0001f44b"
+    hidden: "Oculto"
+    image: "Imagem"
+    includes: "Inclui"
+    input_type: "Tipo de entrada"
+    integer: "Integer"
+    interval: "Intervalo"
+    is: "É"
+    is_not: "Não é"
+    items_has_been_removed: "itens foram removidos"
+    items_will_be_removed: "%{count} itens serão removidos"
+    json: "JSON"
+    label: "Moeda"
+    less_or_equal: "Menor ou igual"
+    less_than: "Menor do que"
+    less_than_or_equal_to: "Menor ou igual a"
+    line_chart: "Gráfico de linhas"
+    link: "Link"
+    link_name: "Nome do link"
+    link_text: "Texto do link"
+    links: "Links"
+    load_initial_data: "Carregar dados iniciais"
+    loading: "Carregando…"
+    long_text: "Texto longo"
+    looks_like_you_are_new_here: "Parece que você é novo aqui \U0001f643"
+    markdown: "Markdown"
+    method: "Método"
+    method_call: "Chamada de método"
+    more: "Mais"
+    multiple: "Múltiplo"
+    name: "Nome"
+    new_alert: "Novo alerta"
+    new_dashboard: "Novo painel"
+    new_form: "Novo formulário"
+    new_query: "Nova consulta"
+    no_data: "Sem dados"
+    not_empty: "Não vazio"
+    not_found: "Não encontrado"
+    number: "Número"
+    ok: "Ok"
+    open_in_markdown_editor: "Abrir no editor de markdown"
+    options_separated_with_new_line_or_comma: "Opções separadas com nova linha ou vírgula"
+    or: "Ou"
+    other_than: "Outros que não"
+    param_name: "Nome do param"
+    password: "Senha"
+    path: "Caminho"
+    percent: "Porcento"
+    percentage: "Porcentagem"
+    pie_chart: "Gráfico de pizza"
+    polymorphic: "Polimórfico"
+    primary_key: "Chave primária"
+    queries: "Consultas"
+    queries_can_contain_variable_via_syntax_html: "As consultas podem conter variáveis incorporadas usando a sintaxe <code>{{variable}}</code>:"
+    query: "Consulta"
+    query_editor: "Editor de consultas"
+    query_has_been_saved: "A consulta foi salva!"
+    query_name: "Nome da consulta"
+    query_not_selected: "Consulta não selecionada"
+    query_revisions: "Revisões de consulta"
+    read_only: "Somente leitura"
+    read_write: "Leitura-gravação"
+    reference: "Referência"
+    reference_resource: "Recurso de referência"
+    remove: "Remover"
+    reports: "Relatórios"
+    request_param: "Param de solicitação"
+    required: "Requerido"
+    resource: "Recurso"
+    resource_filters: "%{resource} Filtros"
+    resource_settings: "%{resource} Configurações"
+    resources: "Recursos"
+    restore: "Restaurar"
+    resubmit: "Reenviar"
+    revert: "Reverter"
+    revision_has_been_applied: "A revisão foi aplicada"
+    revisions: "Revisões"
+    richtext: "Richtext"
+    row_chart: "Gráfico de linhas"
+    run: "Executar"
+    save: "Salvar"
+    save_and_create_new: "Salvar e criar novo"
+    save_as_new: "Salvar como novo"
+    save_dashboard: "Salvar painel"
+    save_form: "Salvar formulário"
+    save_query: "Salvar consulta"
+    scopes: "Escopos"
+    search: "Pesquisar"
+    search_placeholder: "Pesquisar..."
+    search_query: "Consulta de pesquisa"
+    select: "Selecionar"
+    select_alert_tags: "Selecionar tags de alerta"
+    select_dashboard: "Selecione o painel"
+    select_dashboard_tags: "Selecionar tags de painel"
+    select_form: "Selecionar formulário"
+    select_form_tags: "Selecionar tags de dashform"
+    select_options: "Selecionar opções"
+    select_placeholder: "Selecione..."
+    select_query: "Selecionar consulta"
+    select_query_tags: "Selecionar tags de consulta"
+    select_resource_placeholder: "Selecionar recurso..."
+    selected_item_has_been_removed: "O item selecionado foi removido"
+    selected_item_will_be_removed: "O item selecionado será removido"
+    selected_item_will_be_removed_are_you_sure: "O item selecionado será removido. Tem certeza?"
+    send_empty: "Enviar vazio?"
+    send_now: "Enviar agora"
+    send_to: "Enviar para"
+    set_tags: "Definir tags"
+    settings: "Configurações"
+    should_be_a_valid_json: "Deve ser um JSON válido"
+    should_be_error_constraint: "Deve ser %{erro} %{constraint}"
+    source: "Fonte"
+    stacked_bars: "Barras empilhadas"
+    starts_with: "Começa com"
+    submit: "Enviar"
+    syntax_is_used_for_if_and_if_not_conditions_html: "<code>{{#variable}}... {{/variable}}</code> e <code>{{^variable}}... A sintaxe {{variable}}</code> é usada para condições <code>if</code> e <code>se não</code>, respectivamente:"
+    tab_type: "Tipo de guia"
+    table: "Tabela"
+    tabs: "Guias"
+    tag: "Tag"
+    tags: "Tags"
+    text: "Texto"
+    textarea: "Área de texto"
+    there_are_unsaved_changes_from: "Há alterações não salvas de %{timestamp}"
+    through: "Através"
+    timezone: "Fuso horário"
+    title: "Título"
+    type: "Tipo"
+    unable_to_load_form_data: "Não é possível carregar dados do formulário"
+    unable_to_remove_item: "Não foi possível remover o item"
+    unable_to_remove_items: "Não foi possível remover itens"
+    unable_to_send_email: "Não foi possível enviar e-mail"
+    unable_to_submit_form: "Não foi possível enviar o formulário"
+    unit: "Unidade"
+    use_default: "Usar padrão"
+    value: "Valor"
+    values_axis: "Eixo valores"
+    variables: "Variáveis"
+    visibility: "Visibilidade"
+    visualization: "Visualização"
+    write_only: "Somente gravação"
+    i:
+      locale: pt
+      select:
+        placeholder: Selecionar
+        noMatch: Sem correspondências
+        loading: Carregando
+      table:
+        noDataText: Sem dados
+        noFilteredDataText: Sem dados para o filtro
+        confirmFilter: Aceitar
+        resetFilter: Resetar filtro
+        clearFilter: Limpar
+        sumText: Soma
+      datepicker:
+        selectDate: Selecionar data
+        selectTime: Selecionar hora
+        startTime: Horário de início
+        endTime: Horário de final
+        clear: Limpar
+        ok: Aceitar
+        datePanelLabel: "[mmmm] [yyyy]"
+        month: Mês
+        month1: Janeiro
+        month2: Fevereiro
+        month3: Março
+        month4: Abril
+        month5: Maio
+        month6: Junho
+        month7: Julho
+        month8: Agosto
+        month9: Setembro
+        month10: Outubro
+        month11: Novembro
+        month12: Dezembro
+        year: Ano
+        weekStartDay: '1'
+        weeks:
+          sun: Dom
+          mon: Seg
+          tue: Ter
+          wed: Qua
+          thu: Qui
+          fri: Sex
+          sat: Sab
+        months:
+          m1: Jan
+          m2: Fev
+          m3: Mar
+          m4: Abr
+          m5: Mai
+          m6: Jun
+          m7: Jul
+          m8: Ago
+          m9: Set
+          m10: Out
+          m11: Nov
+          m12: Dez
+      transfer:
+        titles:
+          source: Origem
+          target: Destino
+        filterPlaceholder: Buscar aqui
+        notFoundText: Sem resultados
+      modal:
+        okText: Aceitar
+        cancelText: Cancelar
+      poptip:
+        okText: Aceitar
+        cancelText: Cancelar
+      page:
+        prev: Página Anterior
+        next: Página Seguinte
+        total: Total
+        item: Elemento
+        items: Elementos
+        prev5: 5 Páginas Anteriores
+        next5: 5 Páginas Seguintes
+        page: "/pag"
+        goto: Ir a
+        p: ''
+      rate:
+        star: Estrela
+        stars: Estrelas
+      tree:
+        emptyText: Sem Dados
