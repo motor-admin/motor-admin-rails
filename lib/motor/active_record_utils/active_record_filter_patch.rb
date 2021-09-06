@@ -24,7 +24,7 @@ if Rails::VERSION::MAJOR == 6
         manager.where(where_clause.ast)
       end
 
-      @values[:where] = where_clause
+      @values[:where] = where_clause if where_clause
     end
   end
 end
