@@ -49,6 +49,8 @@ Everything in the admin panel can be configured using the intuitive settings UI,
 
 Data displayed on the resource page can be completely customized via [SQL queries](#sql-queries) and [dashboards](#dashboards) attached to the resource as a tab. Usually, queries used to display resource data should contain `{{resource_name_id}}` [variable](#sql-queries).
 
+[Learn more about resource customizations](https://github.com/omohokcoj/motor-admin/blob/master/guides/customizing_resource_table.md)
+
 ### Custom Actions
 
 ![Custom actions](https://user-images.githubusercontent.com/5418788/119266132-3c1dd580-bbf2-11eb-9666-09e1640eaf7b.png)
@@ -75,8 +77,9 @@ end
 
 ![Custom form](https://user-images.githubusercontent.com/5418788/119264008-1391dd80-bbea-11eb-9f14-cb405e77fb60.png)
 
-Values from the form fields can be used in API path via `{field_name}` syntax: `/api/some-endpoint/{resource_id}/apply`.<br>
-[Learn more about custom forms builder](https://github.com/omohokcoj/motor-admin/blob/master/guides/building_custom_forms.md).
+Values from the form fields can be used in API path via `{field_name}` syntax: `/api/some-endpoint/{resource_id}/apply`.
+
+[Learn more about custom forms builder](https://github.com/omohokcoj/motor-admin/blob/master/guides/building_custom_forms.md)
 
 ### SQL Queries
 
