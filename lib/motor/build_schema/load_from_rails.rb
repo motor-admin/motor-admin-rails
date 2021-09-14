@@ -287,8 +287,6 @@ module Motor
           { includes: validator.send(:delimiter) }
         when ActiveRecord::Validations::PresenceValidator
           { required: true }
-        when ActiveModel::Validations::FormatValidator
-          { format: JsRegex.new(options[:with]).to_h.slice(:source, :options) }
         when ActiveRecord::Validations::LengthValidator
           { length: normalize_length_validation_options(options) }
         when ActiveModel::Validations::NumericalityValidator
