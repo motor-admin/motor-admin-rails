@@ -46,7 +46,7 @@
       :loading="isLoading"
       :preferences="query.preferences"
       :columns="columns"
-      :default-page-size="pageSizesMap[item.size[1]]"
+      :default-page-size="pageSizesMap[item.size[2]]"
       :borderless="true"
       :with-settings="false"
       :with-table-toggle="true"
