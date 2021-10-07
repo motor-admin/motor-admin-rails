@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="photoswipe"
+    v-if="photoswipe && value"
     class="photoswipe"
   >
     <a
@@ -17,7 +17,7 @@
     </a>
   </div>
   <img
-    v-else
+    v-else-if="value"
     class="table-image"
     :src="value"
   >
@@ -28,8 +28,6 @@ import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js'
 import PhotoSwipe from 'photoswipe/dist/photoswipe.esm.js'
 
 import 'photoswipe/dist/photoswipe.css'
-
-import { copyToClipboard } from '../mixins/copy_to_clipboard'
 
 export default {
   name: 'DataImage',
@@ -57,7 +55,11 @@ export default {
     }
   },
   methods: {
-    copyToClipboard
+    copyToClipboard () {
+      const url = this.value[0] === '/' ? document.location.origin + this.value : this.value
+
+      return navigator.clipboard.writeText(url)
+    }
   }
 }
 </script>

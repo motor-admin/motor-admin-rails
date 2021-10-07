@@ -105,7 +105,7 @@
         />
       </FormItem>
       <FormItem
-        v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !['image', 'file'].includes(dataColumn.column_type)"
+        v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !['image', 'file', 'audio', 'video'].includes(dataColumn.column_type)"
         :label="i18n['default_value']"
         prop="default_value"
       >
@@ -233,6 +233,8 @@ export default {
         { label: this.i18n.link, value: 'link' },
         { label: this.i18n.color, value: 'color' },
         { label: this.i18n.image, value: 'image' },
+        { label: this.i18n.audio, value: 'audio' },
+        { label: this.i18n.video, value: 'video' },
         { label: this.i18n.file, value: 'file' },
         { label: this.i18n.json, value: 'json' }
       ]

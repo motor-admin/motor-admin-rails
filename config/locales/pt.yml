@@ -258,6 +258,8 @@ pt:
     visibility: "Visibilidade"
     visualization: "Visualização"
     write_only: "Somente gravação"
+    audio: Áudio
+    video: Vídeo
     i:
       locale: pt
       select:

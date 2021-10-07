@@ -13,7 +13,6 @@
 
 <script>
 import Truncate from '../mixins/truncate'
-import { copyToClipboard } from '../mixins/copy_to_clipboard'
 
 export default {
   name: 'TextCell',
@@ -54,7 +53,11 @@ export default {
     }
   },
   methods: {
-    copyToClipboard
+    copyToClipboard () {
+      const url = this.value[0] === '/' ? document.location.origin + this.value : this.value
+
+      return navigator.clipboard.writeText(url)
+    }
   }
 }
 </script>

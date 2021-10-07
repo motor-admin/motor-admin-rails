@@ -262,6 +262,8 @@ es:
     activate: Activar
     load_existing_options_from_database: Cargar las opciones existentes de la base de datos
     add_database: Añadir base de datos
+    audio: Audio
+    video: Video
     i:
       locale: es
       select:

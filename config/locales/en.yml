@@ -262,3 +262,5 @@ en:
     activate: Activate
     load_existing_options_from_database: Load existing options from the database
     add_database: Add Database
+    audio: Audio
+    video: Video

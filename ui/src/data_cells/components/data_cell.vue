@@ -48,6 +48,17 @@
     :photoswipe="!textTruncate"
     :value="stringValue"
   />
+  <DataAudio
+    v-else-if="isAudio"
+    ref="cell"
+    :value="stringValue"
+  />
+  <DataVideo
+    v-else-if="isVideo"
+    ref="cell"
+    :is-table="textTruncate"
+    :value="stringValue"
+  />
   <DataLink
     v-else-if="isUrl || isPath"
     ref="cell"
@@ -95,6 +106,8 @@ import DataPercentage from './percentage'
 import DataChange from './change'
 import DataChart from './chart'
 import DataColor from './color'
+import DataAudio from './audio'
+import DataVideo from './video'
 
 import DataTypes from '../scripts/data_types'
 
@@ -114,7 +127,9 @@ export default {
     DataPercentage,
     DataChange,
     DataChart,
-    DataColor
+    DataColor,
+    DataAudio,
+    DataVideo
   },
   props: {
     value: {
@@ -173,7 +188,13 @@ export default {
       return this.type === 'chart'
     },
     isImage () {
-      return this.type === 'image' || (this.isPath && !!this.stringValue.match(/\.(jpg|png|jpeg|wepb|svg)$/i))
+      return this.type === 'image' || (this.isPath && !!this.stringValue.match(/\.(jpg|png|jpeg|wepb|svg|gif)$/i))
+    },
+    isAudio () {
+      return this.type === 'audio' || (this.isPath && !!this.stringValue.match(/\.(mp3|ogg|wav|aif)$/i))
+    },
+    isVideo () {
+      return this.type === 'video' || (this.isPath && !!this.stringValue.match(/\.(mp4|mov|flv|webm)$/i))
     },
     isCurrency () {
       return this.type === 'currency'
