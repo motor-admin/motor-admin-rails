@@ -14,7 +14,7 @@ module Motor
 
         maybe_fetch_from_cache(
           model,
-          cache_key,
+          cache_key.to_s + model.object_id.to_s,
           lambda {
             resource_config = configs.find { |r| r.name == model.name.underscore }
 

@@ -4,6 +4,8 @@ module Motor
   module CancanUtils
     module AbilityPatch
       def serialized_rules
+        return [] unless @rules
+
         @rules.map do |rule|
           {
             base_behavior: rule.base_behavior,

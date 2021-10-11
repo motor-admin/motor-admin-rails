@@ -13,7 +13,7 @@ module Motor
       module_function
 
       def call(current_user = nil, current_ability = nil, cache_keys: LoadFromCache.load_cache_keys)
-        CACHE_STORE.fetch("#{I18n.locale}#{cache_keys.hash}#{current_user&.id}") do
+        CACHE_STORE.fetch("#{I18n.locale}#{cache_keys.hash}#{current_user&.id}#{current_ability&.rules_hash}") do
           CACHE_STORE.clear
 
           data = build_data(cache_keys, current_user, current_ability)
