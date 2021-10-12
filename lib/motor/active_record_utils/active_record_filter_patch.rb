@@ -16,6 +16,8 @@ if Rails::VERSION::MAJOR == 6
     end
 
     def build_filters(manager, alias_tracker)
+      return unless @filters
+
       where_clause = nil
 
       @filters.each do |filters|
