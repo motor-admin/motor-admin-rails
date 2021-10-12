@@ -27,6 +27,15 @@
           @keydown.enter="submit"
         />
       </FormItem>
+      <FormItem
+        :label="i18n['type']"
+        prop="type"
+      >
+        <MSelect
+          v-model="dataLink.link_type"
+          :options="linkTypeOptions"
+        />
+      </FormItem>
     </VForm>
     <div class="d-flex justify-content-between">
       <div>
@@ -85,6 +94,12 @@ export default {
     }
   },
   computed: {
+    linkTypeOptions () {
+      return [
+        { label: this.i18n.header, value: 'header' },
+        { label: this.i18n.user_dropdown, value: 'user_dropdown' }
+      ]
+    },
     rules () {
       return {
         name: [{ required: true, message: fieldRequiredMessage('name') }],

@@ -70,6 +70,42 @@
       </template>
     </div>
     <div class="col-2 d-flex justify-content-end align-items-center">
+      <Dropdown
+        v-if="currentUser?.email && !widthLessThan('sm')"
+        trigger="click"
+        :placement="'bottom-end'"
+        class="ms-2"
+      >
+        <VButton
+          v-if="currentUser"
+          type="primary"
+          class="header-btn ms-2"
+          size="large"
+        >
+          {{ currentUser.email }}
+        </VButton>
+        <template #list>
+          <DropdownMenu>
+            <DropdownItem
+              v-for="link in linksToRenderForUserDropdown"
+              :key="link.name"
+              @click="$router.push(link.to)"
+            >
+              {{ link.name }}
+            </DropdownItem>
+            <DropdownItem
+              :divided="linksToRenderForUserDropdown.length !== 0"
+              @click="signOut"
+            >
+              <Icon
+                type="md-exit"
+                size="large"
+              />
+              {{ i18n['sign_out'] }}
+            </DropdownItem>
+          </DropdownMenu>
+        </template>
+      </Dropdown>
       <VButton
         v-if="!isShowSettings && currentUser.showHelp"
         type="primary"
@@ -172,6 +208,7 @@
 </template>
 
 <script>
+import api from 'api'
 import Search from './search'
 import Guides from './guides'
 import LinksEdit from './links_edit'
@@ -199,8 +236,34 @@ export default {
     links () {
       return linksStore
     },
+    linksToRenderForUserDropdown () {
+      return this.normalizeLinks(this.links.filter((l) => l.link_type === 'user_dropdown'))
+    },
     linksToRender () {
-      return this.links.map((link) => {
+      return this.normalizeLinks(this.links.filter((l) => !l.link_type || l.link_type === 'header'))
+    },
+    currentResource () {
+      if (this.$route.name !== 'resources') {
+        return
+      }
+
+      return this.$route.params.fragments.reduce((acc, slug, index) => {
+        if (index % 2 === 0) {
+          return (
+            modelNameMap[acc.associations?.find((assoc) => assoc.slug === slug)?.model_name] ||
+            modelSlugMap[slug]
+          )
+        } else {
+          return acc
+        }
+      }, {})
+    }
+  },
+  methods: {
+    widthLessThan,
+    openSettingsDrawer,
+    normalizeLinks (links) {
+      return links.map((link) => {
         const params = { name: link.name }
 
         const path = link.path.replace(location.origin, '').replace(new RegExp(`^${basePath}`), '/')
@@ -226,26 +289,11 @@ export default {
         }
       }).filter(Boolean)
     },
-    currentResource () {
-      if (this.$route.name !== 'resources') {
-        return
-      }
-
-      return this.$route.params.fragments.reduce((acc, slug, index) => {
-        if (index % 2 === 0) {
-          return (
-            modelNameMap[acc.associations?.find((assoc) => assoc.slug === slug)?.model_name] ||
-            modelSlugMap[slug]
-          )
-        } else {
-          return acc
-        }
-      }, {})
-    }
-  },
-  methods: {
-    widthLessThan,
-    openSettingsDrawer,
+    signOut () {
+      api.delete('session').then(() => {
+        document.location.href = '/'
+      })
+    },
     openSearch () {
       this.$Modal.open(Search, {
         placeholder: this.i18n.search_placeholder,

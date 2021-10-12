@@ -267,6 +267,9 @@ pt:
     downloading: Descarregamento
     display_id: Mostrar ID
     display_settings: Definições de visualização
+    sign_out: Sign out
+    header: Header
+    user_dropdown: User dropdown
     i:
       locale: pt
       select:

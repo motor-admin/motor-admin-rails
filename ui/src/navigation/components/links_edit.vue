@@ -45,7 +45,8 @@ import { linksStore } from '../scripts/links_store'
 
 const defaultLinkParams = {
   name: '',
-  path: ''
+  path: '',
+  link_type: 'header'
 }
 
 export default {
