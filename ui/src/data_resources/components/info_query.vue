@@ -167,7 +167,11 @@ export default {
         } else {
           console.error(error)
 
-          this.$Message.error(error.message)
+          if (error.response?.data?.errors) {
+            this.$Message.error(error.response.data.errors.join('\n'))
+          } else {
+            this.$Message.error(error.message)
+          }
         }
       })
     }

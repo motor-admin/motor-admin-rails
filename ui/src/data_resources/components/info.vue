@@ -185,7 +185,7 @@ export default {
     isShowSettings,
     title () {
       const primaryKeyValue = this.resource[this.model.primary_key]
-      const isNumber = primaryKeyValue.toString().match(/^\d+$/)
+      const isNumber = primaryKeyValue?.toString()?.match(/^\d+$/)
 
       return `${singularize(this.model.display_name)}${isNumber ? ' #' : ': '}${primaryKeyValue}`
     },
@@ -239,7 +239,9 @@ export default {
         { threshold: 1.0 }
       )
 
-      this.titleObserver.observe(this.$refs.observerElement)
+      if (this.$refs.observerElement) {
+        this.titleObserver.observe(this.$refs.observerElement)
+      }
     },
     onFinisAction (action) {
       if (action === 'remove') {
@@ -272,7 +274,15 @@ export default {
         } else {
           console.error(error)
 
-          this.$Message.error(error.message)
+          if (error.response?.status === 403) {
+            this.notFound = true
+          }
+
+          if (error.response?.data?.errors) {
+            this.$Message.error(error.response.data.errors.join('\n'))
+          } else {
+            this.$Message.error(error.message)
+          }
         }
       }).finally(() => {
         this.isLoading = false

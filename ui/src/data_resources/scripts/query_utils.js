@@ -25,7 +25,9 @@ function fieldsParams (model) {
     if (column.reference?.name && !column.reference.polymorphic && ['read_only', 'read_write'].includes(column.access_type)) {
       const referenceModel = modelNameMap[column.reference.model_name]
 
-      fields[column.reference.name] ||= selectReadableColumns(referenceModel.columns)
+      if (referenceModel) {
+        fields[column.reference.name] ||= selectReadableColumns(referenceModel.columns)
+      }
     }
   })
 

@@ -45,9 +45,7 @@ module Motor
 
       def select_columns(columns)
         selected_columns =
-          columns.select do |name|
-            BuildSchema::FindDisplayColumn::DISPLAY_NAME_REGEXP.match?(name)
-          end.presence
+          columns.grep(BuildSchema::FindDisplayColumn::DISPLAY_NAME_REGEXP).presence
 
         selected_columns ||= columns.first(SELECT_COLUMNS_AMOUNT)
 

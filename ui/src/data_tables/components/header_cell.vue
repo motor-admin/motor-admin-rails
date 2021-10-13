@@ -52,7 +52,11 @@ export default {
       if (this.column.reference?.reference_type === 'has_one') {
         const referenceModel = modelNameMap[this.column.reference.model_name]
 
-        return `${this.column.key}.${referenceModel.primary_key}`
+        if (referenceModel) {
+          return `${this.column.key}.${referenceModel.primary_key}`
+        } else {
+          return this.column.key
+        }
       } else {
         return this.column.key
       }

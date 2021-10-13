@@ -18,6 +18,12 @@ module Motor
 
         render json: { errors: [e.message] }, status: :internal_server_error
       end
+
+      rescue_from CanCan::AccessDenied do |e|
+        Rails.logger.error(e)
+
+        render json: { errors: [e.message] }, status: :forbidden
+      end
     end
   end
 end

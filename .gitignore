@@ -17,4 +17,5 @@
 .DS_Store
 /images
 /coverage
+/dist
 *.gem
