@@ -2,13 +2,19 @@
 
 module Motor
   class AlertsMailer < ApplicationMailer
+    SenderAddressNotSet = Class.new(StandardError)
+    SENDER_NOT_SET_ERROR_MESSAGE =
+      'Please specify your sender address via MOTOR_ALERTS_FROM_ADDRESS environment variable'
+
     def alert_email(alert)
       @alert = alert
       @query_result = Queries::RunQuery.call(alert.query)
 
       return if @alert.preferences[:send_empty].blank? && @query_result.data.blank?
 
-      attachments["#{alert.name.presence || 'data'}.csv"] = generate_csv(@query_result)
+      assign_attachment(@alert, @query_result)
+
+      raise SenderAddressNotSet, SENDER_NOT_SET_ERROR_MESSAGE unless from_address
 
       mail(
         from: from_address,
@@ -18,6 +24,10 @@ module Motor
     end
 
     private
+
+    def assign_attachment(alert, query_result)
+      attachments["#{alert.name.presence || 'data'}.csv"] = generate_csv(query_result)
+    end
 
     def generate_csv(_query_result)
       rows = [@query_result.columns.pluck(:name)] + @query_result.data
@@ -32,7 +42,9 @@ module Motor
       from ||= mailer_config_from_address
       from ||= "reports@#{ENV['HOST'].delete_prefix('www.')}" if ENV['HOST'].present?
 
-      from || 'reports@example.com'
+      from ||= 'reports@example.com' if Rails.env.development?
+
+      from
     end
 
     def application_mailer_default_from

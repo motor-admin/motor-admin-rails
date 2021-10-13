@@ -175,8 +175,11 @@ export default {
       }).then((result) => {
         this.$Message.info(this.i18n.alert_email_has_been_sent)
       }).catch((error) => {
-        console.error(error)
-        this.$Message.error(this.i18n.unable_to_send_email)
+        if (error.response.data?.errors?.length) {
+          this.$Message.error(error.response.data.errors.join('\n'))
+        } else {
+          this.$Message.error(this.i18n.unable_to_send_email)
+        }
       }).finally(() => {
         this.isSendingLoading = false
       })
