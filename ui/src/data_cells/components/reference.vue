@@ -8,7 +8,9 @@
     @click.stop
   >
     <template v-if="isNumberId">
-      #{{ resourceId }} {{ truncate(displayText, maxLength) }}
+      #{{ resourceId }} <template v-if="resourceId !== displayText">
+        {{ truncate(displayText, maxLength) }}
+      </template>
     </template>
     <template v-else>
       {{ truncate(resourceId.toString(), maxLength) }}

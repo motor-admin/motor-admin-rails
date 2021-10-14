@@ -31,6 +31,7 @@
           </template>
         </Panel>
       </Collapse>
+      <ResourceGeneralForm :resource="resource" />
       <ResourceColumnsList
         :resource="resource"
       />
@@ -71,6 +72,7 @@ import ActionsList from './actions_list'
 import TabsList from './tabs_list'
 import ScopesList from './scopes_list'
 import ResourceQueryForm from './resource_query_form'
+import ResourceGeneralForm from './resource_general'
 import Tabs from 'utils/components/tabs'
 
 export default {
@@ -82,6 +84,7 @@ export default {
     ScopesList,
     TabsList,
     Tabs,
+    ResourceGeneralForm,
     ResourceQueryForm
   },
   props: {

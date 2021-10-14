@@ -219,6 +219,9 @@ export default {
       handler: throttle(async function () {
         this.loadData()
       }, 3000)
+    },
+    'model.display_column' () {
+      this.assignBreadcrumbLabel()
     }
   },
   beforeUnmount () {
@@ -253,13 +256,16 @@ export default {
     assignResource (data) {
       this.resource = data
 
-      if (this.model.display_column && this.resource[this.model.display_column]) {
-        assignBreadcrumbLabel(
-          this.resourceName,
-          this.resourceId,
-          `#${this.resourceId} ${this.resource[this.model.display_column]}`
-        )
+      this.assignBreadcrumbLabel()
+    },
+    assignBreadcrumbLabel () {
+      let label = `${this.resourceId.toString().match(/^\d+$/) ? '#' : ''}${this.resourceId}`
+
+      if (this.model.display_column && this.resource[this.model.display_column] && this.resourceId.toString() !== this.resource[this.model.display_column].toString()) {
+        label += ` ${this.resource[this.model.display_column]}`
       }
+
+      assignBreadcrumbLabel(this.resourceName, this.resourceId, label)
     },
     loadData () {
       this.isReloading = true

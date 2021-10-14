@@ -260,6 +260,7 @@ pt:
     write_only: "Somente gravação"
     audio: Áudio
     video: Vídeo
+    display_column: Coluna de exibição
     i:
       locale: pt
       select:

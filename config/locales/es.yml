@@ -264,6 +264,7 @@ es:
     add_database: Añadir base de datos
     audio: Audio
     video: Video
+    display_column: Columna de visualización
     i:
       locale: es
       select:
