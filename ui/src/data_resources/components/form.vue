@@ -154,7 +154,14 @@ export default {
       if (this.action === 'edit') {
         return api.put(`data/${this.model.slug}/${this.resource[this.model.primary_key]}`, this.requestParams)
       } else if (this.action === 'new' && this.parentResourceName) {
-        return api.post(`data/${modelNameMap[this.parentResourceName].slug}/${this.parentResourceId}/${this.associationName}`, this.requestParams)
+        const parentModel = modelNameMap[this.parentResourceName]
+        const associationModelName = parentModel.associations.find((assoc) => assoc.name === this.associationName).model_name
+
+        if (associationModelName === 'active_storage/attachment') {
+          return api.post('data/active_storage__attachments', this.requestParams)
+        } else {
+          return api.post(`data/${parentModel.slug}/${this.parentResourceId}/${this.associationName}`, this.requestParams)
+        }
       } else if (this.action === 'new') {
         return api.post(`data/${this.model.slug}`, this.requestParams)
       } else {
