@@ -65,33 +65,13 @@
               <Checkbox v-model="row._selected" />
             </div>
           </td>
-          <td
+          <TableColumn
             v-for="column in columns"
             :key="column.key"
-            class="ivu-table-column"
-          >
-            <div class="ivu-table-cell">
-              <DataCell
-                v-if="column.reference?.model_name === 'active_storage/attachment'"
-                :value="row[column.key]?.path"
-                :type="'string'"
-              />
-              <Reference
-                v-else-if="column.reference && row[column.key]"
-                :resource-id="getReferenceId(column, row)"
-                :reference-name="column.reference.model_name"
-                :reference-data="row[column.reference.name]"
-                :always-refer="alwaysRefer"
-                :polymorphic-name="column.reference?.polymorphic ? row[column.reference.name + '_type'] : null"
-              />
-              <DataCell
-                v-else
-                :value="row[column.key]"
-                :format="column.format"
-                :type="column.type"
-              />
-            </div>
-          </td>
+            :row="row"
+            :always-refer="alwaysRefer"
+            :column="column"
+          />
         </tr>
       </tbody>
     </table>
@@ -114,17 +94,14 @@
 </template>
 
 <script>
-import DataCell from 'data_cells/components/data_cell'
-import Reference from 'data_cells/components/reference'
 import HeaderCell from './header_cell'
-import { modelNameMap } from 'data_resources/scripts/schema'
+import TableColumn from './table_column'
 
 export default {
   name: 'DataTable',
   components: {
-    DataCell,
     HeaderCell,
-    Reference
+    TableColumn
   },
   props: {
     data: {
@@ -221,15 +198,6 @@ export default {
   methods: {
     scrollToTop () {
       this.$refs.wrapper.scrollTop = 0
-    },
-    getReferenceId (column, row) {
-      const referenceModel = modelNameMap[column.reference.model_name]
-
-      if (referenceModel) {
-        return row[column.key][referenceModel.primary_key] || row[column.key]
-      } else {
-        return row[column.key]
-      }
     },
     onRowClick (row) {
       setTimeout(() => {

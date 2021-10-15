@@ -43,14 +43,14 @@
         :type="'string'"
       />
       <Reference
-        v-else-if="column.reference && value"
+        v-else-if="column.reference && value && (!column.reference?.polymorphic || polymorphicModel)"
         ref="dataReference"
         :resource-id="referenceId"
         :reference-name="column.reference.model_name"
         :max-length="referenceSize"
         :show-popover="referencePopover"
         :reference-data="resource[column.reference.name]"
-        :polymorphic-name="column.reference?.polymorphic ? resource[column.reference.name + '_type'] : null"
+        :polymorphic-model="polymorphicModel"
       />
       <span
         v-else-if="isEmpty"
@@ -122,6 +122,7 @@ import FormListInput from 'data_forms/components/list_input'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import { isJsonColumn, buildColumnValidator } from '../scripts/form_utils'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
+import { underscore } from 'utils/scripts/string'
 import api from 'api'
 
 export default {
@@ -225,6 +226,15 @@ export default {
         return this.value[referenceModel.primary_key] || this.value
       } else {
         return this.value
+      }
+    },
+    polymorphicModel () {
+      if (this.column.reference?.polymorphic) {
+        const polymorphicName = this.resource[this.column.reference.name + '_type']
+
+        return modelNameMap[underscore(polymorphicName).replace(/:{2}/g, '/')]
+      } else {
+        return null
       }
     },
     isActiveStorage () {

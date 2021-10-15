@@ -39,7 +39,7 @@
           :resource="model"
         />
         <span
-          v-if="withTitle && !widthLessThan('sm') && !selectedRows.length"
+          v-if="withTitle && !widthLessThan('sm') && (!selectedRows.length || !modelHasActions)"
           class="fs-4 fw-bold nowrap overflow-hidden text-truncate"
         >{{ title }}
           <template v-if="currentScope">
@@ -47,7 +47,7 @@
           </template>
         </span>
         <ResourceActions
-          v-if="selectedRows.length && !isShowSettings"
+          v-if="selectedRows.length && !isShowSettings && modelHasActions"
           :resources="selectedRows"
           :with-deselect="true"
           :resource-name="model.name"
@@ -107,6 +107,7 @@
         :style="{ height: height }"
         :sort-params="sortParams"
         :scroll-to-top-on-data-update="false"
+        :with-select="modelHasActions"
         :click-rows="!!model.primary_key"
         @sort-change="applySort"
         @row-click="onRowClick"
@@ -220,6 +221,9 @@ export default {
   },
   computed: {
     isShowSettings,
+    modelHasActions () {
+      return this.model.actions.some((action) => action.name !== 'create' && action.visible)
+    },
     defaultSortParams () {
       if (this.model.primary_key) {
         return {

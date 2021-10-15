@@ -20,7 +20,7 @@
 
 <script>
 import { modelNameMap } from 'data_resources/scripts/schema'
-import { truncate, underscore } from 'utils/scripts/string'
+import { truncate } from 'utils/scripts/string'
 
 export default {
   name: 'ResourceReference',
@@ -39,10 +39,10 @@ export default {
       required: false,
       default: () => ({})
     },
-    polymorphicName: {
-      type: String,
+    polymorphicModel: {
+      type: Object,
       required: false,
-      default: ''
+      default: null
     },
     maxLength: {
       type: Number,
@@ -112,8 +112,8 @@ export default {
       }
     },
     model () {
-      if (this.polymorphicName) {
-        return modelNameMap[underscore(this.polymorphicName).replace(/:{2}/g, '/')]
+      if (this.polymorphicModel) {
+        return this.polymorphicModel
       } else {
         return modelNameMap[this.referenceName]
       }

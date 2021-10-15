@@ -56,10 +56,10 @@
           @input="onSearch"
         >
         <span
-          v-else
-          class="ivu-select-selected-value"
+          v-else-if="selectedOptionData || !selectedOptionsData.length"
+          :class="{ 'ivu-select-placeholder': !selectedOptionData, 'ivu-select-selected-value' : selectedOptionData }"
         >
-          {{ getLabel(selectedOptionData) }}
+          {{ selectedOptionData ? getLabel(selectedOptionData) : placeholder }}
         </span>
         <i
           v-if="withDeselect && selectedOptionData"
