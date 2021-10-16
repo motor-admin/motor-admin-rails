@@ -23,30 +23,38 @@
     />
     <Layout class="d-block">
       <template v-if="fragments && fragments.length">
-        <template v-if="fragments.length > 1 || (isShowSiderScreen && fragments.length > 1) || widthLessThan('sm')">
-          <Breadcrumbs
-            :crumbs="crumbs"
-            :with-menu="isShowSiderScreen"
-            :style="{ padding: '14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }"
+        <template v-if="resourceName">
+          <template v-if="fragments.length > 1 || (isShowSiderScreen && fragments.length > 1) || widthLessThan('sm')">
+            <Breadcrumbs
+              :crumbs="crumbs"
+              :with-menu="isShowSiderScreen"
+              :style="{ padding: '14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }"
+              @click-menu="toggleResourcesMenu"
+            />
+            <Resource
+              v-if="fragments.length > 1"
+              :resource-name="resourceName"
+              :resource-id="resourceId"
+              :association-name="associationName"
+            />
+          </template>
+          <ResourceTable
+            v-if="fragments.length === 1"
+            :key="resourceName"
+            :height="`calc(var(--vh, 100vh) - ${widthLessThan('sm') ? '200px' : '148px'})`"
+            :with-title="!widthLessThan('sm')"
+            :with-menu="isShowSiderScreen && !widthLessThan('sm')"
+            class="border-top border-md-0"
+            :resource-name="resourceName"
             @click-menu="toggleResourcesMenu"
           />
-          <Resource
-            v-if="fragments.length > 1"
-            :resource-name="resourceName"
-            :resource-id="resourceId"
-            :association-name="associationName"
-          />
         </template>
-        <ResourceTable
-          v-if="fragments.length === 1"
-          :key="resourceName"
-          :height="`calc(var(--vh, 100vh) - ${widthLessThan('sm') ? '200px' : '148px'})`"
-          :with-title="!widthLessThan('sm')"
-          :with-menu="isShowSiderScreen && !widthLessThan('sm')"
-          class="border-top border-md-0"
-          :resource-name="resourceName"
-          @click-menu="toggleResourcesMenu"
-        />
+        <div
+          v-else
+          class="text-center mt-4"
+        >
+          {{ i18n.not_found }}
+        </div>
       </template>
       <Home v-else />
     </Layout>
@@ -149,7 +157,7 @@ export default {
         const normalizedFragments = this.normalizedFragments
         const association = normalizedFragments.find((assoc) => assoc.fragment === this.resourceSlug)
 
-        return association.model.name
+        return association?.model?.name
       }
     },
     crumbs () {

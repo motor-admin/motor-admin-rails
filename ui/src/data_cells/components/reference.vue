@@ -67,6 +67,9 @@ export default {
     referenceId () {
       return this.referenceData[this.model.primary_key]
     },
+    isCanRead () {
+      return this.$can('read', this.model.class_name, this.referenceData)
+    },
     displayText () {
       if (this.referenceData.first_name && this.referenceData.last_name) {
         return [this.referenceData.first_name, this.referenceData.last_name].join(' ')
@@ -100,7 +103,7 @@ export default {
             })
           }
         },
-        disabled: !this.showPopover || !this.referenceId,
+        disabled: !this.showPopover || !this.referenceId || !this.isCanRead,
         placement: 'right',
         bodyStyle: {
           whiteSpace: tab?.tab_type === 'query' ? '' : 'break-spaces',

@@ -22,7 +22,11 @@ module Motor
       rescue_from CanCan::AccessDenied do |e|
         Rails.logger.error(e)
 
-        render json: { errors: [e.message] }, status: :forbidden
+        if params[:action].in?(%w[create update destroy])
+          render json: { errors: [I18n.t('motor.not_authorized_to_perform_action')] }, status: :forbidden
+        else
+          render json: { errors: [e.message] }, status: :forbidden
+        end
       end
     end
   end

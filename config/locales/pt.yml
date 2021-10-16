@@ -261,6 +261,7 @@ pt:
     audio: Áudio
     video: Vídeo
     display_column: Coluna de exibição
+    not_authorized_to_perform_action: Não está autorizado a realizar esta acção.
     i:
       locale: pt
       select:
