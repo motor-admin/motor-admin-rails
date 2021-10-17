@@ -55,6 +55,14 @@
           @keydown.backspace="maybeRemoveOption"
           @input="onSearch"
         >
+
+        <component
+          :is="optionComponent"
+          v-else-if="optionComponent && selectedOptionData"
+
+          :class="{ 'ivu-select-placeholder': !selectedOptionData, 'ivu-select-selected-value' : selectedOptionData }"
+          :option="selectedOptionData"
+        />
         <span
           v-else-if="selectedOptionData || !selectedOptionsData.length"
           :class="{ 'ivu-select-placeholder': !selectedOptionData, 'ivu-select-selected-value' : selectedOptionData }"
