@@ -6,7 +6,7 @@
     />
     <template v-else>
       <VariablesForm
-        v-if="!isLoading && showVariablesForm"
+        v-if="showVariablesForm"
         v-model:data="dataVariables"
         :variables="variablesToRender"
         class="mx-2 pb-3"
@@ -30,7 +30,8 @@
         :title="query.name"
         :columns="columns"
         :query-id="query.id"
-        :with-footer="false"
+        :with-footer="true"
+        :with-settings="false"
         :header-border="showVariablesForm"
         :preferences="query.preferences"
       />
@@ -79,7 +80,7 @@ export default {
       if (this.isLoadingQuery || !this.showVariablesForm) {
         return 'height: 100%'
       } else {
-        return 'height: calc(100% - 82px)'
+        return 'height: calc(100% - 78px)'
       }
     },
     variablesToRender () {
