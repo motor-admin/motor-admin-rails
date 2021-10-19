@@ -83,15 +83,49 @@ module Motor
       # @param result [ActiveRecord::Result]
       # @return [Hash]
       def build_columns_hash(result)
-        result.columns.map do |column_name|
-          column_type = result.column_types[column_name]
+        result.columns.map.with_index do |column_name, index|
+          column_type_class = result.column_types[column_name]
+
+          column_type =
+            if column_type_class
+              ActiveRecordUtils::Types.find_name_for_type(column_type_class)
+            else
+              not_nil_value = result.rows.reduce(nil) do |acc, row|
+                column = row[index]
+
+                break column unless column.nil?
+
+                acc
+              end
+
+              fetch_column_type_from_value(not_nil_value)
+            end
 
           {
             name: column_name,
             display_name: column_name.humanize,
-            column_type: ActiveRecordUtils::Types.find_name_for_type(column_type),
+            column_type: column_type,
             is_array: column_type.class.to_s == 'ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array'
           }
+        end
+      end
+
+      # @param value [Object]
+      # @return [String]
+      def fetch_column_type_from_value(value)
+        case value
+        when Integer
+          'integer'
+        when Float
+          'float'
+        when Time
+          'datetime'
+        when Date
+          'date'
+        when TrueClass, FalseClass
+          'boolean'
+        else
+          'string'
         end
       end
 
