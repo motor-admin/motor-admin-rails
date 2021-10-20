@@ -262,6 +262,8 @@ pt:
     video: Vídeo
     display_column: Coluna de exibição
     not_authorized_to_perform_action: Não está autorizado a realizar esta acção.
+    download: Descarregar
+    alert: Alerta
     i:
       locale: pt
       select:

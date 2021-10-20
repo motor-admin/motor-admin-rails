@@ -119,17 +119,23 @@
         icon="md-notifications"
         type="text"
         size="small"
+        class="md-icon-only"
         style="height: 24px"
         @click="$router.push({ name: 'new_alert', query: { query_id: queryId } })"
-      />
+      >
+        {{ i18n.alert }}
+      </VButton>
       <VButton
         v-if="!!data.length"
         icon="md-download"
         type="text"
         size="small"
         style="height: 24px"
+        class="md-icon-only"
         @click="download"
-      />
+      >
+        {{ i18n.download }}
+      </VButton>
     </div>
   </div>
 </template>
