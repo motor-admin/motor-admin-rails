@@ -366,13 +366,14 @@ export default {
       if (this.$refs.chart) {
         dataUrl = this.$refs.chart.chart.toBase64Image()
       } else {
-        dataUrl = 'data:text/csv;charset=utf-8,' + csv(this.normalizedColumns, this.sortedData, { quoted: true })
+        const csvData = csv(this.normalizedColumns, this.sortedData, { quoted: true })
+
+        dataUrl = URL.createObjectURL(new Blob([csvData], { type: 'data:text/csv;charset=utf-8' }))
       }
 
-      const encodedUri = encodeURI(dataUrl)
       const link = document.createElement('a')
 
-      link.setAttribute('href', encodedUri)
+      link.setAttribute('href', dataUrl)
       link.setAttribute('download', `${underscore(this.title || 'query')}_${underscore(dateTime)}.${fileType}`)
 
       link.click()
