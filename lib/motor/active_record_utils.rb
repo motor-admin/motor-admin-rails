@@ -12,6 +12,18 @@ module Motor
         ActiveRecord::Base.connection.reset_sequence!(model.table_name, 'id')
       end
     end
+
+    def generate_csv_for_relation(relation, reset_limit: false)
+      relation = relation.limit(nil).offset(nil) if reset_limit
+
+      result = relation.klass.connection.exec_query(relation.to_sql)
+
+      CSV.generate do |csv|
+        csv << result.columns
+
+        result.rows.each { |row| csv << row }
+      end
+    end
   end
 end
 

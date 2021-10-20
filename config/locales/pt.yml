@@ -264,6 +264,7 @@ pt:
     not_authorized_to_perform_action: Não está autorizado a realizar esta acção.
     download: Descarregar
     alert: Alerta
+    downloading: Descarregamento
     i:
       locale: pt
       select:

@@ -10,10 +10,14 @@ module Motor
     def index
       @resources = Motor::ApiQuery.call(@resources, params)
 
-      render json: {
-        data: Motor::ApiQuery::BuildJson.call(@resources, params, current_ability),
-        meta: Motor::ApiQuery::BuildMeta.call(@resources, params)
-      }
+      if params[:format] == 'csv'
+        render plain: Motor::ActiveRecordUtils.generate_csv_for_relation(@resources, reset_limit: true)
+      else
+        render json: {
+          data: Motor::ApiQuery::BuildJson.call(@resources, params, current_ability),
+          meta: Motor::ApiQuery::BuildMeta.call(@resources, params)
+        }
+      end
     end
 
     def show

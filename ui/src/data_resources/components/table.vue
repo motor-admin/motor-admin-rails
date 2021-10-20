@@ -112,7 +112,8 @@
         @sort-change="applySort"
         @row-click="onRowClick"
       />
-      <div class="text-center border-top bg-white p-1">
+      <div class="d-flex border-top justify-content-between bg-white p-1">
+        <span />
         <Pagination
           :current="paginationParams.current"
           :total="paginationParams.total"
@@ -127,6 +128,17 @@
           @on-change="onPageChange"
           @on-page-size-change="onPageSizeChange"
         />
+        <VButton
+          icon="md-download"
+          type="text"
+          size="small"
+          style="height: 24px"
+          :loading="isDownloadLoading"
+          class="float-right md-icon-only"
+          @click="download"
+        >
+          {{ isDownloadLoading ? i18n.downloading : i18n.download }}
+        </VButton>
       </div>
     </div>
     <div
@@ -151,7 +163,8 @@ import NewResourceButton from './new_button'
 import FiltersModal from './filters_modal'
 
 import { widthLessThan } from 'utils/scripts/dimensions'
-import { truncate } from 'utils/scripts/string'
+import { truncate, underscore } from 'utils/scripts/string'
+import { formatDate } from 'utils/scripts/date_format'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
 
 import { isShowSettings } from 'settings/scripts/toggle'
@@ -212,6 +225,7 @@ export default {
     return {
       isLoading: true,
       isReloading: true,
+      isDownloadLoading: false,
       rows: [],
       sortParams: { ...this.defaultSortParams },
       filterParams: [],
@@ -407,6 +421,39 @@ export default {
       this.loadDataAndCount()
 
       this.$emit('action-applied', value)
+    },
+    download () {
+      this.isDownloadLoading = true
+
+      return api.get(this.queryPath + '.csv', {
+        params: this.queryParams
+      }).then((result) => {
+        const dateTime = formatDate(new Date(), {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true
+        }).replace(',', '')
+
+        const dataUrl = URL.createObjectURL(new Blob([result.data], { type: 'data:text/csv;charset=utf-8' }))
+
+        const link = document.createElement('a')
+
+        link.setAttribute('href', dataUrl)
+        link.setAttribute('download', `${underscore(this.title || 'query')}_${underscore(dateTime)}.csv`)
+
+        link.click()
+      }).catch((error) => {
+        if (error.response) {
+          this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
+        } else {
+          this.$Message.error(error.message)
+        }
+      }).finally(() => {
+        this.isDownloadLoading = false
+      })
     },
     openFiltersModal () {
       this.$Drawer.open(FiltersModal, {
