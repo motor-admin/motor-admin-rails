@@ -78,7 +78,7 @@ export default {
       return !this.customForm && this.$can('update', 'Motor::Resource', this.model)
     },
     customForm () {
-      const formId = this.modelAction.preferences.form_id
+      const formId = this.modelAction?.preferences?.form_id
 
       if (formId) {
         return formsStore.find((form) => form.id.toString() === formId.toString())
