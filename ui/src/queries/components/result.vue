@@ -126,7 +126,7 @@
         {{ i18n.alert }}
       </VButton>
       <VButton
-        v-if="!!data.length"
+        v-if="!!data.length && withFooterButtonLabels"
         icon="md-download"
         type="text"
         size="small"
@@ -136,6 +136,15 @@
       >
         {{ i18n.download }}
       </VButton>
+      <VButton
+        v-else-if="!!data.length"
+        icon="md-download"
+        type="text"
+        size="small"
+        style="height: 24px"
+        class="md-icon-only"
+        @click="download"
+      />
     </div>
   </div>
 </template>
@@ -232,6 +241,11 @@ export default {
       default: true
     },
     withFooter: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    withFooterButtonLabels: {
       type: Boolean,
       required: false,
       default: true

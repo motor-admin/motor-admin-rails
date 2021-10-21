@@ -46,6 +46,7 @@
       :loading="isLoading"
       :preferences="query.preferences"
       :columns="columns"
+      :with-footer-button-labels="false"
       :default-page-size="pageSizesMap[item.size[2]]"
       :borderless="true"
       :with-settings="false"
