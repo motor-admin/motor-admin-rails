@@ -120,6 +120,7 @@ const ISO_CODES = [
   'SVC',
   'SZL',
   'UAH',
+  'VND',
   'XAF',
   'XAG',
   'XAU',
