@@ -49,7 +49,6 @@
           {{ i18n['forms'] }}
         </VButton>
         <VButton
-          :is="link.component"
           v-for="link in linksToRender"
           :key="link.name"
           type="primary"
@@ -89,9 +88,16 @@
             <DropdownItem
               v-for="link in linksToRenderForUserDropdown"
               :key="link.name"
-              @click="$router.push(link.to)"
             >
-              {{ link.name }}
+              <VButton
+                type="text"
+                :target="link.target"
+                :to="link.to"
+                class="p-0 bg-transparent text-dark"
+                style="line-height: unset; height: unset"
+              >
+                {{ link.name }}
+              </VButton>
             </DropdownItem>
             <DropdownItem
               :divided="linksToRenderForUserDropdown.length !== 0"
