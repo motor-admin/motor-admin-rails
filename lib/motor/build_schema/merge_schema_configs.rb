@@ -135,7 +135,7 @@ module Motor
               access_type: ColumnAccessTypes::READ_ONLY,
               column_source: ColumnSources::QUERY,
               virtual: false
-            )
+            ).with_indifferent_access
           end
 
         reflection_columns = columns_index.values.select { |c| c[:column_source] == ColumnSources::REFLECTION }
