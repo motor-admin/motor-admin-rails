@@ -31,7 +31,20 @@
           </template>
         </Panel>
       </Collapse>
-      <ResourceGeneralForm :resource="resource" />
+
+      <Collapse
+        v-model="collapseValue"
+        simple
+        class="mb-3"
+        style="margin: 0 -16px"
+      >
+        <Panel name="2">
+          {{ i18n.display_settings }}
+          <template #content>
+            <ResourceGeneralForm :resource="resource" />
+          </template>
+        </Panel>
+      </Collapse>
       <ResourceColumnsList
         :resource="resource"
       />

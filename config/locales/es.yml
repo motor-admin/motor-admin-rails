@@ -269,6 +269,8 @@ es:
     download: Descargar
     alert: Alerta
     downloading: Descargando
+    display_id: Visualizar ID
+    display_settings: Configuración de la pantalla
     i:
       locale: es
       select:

@@ -265,6 +265,8 @@ pt:
     download: Descarregar
     alert: Alerta
     downloading: Descarregamento
+    display_id: Mostrar ID
+    display_settings: Definições de visualização
     i:
       locale: pt
       select:

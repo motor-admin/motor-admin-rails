@@ -17,6 +17,16 @@
         @update:modelValue="persistChanges"
       />
     </FormItem>
+    <FormItem
+      :label="i18n['display_id']"
+      class="mb-1"
+      prop="display_column"
+    >
+      <Checkbox
+        v-model="resource.display_primary_key"
+        @update:modelValue="persistChanges"
+      />
+    </FormItem>
   </VForm>
 </template>
 
@@ -39,7 +49,6 @@ export default {
     },
     rules () {
       return {
-        display_column: [{ required: true }]
       }
     }
   },
@@ -49,7 +58,8 @@ export default {
         data: {
           name: this.resource.name,
           preferences: {
-            display_column: this.resource.display_column
+            display_column: this.resource.display_column,
+            display_primary_key: this.resource.display_primary_key
           }
         }
       }).then((result) => {

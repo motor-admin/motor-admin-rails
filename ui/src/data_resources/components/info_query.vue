@@ -134,6 +134,9 @@ export default {
     },
     'model.display_column' () {
       this.assignBreadcrumbLabel()
+    },
+    'model.display_primary_key' () {
+      this.assignBreadcrumbLabel()
     }
   },
   mounted () {
@@ -154,13 +157,13 @@ export default {
       this.assignBreadcrumbLabel()
     },
     assignBreadcrumbLabel () {
-      let label = `${this.resourceId.toString().match(/^\d+$/) ? '#' : ''}${this.resourceId}`
+      const labelParts = this.model.display_primary_key ? [`${this.resourceId.toString().match(/^\d+$/) ? '#' : ''}${this.resourceId}`] : []
 
       if (this.model.display_column && this.resource[this.model.display_column] && this.resourceId.toString() !== this.resource[this.model.display_column].toString()) {
-        label += ` ${this.resource[this.model.display_column]}`
+        labelParts.push(`${this.resource[this.model.display_column]}`)
       }
 
-      assignBreadcrumbLabel(this.resourceName, this.resourceId, label)
+      assignBreadcrumbLabel(this.resourceName, this.resourceId, labelParts.join(' '))
     },
     loadData () {
       api.get(`data/${this.model.slug}/${this.resourceId}`, {

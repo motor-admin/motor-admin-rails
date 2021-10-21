@@ -76,7 +76,8 @@ module Motor
           actions: BuildSchema::Defaults.actions,
           tabs: BuildSchema::Defaults.tabs,
           custom_sql: nil,
-          visible: true
+          visible: true,
+          display_primary_key: true
         }.with_indifferent_access
       end
 
