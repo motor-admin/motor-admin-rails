@@ -298,7 +298,7 @@ export default {
         return
       }
 
-      const resourceTitle = `${singularize(this.model.display_name)} #${this.resource.id}`
+      const resourceTitle = `${singularize(this.model.display_name)} #${this.resource[this.model.primary_key]}`
 
       this.$Drawer.open(ResourceForm, {
         resource: this.resource,

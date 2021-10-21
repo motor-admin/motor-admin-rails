@@ -5,6 +5,10 @@
     :rules="rules"
     label-position="top"
   >
+    <Spin
+      v-if="isLoading"
+      fix
+    />
     <FormItem
       v-for="column in columns"
       :key="column.name"
@@ -56,6 +60,7 @@ import api from 'api'
 import { modelNameMap } from '../scripts/schema'
 import { isJsonColumn, buildColumnValidator } from '../scripts/form_utils'
 import { scrollToErrors } from 'data_forms/scripts/form_utils'
+import { includeParams, fieldsParams } from '../scripts/query_utils'
 
 import FormInput from 'data_forms/components/input'
 import FormListInput from 'data_forms/components/list_input'
@@ -110,6 +115,7 @@ export default {
   emits: ['close', 'success'],
   data () {
     return {
+      isLoading: false,
       isSaveAndNewLoading: false,
       isSaveLoading: false,
       resourceData: {}
@@ -168,6 +174,13 @@ export default {
         return null
       }
     },
+    hasNewEditColumnsToLoad () {
+      const readColumnNames = this.model.columns.filter((column) => {
+        return ['read_write', 'read_only'].includes(column.access_type)
+      }).map((c) => c.name)
+
+      return this.columns.some((c) => !readColumnNames.includes(c.name))
+    },
     columns () {
       const accessTypes = ['read_write', 'write_only']
 
@@ -178,6 +191,10 @@ export default {
   },
   created () {
     this.resourceData = this.normalizeResourceData(this.resource)
+
+    if (this.action === 'edit' && this.hasNewEditColumnsToLoad) {
+      this.loadData()
+    }
   },
   methods: {
     scrollToErrors,
@@ -219,6 +236,28 @@ export default {
       })
 
       return data
+    },
+    loadData () {
+      this.isLoading = true
+
+      const accessTypes = ['read_only', 'read_write', 'write_only']
+
+      return api.get(`data/${this.model.slug}/${this.resource[this.model.primary_key]}`, {
+        params: {
+          fields: fieldsParams(this.model, accessTypes),
+          include: includeParams(this.model, accessTypes)
+        }
+      }).then((result) => {
+        this.resourceData = this.normalizeResourceData(result.data.data)
+      }).catch((error) => {
+        if (error.response?.data?.errors) {
+          this.$Message.error(error.response.data.errors.join('\n'))
+        } else {
+          this.$Message.error(error.message)
+        }
+      }).finally(() => {
+        this.isLoading = false
+      })
     },
     async handleSubmit (eventData = {}) {
       try {
