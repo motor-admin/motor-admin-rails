@@ -72,6 +72,18 @@
         v-if="isLoading || !isFormDataLoaded"
         fix
       />
+      <div
+        v-if="isEditorOpened && !form.id && !form.preferences.fields.length && !$refs.editor?.$refs.itemsList.newField"
+        class="text-center mt-3"
+      >
+        <VButton
+          size="large"
+          icon="md-add"
+          @click="toggleNewField"
+        >
+          {{ i18n.add_field }}
+        </VButton>
+      </div>
       <Card
         v-show="isFormDataLoaded && form.preferences.fields.length"
         style="max-width: 640px; margin: 0 auto"
@@ -89,7 +101,10 @@
       class="col-12 col-md-6 col-lg-3 border-left bg-white p-0"
       style="height: 100%; overflowY: auto"
     >
-      <Editor :fields="form.preferences.fields" />
+      <Editor
+        ref="editor"
+        :fields="form.preferences.fields"
+      />
     </div>
   </div>
 </template>
@@ -326,6 +341,9 @@ export default {
         title: this.i18n.save_form,
         closable: true
       })
+    },
+    toggleNewField () {
+      this.$refs.editor.toggleNewField()
     }
   }
 }
