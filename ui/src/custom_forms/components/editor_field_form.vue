@@ -143,6 +143,7 @@
 <script>
 import { schema } from 'data_resources/scripts/schema'
 import { underscore } from 'utils/scripts/string'
+import singularize from 'inflected/src/singularize'
 import FormInput from 'data_forms/components/input'
 import QuerySelect from 'queries/components/select'
 import Validators from 'utils/scripts/validators'
@@ -296,7 +297,13 @@ export default {
       }
 
       if (value === 'reference') {
-        this.dataField.reference = { model_name: '' }
+        const normalizedFieldName = underscore(singularize((this.dataField.display_name || '').toLowerCase())).replace(/_id$/, '')
+
+        const foundModelByName = schema.find((model) => {
+          return model.name === normalizedFieldName || model.name === normalizedFieldName.split('_').pop()
+        })
+
+        this.dataField.reference = { model_name: foundModelByName?.name || '' }
       } else {
         delete this.dataField.reference
       }
