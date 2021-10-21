@@ -30,7 +30,7 @@
         :title="query.name"
         :columns="columns"
         :query-id="query.id"
-        :with-footer="true"
+        :with-footer="query.preferences.visualization !== 'markdown'"
         :with-settings="false"
         :header-border="showVariablesForm"
         :preferences="query.preferences"
