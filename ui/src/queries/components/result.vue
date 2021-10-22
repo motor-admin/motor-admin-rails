@@ -1,7 +1,6 @@
 <template>
   <div
     v-if="errors.length"
-
     class="d-flex justify-content-center align-items-center text-danger text-center"
     :style="{ height: 'calc(100% - 34px)' }"
   >

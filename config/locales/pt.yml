@@ -280,6 +280,8 @@ pt:
     hyphen: Hífen
     comma: Vírgula
     slash: Slash
+    sql: SQL
+    api: API
     i:
       locale: pt
       select:

@@ -16,17 +16,33 @@
       class="p-2"
     >
       <template v-if="selectedTab === 'variables'">
-        <template v-if="preferences.variables.length">
+        <template v-if="withVariablesEditor || preferences.variables.length">
           <Card
-            v-for="variable in preferences.variables"
-            :key="variable.name"
+            v-for="(variable, index) in preferences.variables"
+            :key="index"
             class="my-2"
           >
-            <div class="fw-bold mb-3">
+            <div
+              v-if="!withVariablesEditor"
+              class="fw-bold mb-3"
+            >
               {{ variable.display_name }}
             </div>
-            <VariableSettings :variable="variable" />
+            <VariableSettings
+              :variable="variable"
+              :with-name="withVariablesEditor"
+              :with-remove="withVariablesEditor"
+              @remove="preferences.variables.splice(index, 1)"
+            />
           </Card>
+          <VButton
+            v-if="withVariablesEditor"
+            icon="md-add"
+            long
+            @click="addNewVariable"
+          >
+            {{ i18n.add_variable }}
+          </VButton>
         </template>
         <VariablesHint v-else />
       </template>
@@ -131,6 +147,11 @@ export default {
       type: Array,
       required: false,
       default: () => []
+    },
+    withVariablesEditor: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   emits: ['close'],
@@ -166,6 +187,13 @@ export default {
         this.preferences.visualization_options.label_format ||= 'decimal'
         this.preferences.visualization_options.label_format_options ||= {}
       }
+    },
+    addNewVariable () {
+      this.preferences.variables.push({
+        name: '',
+        display_name: 'New variable',
+        variable_type: 'text'
+      })
     },
     maybeSetCurrency (value) {
       if (value === 'currency') {

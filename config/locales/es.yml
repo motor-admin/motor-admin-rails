@@ -284,6 +284,8 @@ es:
     hyphen: Guión
     comma: Coma
     slash: Slash
+    sql: SQL
+    api: API
     i:
       locale: es
       select:

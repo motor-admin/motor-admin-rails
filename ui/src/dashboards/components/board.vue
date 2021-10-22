@@ -31,14 +31,19 @@
     </div>
   </div>
   <div
-    class="ivu-card-body p-0"
+    class="ivu-card-body p-0 overflow-auto"
     :style="{ height: heightsMap[item.size[2]] }"
   >
     <Spin
       v-if="isLoading"
       fix
     />
+    <div
+      v-if="dataHTML"
+      v-html="dataHTML"
+    />
     <QueryResult
+      v-else
       :data="filteredData"
       :title="query.name"
       :minimal-pagination="true"
@@ -59,6 +64,8 @@
 <script>
 import api from 'api'
 import QueryResult from 'queries/components/result'
+
+import { loadApiQuery } from 'queries/scripts/api_query'
 
 export default {
   name: 'Board',
@@ -88,7 +95,8 @@ export default {
       isLoading: false,
       errors: [],
       data: [],
-      columns: []
+      columns: [],
+      dataHTML: ''
     }
   },
   computed: {
@@ -152,16 +160,33 @@ export default {
       if (!this.isLoading) {
         this.isLoading = true
 
-        return api.get(`run_queries/${this.query.id}`, {
-          params: {
-            variables: this.queryVariables
+        let apiRequest
+
+        if (this.query.preferences.query_type === 'api') {
+          apiRequest = loadApiQuery(this.query, this.queryVariables).then((result) => {
+            this.errors = []
+            this.data = result.data || []
+            this.columns = result.columns || []
+            this.dataHTML = result.dataHTML || ''
+          })
+        } else {
+          apiRequest = api.get(`run_queries/${this.query.id}`, {
+            params: {
+              variables: this.queryVariables
+            }
+          }).then((result) => {
+            this.errors = []
+            this.data = result.data.data
+            this.columns = result.data.meta.columns
+          })
+        }
+
+        return apiRequest.catch((error) => {
+          if (error.response) {
+            this.errors = error.response.data?.errors
+          } else {
+            this.$Message.error(error.message)
           }
-        }).then((result) => {
-          this.errors = []
-          this.data = result.data.data
-          this.columns = result.data.meta.columns
-        }).catch((error) => {
-          this.errors = error.response.data?.errors
         }).finally(() => {
           this.isLoading = false
         })

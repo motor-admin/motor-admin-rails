@@ -1,6 +1,6 @@
 ---
-engine_version: 0.1.88
-file_version: 2021-07-17 11:38:08.095291000 Z
+engine_version: 0.2.32
+file_version: 2021-12-05 16:40:32.023810000 Z
 resources:
 - name: country
   preferences:
@@ -51,7 +51,7 @@ resources:
       SELECT co.*, count(cs.id) as customers_count FROM countries as co
       JOIN customers as cs ON cs.country_code = co.code
       GROUP BY co.id
-  updated_at: 2021-07-17 11:38:08.095291000 +00:00
+  updated_at: 2021-12-04 10:25:38.021847000 +00:00
 - name: customer
   preferences:
     columns:
@@ -109,7 +109,7 @@ resources:
         currency_base: cents
       name: unit_price
     visible: false
-  updated_at: 2021-05-20 16:41:09.374872000 +00:00
+  updated_at: 2021-12-04 10:25:38.023578000 +00:00
 - name: note
   preferences:
     actions:
@@ -117,7 +117,7 @@ resources:
       preferences:
         form_id: 4
       name: create
-  updated_at: 2021-07-08 06:14:31.509240000 +00:00
+  updated_at: 2021-12-04 10:25:38.024820000 +00:00
 - name: order
   preferences:
     actions:
@@ -152,11 +152,11 @@ resources:
       virtual: true
       format:
         link_text: "\U0001F4CD Map"
-  updated_at: 2021-07-17 10:40:50.495370000 +00:00
+  updated_at: 2021-12-04 10:25:38.026092000 +00:00
 - name: order_note
   preferences:
     display_name: Notes
-  updated_at: 2021-05-22 16:22:28.073754000 +00:00
+  updated_at: 2021-12-04 10:25:38.027365000 +00:00
 - name: product
   preferences:
     columns:
@@ -174,7 +174,7 @@ resources:
     associations:
     - visible: false
       name: line_items
-  updated_at: 2021-06-25 18:17:51.809039000 +00:00
+  updated_at: 2021-12-04 10:25:38.028556000 +00:00
 - name: user
   preferences:
     columns:
@@ -199,7 +199,7 @@ resources:
         primary_key: email
       virtual: true
       format: {}
-  updated_at: 2021-07-15 13:55:50.216297000 +00:00
+  updated_at: 2021-12-04 10:25:38.029892000 +00:00
 configs:
 - key: header.links
   value:
@@ -660,6 +660,18 @@ queries:
   tags:
   - Details
   updated_at: 2021-07-14 07:25:20.791589000 +00:00
+- id: 18
+  name: API query
+  sql_body: ''
+  description:
+  preferences:
+    query_type: api
+    visualization: table
+    visualization_options: {}
+    variables: []
+    api_path: "/api/data/customers?q=ver"
+  tags: []
+  updated_at: 2021-12-05 16:40:32.023810000 +00:00
 dashboards:
 - id: 1
   title: Sales dashboard

@@ -284,3 +284,5 @@ en:
     hyphen: Hyphen
     comma: Comma
     slash: Slash
+    sql: SQL
+    api: API

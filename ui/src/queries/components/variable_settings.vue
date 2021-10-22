@@ -6,6 +6,17 @@
     :model="variable"
   >
     <FormItem
+      v-if="withName"
+      :label="i18n['name']"
+      prop="name"
+    >
+      <VInput
+        v-model="variable.name"
+        :placeholder="i18n.name"
+        @update:model-value="updateDisplayName"
+      />
+    </FormItem>
+    <FormItem
       :label="i18n['input_type']"
       prop="variable_type"
     >
@@ -52,6 +63,17 @@
         @update:model-value="$emit('update:variable', variable)"
       />
     </FormItem>
+
+    <VButton
+      v-if="withRemove"
+      long
+      type="error"
+      ghost
+      size="small"
+      @click="$emit('remove', variable)"
+    >
+      {{ i18n.remove }}
+    </VButton>
   </VForm>
 </template>
 
@@ -59,6 +81,7 @@
 import VariableInput from './variable_input'
 import OptionsInput from 'utils/components/options_input'
 import { schema } from 'data_resources/scripts/schema'
+import { titleize } from 'utils/scripts/string'
 
 export default {
   name: 'VariableSettings',
@@ -70,13 +93,25 @@ export default {
     variable: {
       type: Object,
       required: true
+    },
+    withName: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    withRemove: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
-  emits: ['update:variable'],
+  emits: ['update:variable', 'remove'],
   computed: {
     schema: () => schema,
     rules () {
-      return []
+      return {
+        name: [{ required: this.withName }]
+      }
     },
     variableTypes () {
       return [
@@ -90,6 +125,9 @@ export default {
     }
   },
   methods: {
+    updateDisplayName (value) {
+      this.variable.display_name = titleize(value.replace(/_id$/, ''))
+    },
     onTypeChange () {
       this.variable.default_value = ''
 

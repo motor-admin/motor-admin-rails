@@ -91,6 +91,14 @@ export default {
         include: 'tags'
       }
 
+      if (this.dataQuery.preferences.query_type === 'api') {
+        params.data.sql_body = ''
+      }
+
+      if (this.dataQuery.preferences.query_type === 'sql') {
+        delete params.data.preferences.api_path
+      }
+
       if (this.action === 'edit') {
         return api.put(`queries/${this.dataQuery.id}`, params)
       } else {

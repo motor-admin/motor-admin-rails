@@ -3,12 +3,30 @@
     class="row mx-0 mx-md-2"
     style="min-height: 74px"
   >
-    <div class="col-8 d-flex align-items-center">
+    <div
+      class="d-flex align-items-center"
+      :class="isNewPage ? 'col-4' : 'col-8'"
+    >
       <h1
         class="my-3 overflow-hidden text-truncate"
       >
         {{ query.name || cachedQueryName || (isExisting ? '' : i18n['new_query']) }}
       </h1>
+    </div>
+    <div
+      v-if="isNewPage"
+      class="col-4 d-flex align-items-center justify-content-center"
+    >
+      <VButton
+        v-for="item in queryTypes"
+        :key="item.value"
+        :type="queryType === item.value ? 'primary' : 'dashed'"
+        class="bg-transparent mx-1"
+        :class="queryType === item.value ? 'text-primary' : 'text-dark'"
+        @click="changeQueryType(item.value)"
+      >
+        {{ item.label }}
+      </VButton>
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
       <VButton
@@ -30,7 +48,7 @@
         {{ isMarkdownEditor ? i18n['edit_sql'] : i18n['edit_markdown'] }}
       </VButton>
       <VButton
-        v-if="vSplit === 0 && $can('edit', 'Motor::Query', query)"
+        v-if="vSplit === 0 && $can('edit', 'Motor::Query', query) && queryType === 'sql'"
         size="large"
         class="bg-white me-2 md-icon-only"
         icon="md-create"
@@ -39,7 +57,7 @@
         {{ i18n['edit'] }}
       </VButton>
       <VButton
-        v-if="canSaveNew && vSplit !== 0"
+        v-if="canSaveNew && (vSplit !== 0 || queryType === 'api')"
         size="large"
         class="bg-white me-2 d-none d-sm-block"
         @click="saveAsNew"
@@ -77,13 +95,14 @@
       <Settings
         :preferences="dataQuery.preferences"
         :columns="columns"
+        :with-variables-editor="queryType === 'api'"
         style="height: 100%"
         @close="toggleSettings"
       />
     </div>
     <div
       class="p-0"
-      :class="isSettingsOpened ? 'col-6 col-lg-9 d-none d-md-block' : 'col-12'"
+      :class="{ 'col-6 col-lg-9 d-none d-md-inline' : isSettingsOpened, 'col-12': !isSettingsOpened, 'h-100': queryType === 'api' }"
     >
       <div
         v-if="isVariablesForm"
@@ -95,8 +114,55 @@
           @submit="loadQueryData"
         />
       </div>
-
+      <div
+        v-if="showApiUi"
+        style="height: calc(100% - 64px)"
+      >
+        <div
+          class="p-3 bg-white"
+          :class="{ 'border-bottom': !data.length && !errors.length }"
+        >
+          <VInput
+            v-model="dataQuery.preferences.api_path"
+            class="w-100"
+            :placeholder="i18n.api_path"
+            @keyup.enter="loadQueryData"
+          />
+        </div>
+        <div class="h-100 position-relative">
+          <Spin
+            v-if="isLoading || isLoadingQuery"
+            fix
+          />
+          <div
+            v-else-if="!data.length && !errors.length && !dataHTML"
+            class="d-flex justify-content-center align-items-center h-100"
+          >
+            {{ i18n['no_data'] }}
+          </div>
+          <QueryResult
+            v-if="(data.length || errors.length) && !isLoadingQuery"
+            :data="data"
+            :errors="errors"
+            :title="query.name"
+            :columns="columns"
+            :query-id="query.id"
+            :with-alert="!!query.id && $can('create', 'Motor::Alert') && queryType !== 'api'"
+            :with-settings="isCanEdit"
+            :with-table-toggle="true"
+            :show-markdown-table="!widthLessThan('md') && isEdit"
+            :preferences="dataQuery.preferences"
+            @settings="toggleSettings"
+          />
+          <div
+            v-else-if="dataHTML"
+            class="h-100 overflow-auto"
+            v-html="dataHTML"
+          />
+        </div>
+      </div>
       <Split
+        v-else
         v-model="vSplit"
         mode="vertical"
         :style="{ height: isSettingsOpened && isVariablesForm ? 'calc(100% - 82px)' : '100%' }"
@@ -170,6 +236,7 @@ import { queriesStore } from 'reports/scripts/store'
 import RevisionsModal from 'utils/components/revisions_modal'
 
 import api from 'api'
+import { loadApiQuery } from '../scripts/api_query'
 
 const SPLIT_POSITION_KEY = 'motor:queries:vsplit'
 const RESERVED_VARIABLES = ['current_user', 'current_user_id', 'current_user_email']
@@ -179,6 +246,7 @@ const defaultQueryParams = {
   sql_body: '',
   tags: [],
   preferences: {
+    query_type: 'sql',
     visualization: 'table',
     visualization_options: {},
     variables: []
@@ -208,12 +276,28 @@ export default {
       isSettingsOpened: false,
       errors: [],
       columns: [],
-      data: []
+      data: [],
+      dataHTML: ''
     }
   },
   computed: {
     queryParamsVariables () {
       return this.$route.query || {}
+    },
+    queryType () {
+      return this.dataQuery.preferences.query_type || 'sql'
+    },
+    isNewPage () {
+      return this.$route.name === 'new_query' && !this.query.id
+    },
+    showApiUi () {
+      return this.queryType === 'api' || (!this.isNewPage && this.dataQuery.preferences.api_path)
+    },
+    queryTypes () {
+      return [
+        { label: this.i18n.sql, value: 'sql' },
+        { label: this.i18n.api, value: 'api' }
+      ]
     },
     defaultVariablesData () {
       return (this.dataQuery.preferences.variables || []).reduce((acc, variable) => {
@@ -241,7 +325,7 @@ export default {
       return this.$route.params.id
     },
     canSave () {
-      return this.dataQuery.sql_body && this.isEdit && this.isCanEdit
+      return (this.dataQuery.sql_body || this.dataQuery.preferences.api_path) && this.isEdit && this.isCanEdit
     },
     canSaveNew () {
       return this.query.id && this.isEdited && this.$can('create', 'Motor::Query')
@@ -314,6 +398,12 @@ export default {
   },
   methods: {
     widthLessThan,
+    changeQueryType (value) {
+      this.dataQuery.preferences.query_type = value
+
+      this.data = []
+      this.columns = []
+    },
     openRevisionsModal () {
       this.$Drawer.open(RevisionsModal, {
         auditableName: 'query',
@@ -358,7 +448,7 @@ export default {
         this.columns = []
         this.openEditor()
 
-        if (this.dataQuery.sql_body) {
+        if (this.dataQuery.sql_body || this.dataQuery.preferences.api_path) {
           this.assignVariablesData()
           this.loadQueryData()
         }
@@ -370,7 +460,7 @@ export default {
     loadQuery () {
       this.isLoadingQuery = true
 
-      api.get(`queries/${this.$route.params.id}`, {
+      return api.get(`queries/${this.$route.params.id}`, {
         params: {
           include: 'tags'
         }
@@ -394,6 +484,8 @@ export default {
         }
 
         this.assignVariablesData()
+
+        return this.loadQueryData()
       }).catch((error) => {
         if (error.response?.data?.errors) {
           this.$Message.error(error.response.data.errors.join('\n'))
@@ -403,8 +495,6 @@ export default {
       }).finally(() => {
         this.isLoadingQuery = false
       })
-
-      this.loadQueryData()
     },
     assignVariablesFromSql (sql) {
       if (sql) {
@@ -520,10 +610,14 @@ export default {
     loadQueryData () {
       this.maybeUpdateVariablesQueryParams()
 
-      if (this.dataQuery.sql_body && (this.isEdited || !this.query.id)) {
-        return this.runQuery()
-      } else if (this.$route.params.id) {
-        return this.runExistingQuery()
+      if (this.queryType === 'api') {
+        return this.runApiQuery()
+      } else {
+        if (this.dataQuery.sql_body && (this.isEdited || !this.query.id)) {
+          return this.runQuery()
+        } else if (this.$route.params.id) {
+          return this.runExistingQuery()
+        }
       }
     },
     runExistingQuery () {
@@ -540,6 +634,27 @@ export default {
           this.columns = result.data.meta.columns
         }).catch((error) => {
           this.errors = error.response.data?.errors
+        }).finally(() => {
+          this.isLoading = false
+        })
+      }
+    },
+    runApiQuery () {
+      if (!this.isLoading) {
+        this.isLoading = true
+
+        return loadApiQuery(this.dataQuery, this.variablesData).then((result) => {
+          this.errors = []
+
+          this.data = result.data || []
+          this.columns = result.columns || []
+          this.dataHTML = result.dataHTML || ''
+        }).catch((error) => {
+          if (error.response) {
+            this.errors = error.response.data?.errors
+          } else {
+            this.$Message.error(error.message)
+          }
         }).finally(() => {
           this.isLoading = false
         })
