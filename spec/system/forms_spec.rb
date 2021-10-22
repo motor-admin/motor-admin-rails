@@ -10,7 +10,7 @@ RSpec.describe 'Forms' do
       end
 
       it 'saves form' do
-        click_on 'Add Field'
+        click_on 'Add Field', match: :first
         ivu_fill_field 'Name', 'Test'
         click_on 'Add'
 
