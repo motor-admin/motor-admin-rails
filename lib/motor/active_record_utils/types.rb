@@ -21,6 +21,7 @@ module Motor
         'text' => 'string',
         'citext' => 'string',
         'jsonb' => 'json',
+        'bool' => 'boolean',
         'timestamp' => 'datetime'
       }.freeze
 
