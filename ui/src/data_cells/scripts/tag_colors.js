@@ -8,7 +8,7 @@ function colorsForTag (text) {
   if (!colors) {
     let params = {}
 
-    if (text.match(/not[_\s]/i)) {
+    if (text.match(/^not[_\s]/i)) {
       params = { hue: { min: 0, max: 60 } }
     }
 
