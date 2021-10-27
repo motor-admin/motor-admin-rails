@@ -39,6 +39,19 @@ $ rails motor:install && rake db:migrate
 * [Optimized for mobile](#optimized-for-mobile)
 * [Configurations sync between environments](#configurations-sync)
 
+## [Pro](https://www.getmotoradmin.com/pro)
+
+* Multiple databases support
+* Audit log
+* Live collaboration
+* Multi-factor authentication
+* Custom styling
+* Personalized report alerts via Slack
+* Full-text search
+* Stripe integration
+* Shareable forms and reports
+* [learn more](https://www.getmotoradmin.com/pro)
+
 ### Customizable CRUD
 
 ![Resource settings](https://user-images.githubusercontent.com/5418788/119318569-2a840e80-bc82-11eb-9ba3-f3964eb6f997.png)
