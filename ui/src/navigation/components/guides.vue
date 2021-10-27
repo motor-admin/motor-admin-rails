@@ -47,7 +47,7 @@
           Have a problem or found a bug?
         </p>
         <VButton
-          :to="'https://github.com/omohokcoj/motor-admin/issues/new'"
+          :to="'https://github.com/motor-admin/motor-admin-rails/issues/new'"
           target="_blank"
           icon="ios-bug"
           class="mt-3"
@@ -60,7 +60,7 @@
           Enjoy using Motor Admin?
         </p>
         <VButton
-          :to="'https://github.com/omohokcoj/motor-admin/stargazers'"
+          :to="'https://github.com/motor-admin/motor-admin-rails/stargazers'"
           target="_blank"
           class="mt-3"
           icon="md-star"

@@ -2,7 +2,7 @@
 
 Low-code Admin panel and Business intelligence Rails engine **(no DSL - configurable from the UI)**.
 
-🤓 [Demo App](https://motor-admin.herokuapp.com/demo) | 👀 [Features overview](https://www.youtube.com/watch?v=ngVoci8Hll4&list=PLu7llEMh0KcOkR3Uy_RJT0cXPZQKAYVsq&index=1) | ⭐ [Stargathers](https://github.com/omohokcoj/motor-admin/stargazers)
+🤓 [Demo App](https://motor-admin.herokuapp.com/demo) | 👀 [Features overview](https://www.youtube.com/watch?v=ngVoci8Hll4&list=PLu7llEMh0KcOkR3Uy_RJT0cXPZQKAYVsq&index=1) | ⭐ [Pro](https://www.getmotoradmin.com/pro)
 
 [![Admin Panel](https://user-images.githubusercontent.com/5418788/119318538-1f30e300-bc82-11eb-94a4-107c31c93b13.png)](https://motor-admin.herokuapp.com/demo)
 
@@ -62,7 +62,7 @@ Everything in the admin panel can be configured using the intuitive settings UI,
 
 Data displayed on the resource page can be completely customized via [SQL queries](#sql-queries) and [dashboards](#dashboards) attached to the resource as a tab. Usually, queries used to display resource data should contain `{{resource_name_id}}` [variable](#sql-queries).
 
-[Learn more about resource customizations](https://github.com/omohokcoj/motor-admin/blob/master/guides/customizing_resource_table.md)
+[Learn more about resource customizations](https://github.com/motor-admin/motor-admin-rails/blob/master/guides/customizing_resource_table.md)
 
 ### Custom Actions
 
@@ -92,7 +92,7 @@ end
 
 Values from the form fields can be used in API path via `{field_name}` syntax: `/api/some-endpoint/{resource_id}/apply`.
 
-[Learn more about custom forms builder](https://github.com/omohokcoj/motor-admin/blob/master/guides/building_custom_forms.md)
+[Learn more about custom forms builder](https://github.com/motor-admin/motor-admin-rails/blob/master/guides/building_custom_forms.md)
 
 ### SQL Queries
 
@@ -128,7 +128,7 @@ Intelligence search can be opened via the top right corner button or using <kbd>
 
 ### Authorization
 
-Motor Admin allows to set row-level and column-level permissions via [cancan](https://github.com/CanCanCommunity/cancancan) gem. Admin UI permissions should be defined in `app/models/motor/ability.rb` file in `Motor::Ability` class. See [Motor Admin guide](https://github.com/omohokcoj/motor-admin/blob/master/guides/defining_permissions.md) and [CanCan documentation](https://github.com/CanCanCommunity/cancancan/blob/develop/docs/Defining-Abilities.md) to learn how to define user permissions.
+Motor Admin allows to set row-level and column-level permissions via [cancan](https://github.com/CanCanCommunity/cancancan) gem. Admin UI permissions should be defined in `app/models/motor/ability.rb` file in `Motor::Ability` class. See [Motor Admin guide](https://github.com/motor-admin/motor-admin-rails/blob/master/guides/defining_permissions.md) and [CanCan documentation](https://github.com/CanCanCommunity/cancancan/blob/develop/docs/Defining-Abilities.md) to learn how to define user permissions.
 
 ### I18n
 
@@ -199,4 +199,4 @@ MOTOR_DEVELOPMENT=true rails s
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://github.com/omohokcoj/motor-admin/blob/master/LICENSE).
+The gem is available as open source under the terms of the [MIT License](https://github.com/motor-admin/motor-admin-rails/blob/master/LICENSE).

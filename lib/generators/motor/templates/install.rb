@@ -150,7 +150,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
 
     model.create!(key: 'header.links', value: [{
       name: '⭐ Star on GitHub',
-      path: 'https://github.com/omohokcoj/motor-admin'
+      path: 'https://github.com/motor-admin/motor-admin-rails'
     }].to_json)
   end
 
