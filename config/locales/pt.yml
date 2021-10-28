@@ -267,9 +267,11 @@ pt:
     downloading: Descarregamento
     display_id: Mostrar ID
     display_settings: Definições de visualização
-    sign_out: Sign out
-    header: Header
-    user_dropdown: User dropdown
+    sign_out: Sair
+    header: Cabeçalho
+    user_dropdown: Desistência do utilizador
+    upload: Carregar
+    there_is_nothing_here_yet: Ainda não há nada aqui 🤷‍♂️
     i:
       locale: pt
       select:

@@ -34,8 +34,20 @@
         class="border-top"
         @remove="goToParent"
       />
+      <AttachmentsList
+        v-if="showTable && association?.model_name === 'active_storage/attachment'"
+        :key="resourceName + resourceId + associationName"
+        :height="isFullscreenTable ? 'calc(var(--vh, 100vh) - 199px)' : 'calc((var(--vh) / 2) - 108px)'"
+        :with-resize="true"
+        :resource-name="resourceName"
+        :with-title="true"
+        class="border-top"
+        :association-params="{ name: associationName, id: resourceId }"
+        @action-applied="reloadTabs"
+        @click-resize="toggleSize"
+      />
       <ResourceTable
-        v-if="showTable"
+        v-else-if="showTable"
         :key="resourceName + resourceId + associationName"
         :height="isFullscreenTable ? 'calc(var(--vh, 100vh) - 199px)' : 'calc((var(--vh) / 2) - 108px)'"
         :with-resize="true"
@@ -56,6 +68,7 @@ import { modelNameMap } from '../scripts/schema'
 import ResourcesMenu from 'navigation/components/resources'
 import ResourceTable from './table'
 import ResourceTabs from './tabs'
+import AttachmentsList from './attachments_list'
 
 import { widthLessThan } from 'utils/scripts/dimensions'
 import { isShowSettings } from 'settings/scripts/toggle'
@@ -69,7 +82,8 @@ export default {
     ResourcesMenu,
     ResourceTable,
     ResourceTabs,
-    SettingsMask
+    SettingsMask,
+    AttachmentsList
   },
   props: {
     resourceName: {
@@ -107,6 +121,9 @@ export default {
     },
     model () {
       return modelNameMap[this.resourceName]
+    },
+    association () {
+      return this.associations.find((assoc) => assoc.name === this.associationName)
     },
     associations () {
       return this.model.associations.filter((assoc) => assoc.visible && modelNameMap[assoc.model_name])

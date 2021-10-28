@@ -76,6 +76,7 @@ export default {
 
 .info-image {
   max-height: 120px;
+  max-width: 220px;
   vertical-align: top;
 }
 

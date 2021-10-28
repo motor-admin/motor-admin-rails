@@ -12,7 +12,7 @@ module Motor
         {
           name: model.name.underscore,
           slug: Utils.slugify(model),
-          class_name: model.class.name,
+          class_name: model.name,
           table_name: model.table_name,
           primary_key: model.primary_key,
           display_name: model.model_name.human(count: 2, default: 'Attachments'),
