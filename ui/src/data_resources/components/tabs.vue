@@ -29,7 +29,7 @@
           :resources="associations"
           :size="'small'"
           :with-scopes="false"
-          :path-fragments="$route.params.fragments"
+          :path-fragments="$route.params.fragments.length % 2 === 1 ? $route.params.fragments.slice(0, -1) : $route.params.fragments"
           :style="{ minHeight: '100%' }"
         />
         <ResourceInfo
