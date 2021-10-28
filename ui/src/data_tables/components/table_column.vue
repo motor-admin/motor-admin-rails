@@ -17,6 +17,13 @@
         :polymorphic-model="polymorphicModel"
       />
       <DataCell
+        v-else-if="withHtml && column.type === 'string' && row[column.key]?.match(/^\<.*\>$/)"
+        :value="row[column.key]"
+        :type="'richtext'"
+        :text-truncate="false"
+        @click.stop
+      />
+      <DataCell
         v-else
         :value="row[column.key]"
         :format="column.format"
@@ -46,6 +53,11 @@ export default {
     column: {
       type: Object,
       required: true
+    },
+    withHtml: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     alwaysRefer: {
       type: Boolean,

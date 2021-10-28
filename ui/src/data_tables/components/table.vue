@@ -69,6 +69,7 @@
             v-for="column in columns"
             :key="column.key"
             :row="row"
+            :with-html="withHtml"
             :always-refer="alwaysRefer"
             :column="column"
           />
@@ -140,6 +141,11 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    withHtml: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     borderless: {
       type: Boolean,
