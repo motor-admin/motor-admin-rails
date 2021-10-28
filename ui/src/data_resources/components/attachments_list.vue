@@ -303,7 +303,7 @@ export default {
 
           reader.readAsBinaryString(file)
 
-          reader.onerrror = reject
+          reader.onerror = reject
           reader.onload = () => {
             resolve(reader.result)
           }
