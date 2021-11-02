@@ -351,6 +351,7 @@ export default {
           key: index,
           title: column.name,
           type: column.column_type,
+          format: { number_format: !modelName && ['number', 'integer', 'float'].includes(column.column_type) },
           reference
         }
       })

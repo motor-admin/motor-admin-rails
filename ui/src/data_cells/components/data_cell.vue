@@ -83,6 +83,12 @@
     :truncate="textTruncate"
     :value="value"
   />
+  <DataNumber
+    v-else-if="isNumber"
+    ref="cell"
+    :value="value"
+    :with-format="format.number_format"
+  />
   <DataText
     v-else
     ref="cell"
@@ -108,6 +114,7 @@ import DataChart from './chart'
 import DataColor from './color'
 import DataAudio from './audio'
 import DataVideo from './video'
+import DataNumber from './number'
 
 import DataTypes from '../scripts/data_types'
 
@@ -129,7 +136,8 @@ export default {
     DataChart,
     DataColor,
     DataAudio,
-    DataVideo
+    DataVideo,
+    DataNumber
   },
   props: {
     value: {
@@ -183,6 +191,9 @@ export default {
     },
     isChange () {
       return this.type === 'change'
+    },
+    isNumber () {
+      return this.type === 'integer' || this.type === 'float' || this.type === 'number'
     },
     isChart () {
       return this.type === 'chart'
