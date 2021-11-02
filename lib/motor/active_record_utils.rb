@@ -16,13 +16,21 @@ module Motor
     def generate_csv_for_relation(relation, reset_limit: false)
       relation = relation.limit(nil).offset(nil) if reset_limit
 
-      result = relation.klass.connection.exec_query(relation.to_sql)
+      result = load_query_for_csv(relation)
 
       CSV.generate do |csv|
         csv << result.columns
 
         result.rows.each { |row| csv << row }
       end
+    end
+
+    def load_query_for_csv(relation)
+      model_name = relation.klass.model_name.human(count: :many, default: relation.klass.name.titleize.pluralize)
+
+      query = Motor::Query.find_by(name: "Export #{model_name}")
+
+      relation.klass.connection.exec_query(query&.sql_body || relation.to_sql)
     end
   end
 end
