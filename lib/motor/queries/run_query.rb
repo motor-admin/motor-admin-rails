@@ -86,10 +86,10 @@ module Motor
         result.columns.map.with_index do |column_name, index|
           column_type_class = result.column_types[column_name]
 
-          column_type =
-            if column_type_class
-              ActiveRecordUtils::Types.find_name_for_type(column_type_class)
-            else
+          column_type = ActiveRecordUtils::Types.find_name_for_type(column_type_class) if column_type_class
+
+          column_type ||=
+            begin
               not_nil_value = result.rows.reduce(nil) do |acc, row|
                 column = row[index]
 

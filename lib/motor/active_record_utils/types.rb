@@ -16,6 +16,7 @@ module Motor
         'numeric' => 'float',
         'decimal' => 'float',
         'float4' => 'float',
+        'bpchar' => 'string',
         'float8' => 'float',
         'float16' => 'float',
         'text' => 'string',
@@ -43,11 +44,13 @@ module Motor
 
         return UNIFIED_TYPES.fetch(name, name) if name
 
-        DEFAULT_TYPE
+        nil
       end
 
       def build_types_hash
-        type_map = ActiveRecord::Base.connection.send(:type_map)
+        connection_class = defined?(::ResourceRecord) ? ::ResourceRecord : ActiveRecord::Base
+
+        type_map = connection_class.connection.send(:type_map)
 
         type_map.instance_variable_get('@mapping').map do |name, type|
           next unless name.is_a?(String)

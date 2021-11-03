@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.2.16)
+    motor-admin (0.2.18)
       activerecord-filter (>= 5.2)
       ar_lazy_preload (~> 0.6)
       audited (~> 5.0)
@@ -131,7 +131,7 @@ GEM
     diff-lcs (1.4.4)
     docile (1.4.0)
     erubi (1.10.0)
-    et-orbi (1.2.5)
+    et-orbi (1.2.6)
       tzinfo
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
