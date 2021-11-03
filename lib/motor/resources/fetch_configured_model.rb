@@ -10,26 +10,19 @@ module Motor
       def call(model, cache_key:)
         configs = Motor::Configs::LoadFromCache.load_resources(cache_key: cache_key)
 
-        return model if configs.blank?
+        return model if configs.blank? || sti_model?(model)
 
         maybe_fetch_from_cache(
           model,
           cache_key.to_s + model.object_id.to_s,
-          lambda {
-            resource_config = configs.find { |r| r.name == model.name.underscore }
-
-            if resource_config
-              build_configured_model(model, resource_config.preferences)
-            else
-              define_class_name_method(Class.new(model), model)
-            end
-          },
+          -> { build_configured_model_from_configs(model, configs) },
           ->(klass) { configure_reflection_classes(klass, cache_key) }
         )
       end
 
       def build_configured_model(model, config)
         klass = Class.new(model)
+        klass.inheritance_column = nil if model.superclass.abstract_class
 
         define_class_name_method(klass, model)
 
@@ -198,6 +191,20 @@ module Motor
 
           postprocess_block.call(result)
         end
+      end
+
+      def build_configured_model_from_configs(model, configs)
+        resource_config = configs.find { |r| r.name == model.name.underscore }
+
+        if resource_config
+          build_configured_model(model, resource_config.preferences)
+        else
+          define_class_name_method(Class.new(model), model)
+        end
+      end
+
+      def sti_model?(model)
+        !model.superclass.abstract_class && model.columns_hash[model.inheritance_column.to_s]
       end
     end
   end
