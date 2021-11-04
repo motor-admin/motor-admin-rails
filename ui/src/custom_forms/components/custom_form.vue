@@ -159,9 +159,22 @@ export default {
             ...credentials.headers
           }
         }).then((result) => {
+          const redirectTo = result.data?.redirect || result.data?.redirect_to || result.redirect || result.redirect_to
+
+          if (typeof redirectTo === 'string') {
+            const resolvedRoute = this.$router.resolve({ path: redirectTo.replace(location.origin, '') }, this.$route)
+
+            if (resolvedRoute?.name) {
+              this.$router.push(resolvedRoute)
+            } else {
+              location.href = redirectTo
+            }
+          } else {
+            this.isSuccess = true
+            this.successData = result.data
+          }
+
           this.$emit('success', result)
-          this.isSuccess = true
-          this.successData = result.data
         }).catch((error) => {
           console.error(error)
 

@@ -131,6 +131,16 @@ export default {
         return this.buttonActions.length ? this.i18n.more : this.i18n.actions
       }
     },
+    requestHeaders () {
+      const headers = {}
+      const csrfTag = document.querySelector('[name="csrf-token"]')
+
+      if (csrfTag) {
+        headers['X-CSRF-Token'] = csrfTag.content
+      }
+
+      return headers
+    },
     buttonTypes () {
       return {
         edit: 'primary',
@@ -248,12 +258,33 @@ export default {
       })
 
       Promise.all(requests).then((result) => {
-        this.$Message.info(this.i18n.action_has_been_applied)
-      }).catch((error) => {
-        if (error.response.data?.errors) {
-          this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
+        if (result.length === 1) {
+          const resultData = result[0].data
+          const redirectTo = resultData?.data?.redirect || resultData?.data?.redirect_to || resultData?.redirect || resultData?.redirect_to
+
+          if (typeof redirectTo === 'string') {
+            const resolvedRoute = this.$router.resolve({ path: redirectTo.replace(location.origin, '') }, this.$route)
+
+            if (resolvedRoute?.name) {
+              this.$router.push(resolvedRoute)
+
+              this.$Message.info(this.i18n.action_has_been_applied)
+            } else {
+              location.href = redirectTo
+            }
+          } else {
+            this.$Message.info(this.i18n.action_has_been_applied)
+          }
         } else {
+          this.$Message.info(this.i18n.action_has_been_applied)
+        }
+      }).catch((error) => {
+        if (error.response?.data?.errors) {
+          this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
+        } else if (error?.response?.status) {
           this.$Message.error(`${this.i18n.action_has_failed_with_code} ${error.response.status}`)
+        } else {
+          this.$Message.error(error.message)
         }
       }).finally(() => {
         this.$emit('finish-action', action.name)
@@ -263,10 +294,18 @@ export default {
       return api.put(`data/${this.model.slug}/${resource[this.model.primary_key]}/${action.preferences.method_name}`)
     },
     apiRequest (resource, action) {
-      const path = interpolate(action.preferences.api_path, resource)
+      const path = interpolate(action.preferences.api_path, {
+        [this.model.name + '_' + this.model.primary_key]: resource[this.model.primary_key],
+        ...resource
+      })
 
       return loadCredentials().then((credentials) => {
-        return axios.post(path, {}, { headers: credentials.headers })
+        return axios.post(path, {}, {
+          headers: {
+            ...this.requestHeaders,
+            ...credentials.headers
+          }
+        })
       })
     },
     openForm (resource, action) {
