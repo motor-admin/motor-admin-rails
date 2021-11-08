@@ -42,7 +42,6 @@ export default {
   name: 'LinksSection',
   computed: {
     linksToRender () {
-      console.log(this.customLinks)
       return this.defaultLinks.concat(this.customLinks)
     },
     canReadReports () {
