@@ -276,3 +276,5 @@ en:
     user_dropdown: User dropdown
     upload: Upload
     there_is_nothing_here_yet: There is nothing here yet 🤷‍♂️
+    is_null: Is null
+    is_not_null: Is not null

@@ -272,6 +272,8 @@ pt:
     user_dropdown: Desistência do utilizador
     upload: Carregar
     there_is_nothing_here_yet: Ainda não há nada aqui 🤷‍♂️
+    is_null: É nulo
+    is_not_null: Não é nulo
     i:
       locale: pt
       select:

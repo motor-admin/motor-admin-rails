@@ -25,7 +25,7 @@
     </div>
     <div class="d-flex col-5 ps-2 pe-0">
       <FormInput
-        v-if="selectedColumn && !['contains', 'starts_with', 'ends_with'].includes(dataFilter.action) && selectedColumn.column_type !== 'richtext'"
+        v-if="selectedColumn && !['contains', 'starts_with', 'ends_with', 'eqnull', 'neqnull'].includes(dataFilter.action) && selectedColumn.column_type !== 'richtext'"
         v-model="dataFilter.value"
         data-role="filter-value"
         :column="selectedColumn"
@@ -33,6 +33,7 @@
       <VInput
         v-else
         v-model="dataFilter.value"
+        :disabled="['eqnull', 'neqnull'].includes(dataFilter.action)"
         data-role="filter-value"
       />
       <VButton
@@ -49,7 +50,7 @@
 import FormInput from 'data_forms/components/input'
 import { modelNameMap } from '../scripts/schema'
 
-const ACTIONS = ['eq', 'neq', 'contains', 'gt', 'gte', 'lt', 'lte', 'starts_with', 'ends_with', 'includes', 'excludes']
+const ACTIONS = ['eq', 'neq', 'eqnull', 'neqnull', 'contains', 'gt', 'gte', 'lt', 'lte', 'starts_with', 'ends_with', 'includes', 'excludes']
 
 export default {
   name: 'FilterItem',
@@ -136,7 +137,9 @@ export default {
     actions () {
       const actions = [
         { value: 'eq', label: this.i18n.is },
-        { value: 'neq', label: this.i18n.is_not }
+        { value: 'neq', label: this.i18n.is_not },
+        { value: 'eqnull', label: this.i18n.is_null },
+        { value: 'neqnull', label: this.i18n.is_not_null }
       ]
 
       if (!this.selectedColumn) {

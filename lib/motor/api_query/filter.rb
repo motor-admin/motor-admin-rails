@@ -67,6 +67,10 @@ module Motor
           ['ilike', value.sub(LIKE_FILTER_VALUE_REGEXP, '\1%')]
         when 'ends_with'
           ['ilike', value.sub(LIKE_FILTER_VALUE_REGEXP, '%\1')]
+        when 'eqnull'
+          ['eq', nil]
+        when 'neqnull'
+          ['neq', nil]
         else
           [action, value]
         end

@@ -276,6 +276,8 @@ es:
     user_dropdown: Despliegue del usuario
     upload: Subir a
     there_is_nothing_here_yet: Todavía no hay nada aquí 🤷‍♂️
+    is_null: Es nulo
+    is_not_null: No es nulo
     i:
       locale: es
       select:
