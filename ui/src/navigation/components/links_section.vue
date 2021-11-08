@@ -21,7 +21,7 @@
   </div>
   <div class="col-12">
     <VButton
-      v-if="this.$can('manage', 'all')"
+      v-if="$can('manage', 'all')"
       icon="md-add"
       long
       @click="openEditModal"
