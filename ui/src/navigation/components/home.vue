@@ -35,7 +35,7 @@
         {{ i18n['hello_admin'] }}
       </h1>
       <VButton
-        v-if="$can('manage', 'all')"
+        v-if="$can('manage', 'all') && $route.name === 'home'"
         :icon="isEdit ? 'md-close' : 'md-create'"
         class="fs-1 bg-transparent"
         type="text"
@@ -72,11 +72,11 @@
     </div>
 
     <DashboardLayout
-      v-else-if="dashboardId && dashboard"
+      v-else-if="dashboardId && dashboard && $route.name === 'home'"
       :dashboard="dashboard"
     />
     <div
-      v-else-if="!dashboardId"
+      v-else
       class="row"
     >
       <div

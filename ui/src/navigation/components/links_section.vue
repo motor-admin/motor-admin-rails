@@ -6,7 +6,7 @@
   >
     <component
       :is="link.is"
-      v-if="link.to"
+      v-if="link.to || link.href"
       :to="link.to"
       :href="link.href"
       :target="link.target"
@@ -40,6 +40,7 @@ export default {
   name: 'LinksSection',
   computed: {
     linksToRender () {
+      console.log(this.customLinks)
       return this.defaultLinks.concat(this.customLinks)
     },
     canReadReports () {
