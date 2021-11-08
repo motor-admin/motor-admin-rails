@@ -4,7 +4,7 @@ module Motor
   module CurrentAbility
     def current_ability
       @current_ability ||=
-        if defined?(Motor::Ability) && current_user
+        if defined?(Motor::Ability)
           klass = Motor::Ability.dup.tap do |k|
             k.prepend(Motor::CancanUtils::AbilityPatch)
           end
