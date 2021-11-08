@@ -142,7 +142,10 @@ module Motor
 
         return { select_options: enum.keys } if enum
 
-        return { number_format: true } if !column.name.ends_with?('_id') && %i[integer float].include?(column.type)
+        return {} if column.name == 'year'
+
+        return { number_format: true } if !column.name.match?(/_(?:id|year)\z/) &&
+                                          %i[integer float].include?(column.type)
 
         {}
       end
