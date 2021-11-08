@@ -34,6 +34,7 @@
 import { linksStore } from '../scripts/links_store'
 import { basePath } from 'utils/scripts/configs'
 import { canVisit } from '../scripts/can_visit'
+import { widthLessThan } from 'utils/scripts/dimensions'
 import LinksEdit from './links_edit'
 
 export default {
@@ -48,6 +49,11 @@ export default {
     },
     defaultLinks () {
       return [
+        widthLessThan('sm') && {
+          is: 'RouterLink',
+          name: 'Data',
+          to: { name: 'data_home' }
+        },
         this.canReadReports && {
           is: 'RouterLink',
           name: 'Reports',

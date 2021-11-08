@@ -8,25 +8,29 @@
         {{ i18n['hello_admin'] }}
       </h1>
       <VButton
+        v-if="$can('manage', 'all') && $route.name === 'home'"
         :icon="isEdit ? 'md-close' : 'md-create'"
         class="fs-1 bg-transparent"
         type="text"
         @click="isEdit = !isEdit"
       />
     </div>
-    <div class="row">
+    <div
+      v-if="$route.name === 'home'"
+      class="row"
+    >
       <LinksSection />
     </div>
   </div>
   <div class="mx-2 mx-md-3 position-relative">
     <h1
-      v-if="widthLessThan('sm')"
+      v-if="widthLessThan('sm') && $route.name === 'home'"
       class="mt-3 mb-2"
     >
       {{ dashboardId ? dashboard?.title : i18n['resources'] }}
     </h1>
     <div
-      v-else
+      v-else-if="!widthLessThan('sm')"
       class="d-flex justify-content-between align-items-center"
     >
       <h1
