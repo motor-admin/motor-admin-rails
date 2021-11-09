@@ -45,6 +45,7 @@
         <div
           v-if="withActions && !notFound"
           class="d-flex justify-content-end align-items-center"
+          style="z-index: 0"
           :style="widthLessThan('lg') ? 'width: 100px' : 'width: 50%'"
         >
           <SettingsMask
