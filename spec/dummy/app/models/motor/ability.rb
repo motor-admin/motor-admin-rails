@@ -5,6 +5,8 @@ module Motor
     include CanCan::Ability
 
     def initialize(user, _request = nil)
+      return can :manage, :all unless user
+
       case user.role
       when 'admin'
         can :manage, :all
