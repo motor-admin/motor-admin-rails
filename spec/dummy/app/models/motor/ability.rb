@@ -5,21 +5,23 @@ module Motor
     include CanCan::Ability
 
     def initialize(user, _request = nil)
-      return can :manage, :all unless user
+      if user
+        case user.role
+        when 'admin'
+          can :manage, :all
+        when 'ops'
+          resource_abilities
+          motor_abilities
 
-      case user.role
-      when 'admin'
+          cannot :destroy, Order
+          can :manage, User, id: user.id
+          cannot :destroy, User
+        when 'sales'
+          resource_abilities
+          motor_abilities
+        end
+      else
         can :manage, :all
-      when 'ops'
-        resource_abilities
-        motor_abilities
-
-        cannot :destroy, Order
-        can :manage, User, id: user.id
-        cannot :destroy, User
-      when 'sales'
-        resource_abilities
-        motor_abilities
       end
     end
 
