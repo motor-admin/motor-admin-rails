@@ -155,13 +155,13 @@ export default {
         return actions
       }
 
-      if (this.selectedColumn.column_type === 'string') {
+      if (['link', 'image', 'audio', 'video', 'file', 'textarea', 'richtext', 'string'].includes(this.selectedColumn.column_type)) {
         actions.push(
           { value: 'contains', label: this.i18n.contains },
           { value: 'starts_with', label: this.i18n.starts_with },
           { value: 'ends_with', label: this.i18n.ends_with }
         )
-      } else if (['integer', 'float', 'date', 'datetime', 'currency'].includes(this.selectedColumn.column_type)) {
+      } else if (['change', 'percentage', 'integer', 'float', 'date', 'datetime', 'currency'].includes(this.selectedColumn.column_type)) {
         actions.push(
           { value: 'gt', label: this.i18n.greater_than },
           { value: 'gte', label: this.i18n.greater_or_equal },
