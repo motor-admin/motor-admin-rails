@@ -157,7 +157,7 @@ module Motor
         expresion = table.project(table[Arel.star])
         expresion = expresion.where(arel_filters) if arel_filters.present?
 
-        expresion.take(limit.to_i).to_sql
+        expresion.take(limit.to_i).to_sql.delete('"')
       end
 
       # @param filters [Hash]
