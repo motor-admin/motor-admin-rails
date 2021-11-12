@@ -308,7 +308,7 @@ export default {
       api.post('run_queries', {
         sql_body: sqlBody
       }).then((result) => {
-        this.dataColumn.format.select_options = result.data.data.flat()
+        this.dataColumn.format.select_options = result.data.data.flat().map((e) => e?.match && e.match(/^{.*}$/) ? e.split(/[{},]/) : e).flat().filter(Boolean)
       })
     },
     submit () {

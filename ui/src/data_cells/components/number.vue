@@ -9,7 +9,7 @@ export default {
   name: 'NumberCell',
   props: {
     value: {
-      type: [String, Number],
+      type: [String, Number, Array],
       required: false,
       default: ''
     },
@@ -21,10 +21,14 @@ export default {
   },
   computed: {
     formattedValue () {
-      if (this.withFormat && this.value) {
-        return Intl.NumberFormat(navigator.language || 'en-US').format(this.value)
+      if (Array.isArray(this.value)) {
+        return this.value !== null ? JSON.stringify(this.value, null, ' ') : this.value
       } else {
-        return this.value.toString()
+        if (this.withFormat && this.value && typeof this.value === 'number') {
+          return Intl.NumberFormat(navigator.language || 'en-US').format(this.value)
+        } else {
+          return this.value?.toString()
+        }
       }
     }
   },

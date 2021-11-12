@@ -15,7 +15,7 @@
     <span
       class="ivu-tag-text ivu-tag-color-white cursor-unset"
       :style="textStyle"
-    >{{ titleize(value) }}</span>
+    >{{ titleize(value.toString()) }}</span>
   </div>
 </template>
 
@@ -49,7 +49,7 @@ export default {
   name: 'DataTag',
   props: {
     value: {
-      type: [String, Array],
+      type: [String, Array, Number],
       required: false,
       default: () => []
     }
