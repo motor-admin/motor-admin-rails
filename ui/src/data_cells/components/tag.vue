@@ -1,7 +1,7 @@
 <template>
-  <template v-if="Array.isArray(value)">
+  <template v-if="Array.isArray(normalizedValue)">
     <DataTag
-      v-for="(val, index) in value"
+      v-for="(val, index) in normalizedValue"
       :key="index"
       :value="val"
     />
@@ -57,6 +57,13 @@ export default {
   computed: {
     colorClass () {
       return COLORS[this.value]
+    },
+    normalizedValue () {
+      if (typeof this.value === 'string' && this.value.match(/[,;]|(?:\s-\s)/)) {
+        return this.value.split(/[,;]|(?:\s-\s)/)
+      } else {
+        return this.value
+      }
     },
     tagColors () {
       return colorsForTag(this.value)
