@@ -155,7 +155,7 @@ export default {
         return actions
       }
 
-      if (['link', 'image', 'audio', 'video', 'file', 'textarea', 'richtext', 'string'].includes(this.selectedColumn.column_type)) {
+      if (['link', 'image', 'audio', 'video', 'file', 'textarea', 'richtext', 'string', 'tag'].includes(this.selectedColumn.column_type)) {
         actions.push(
           { value: 'contains', label: this.i18n.contains },
           { value: 'starts_with', label: this.i18n.starts_with },
