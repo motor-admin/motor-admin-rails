@@ -61,7 +61,7 @@ module Motor
       # @return [ActiveRecord::Result]
       def execute_query(query, limit, variables_hash, filters)
         result = nil
-        statement = prepare_sql_statement(query, limit, variables_hash, filters)
+        statement = prepare_sql_statement(connection_class.connection, query, limit, variables_hash, filters)
 
         connection_class.transaction do
           result =
@@ -129,17 +129,18 @@ module Motor
         end
       end
 
+      # @param connection [Object]
       # @param query [Motor::Query]
       # @param limit [Integer]
       # @param variables_hash [Hash]
       # @param filters [Hash]
       # @return [Array]
-      def prepare_sql_statement(query, limit, variables_hash, filters)
+      def prepare_sql_statement(connection, query, limit, variables_hash, filters)
         variables = merge_variable_default_values(query.preferences.fetch(:variables, []), variables_hash)
 
         sql, query_variables = RenderSqlTemplate.call(query.sql_body, variables)
         cte_sql = format(WITH_STATEMENT_TEMPLATE, sql_body: sql.strip.delete_suffix(';'))
-        cte_select_sql = build_cte_select_sql(limit, filters)
+        cte_select_sql = build_cte_select_sql(connection, limit, filters)
 
         attributes = build_statement_attributes(query_variables)
 
@@ -149,7 +150,7 @@ module Motor
       # @param limit [Number]
       # @param filters [Hash]
       # @return [String]
-      def build_cte_select_sql(limit, filters)
+      def build_cte_select_sql(connection, limit, filters)
         table = Arel::Table.new(CTE_NAME)
 
         arel_filters = build_filters_arel(filters)
@@ -157,7 +158,9 @@ module Motor
         expresion = table.project(table[Arel.star])
         expresion = expresion.where(arel_filters) if arel_filters.present?
 
-        expresion.take(limit.to_i).to_sql.delete('"')
+        expresion.take(limit.to_i) unless connection.class.name.include?('SQLServerAdapter')
+
+        expresion.to_sql.delete('"')
       end
 
       # @param filters [Hash]

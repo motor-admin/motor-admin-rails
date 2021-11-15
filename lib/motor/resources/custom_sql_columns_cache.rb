@@ -9,7 +9,7 @@ module Motor
 
       def call(sql)
         CACHE_STORE.fetch(sql.hash) do
-          Queries::RunQuery.call(Query.new(sql_body: sql), limit: 0).columns
+          Queries::RunQuery.call(Query.new(sql_body: sql), limit: 0).columns || []
         end
       end
     end

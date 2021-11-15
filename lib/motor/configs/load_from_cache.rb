@@ -83,9 +83,7 @@ module Motor
       end
 
       def load_cache_keys
-        result = ActiveRecord::Base.connection.execute(cache_keys_sql).to_a
-
-        result = result.map(&:values) if result.first.is_a?(Hash)
+        result = ActiveRecord::Base.connection.exec_query(cache_keys_sql).rows
 
         result.to_h.with_indifferent_access
       end
