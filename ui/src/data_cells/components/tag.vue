@@ -4,6 +4,7 @@
       v-for="(val, index) in normalizedValue"
       :key="index"
       :value="val"
+      :format="format"
     />
   </template>
   <div
@@ -52,6 +53,11 @@ export default {
       type: [String, Array, Number],
       required: false,
       default: () => []
+    },
+    format: {
+      type: Object,
+      required: false,
+      default: () => ({})
     }
   },
   computed: {
@@ -59,8 +65,8 @@ export default {
       return COLORS[this.value]
     },
     normalizedValue () {
-      if (typeof this.value === 'string' && this.value.match(/[,;]|(?:\s-\s)/)) {
-        return this.value.split(/[,;]|(?:\s-\s)/)
+      if (typeof this.value === 'string' && this.format.split_tags_by && this.value.includes(this.format.split_tags_by)) {
+        return this.value.split(this.format.split_tags_by).map((e) => e.trim())
       } else {
         return this.value
       }

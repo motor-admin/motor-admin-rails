@@ -278,6 +278,12 @@ es:
     there_is_nothing_here_yet: Todavía no hay nada aquí 🤷‍♂️
     is_null: Es nulo
     is_not_null: No es nulo
+    split_tags_by: Dividir las etiquetas por
+    do_not_split: No dividir
+    semicolon: Punto y coma
+    hyphen: Guión
+    comma: Coma
+    slash: Slash
     i:
       locale: es
       select:

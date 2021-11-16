@@ -41,6 +41,7 @@
     v-else-if="isTag"
     ref="cell"
     :value="value"
+    :format="format"
   />
   <DataImage
     v-else-if="isImage"

@@ -105,6 +105,16 @@
         />
       </FormItem>
       <FormItem
+        v-if="['tag'].includes(dataColumn.column_type)"
+        :label="i18n['split_tags_by']"
+        prop="format.split_tags_by"
+      >
+        <MSelect
+          v-model="dataColumn.format.split_tags_by"
+          :options="splitTagOptions"
+        />
+      </FormItem>
+      <FormItem
         v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !['image', 'file', 'audio', 'video'].includes(dataColumn.column_type)"
         :label="i18n['default_value']"
         prop="default_value"
@@ -245,6 +255,14 @@ export default {
         { label: this.i18n.read_only, value: 'read_only' },
         { label: this.i18n.write_only, value: 'write_only' },
         { label: this.i18n.hidden, value: 'hidden' }
+      ]
+    },
+    splitTagOptions () {
+      return [
+        { label: this.i18n.semicolon, value: ';' },
+        { label: this.i18n.comma, value: ',' },
+        { label: this.i18n.hyphen, value: '-' },
+        { label: this.i18n.slash, value: '/' }
       ]
     }
   },

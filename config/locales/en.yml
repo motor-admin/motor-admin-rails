@@ -278,3 +278,9 @@ en:
     there_is_nothing_here_yet: There is nothing here yet 🤷‍♂️
     is_null: Is null
     is_not_null: Is not null
+    split_tags_by: Split tags by
+    do_not_split: Do not split
+    semicolon: Semicolon
+    hyphen: Hyphen
+    comma: Comma
+    slash: Slash

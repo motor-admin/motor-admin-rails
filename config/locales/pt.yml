@@ -274,6 +274,12 @@ pt:
     there_is_nothing_here_yet: Ainda não há nada aqui 🤷‍♂️
     is_null: É nulo
     is_not_null: Não é nulo
+    split_tags_by: Dividir as etiquetas por
+    do_not_split: Não dividir
+    semicolon: Ponto-e-vírgula
+    hyphen: Hífen
+    comma: Vírgula
+    slash: Slash
     i:
       locale: pt
       select:
