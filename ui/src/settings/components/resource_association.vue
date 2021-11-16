@@ -16,7 +16,7 @@
               v-model="association.visible"
               class="m-0"
               @click.stop
-              @change="persistChanges"
+              @change="persistChanges()"
             />
             <CustomIcon
               :type="association.icon"
@@ -28,7 +28,7 @@
               v-model="association.display_name"
               class="fs-5 fw-bold"
               @click.stop
-              @change="persistChanges"
+              @change="persistChanges()"
             />
           </div>
           <div

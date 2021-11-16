@@ -24,7 +24,7 @@
               v-model="column.display_name"
               class="fs-5 fw-bold"
               @click.stop
-              @change="persistChanges"
+              @change="persistChanges()"
             />
           </div>
           <div class="d-flex align-items-center">
