@@ -116,13 +116,20 @@ module Motor
       end
 
       def build_table_column(column, model, default_attrs)
+        access_type =
+          if model.primary_key == column.name
+            ColumnAccessTypes::READ_ONLY
+          else
+            COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE)
+          end
+
         {
           name: column.name,
           display_name: Utils.humanize_column_name(model.human_attribute_name(column.name)),
           column_type: fetch_column_type(column, model),
           column_source: ColumnSources::TABLE,
           is_array: column.array?,
-          access_type: COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE),
+          access_type: access_type,
           default_value: default_attrs[column.name],
           validators: fetch_validators(model, column.name),
           reference: nil,
