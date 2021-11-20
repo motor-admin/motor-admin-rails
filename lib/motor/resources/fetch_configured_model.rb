@@ -143,8 +143,10 @@ module Motor
             ref_dup.instance_variable_set(:@klass, call(ref.klass, cache_key: cache_key))
           end
 
-          klass._reflections[key] = ref_dup
+          klass.reflections[key] = ref_dup
         end
+
+        klass._reflections = klass.reflections
 
         klass
       end
