@@ -5,6 +5,8 @@ module Motor
     module FetchConfiguredModel
       CACHE_HASH = HashWithIndifferentAccess.new
 
+      HAS_AND_BELONGS_TO_MANY_JOIN_MODEL_PREFIX = 'HABTM_'
+
       module_function
 
       def call(model, cache_key:)
@@ -130,13 +132,8 @@ module Motor
       end
 
       def configure_reflection_classes(klass, cache_key)
-        klass.reflections.each do |key, ref|
-          begin
-            next unless ref.klass
-            next if ref.klass.anonymous?
-          rescue StandardError
-            next
-          end
+        klass._reflections.each do |key, ref|
+          next unless configure_reflection_class?(ref)
 
           ref_dup = ref.dup
 
@@ -146,10 +143,8 @@ module Motor
             ref_dup.instance_variable_set(:@klass, call(ref.klass, cache_key: cache_key))
           end
 
-          klass.reflections[key] = ref_dup
+          klass._reflections[key] = ref_dup
         end
-
-        klass._reflections = klass.reflections
 
         klass
       end
@@ -201,6 +196,19 @@ module Motor
         else
           define_class_name_method(Class.new(model), model)
         end
+      end
+
+      def configure_reflection_class?(ref)
+        begin
+          return false unless ref.klass
+        rescue StandardError
+          return false
+        end
+
+        return false if ref.klass.anonymous?
+        return false if ref.klass.name.demodulize.starts_with?(HAS_AND_BELONGS_TO_MANY_JOIN_MODEL_PREFIX)
+
+        true
       end
 
       def sti_model?(model)
