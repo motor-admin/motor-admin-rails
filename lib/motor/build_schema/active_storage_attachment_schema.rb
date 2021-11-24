@@ -115,7 +115,7 @@ module Motor
           scopes: [],
           actions: Motor::BuildSchema::Defaults.actions.reject { |e| e[:name] == 'edit' },
           tabs: Motor::BuildSchema::Defaults.tabs,
-          visible: true
+          visible: false
         }.with_indifferent_access
       end
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
