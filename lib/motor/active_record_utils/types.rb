@@ -23,7 +23,8 @@ module Motor
         'citext' => 'string',
         'jsonb' => 'json',
         'bool' => 'boolean',
-        'timestamp' => 'datetime'
+        'timestamp' => 'datetime',
+        'timestamptz' => 'datetime'
       }.freeze
 
       module_function
