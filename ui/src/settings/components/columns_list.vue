@@ -81,6 +81,10 @@ export default {
     onColumnSubmit (column) {
       column.name = underscore(column.display_name)
 
+      if (column.reference?.model_name === 'active_storage/attachment') {
+        column.name += '_attachment'
+      }
+
       this.newColumn = null
 
       return api.post('resources', {

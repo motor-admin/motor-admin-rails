@@ -115,7 +115,7 @@
         />
       </FormItem>
       <FormItem
-        v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !['image', 'file', 'audio', 'video'].includes(dataColumn.column_type)"
+        v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !['image', 'file', 'audio', 'video'].includes(dataColumn.column_type) && dataColumn.reference?.model_name !== 'active_storage/attachment'"
         :label="i18n['default_value']"
         prop="default_value"
       >
@@ -335,7 +335,12 @@ export default {
           if (this.dataColumn.reference) {
             const idSuffixRegexp = new RegExp(`_${this.dataColumn.reference.primary_key}$`)
 
-            this.dataColumn.reference.name ||= underscore(this.dataColumn.display_name).replace(idSuffixRegexp, '')
+            if (this.dataColumn.reference.model_name === 'active_storage/attachment') {
+              this.dataColumn.reference.name ||= underscore(this.dataColumn.display_name) + '_attachment'
+            } else {
+              this.dataColumn.reference.name ||= underscore(this.dataColumn.display_name).replace(idSuffixRegexp, '')
+            }
+
             this.dataColumn.reference.display_name ||= this.dataColumn.display_name
           }
 

@@ -9,8 +9,8 @@ module Motor
     load_and_authorize_resource :attachment, class: 'ActiveStorage::Attachment', parent: false
 
     def create
-      if attachable?(@attachment.record)
-        @attachment.record.public_send(@attachment.name).attach(file_params)
+      if attachable?(record)
+        record.public_send(@attachment.name).attach(file_params)
 
         head :ok
       else
@@ -19,6 +19,15 @@ module Motor
     end
 
     private
+
+    def record
+      record_pk = @attachment.record.class.primary_key
+
+      Motor::Resources::FetchConfiguredModel.call(
+        @attachment.record.class,
+        cache_key: Motor::Resource.maximum(:updated_at)
+      ).find_by(record_pk => @attachment.record[record_pk])
+    end
 
     def attachable?(record)
       record.respond_to?("#{@attachment.name}_attachment=") ||

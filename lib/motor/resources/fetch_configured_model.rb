@@ -12,6 +12,7 @@ module Motor
       def call(model, cache_key:)
         configs = Motor::Configs::LoadFromCache.load_resources(cache_key: cache_key)
 
+        return model if model.name == 'ActiveStorage::Attachment'
         return model if configs.blank? || sti_model?(model)
 
         maybe_fetch_from_cache(
@@ -128,7 +129,11 @@ module Motor
 
         options = options.merge(config[:options] || {})
 
-        klass.has_one(config[:name].to_sym, **options.symbolize_keys)
+        if config[:model_name] == 'active_storage/attachment'
+          klass.has_one_attached config[:name].delete_suffix('_attachment').to_sym
+        else
+          klass.has_one(config[:name].to_sym, **options.symbolize_keys)
+        end
       end
 
       def configure_reflection_classes(klass, cache_key)
@@ -159,11 +164,17 @@ module Motor
 
           filters = options.delete(:filters)
 
-          if filters.present?
-            klass.has_many(association[:name].to_sym, -> { filter(filters).tap(&:arel) }, **options.symbolize_keys)
-          else
-            klass.has_many(association[:name].to_sym, **options.symbolize_keys)
-          end
+          define_association(klass, association[:name], options, filters)
+        end
+      end
+
+      def define_association(klass, name, options, filters)
+        if options[:class_name] == 'ActiveStorage::Attachment'
+          klass.has_many_attached name.delete_suffix('_attachments').to_sym
+        elsif filters.present?
+          klass.has_many(name.to_sym, -> { filter(filters).tap(&:arel) }, **options.symbolize_keys)
+        else
+          klass.has_many(name.to_sym, **options.symbolize_keys)
         end
       end
 

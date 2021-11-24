@@ -147,7 +147,7 @@ export default {
       return this.type === 'date'
     },
     isFile () {
-      return this.type === 'file' || this.type === 'image'
+      return this.type === 'file' || this.type === 'image' || this.column.reference?.model_name === 'active_storage/attachment'
     },
     isNumber () {
       return ['integer', 'bigint', 'int', 'float', 'decimal', 'double', 'number', 'currency', 'change', 'percentage'].includes(this.type)

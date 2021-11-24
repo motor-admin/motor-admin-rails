@@ -32,88 +32,90 @@
             />
           </FormItem>
         </div>
-        <div class="col-sm-6 pe-sm-1">
-          <FormItem
-            :label="i18n['foreign_key']"
-            prop="foreign_key"
+        <template v-if="dataAssoc.model_name !== 'active_storage/attachment'">
+          <div class="col-sm-6 pe-sm-1">
+            <FormItem
+              :label="i18n['foreign_key']"
+              prop="foreign_key"
+            >
+              <MSelect
+                v-model="dataAssoc.foreign_key"
+                :value-key="'name'"
+                :disabled="!!dataAssoc.options.through"
+                :label-key="'name'"
+                :with-deselect="false"
+                :options="associationColumns"
+                filterable
+              />
+            </FormItem>
+          </div>
+          <div class="col-sm-6 ps-sm-1">
+            <FormItem
+              :label="i18n['primary_key']"
+              prop="primary_key"
+            >
+              <MSelect
+                v-model="dataAssoc.primary_key"
+                :disabled="!!dataAssoc.options.through"
+                :value-key="'name'"
+                :label-key="'name'"
+                :with-deselect="false"
+                :options="resourceColumns"
+                filterable
+              />
+            </FormItem>
+          </div>
+          <div class="col-sm-6 pe-sm-1">
+            <FormItem
+              :label="i18n['through']"
+              prop="options.through"
+            >
+              <MSelect
+                v-model="dataAssoc.options.through"
+                :value-key="'name'"
+                :label-key="'display_name'"
+                :options="resourceReferences"
+                filterable
+                @update:model-value="$event ? '' : dataAssoc.options.source = null"
+              />
+            </FormItem>
+          </div>
+          <div class="col-sm-6 ps-sm-1">
+            <FormItem
+              :label="i18n['source']"
+              prop="options.source"
+            >
+              <MSelect
+                v-model="dataAssoc.options.source"
+                :value-key="'name'"
+                :label-key="'display_name'"
+                :options="throughReferences"
+                filterable
+                @select="setAssociationKeys"
+              />
+            </FormItem>
+          </div>
+          <div
+            class="col-sm-12 mb-2"
           >
-            <MSelect
-              v-model="dataAssoc.foreign_key"
-              :value-key="'name'"
-              :disabled="!!dataAssoc.options.through"
-              :label-key="'name'"
-              :with-deselect="false"
-              :options="associationColumns"
-              filterable
-            />
-          </FormItem>
-        </div>
-        <div class="col-sm-6 ps-sm-1">
-          <FormItem
-            :label="i18n['primary_key']"
-            prop="primary_key"
-          >
-            <MSelect
-              v-model="dataAssoc.primary_key"
-              :disabled="!!dataAssoc.options.through"
-              :value-key="'name'"
-              :label-key="'name'"
-              :with-deselect="false"
-              :options="resourceColumns"
-              filterable
-            />
-          </FormItem>
-        </div>
-        <div class="col-sm-6 pe-sm-1">
-          <FormItem
-            :label="i18n['through']"
-            prop="options.through"
-          >
-            <MSelect
-              v-model="dataAssoc.options.through"
-              :value-key="'name'"
-              :label-key="'display_name'"
-              :options="resourceReferences"
-              filterable
-              @update:model-value="$event ? '' : dataAssoc.options.source = null"
-            />
-          </FormItem>
-        </div>
-        <div class="col-sm-6 ps-sm-1">
-          <FormItem
-            :label="i18n['source']"
-            prop="options.source"
-          >
-            <MSelect
-              v-model="dataAssoc.options.source"
-              :value-key="'name'"
-              :label-key="'display_name'"
-              :options="throughReferences"
-              filterable
-              @select="setAssociationKeys"
-            />
-          </FormItem>
-        </div>
-        <div
-          class="col-sm-12 mb-2"
-        >
-          <Checkbox
-            v-model="dataAssoc.polymorphic"
-            @update:model-value="onPolymorphicChange"
-          >
-            {{ ' ' }}{{ i18n['polymorphic'] }}
-          </Checkbox>
-          <br>
-          <Checkbox
-            :model-value="!!dataAssoc.options.filters"
-            @update:model-value="onFiltersToggle"
-          >
-            {{ ' ' }}{{ i18n['filter'] }}
-          </Checkbox>
-        </div>
+            <Checkbox
+              v-model="dataAssoc.polymorphic"
+              @update:model-value="onPolymorphicChange"
+            >
+              {{ ' ' }}{{ i18n['polymorphic'] }}
+            </Checkbox>
+            <br>
+            <Checkbox
+              :model-value="!!dataAssoc.options.filters"
+              @update:model-value="onFiltersToggle"
+            >
+              {{ ' ' }}{{ i18n['filter'] }}
+            </Checkbox>
+          </div>
+        </template>
       </div>
       <Filters
-        v-if="!!dataAssoc.options.filters"
+        v-if="!!dataAssoc.options.filters && dataAssoc.model_name !== 'active_storage/attachment'"
         v-model:filters="dataAssoc.options.filters"
         :model="associationModel || throughModel"
       />

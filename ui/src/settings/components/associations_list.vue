@@ -82,6 +82,11 @@ export default {
       assoc.name = underscore(assoc.display_name)
       assoc.slug = underscore(assoc.display_name)
 
+      if (assoc.model_name === 'active_storage/attachment') {
+        assoc.name += '_attachments'
+        assoc.slug += '_attachments'
+      }
+
       this.newAssociation = null
 
       return api.post('resources', {

@@ -17,83 +17,85 @@
         />
       </FormItem>
     </div>
-    <div class="col-sm-6 pe-sm-1">
-      <FormItem
-        :label="i18n['foreign_key']"
-        prop="reference.foreign_key"
-      >
-        <MSelect
-          v-model="reference.foreign_key"
-          :value-key="'name'"
-          :label-key="'name'"
-          :with-deselect="false"
-          :disabled="!!reference.options.through"
-          :options="reference.reference_type === 'has_one' ? referenceColumns : resourceColumns"
-          filterable
-        />
-      </FormItem>
-    </div>
-    <div class="col-sm-6 ps-sm-1">
-      <FormItem
-        :label="i18n['primary_key']"
-        prop="reference.primary_key"
-      >
-        <MSelect
-          v-model="reference.primary_key"
-          :value-key="'name'"
-          :label-key="'name'"
-          :with-deselect="false"
-          :disabled="reference.polymorphic || !!reference.options.through"
-          :options="reference.reference_type === 'has_one' ? resourceColumns : referenceColumns"
-          filterable
-        />
-      </FormItem>
-    </div>
-    <template v-if="reference.reference_type === 'has_one'">
+    <template v-if="reference.model_name !== 'active_storage/attachment'">
       <div class="col-sm-6 pe-sm-1">
         <FormItem
-          :label="i18n['through']"
-          prop="reference.options.through"
+          :label="i18n['foreign_key']"
+          prop="reference.foreign_key"
         >
           <MSelect
-            v-model="reference.options.through"
+            v-model="reference.foreign_key"
             :value-key="'name'"
-            :label-key="'display_name'"
-            :options="resourceReferences"
+            :label-key="'name'"
+            :with-deselect="false"
+            :disabled="!!reference.options.through"
+            :options="reference.reference_type === 'has_one' ? referenceColumns : resourceColumns"
             filterable
           />
         </FormItem>
       </div>
       <div class="col-sm-6 ps-sm-1">
         <FormItem
-          :label="i18n['source']"
-          prop="reference.options.source"
+          :label="i18n['primary_key']"
+          prop="reference.primary_key"
         >
           <MSelect
-            v-model="reference.options.source"
+            v-model="reference.primary_key"
             :value-key="'name'"
-            :label-key="'display_name'"
-            :options="throughReferences"
+            :label-key="'name'"
+            :with-deselect="false"
+            :disabled="reference.polymorphic || !!reference.options.through"
+            :options="reference.reference_type === 'has_one' ? resourceColumns : referenceColumns"
             filterable
-            @select="setReferenceKeys"
+          />
+        </FormItem>
+      </div>
+      <template v-if="reference.reference_type === 'has_one'">
+        <div class="col-sm-6 pe-sm-1">
+          <FormItem
+            :label="i18n['through']"
+            prop="reference.options.through"
+          >
+            <MSelect
+              v-model="reference.options.through"
+              :value-key="'name'"
+              :label-key="'display_name'"
+              :options="resourceReferences"
+              filterable
+            />
+          </FormItem>
+        </div>
+        <div class="col-sm-6 ps-sm-1">
+          <FormItem
+            :label="i18n['source']"
+            prop="reference.options.source"
+          >
+            <MSelect
+              v-model="reference.options.source"
+              :value-key="'name'"
+              :label-key="'display_name'"
+              :options="throughReferences"
+              filterable
+              @select="setReferenceKeys"
+            />
+          </FormItem>
+        </div>
+      </template>
+      <div
+        v-else
+        class="col-sm-12"
+      >
+        <FormItem
+          :label="i18n['polymorphic']"
+          prop="reference.polymorphic"
+        >
+          <Checkbox
+            v-model="reference.polymorphic"
+            @update:model-value="onPolymorphicChange"
           />
         </FormItem>
       </div>
     </template>
-    <div
-      v-else
-      class="col-sm-12"
-    >
-      <FormItem
-        :label="i18n['polymorphic']"
-        prop="reference.polymorphic"
-      >
-        <Checkbox
-          v-model="reference.polymorphic"
-          @update:model-value="onPolymorphicChange"
-        />
-      </FormItem>
-    </div>
   </div>
 </template>
 
