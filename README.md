@@ -38,6 +38,7 @@ $ rails motor:install && rake db:migrate
 * [I18n](#i18n)
 * [Optimized for mobile](#optimized-for-mobile)
 * [Configurations sync between environments](#configurations-sync)
+* [Authentication](#authentication)
 
 ## [Pro](https://www.getmotoradmin.com/pro)
 
