@@ -45,7 +45,18 @@ module Motor
 
           arel_column = reflection_model.arel_table[field]
 
-          direction.present? ? arel_column.desc.nulls_last : arel_column.asc
+          arel_direction = direction.present? ? arel_column.desc : arel_column.asc
+
+          maybe_add_null_last(model, arel_direction)
+        end
+      end
+
+      def maybe_add_null_last(model, arel_direction)
+        if arel_direction.respond_to?(:nulls_last) &&
+           model.connection.class.name == 'ActiveRecord::ConnectionAdapters::PostgreSQLAdapter'
+          arel_direction.nulls_last
+        else
+          arel_direction
         end
       end
     end

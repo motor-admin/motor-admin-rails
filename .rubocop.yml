@@ -44,6 +44,9 @@ Naming/MethodParameterName:
 Metrics/ModuleLength:
   Max: 300
 
+Style/ClassEqualityComparison:
+  Enabled: false
+
 Rails/Date:
   Enabled: false
 
