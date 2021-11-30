@@ -15,7 +15,7 @@
       </template>
     </template>
     <template v-else>
-      {{ truncate(resourceId.toString(), maxLength) }}
+      {{ truncate(model.display_primary_key ? resourceId.toString() : displayText, maxLength) }}
     </template>
   </VButton>
 </template>
