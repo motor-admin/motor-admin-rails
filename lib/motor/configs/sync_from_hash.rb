@@ -72,10 +72,14 @@ module Motor
         resources_index = Motor::Configs::LoadFromCache.load_resources.index_by(&:name)
 
         configs_hash[:resources].each do |attrs|
-          record = resources_index[attrs[:name]] || Motor::Resource.new
+          record = resources_index.fetch(attrs[:name], Motor::Resource.new)
 
-          next if record.updated_at && attrs[:updated_at] <= record.updated_at
+          next if record.updated_at && attrs[:updated_at] < record.updated_at
+          next if record.updated_at &&
+                  attrs[:updated_at] == record.updated_at &&
+                  attrs[:preferences] == record.preferences
 
+          record.updated_at_will_change!
           record.update!(attrs)
         end
       end
