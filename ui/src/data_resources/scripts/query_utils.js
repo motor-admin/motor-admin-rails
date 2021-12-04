@@ -1,8 +1,8 @@
 import { modelNameMap } from '../scripts/schema'
 
-function selectReadableColumns (columns, accessTypes = ['read_only', 'read_write']) {
-  return columns.map((column) => {
-    return accessTypes.includes(column.access_type)
+function selectReadableColumns (model, accessTypes = ['read_only', 'read_write']) {
+  return model.columns.map((column) => {
+    return accessTypes.includes(column.access_type) || model.primary_key === column.name
       ? column.name
       : null
   }).filter(Boolean).join(',')
@@ -18,7 +18,7 @@ function includeParams (model, accessTypes = ['read_only', 'read_write']) {
 
 function fieldsParams (model, accessTypes = ['read_only', 'read_write']) {
   const fields = {
-    [model.name]: selectReadableColumns(model.columns, accessTypes)
+    [model.name]: selectReadableColumns(model, accessTypes)
   }
 
   model.columns.forEach((column) => {
@@ -26,7 +26,7 @@ function fieldsParams (model, accessTypes = ['read_only', 'read_write']) {
       const referenceModel = modelNameMap[column.reference.model_name]
 
       if (referenceModel) {
-        fields[column.reference.name] ||= selectReadableColumns(referenceModel.columns, accessTypes)
+        fields[column.reference.name] ||= selectReadableColumns(referenceModel, accessTypes)
       }
     }
   })
