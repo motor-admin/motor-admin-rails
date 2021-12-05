@@ -145,7 +145,7 @@ export default {
           data[column.name] = JSON.parse(data[column.name])
         }
 
-        if (this.action === 'edit' && JSON.stringify(this.resource[column.name]) === JSON.stringify(data[column.name])) {
+        if (this.action === 'edit' && ((this.resource[column.name] ?? '') === data[column.name] || JSON.stringify(this.resource[column.name]) === JSON.stringify(data[column.name]))) {
           delete data[column.name]
         } else if (column.reference?.model_name === 'active_storage/attachment') {
           data[column.name.replace(/_attachment$/, '')] = data[column.name]
