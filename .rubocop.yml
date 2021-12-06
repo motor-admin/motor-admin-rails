@@ -11,6 +11,7 @@ AllCops:
     - bin/*
     - vendor/**/*
     - lib/generators/motor/templates/**/*
+    - motor-admin.gemspec
   TargetRubyVersion: '2.6'
 
 Metrics/BlockLength:

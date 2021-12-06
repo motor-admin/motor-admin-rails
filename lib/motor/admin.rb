@@ -39,7 +39,7 @@ module Motor
     end
 
     initializer 'motor.filter_params' do
-      Rails.application.config.filter_parameters += %i[io]
+      Rails.application.config.filter_parameters += [/\Aio\z/]
     end
 
     initializer 'motor.alerts.scheduler' do
