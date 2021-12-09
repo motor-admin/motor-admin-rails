@@ -282,6 +282,7 @@ pt:
     slash: Slash
     sql: SQL
     api: API
+    searchable_columns: Colunas pesquisáveis
     i:
       locale: pt
       select:

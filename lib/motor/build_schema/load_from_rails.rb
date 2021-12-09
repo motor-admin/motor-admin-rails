@@ -56,6 +56,7 @@ module Motor
         models
       end
 
+      # rubocop:disable Metrics/MethodLength
       def build_model_schema(model)
         model_name = model.name
 
@@ -65,7 +66,7 @@ module Motor
           name: model_name.underscore,
           slug: Utils.slugify(model),
           table_name: model.table_name,
-          class_name: model.name,
+          class_name: model_name,
           primary_key: model.primary_key,
           display_name: model.model_name.human(count: :many, default: model_name.titleize.pluralize),
           display_column: FindDisplayColumn.call(model),
@@ -75,11 +76,13 @@ module Motor
           scopes: fetch_scopes(model),
           actions: BuildSchema::Defaults.actions,
           tabs: BuildSchema::Defaults.tabs,
+          searchable_columns: FindSearchableColumns.call(model),
           custom_sql: nil,
           visible: true,
           display_primary_key: true
         }.with_indifferent_access
       end
+      # rubocop:enable Metrics/MethodLength
 
       def fetch_scopes(model)
         model.defined_scopes.map do |scope_name|

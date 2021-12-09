@@ -286,6 +286,7 @@ es:
     slash: Slash
     sql: SQL
     api: API
+    searchable_columns: Columnas de búsqueda
     i:
       locale: es
       select:

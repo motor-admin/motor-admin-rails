@@ -3,9 +3,8 @@
 module Motor
   module ApiQuery
     module Search
-      SELECT_COLUMNS_AMOUNT = 2
-      COLUMN_TYPES = BuildSchema::SEARCHABLE_COLUMN_TYPES
-      ID_REGEXP = /\A\d+\z/.freeze
+      STRING_COLUMN_TYPES = %i[text string].freeze
+      NUMBER_COLUMN_TYPES = %i[integer float].freeze
 
       module_function
 
@@ -20,19 +19,27 @@ module Motor
       end
 
       def fetch_filters(rel, keyword)
-        arel_filters = []
-
         klass = rel.klass
-        arel_table = klass.arel_table
 
-        arel_filters << arel_table[klass.primary_key].eq(keyword) if keyword.match?(ID_REGEXP)
+        selected_columns = find_searchable_columns(klass)
 
-        string_column_names = find_searchable_columns(klass)
-        selected_columns = select_columns(string_column_names)
+        build_arel_filters(klass, selected_columns, keyword)
+      end
 
-        selected_columns.each { |name| arel_filters << arel_table[name].matches("%#{keyword}%") }
+      def build_arel_filters(model, column_names, keyword)
+        arel_table = model.arel_table
 
-        arel_filters
+        column_names.map do |name|
+          column_type = model.columns_hash[name].type
+
+          if STRING_COLUMN_TYPES.include?(column_type)
+            arel_table[name].matches("%#{keyword}%")
+          elsif NUMBER_COLUMN_TYPES.include?(column_type)
+            arel_table[name].eq(keyword.to_f)
+          else
+            arel_table[name].eq(keyword)
+          end
+        end
       end
 
       def build_arel_or_query(filter_array)
@@ -43,23 +50,8 @@ module Motor
         end
       end
 
-      def select_columns(columns)
-        selected_columns =
-          columns.grep(BuildSchema::FindDisplayColumn::DISPLAY_NAME_REGEXP).presence
-
-        selected_columns ||= columns.first(SELECT_COLUMNS_AMOUNT)
-
-        selected_columns
-      end
-
       def find_searchable_columns(model)
-        model.columns.map do |column|
-          next unless column.type.in?(COLUMN_TYPES)
-          next if column.respond_to?(:array?) && column.array?
-          next if model.validators_on(column.name).any?(ActiveModel::Validations::InclusionValidator)
-
-          column.name
-        end.compact
+        model.try(:motor_searchable_columns) || Motor::BuildSchema::FindSearchableColumns.call(model)
       end
     end
   end

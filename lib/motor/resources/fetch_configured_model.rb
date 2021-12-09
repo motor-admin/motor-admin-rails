@@ -33,6 +33,7 @@ module Motor
         define_default_scope(klass, config)
         define_column_reflections(klass, config)
         define_associations(klass, config)
+        define_searchable_columns_method(klass, config)
 
         klass
       end
@@ -75,6 +76,18 @@ module Motor
         klass
       end
 
+      def define_searchable_columns_method(klass, config)
+        return if config[:searchable_columns].blank?
+
+        klass.instance_variable_set(:@__motor_searchable_columns, config[:searchable_columns])
+
+        klass.instance_eval do
+          def motor_searchable_columns
+            @__motor_searchable_columns
+          end
+        end
+      end
+
       def define_columns_hash(klass, config)
         return klass if config[:custom_sql].blank?
 
@@ -82,7 +95,13 @@ module Motor
 
         columns_hash =
           columns.each_with_object({}) do |column, acc|
-            acc[column[:name]] = ActiveRecord::ConnectionAdapters::Column.new(column[:name], nil)
+            acc[column[:name]] =
+              ActiveRecord::ConnectionAdapters::Column.new(
+                column[:name],
+                nil,
+                ActiveRecord::ConnectionAdapters::SqlTypeMetadata.new(sql_type: column[:column_type],
+                                                                      type: column[:column_type].to_sym)
+              )
           end
 
         klass.instance_variable_set(:@__motor_custom_sql_columns_hash, columns_hash)
