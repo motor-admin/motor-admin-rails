@@ -18,5 +18,16 @@ if Rails::VERSION::MAJOR == 7
         end
       end
     end
+
+    module Contexts
+      class BaseContext
+        def preload_records(association_name, records)
+          TemporaryPreloadConfig.within_context do
+            ActiveRecord::Associations::Preloader.new(records: records,
+                                                      associations: association_name).call
+          end
+        end
+      end
+    end
   end
 end
