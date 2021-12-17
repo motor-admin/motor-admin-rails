@@ -207,7 +207,7 @@ export default {
     },
     onNumberUpdate (value) {
       if (this.type === 'currency' && this.column.format?.currency_base === 'cents') {
-        this.$emit('update:modelValue', value * 100)
+        this.$emit('update:modelValue', parseFloat(value * 100).toFixed(4))
       } else {
         this.$emit('update:modelValue', value)
       }
