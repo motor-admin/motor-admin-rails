@@ -17,7 +17,7 @@ jobs:
           - '>= 6.0'
         include:
           - rails: '~> 5.2'
-            ruby: 2.6.0
+            ruby: 2.7.0
           - rails: '>= 6.0'
             ruby: 3.0.0
 
