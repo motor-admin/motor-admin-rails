@@ -61,7 +61,9 @@ ActiveRecord::Schema.define(version: 20_200_714_081_950) do
     t.string 'filename', null: false
     t.string 'content_type'
     t.text 'metadata'
-    t.string 'service_name', null: false if Rails::VERSION::MAJOR >= 6 && Rails::VERSION::MINOR >= 1
+    if Rails::VERSION::MAJOR >= 7 || (Rails::VERSION::MAJOR == 6 && Rails::VERSION::MINOR >= 1)
+      t.string 'service_name', null: false
+    end
     t.bigint 'byte_size', null: false
     t.string 'checksum', null: false
     t.datetime 'created_at', null: false
