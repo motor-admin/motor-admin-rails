@@ -207,14 +207,14 @@ export default {
     },
     onNumberUpdate (value) {
       if (this.type === 'currency' && this.column.format?.currency_base === 'cents') {
-        this.$emit('update:modelValue', parseFloat(value * 100).toFixed(4))
+        this.$emit('update:modelValue', Math.floor(value * 10 ** 8) / 10 ** 6)
       } else {
         this.$emit('update:modelValue', value)
       }
     },
     maybeAdjustCurrencyNumber (value) {
       if (this.type === 'currency' && this.column.format?.currency_base === 'cents') {
-        return value / 100
+        return Math.floor(value * 10 ** 6) / 10 ** 8
       } else {
         return value
       }
