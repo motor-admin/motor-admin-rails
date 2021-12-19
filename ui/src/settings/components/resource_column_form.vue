@@ -124,6 +124,36 @@
           :column="dataColumn"
         />
       </FormItem>
+      <FormItem
+        v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !dataColumn.reference"
+        :label="i18n['validate']"
+        prop="default_value"
+      >
+        <Checkbox
+          :model-value="!!customValidator"
+          @update:modelValue="toggleCustomValidator"
+        />
+      </FormItem>
+      <FormItem
+        v-if="customValidator"
+        :label="i18n['validation_regexp']"
+        :prop="`validators.${dataColumn.validators.length - 1}.format`"
+        :rules="validatorRegexpRule"
+      >
+        <VInput
+          v-model="customValidator.format"
+        />
+      </FormItem>
+      <FormItem
+        v-if="customValidator"
+        :label="i18n['error_message']"
+        :prop="`validators.${dataColumn.validators.length - 1}.message`"
+        :rules="validatorMessageRule"
+      >
+        <VInput
+          v-model="customValidator.message"
+        />
+      </FormItem>
     </VForm>
     <div class="d-flex justify-content-between">
       <div>
@@ -218,6 +248,15 @@ export default {
 
       return rules
     },
+    validatorRegexpRule () {
+      return [
+        { required: true, message: fieldRequiredMessage('regexp') },
+        { validator: Validators.regexp, fullField: this.i18n.regexp }
+      ]
+    },
+    validatorMessageRule () {
+      return [{ required: true, message: fieldRequiredMessage('message') }]
+    },
     currencyBaseOptions () {
       return [
         { label: this.i18n.unit, value: 'unit' },
@@ -248,6 +287,9 @@ export default {
         { label: this.i18n.file, value: 'file' },
         { label: this.i18n.json, value: 'json' }
       ]
+    },
+    customValidator () {
+      return this.dataColumn.validators.find((validator) => 'message' in validator)
     },
     accessTypes () {
       return [
@@ -281,6 +323,13 @@ export default {
     this.dataColumn = this.normalizeDataColumn()
   },
   methods: {
+    toggleCustomValidator () {
+      if (this.customValidator) {
+        this.dataColumn.validators = [...this.column.validators.filter((v) => !('message' in v))]
+      } else {
+        this.dataColumn.validators.push({ format: '', message: '' })
+      }
+    },
     assignDefaultData () {
       if (this.column.reference) {
         if (this.column.reference.virtual) {

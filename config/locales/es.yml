@@ -287,6 +287,12 @@ es:
     sql: SQL
     api: API
     searchable_columns: Columnas de búsqueda
+    validate: Validar
+    error_message: Mensaje de error
+    validation_regexp: Validación RegExp
+    regexp: RegExp
+    message: Mensaje
+    should_be_a_valid_regexp: Debe ser una cadena RegExp válida
     i:
       locale: es
       select:

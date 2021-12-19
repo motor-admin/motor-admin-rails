@@ -13,16 +13,20 @@ function buildColumnValidator (column, resource) {
     return []
   }
 
-  const validators = column.validators.map((validator) => {
+  const validators = (column.validators || []).map((validator) => {
     if (validator.required) {
       return {
         required: true,
         message: i18nDict.field_is_required.replace('%{field}', column.display_name)
       }
     } else if (validator.format) {
+      const regexp = validator.format.source
+        ? new RegExp(validator.format.source, validator.format.options)
+        : new RegExp(validator.format, 'i')
+
       return {
-        pattern: new RegExp(validator.format.source, validator.format.options),
-        message: i18nDict.field_value_does_not_match_pattern.replace('%{field}', column.display_name).replace('%{pattern}', validator.format.source)
+        pattern: regexp,
+        message: validator.message || i18nDict.field_value_does_not_match_pattern.replace('%{field}', column.display_name).replace('%{pattern}', validator.format.source)
       }
     } else if (validator.includes) {
       return {

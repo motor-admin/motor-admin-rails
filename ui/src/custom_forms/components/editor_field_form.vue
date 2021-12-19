@@ -102,7 +102,7 @@
       </Checkbox>
       <Checkbox
         :model-value="isConditional"
-        class="d-block mb-3"
+        class="d-block"
         @update:model-value="toggleConditional"
       >
         {{ ' ' }} {{ i18n['conditional'] }}
@@ -112,6 +112,33 @@
         v-model="dataField.conditions[0]"
         :fields="filteredConditionFields"
       />
+      <Checkbox
+        :model-value="isValidate"
+        class="d-block mb-3"
+        @update:model-value="toggleValidate"
+      >
+        {{ ' ' }} {{ i18n['validate'] }}
+      </Checkbox>
+      <template v-if="isValidate">
+        <FormItem
+          :label="i18n['validation_regexp']"
+          :prop="`validators.${dataField.validators.indexOf(customValidator)}.format`"
+          :rules="validatorRegexpRule"
+        >
+          <VInput
+            v-model="customValidator.format"
+          />
+        </FormItem>
+        <FormItem
+          :label="i18n['error_message']"
+          :prop="`validators.${dataField.validators.indexOf(customValidator)}.message`"
+          :rules="validatorMessageRule"
+        >
+          <VInput
+            v-model="customValidator.message"
+          />
+        </FormItem>
+      </template>
     </VForm>
     <div class="d-flex justify-content-between">
       <div>
@@ -268,8 +295,23 @@ export default {
     isRequired () {
       return !!this.dataField.validators?.find((validator) => validator.required)
     },
+    isValidate () {
+      return !!this.customValidator
+    },
     isConditional () {
       return !!this.dataField.conditions?.length
+    },
+    customValidator () {
+      return this.dataField.validators?.find((validator) => 'format' in validator)
+    },
+    validatorRegexpRule () {
+      return [
+        { required: true, message: fieldRequiredMessage('regexp') },
+        { validator: Validators.regexp, fullField: this.i18n.regexp }
+      ]
+    },
+    validatorMessageRule () {
+      return [{ required: true, message: fieldRequiredMessage('message') }]
     }
   },
   mounted () {
@@ -347,6 +389,15 @@ export default {
         this.dataField.validators = this.dataField.validators.filter((validator) => !validator.required)
       } else {
         this.dataField.validators.push({ required: true })
+      }
+    },
+    toggleValidate () {
+      this.dataField.validators ||= []
+
+      if (this.isValidate) {
+        this.dataField.validators = this.dataField.validators.filter((validator) => !('format' in validator))
+      } else {
+        this.dataField.validators.push({ format: '', message: '' })
       }
     }
   }

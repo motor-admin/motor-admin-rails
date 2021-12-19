@@ -85,5 +85,16 @@ export default {
     } catch {
       return new Error(i18nDict.should_be_a_valid_json.replace('%{field}', rule.fullField))
     }
+  },
+  regexp (rule, value, callbacks) {
+    try {
+      if (value) {
+        new RegExp(value) // eslint-disable-line no-new
+      }
+
+      return true
+    } catch {
+      return new Error(i18nDict.should_be_a_valid_regexp.replace('%{field}', rule.fullField))
+    }
   }
 }

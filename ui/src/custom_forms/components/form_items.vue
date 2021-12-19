@@ -48,7 +48,7 @@ import Markdown from 'utils/components/markdown'
 import { interpolate } from 'utils/scripts/string'
 import { buildDefaultValues, checkConditions } from '../scripts/utils'
 import GroupItem from './group_item'
-import { i18nDict } from 'utils/scripts/i18n'
+import { buildColumnValidator } from 'data_resources/scripts/form_utils'
 
 export default {
   name: 'FormItems',
@@ -96,12 +96,7 @@ export default {
     checkConditions,
     interpolate,
     buildValidationRules (item) {
-      return (item.validators || []).map((rule) => {
-        return {
-          ...rule,
-          message: i18nDict.field_is_required.replace('%{field}', item.display_name)
-        }
-      })
+      return buildColumnValidator(item, {})
     }
   }
 }
