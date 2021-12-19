@@ -16,7 +16,7 @@ module Motor
 
         selected_columns ||= columns.first(SELECT_COLUMNS_AMOUNT)
 
-        ([model.primary_key] + selected_columns).sort
+        ([model.primary_key] + selected_columns).compact.sort
       end
 
       def find_searchable_columns(model)
