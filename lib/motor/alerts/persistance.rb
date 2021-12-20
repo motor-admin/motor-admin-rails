@@ -87,9 +87,9 @@ module Motor
 
       def name_already_exists?(alert)
         if alert.new_record?
-          Alert.exists?(name: alert.name)
+          Alert.exists?(name: alert.name, deleted_at: nil)
         else
-          Alert.exists?(['name = ? AND id != ?', alert.name, alert.id])
+          Alert.exists?(['name = ? AND id != ? AND deleted_at IS NULL', alert.name, alert.id])
         end
       end
     end

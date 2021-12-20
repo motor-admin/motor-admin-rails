@@ -63,9 +63,9 @@ module Motor
 
       def name_already_exists?(query)
         if query.new_record?
-          Query.exists?(name: query.name)
+          Query.exists?(name: query.name, deleted_at: nil)
         else
-          Query.exists?(['name = ? AND id != ?', query.name, query.id])
+          Query.exists?(['name = ? AND id != ? AND deleted_at IS NULL', query.name, query.id])
         end
       end
     end

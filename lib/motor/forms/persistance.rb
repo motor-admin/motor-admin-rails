@@ -63,9 +63,9 @@ module Motor
 
       def name_already_exists?(form)
         if form.new_record?
-          Motor::Form.exists?(['name = ?', form.name])
+          Motor::Form.exists?(['name = ? AND deleted_at IS NULL', form.name])
         else
-          Motor::Form.exists?(['name = ? AND id != ?', form.name, form.id])
+          Motor::Form.exists?(['name = ? AND id != ? AND deleted_at IS NULL', form.name, form.id])
         end
       end
     end

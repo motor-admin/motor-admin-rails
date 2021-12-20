@@ -63,9 +63,9 @@ module Motor
 
       def title_already_exists?(dashboard)
         if dashboard.new_record?
-          Motor::Dashboard.exists?(title: dashboard.title)
+          Motor::Dashboard.exists?(title: dashboard.title, deleted_at: nil)
         else
-          Motor::Dashboard.exists?(['title = ? AND id != ?', dashboard.title, dashboard.id])
+          Motor::Dashboard.exists?(['title = ? AND id != ? AND deleted_at IS NULL', dashboard.title, dashboard.id])
         end
       end
     end
