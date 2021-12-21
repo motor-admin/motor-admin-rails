@@ -194,7 +194,9 @@ module Motor
       def normalize_statement_for_sql(statement)
         sql, _, attributes = statement
 
-        sql = ActiveRecord::Base.sanitize_sql([sql.gsub(STATEMENT_VARIABLE_REGEXP, '?'), attributes.map(&:value)])
+        sql = ActiveRecord::Base.send(:replace_bind_variables,
+                                      sql.gsub(STATEMENT_VARIABLE_REGEXP, '?'),
+                                      attributes.map(&:value))
 
         [sql, 'SQL', attributes]
       end
