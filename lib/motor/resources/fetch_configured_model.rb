@@ -41,7 +41,7 @@ module Motor
       def define_default_scope(klass, config)
         return klass if config[:custom_sql].blank?
 
-        klass.instance_variable_set(:@__motor_custom_sql, config[:custom_sql].squish)
+        klass.instance_variable_set(:@__motor_custom_sql, config[:custom_sql].squish.delete_suffix(';'))
 
         klass.instance_eval do
           default_scope do
