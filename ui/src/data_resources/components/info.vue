@@ -31,12 +31,24 @@
           >
             {{ i18n['not_found'] }}
           </p>
-          <h2
-            v-else
+          <p
+            v-else-if="model.display_primary_key"
+            class="fs-2 fw-bold"
             :style="withStickyTitle ? 'margin: 9px 0' : 'margin-bottom: 9px'"
           >
             {{ title }}
-          </h2>
+          </p>
+          <InfoCell
+            v-else
+            :resource="resource"
+            :column="displayColumn"
+            :style="withStickyTitle ? 'margin: 9px 0' : 'margin-bottom: 9px'"
+            :resource-name="resourceName"
+            :editable="editable && $can('edit', model.class_name, resource)"
+            :reference-popover="referencePopover"
+            class="fs-2 fw-bold"
+            @update="assignResource"
+          />
           <div
             v-if="isShowSettings"
             class="settings-mask"
@@ -190,11 +202,18 @@ export default {
 
       return `${singularize(this.model.display_name)}${isNumber ? ' #' : ': '}${primaryKeyValue}`
     },
+    displayColumn () {
+      return this.model.columns.find((column) => column.name === this.model.display_column)
+    },
     model () {
       return modelNameMap[this.resourceName]
     },
     columns () {
-      return this.model.columns.filter((column) => column.name !== 'id' && ['read_only', 'read_write'].includes(column.access_type))
+      return this.model.columns.filter((column) => {
+        return column.name !== 'id' &&
+          (this.model.display_primary_key || column.name !== this.displayColumn.name) &&
+          ['read_only', 'read_write'].includes(column.access_type)
+      })
     },
     includeParams () {
       return includeParams(this.model)
