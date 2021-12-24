@@ -293,6 +293,9 @@ es:
     regexp: RegExp
     message: Mensaje
     should_be_a_valid_regexp: Debe ser una cadena RegExp válida
+    order_by: Ordenar por
+    ascending: Ascendente
+    descending: Descendente
     i:
       locale: es
       select:

@@ -293,3 +293,6 @@ en:
     regexp: RegExp
     message: Message
     should_be_a_valid_regexp: Should be a valid RegExp string
+    order_by: Order by
+    ascending: Ascending
+    descending: Descending

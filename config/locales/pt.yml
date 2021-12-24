@@ -289,6 +289,9 @@ pt:
     regexp: RegExp
     message: Mensagem
     should_be_a_valid_regexp: Deve ser uma string RegExp válida
+    order_by: Encomendar por
+    ascending: Ascendente
+    descending: Decrescente
     i:
       locale: pt
       select:

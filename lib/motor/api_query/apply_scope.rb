@@ -26,7 +26,17 @@ module Motor
 
         return rel unless scope_configs
 
-        ApiQuery::Filter.call(rel, scope_configs[:preferences][:filter])
+        rel = ApiQuery::Filter.call(rel, scope_configs[:preferences][:filter])
+
+        apply_order(rel, scope_configs[:preferences][:sort])
+      end
+
+      def apply_order(rel, params)
+        return rel if params.blank?
+
+        sort_key, sort_order = params.values_at(:key, :order)
+
+        rel.order(sort_key => sort_order)
       end
     end
   end
