@@ -22,8 +22,24 @@ function interpolate (string, params) {
   return string.replace(/{{?(\w+)}}?/g, (expr, key) => params[key] || expr)
 }
 
+function interpolateForQueryParams (string, params) {
+  const queryParams = { ...params }
+
+  const interpolatedString = string.replace(/{{?(\w+)}}?/g, (expr, key) => {
+    const value = queryParams[key]
+
+    if (key in queryParams) {
+      delete queryParams[key]
+    }
+
+    return value || expr
+  })
+
+  return [interpolatedString, queryParams]
+}
+
 function naiveMustache (string, data) {
   return string.replace(/{{(\w+)}}/g, (expresion, key) => data[key] || expresion)
 }
 
-export { truncate, underscore, titleize, interpolate, naiveMustache }
+export { truncate, underscore, titleize, interpolate, naiveMustache, interpolateForQueryParams }

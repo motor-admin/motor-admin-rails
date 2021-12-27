@@ -1,9 +1,17 @@
 import axios from 'axios'
-import { titleize } from 'utils/scripts/string'
+import { interpolateForQueryParams, titleize } from 'utils/scripts/string'
 
 function loadApiQuery (query, variables) {
-  return axios.get(query.preferences.api_path, {
-    params: variables
+  const [apiPath, queryParams] = interpolateForQueryParams(query.preferences.api_path, variables)
+
+  for (const key in queryParams) {
+    if (!queryParams[key]) {
+      delete queryParams[key]
+    }
+  }
+
+  return axios.get(apiPath, {
+    params: queryParams
   }).then((result) => {
     if (typeof result.data === 'object') {
       const data = fetchRowsFromsApi(result.data?.data || result.data)

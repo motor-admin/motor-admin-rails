@@ -119,7 +119,7 @@
         style="height: calc(100% - 64px)"
       >
         <div
-          class="p-3 bg-white"
+          class="p-3 bg-white d-flex"
           :class="{ 'border-bottom': !data.length && !errors.length }"
         >
           <VInput
@@ -128,6 +128,13 @@
             :placeholder="i18n.api_path"
             @keyup.enter="loadQueryData"
           />
+          <VButton
+            icon="md-settings"
+            class="ms-2"
+            @click="toggleSettings"
+          >
+            {{ i18n.settings }}
+          </VButton>
         </div>
         <div class="h-100 position-relative">
           <Spin
@@ -372,7 +379,9 @@ export default {
       }
     },
     'dataQuery.sql_body': throttle(async function (value) {
-      this.assignVariablesFromSql(value)
+      if (this.dataQuery.preferences.query_type !== 'api') {
+        this.assignVariablesFromSql(value)
+      }
     }, 500),
     'dataQuery.preferences.visualization' (value) {
       if (value === 'markdown') {
@@ -651,7 +660,7 @@ export default {
           this.dataHTML = result.dataHTML || ''
         }).catch((error) => {
           if (error.response) {
-            this.errors = error.response.data?.errors
+            this.errors = error.response?.data?.errors || [error.message]
           } else {
             this.$Message.error(error.message)
           }
