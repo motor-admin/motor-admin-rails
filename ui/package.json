@@ -27,7 +27,7 @@
     "serve": "./node_modules/webpack/bin/webpack.js serve",
     "build:dev": "./node_modules/webpack/bin/webpack.js",
     "build:test": "./node_modules/webpack/bin/webpack.js --env test",
-    "build:prod": "./node_modules/webpack/bin/webpack.js --env production",
+    "build:prod": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js --env production",
     "eslint": "./node_modules/eslint/bin/eslint.js \"src/**/*.{js,vue}\" --fix",
     "stylelint": "./node_modules/stylelint/bin/stylelint.js \"src/**/*.{scss,css}\" --fix"
   },
@@ -44,6 +44,7 @@
     "copy-webpack-plugin": "^9.0.0",
     "core-js": "^3.9.1",
     "css-loader": "^6.2.0",
+    "cssnano": "^5.0.14",
     "eslint": "^7.15.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.9.0",

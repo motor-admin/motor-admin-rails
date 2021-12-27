@@ -5,6 +5,7 @@ module.exports = {
         flexbox: 'no-2009'
       },
       stage: 3
-    })
+    }),
+    process.env.NODE_ENV === 'production' && require('cssnano')
   ]
-};
+}
