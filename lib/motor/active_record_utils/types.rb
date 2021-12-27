@@ -53,7 +53,7 @@ module Motor
 
         type_map = connection_class.connection.send(:type_map)
 
-        type_map.instance_variable_get('@mapping').map do |name, type|
+        type_map.instance_variable_get(:@mapping).map do |name, type|
           next unless name.is_a?(String)
 
           [type.call.class.to_s, name]
