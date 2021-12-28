@@ -38,6 +38,7 @@ module Motor
 
         ApplicationRecord.transaction do
           archive_with_existing_name(form) if force_replace
+          find_or_assign_api_config(form)
 
           form.save!
         end
@@ -50,10 +51,29 @@ module Motor
       end
 
       def assign_attributes(form, params)
-        form.assign_attributes(params.slice(:name, :description, :api_path, :http_method, :preferences))
+        form.assign_attributes(params.slice(:name, :description, :api_path, :http_method, :preferences,
+                                            :api_config_name))
         form.updated_at = [params[:updated_at], Time.current].min if params[:updated_at].present?
 
+        find_or_assign_api_config(form)
+
         Motor::Tags.assign_tags(form, params[:tags])
+      end
+
+      def find_or_assign_api_config(form)
+        return if form.api_config.present?
+
+        config = Motor::ApiConfig.find_by(url: [form.api_config_name, form.api_config_name.delete_suffix('/')])
+
+        if config
+          config.update!(deleted_at: nil)
+
+          form.api_config_name = config.name
+        else
+          form.api_config = Motor::ApiConfig.new(url: form.api_config_name.delete_suffix('/')).tap do |c|
+            c.name = c.url.sub(%r{\Ahttps?://}, '').delete_suffix('/')
+          end
+        end
       end
 
       def archive_with_existing_name(form)

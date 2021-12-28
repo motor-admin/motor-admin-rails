@@ -67,7 +67,7 @@ Rails/ApplicationRecord:
   Enabled: false
 
 RSpec/ExampleLength:
-  Max: 20
+  Max: 30
 
 RSpec/MultipleExpectations:
   Max: 10
@@ -77,3 +77,6 @@ RSpec/NestedGroups:
 
 RSpec/Capybara/VisibilityMatcher:
   Enabled: false
+
+Metrics/ParameterLists:
+  Max: 7

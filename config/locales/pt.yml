@@ -292,6 +292,9 @@ pt:
     order_by: Encomendar por
     ascending: Ascendente
     descending: Decrescente
+    url: URL
+    expand: Expandir
+    add_api: De API
     i:
       locale: pt
       select:

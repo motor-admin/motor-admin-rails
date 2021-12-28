@@ -11,7 +11,10 @@
       v-if="successData"
       class="mb-2"
     >
-      <pre v-if="typeof successData === 'object'">{{ JSON.stringify(successData, null, '  ') }}</pre>
+      <pre
+        v-if="typeof successData === 'object'"
+        style="white-space: break-spaces"
+      >{{ JSON.stringify(successData, null, '  ') }}</pre>
       <div
         v-else
         v-html="safeSuccessData"
@@ -64,6 +67,7 @@ import { loadCredentials } from 'utils/scripts/auth_credentials'
 import { scrollToErrors } from 'data_forms/scripts/form_utils'
 import { buildDefaultValues } from '../scripts/utils'
 import axios from 'axios'
+import api from 'api'
 import DOMPurify from 'dompurify'
 
 export default {
@@ -147,49 +151,63 @@ export default {
     sendData () {
       const path = interpolate(this.form.api_path, this.formData)
       const method = this.form.http_method.toLowerCase()
+      let request
 
       this.isLoading = true
 
-      loadCredentials().then((credentials) => {
-        return axios[method](path, {
-          ...this.formData
-        }, {
-          headers: {
-            ...this.headers,
-            ...credentials.headers
+      if (this.form.api_config_name !== 'origin') {
+        request = api.post('run_api_request', {
+          data: {
+            body: this.formData,
+            api_config_name: this.form.api_config_name,
+            path,
+            method
           }
-        }).then((result) => {
-          const redirectTo = result.data?.redirect || result.data?.redirect_to || result.redirect || result.redirect_to
-
-          if (typeof redirectTo === 'string') {
-            const resolvedRoute = this.$router.resolve({ path: redirectTo.replace(location.origin, '') }, this.$route)
-
-            if (resolvedRoute?.name) {
-              this.$router.push(resolvedRoute)
-            } else {
-              location.href = redirectTo
-            }
-          } else {
-            this.isSuccess = true
-            this.successData = result.data
-          }
-
-          this.$emit('success', result)
-        }).catch((error) => {
-          console.error(error)
-
-          if (error.response?.data?.errors) {
-            this.$refs.form.setErrors(error.response.data.errors)
-            this.scrollToErrors()
-          } else {
-            this.$Message.error(`${this.i18n.unable_to_submit_form}: ${error.response.status}`)
-          }
-
-          this.$emit('error', error)
-        }).finally(() => {
-          this.isLoading = false
-          this.$emit('submit', this.formData)
         })
+      } else {
+        request = loadCredentials().then((credentials) => {
+          return axios[method](path, {
+            ...this.formData
+          }, {
+            headers: {
+              ...this.headers,
+              ...credentials.headers
+            }
+          })
+        })
+      }
+
+      return request.then((result) => {
+        const redirectTo = result.data?.redirect || result.data?.redirect_to || result.redirect || result.redirect_to
+
+        if (typeof redirectTo === 'string') {
+          const resolvedRoute = this.$router.resolve({ path: redirectTo.replace(location.origin, '') }, this.$route)
+
+          if (resolvedRoute?.name) {
+            this.$router.push(resolvedRoute)
+          } else {
+            location.href = redirectTo
+          }
+        } else {
+          this.isSuccess = true
+          this.successData = result.data
+        }
+
+        this.$emit('success', result)
+      }).catch((error) => {
+        console.error(error)
+
+        if (error.response?.data?.errors) {
+          this.$refs.form.setErrors(error.response.data.errors)
+          this.scrollToErrors()
+        } else {
+          this.$Message.error(`${this.i18n.unable_to_submit_form}: ${error.response.status}`)
+        }
+
+        this.$emit('error', error)
+      }).finally(() => {
+        this.isLoading = false
+        this.$emit('submit', this.formData)
       })
     },
     handleSubmit () {

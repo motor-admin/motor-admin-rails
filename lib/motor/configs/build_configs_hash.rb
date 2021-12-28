@@ -5,6 +5,7 @@ module Motor
     module BuildConfigsHash
       module_function
 
+      # rubocop:disable Metrics/AbcSize
       def call
         cache_keys = LoadFromCache.load_cache_keys
 
@@ -16,9 +17,11 @@ module Motor
           queries: build_queries_hash(cache_keys[:queries]),
           dashboards: build_dashboards_hash(cache_keys[:dashboards]),
           forms: build_forms_hash(cache_keys[:forms]),
-          alerts: build_alerts_hash(cache_keys[:alerts])
+          alerts: build_alerts_hash(cache_keys[:alerts]),
+          api_configs: build_api_configs_hash(cache_keys[:api_configs])
         )
       end
+      # rubocop:enable Metrics/AbcSize
 
       def build_queries_hash(cache_key = nil)
         Motor::Configs::LoadFromCache.load_queries(cache_key: cache_key).sort_by(&:id).map do |query|
@@ -43,8 +46,14 @@ module Motor
 
       def build_forms_hash(cache_key = nil)
         Motor::Configs::LoadFromCache.load_forms(cache_key: cache_key).sort_by(&:id).map do |form|
-          form.slice(%i[id name http_method api_path description preferences])
+          form.slice(%i[id name http_method api_path description preferences api_config_name])
               .merge(tags: form.tags.map(&:name), updated_at: form.updated_at.to_time)
+        end
+      end
+
+      def build_api_configs_hash(cache_key = nil)
+        Motor::Configs::LoadFromCache.load_api_configs(cache_key: cache_key).sort_by(&:id).map do |config|
+          config.slice(%i[id name url preferences description]).merge(updated_at: config.updated_at.to_time)
         end
       end
 

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import api from 'api'
 import { interpolateForQueryParams, titleize } from 'utils/scripts/string'
 
 function loadApiQuery (query, variables) {
@@ -10,9 +11,25 @@ function loadApiQuery (query, variables) {
     }
   }
 
-  return axios.get(apiPath, {
-    params: queryParams
-  }).then((result) => {
+  let request
+
+  if (query.preferences.api_config_name !== 'origin') {
+    request = api.get('run_api_request', {
+      params: {
+        data: {
+          params: queryParams,
+          api_config_name: query.preferences.api_config_name,
+          path: apiPath
+        }
+      }
+    })
+  } else {
+    request = axios.get(apiPath, {
+      params: queryParams
+    })
+  }
+
+  return request.then((result) => {
     if (typeof result.data === 'object') {
       const data = fetchRowsFromsApi(result.data?.data || result.data)
       const columns = buildColumnsForData(

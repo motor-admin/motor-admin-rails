@@ -2,7 +2,9 @@
 
 module CapybaraHelpers
   FIELD_XPATH =
-    %|.//div[./label[@class='ivu-form-item-label' and text() = "%<name>s"]]/div[@class='ivu-form-item-content']/*[1]|
+    ".//div[./label[@class='ivu-form-item-label' and text() = '%<name>s']]" \
+    "/div[@class='ivu-form-item-content']//*[contains(@class, 'ivu-input') or" \
+    " contains(@class, 'ivu-select') or contains(@class, 'trix-container')]"
   SELECT_ITEM_XPATH =
     %|.//li[contains(@class, 'ivu-select-item') and normalize-space() = "%<value>s"]|
   SELECT_ITEM_CONTAINING_XPATH =
@@ -31,7 +33,7 @@ module CapybaraHelpers
   end
 
   def ivu_fill_field(name, value, click: false)
-    field = find(:xpath, format(FIELD_XPATH, name: name))
+    field = first(:xpath, format(FIELD_XPATH, name: name))
 
     case field[:class]
     when /ivu-input/

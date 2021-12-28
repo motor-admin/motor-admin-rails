@@ -164,24 +164,39 @@ export default {
       if (this.dataForm.preferences.default_values_api_path && hasVariablesSet) {
         const path = interpolate(this.dataForm.preferences.default_values_api_path, this.customFormComponentData)
 
-        return loadCredentials().then((credentials) => {
-          return axios.get(path, {
-          }, {
-            headers: {
-              ...this.headers,
-              ...credentials.headers
-            }
-          }).then((result) => {
-            this.formData = { ...this.data, ...result.data }
-          }).catch((error) => {
-            console.error(error)
+        let request
 
-            if (error.response.data?.errors) {
-              this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
-            } else {
-              this.$Message.error(this.i18n.unable_to_load_form_data)
+        if (this.dataForm.api_config_name !== 'origin') {
+          request = api.get('run_api_request', {
+            params: {
+              data: {
+                api_config_name: this.dataForm.api_config_name,
+                path: path
+              }
             }
           })
+        } else {
+          request = loadCredentials().then((credentials) => {
+            return axios.get(path, {
+            }, {
+              headers: {
+                ...this.headers,
+                ...credentials.headers
+              }
+            })
+          })
+        }
+
+        return request.then((result) => {
+          this.formData = { ...this.data, ...result.data }
+        }).catch((error) => {
+          console.error(error)
+
+          if (error.response.data?.errors) {
+            this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
+          } else {
+            this.$Message.error(this.i18n.unable_to_load_form_data)
+          }
         })
       } else {
         return Promise.resolve({})

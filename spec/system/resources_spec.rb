@@ -172,6 +172,7 @@ RSpec.describe 'Resources' do
         click_on 'Save'
 
         within '.ivu-modal' do
+          ivu_fill_field 'API', 'Origin'
           ivu_fill_field 'Path', '/test'
 
           click_on 'Save'

@@ -38,6 +38,7 @@ module Motor
 
         ApplicationRecord.transaction do
           archive_with_existing_name(query) if force_replace
+          assign_or_create_api_config!(query)
 
           query.save!
         end
@@ -59,6 +60,22 @@ module Motor
       def archive_with_existing_name(query)
         Motor::Query.where(['name = ? AND id != ?', query.name, query.id])
                     .update_all(deleted_at: Time.current)
+      end
+
+      def assign_or_create_api_config!(query)
+        api_config_name = query.preferences[:api_config_name]
+
+        return if api_config_name.blank?
+        return if Motor::ApiConfig.find_by(name: api_config_name)
+
+        config = Motor::ApiConfig.find_by(url: [api_config_name, api_config_name.delete_suffix('/')])
+
+        config&.update!(deleted_at: nil)
+
+        config ||= Motor::ApiConfig.create!(name: api_config_name.sub(%r{\Ahttps?://}, '').delete_suffix('/'),
+                                            url: api_config_name.delete_suffix('/'))
+
+        query.preferences[:api_config_name] = config.name
       end
 
       def name_already_exists?(query)

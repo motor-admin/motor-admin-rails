@@ -29,6 +29,7 @@ RSpec.describe 'Forms' do
         within '.ivu-modal' do
           ivu_fill_field 'Tags', %w[Stats Test]
           ivu_fill_field 'Name', 'Test', click: true
+          ivu_fill_field 'API', 'Origin', click: true
           ivu_fill_field 'Path', '/test', click: true
           ivu_fill_field 'Description', 'Test', click: true
 

@@ -68,6 +68,12 @@ module Motor
         end
       end
 
+      def load_api_configs(cache_key: nil)
+        maybe_fetch_from_cache('forms', cache_key) do
+          Motor::ApiConfig.all.active.load
+        end
+      end
+
       def maybe_fetch_from_cache(type, cache_key)
         return yield unless cache_key
 
@@ -95,7 +101,8 @@ module Motor
           Motor::Dashboard.select("'dashboards', MAX(updated_at)").to_sql,
           Motor::Alert.select("'alerts', MAX(updated_at)").to_sql,
           Motor::Query.select("'queries', MAX(updated_at)").to_sql,
-          Motor::Form.select("'forms', MAX(updated_at)").to_sql
+          Motor::Form.select("'forms', MAX(updated_at)").to_sql,
+          Motor::ApiConfig.select("'api_configs', MAX(updated_at)").to_sql
         ].join(' UNION ')
       end
     end

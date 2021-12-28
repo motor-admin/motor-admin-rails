@@ -54,7 +54,8 @@ module Motor
     end
 
     def form_params
-      params.require(:data).permit(:name, :description, :api_path, :http_method, preferences: {}, tags: [])
+      params.require(:data).permit(:name, :description, :api_path, :http_method,
+                                   :api_config_name, preferences: {}, tags: [])
     end
   end
 end

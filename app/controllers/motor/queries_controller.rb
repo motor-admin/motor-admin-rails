@@ -21,7 +21,11 @@ module Motor
       if Motor::Queries::Persistance.name_already_exists?(@query)
         render json: { errors: [{ source: 'name', detail: 'Name already exists' }] }, status: :unprocessable_entity
       else
-        ApplicationRecord.transaction { @query.save! }
+        ApplicationRecord.transaction do
+          Motor::Queries::Persistance.assign_or_create_api_config!(@query)
+          @query.save!
+        end
+
         Motor::Configs::WriteToFile.call
 
         render json: { data: Motor::ApiQuery::BuildJson.call(@query, params, current_ability) }

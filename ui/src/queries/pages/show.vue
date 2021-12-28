@@ -122,9 +122,13 @@
           class="p-3 bg-white d-flex"
           :class="{ 'border-bottom': !data.length && !errors.length }"
         >
+          <ApiSelect
+            v-model="dataQuery.preferences.api_config_name"
+            class="w-50 pe-1"
+          />
           <VInput
             v-model="dataQuery.preferences.api_path"
-            class="w-100"
+            class="w-50 ps-1"
             :placeholder="i18n.api_path"
             @keyup.enter="loadQueryData"
           />
@@ -241,6 +245,7 @@ import { widthLessThan } from 'utils/scripts/dimensions'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import { queriesStore } from 'reports/scripts/store'
 import RevisionsModal from 'utils/components/revisions_modal'
+import ApiSelect from 'api_configs/components/select'
 
 import api from 'api'
 import { loadApiQuery } from '../scripts/api_query'
@@ -266,7 +271,8 @@ export default {
     CodeEditor,
     QueryResult,
     Settings,
-    VariablesForm
+    VariablesForm,
+    ApiSelect
   },
   data () {
     return {
@@ -659,6 +665,8 @@ export default {
           this.columns = result.columns || []
           this.dataHTML = result.dataHTML || ''
         }).catch((error) => {
+          console.error(error)
+
           if (error.response) {
             this.errors = error.response?.data?.errors || [error.message]
           } else {
@@ -682,7 +690,7 @@ export default {
           this.columns = result.data.meta.columns
         }).catch((error) => {
           if (error.response) {
-            this.errors = error.response.data?.errors
+            this.errors = error.response.data?.errors || [error.message]
           } else {
             this.$Message.error(error.message)
           }

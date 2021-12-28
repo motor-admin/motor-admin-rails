@@ -1,6 +1,6 @@
 ---
-engine_version: 0.2.32
-file_version: 2021-12-05 16:40:32.023810000 Z
+engine_version: 0.2.41
+file_version: 2021-12-28 13:18:19.248451000 Z
 resources:
 - name: country
   preferences:
@@ -744,6 +744,7 @@ forms:
       field_type: textarea
       default_value: ''
       validators: []
+  api_config_name: origin
   tags:
   - Orders
   updated_at: 2021-05-20 13:23:05.149555000 +00:00
@@ -858,6 +859,7 @@ forms:
       default_value: []
       validators: []
       is_array: true
+  api_config_name: origin
   tags:
   - Orders
   updated_at: 2021-07-13 11:15:14.374208000 +00:00
@@ -884,6 +886,7 @@ forms:
       is_array: true
       select_query_id: 16
     default_values_api_path: "/orders/{order_id}"
+  api_config_name: origin
   tags:
   - Orders
   updated_at: 2021-06-21 13:29:50.410041000 +00:00
@@ -922,6 +925,7 @@ forms:
       default_value: []
       validators: []
       is_array: true
+  api_config_name: origin
   tags: []
   updated_at: 2021-07-08 06:14:54.311735000 +00:00
 alerts:
@@ -937,3 +941,10 @@ alerts:
   tags:
   - Customers
   updated_at: 2021-05-21 18:05:05.637000000 +00:00
+api_configs:
+- id: 1
+  name: origin
+  url: /
+  preferences: {}
+  description:
+  updated_at: 2021-12-28 13:18:19.248451000 +00:00

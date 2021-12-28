@@ -44,6 +44,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       t.column :author_id, :bigint
       t.column :author_type, :string
       t.column :deleted_at, :datetime
+      t.column :api_config_name, :string, null: false
 
       t.timestamps
 
@@ -138,6 +139,22 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       t.column :created_at, :datetime
     end
 
+    create_table :motor_api_configs do |t|
+      t.column :name, :string, null: false
+      t.column :url, :string, null: false
+      t.column :preferences, :text, null: false
+      t.column :credentials, :text, null: false
+      t.column :description, :text
+      t.column :deleted_at, :datetime
+
+      t.timestamps
+
+      t.index 'name',
+        name: 'motor_api_configs_name_unique_index',
+        unique: true,
+        where: 'deleted_at IS NULL'
+    end
+
     add_index :motor_audits, %i[auditable_type auditable_id version], name: 'motor_auditable_index'
     add_index :motor_audits, %i[associated_type associated_id], name: 'motor_auditable_associated_index'
     add_index :motor_audits, %i[user_id user_type], name: 'motor_auditable_user_index'
@@ -152,6 +169,10 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       name: '⭐ Star on GitHub',
       path: 'https://github.com/motor-admin/motor-admin-rails'
     }].to_json)
+
+    model.table_name = 'motor_api_configs'
+
+    model.create!(name: 'origin', path: '/')
   end
 
   def self.down

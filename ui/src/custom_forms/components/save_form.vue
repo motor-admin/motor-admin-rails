@@ -16,7 +16,21 @@
         :placeholder="i18n['form_name']"
       />
     </FormItem>
-
+    <FormItem
+      :label="i18n['api']"
+      prop="api_config_name"
+    >
+      <div class="d-flex">
+        <ApiSelect
+          v-model="dataForm.api_config_name"
+        />
+        <VButton
+          icon="md-settings"
+          class="ms-2"
+          @click="openApiSettings"
+        />
+      </div>
+    </FormItem>
     <div class="row">
       <FormItem
         :label="i18n['method']"
@@ -46,9 +60,7 @@
         :label="i18n['load_initial_data']"
         class="col-3 pe-0"
       >
-        <Checkbox
-          v-model="loadDefault"
-        />
+        <Checkbox v-model="loadDefault" />
       </FormItem>
 
       <FormItem
@@ -71,7 +83,6 @@
         v-model="dataForm.description"
         type="textarea"
         :placeholder="i18n['describe_your_form_optional']"
-
         :autosize="{ minRows: 3, maxRows: 7 }"
       />
     </FormItem>
@@ -100,11 +111,14 @@
 import api from 'api'
 import TagsSelect from 'tags/components/select'
 import { fieldRequiredMessage } from 'utils/scripts/i18n'
+import ApiSelect from 'api_configs/components/select'
+import ApiSettings from 'api_configs/components/list'
 
 export default {
   name: 'SaveCustomForm',
   components: {
-    TagsSelect
+    TagsSelect,
+    ApiSelect
   },
   props: {
     form: {
@@ -124,6 +138,7 @@ export default {
       return {
         name: [{ required: true, message: fieldRequiredMessage('name') }],
         api_path: [{ required: true, message: fieldRequiredMessage('path') }],
+        api_config_name: [{ required: true, message: fieldRequiredMessage('api') }],
         http_method: [{ required: true, message: fieldRequiredMessage('method') }]
       }
     },
@@ -131,6 +146,10 @@ export default {
       const params = {
         data: this.dataForm,
         include: 'tags'
+      }
+
+      if (!this.loadDefault) {
+        delete this.dataForm.preferences.default_values_api_path
       }
 
       if (this.form.id) {
@@ -146,6 +165,14 @@ export default {
     this.loadDefault = !!this.dataForm.preferences.default_values_api_path
   },
   methods: {
+    openApiSettings () {
+      this.$Modal.remove()
+
+      this.$Drawer.open(ApiSettings, {}, {
+        title: 'API Settings',
+        closable: true
+      })
+    },
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {

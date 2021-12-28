@@ -293,7 +293,7 @@ export default {
       return throttle((query) => this.remoteFunction(query), REMOTE_SEARCH_THROTTLE_DURATION)
     },
     displayCreate () {
-      return this.searchInput && this.allowCreate && !this.optionsToRender.find((opt) => this.getValue(opt) === this.searchInput)
+      return this.searchInput && this.allowCreate && !this.optionsToRender.find((opt) => this.getValue(opt) === this.searchInput || this.getLabel(opt) === this.searchInput)
     },
     withFilter () {
       return this.remoteFunction || this.filterable || this.allowCreate

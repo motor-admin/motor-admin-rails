@@ -17,6 +17,7 @@ module Motor
           sync_forms(configs_hash)
           sync_configs(configs_hash)
           sync_resources(configs_hash)
+          sync_api_configs(configs_hash)
         end
       end
 
@@ -65,6 +66,28 @@ module Motor
           next if record.updated_at && attrs[:updated_at] <= record.updated_at
 
           record.update!(attrs)
+        end
+      end
+
+      def sync_api_configs(configs_hash)
+        return if configs_hash[:api_configs].blank?
+
+        configs_index = Motor::Configs::LoadFromCache.load_api_configs.index_by(&:name)
+
+        configs_hash[:api_configs].each do |attrs|
+          record = configs_index[attrs[:name]] || Motor::ApiConfig.new
+
+          next if record.updated_at && attrs[:updated_at] <= record.updated_at
+
+          record.update!(attrs.merge(deleted_at: nil))
+        end
+
+        archive_api_configs(configs_index, configs_hash[:api_configs])
+      end
+
+      def archive_api_configs(configs_index, api_configs)
+        configs_index.except(*api_configs.pluck('name')).each_value do |config|
+          config.update!(deleted_at: Time.current) if config.deleted_at.blank?
         end
       end
 

@@ -296,3 +296,6 @@ en:
     order_by: Order by
     ascending: Ascending
     descending: Descending
+    url: URL
+    expand: Expand
+    add_api: Add API

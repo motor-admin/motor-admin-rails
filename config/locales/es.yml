@@ -296,6 +296,9 @@ es:
     order_by: Ordenar por
     ascending: Ascendente
     descending: Descendente
+    url: URL
+    expand: Expandir
+    add_api: De API
     i:
       locale: es
       select:
