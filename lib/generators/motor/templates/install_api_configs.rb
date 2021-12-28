@@ -44,7 +44,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
       if form.api_path.starts_with?('http')
         url = form.api_path[%r{\Ahttps?://[^/]+}]
 
-        form.preferences[:default_values_api_path].delete(url)
+        form.preferences[:default_values_api_path]&.delete(url)
         form.update!(api_config_name: MotorApiConfig.find_or_create_by!(name: url, url: url).name,
                      api_path: form.api_path.delete(url))
       else
@@ -53,6 +53,8 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
     end
 
     MotorQuery.all.each do |query|
+      next if query.preferences['api_path'].blank?
+
       if query.preferences['api_path'].starts_with?('http')
         url = query.preferences['api_path'][%r{\Ahttps?://[^/]+}]
 
@@ -69,8 +71,6 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
     change_column_null :motor_forms, :api_config_name, false
 
     MotorApiConfig.find_or_create_by!(name: 'origin', url: '/')
-
-    Motor::Configs::WriteToFile.write_with_lock
   end
 
   def down
