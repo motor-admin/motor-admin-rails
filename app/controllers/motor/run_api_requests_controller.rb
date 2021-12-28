@@ -20,8 +20,8 @@ module Motor
       response = Motor::ApiConfigs.run(find_or_initialize_api_config,
                                        method: request_params[:method],
                                        path: request_params[:path],
-                                       body: request_params[:params],
-                                       params: request_params[:body],
+                                       body: request_params[:body],
+                                       params: request_params[:params],
                                        headers: { 'Authorization' => "Bearer #{current_user_jwt}" })
 
       self.response_body = response.body

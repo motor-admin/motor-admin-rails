@@ -18,7 +18,7 @@ module Motor
         api_config.url.to_s.sub(%r{/?\z}, '/') + path.delete_prefix('/'),
         params,
         headers.merge(api_config.headers),
-        body
+        body&.to_json
       )
     end
   end
