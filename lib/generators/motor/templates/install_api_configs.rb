@@ -70,7 +70,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
 
     MotorApiConfig.find_or_create_by!(name: 'origin', url: '/')
 
-    Motor::Configs::WriteToFile.call
+    Motor::Configs::WriteToFile.write_with_lock
   end
 
   def down
