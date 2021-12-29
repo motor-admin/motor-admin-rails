@@ -2,12 +2,6 @@
 
 module Motor
   class ApiConfig < ::Motor::ApplicationRecord
-    unless table_exists?
-      puts
-      puts ' => Run `rails g motor:upgrade && rake db:migrate` to perform data migration and enable the latest features'
-      puts
-    end
-
     encrypts :credentials if defined?(::Motor::EncryptedConfig)
 
     serialize :credentials, Motor::HashSerializer
