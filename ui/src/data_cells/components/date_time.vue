@@ -17,26 +17,16 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    isDate: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   computed: {
-    formatOptions () {
-      const options = {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      }
-
-      if (this.displayTime) {
-        options.hour = 'numeric'
-        options.minute = 'numeric'
-        options.hour12 = true
-      }
-
-      return options
-    },
     formattedDate () {
-      return formatDate(this.value, this.formatOptions)
+      return formatDate(this.value, null, this.displayTime, this.isDate)
     },
     timeAgo () {
       return timeDiff(this.value, new Date())

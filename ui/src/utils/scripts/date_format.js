@@ -1,10 +1,14 @@
-function formatDate (date, options, displayTime) {
-  const dateTime = new Date(date)
+function formatDate (date, options, displayTime, convertToUtc) {
+  let dateTime = new Date(date)
 
   options ||= {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
+  }
+
+  if (convertToUtc) {
+    dateTime = new Date(dateTime.getTime() + dateTime.getTimezoneOffset() * 60000)
   }
 
   if (displayTime) {

@@ -4,6 +4,7 @@
     ref="cell"
     :value="stringValue"
     :display-time="type !== 'date'"
+    :is-date="type === 'date'"
   />
   <DataRichtext
     v-else-if="isRichtext"
