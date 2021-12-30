@@ -177,7 +177,6 @@ export default {
         this.dataValue = new Date(new Date(this.modelValue).getTime())
       } else if (this.isDate) {
         this.dataValue = new Date(new Date(this.modelValue).getTime() + new Date().getTimezoneOffset() * 60000)
-        console.log(this.dataValue)
       }
     }
   },
