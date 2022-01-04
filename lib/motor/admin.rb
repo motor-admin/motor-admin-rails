@@ -109,6 +109,8 @@ module Motor
                ' to perform data migration and enable the latest features'
           puts
         end
+      rescue ActiveRecord::NoDatabaseError
+        nil
       end
     end
   end
