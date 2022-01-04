@@ -26,9 +26,9 @@
     @select="onSelect"
   />
   <QueryValueSelect
-    v-else-if="type === 'select' && column.select_query_id"
+    v-else-if="type === 'select' && selectQueryId"
     :model-value="modelValue"
-    :query-id="column.select_query_id"
+    :query-id="selectQueryId"
     :form-data="formData"
     :multiple="column.is_array"
     @update:modelValue="$emit('update:modelValue', $event)"
@@ -125,6 +125,9 @@ export default {
     }
   },
   computed: {
+    selectQueryId () {
+      return this.column.select_query_id || this.column.format?.select_query_id
+    },
     valueType () {
       return typeof this.modelValue
     },

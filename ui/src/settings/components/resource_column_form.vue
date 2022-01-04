@@ -96,6 +96,13 @@
         </div>
       </FormItem>
       <FormItem
+        v-if="dataColumn.column_type === 'select'"
+        :label="i18n['select_query']"
+        prop="format.select_query_id"
+      >
+        <QuerySelect v-model="dataColumn.format.select_query_id" />
+      </FormItem>
+      <FormItem
         v-if="dataColumn.column_type === 'link'"
         :label="i18n['link_text']"
         prop="format.link_text"
@@ -189,6 +196,7 @@ import Validators from 'utils/scripts/validators'
 import CurrencySelect from 'utils/components/currency_select'
 import OptionsInput from 'utils/components/options_input'
 import ReferenceForm from './resource_reference_form'
+import QuerySelect from 'queries/components/select'
 import { fieldRequiredMessage } from 'utils/scripts/i18n'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import { underscore } from 'utils/scripts/string'
@@ -200,7 +208,8 @@ export default {
     FormInput,
     CurrencySelect,
     OptionsInput,
-    ReferenceForm
+    ReferenceForm,
+    QuerySelect
   },
   props: {
     column: {
@@ -279,6 +288,7 @@ export default {
         { label: this.i18n.change, value: 'change' },
         { label: this.i18n.chart, value: 'chart' },
         { label: this.i18n.tag, value: 'tag' },
+        { label: this.i18n.select, value: 'select' },
         { label: this.i18n.link, value: 'link' },
         { label: this.i18n.color, value: 'color' },
         { label: this.i18n.image, value: 'image' },
