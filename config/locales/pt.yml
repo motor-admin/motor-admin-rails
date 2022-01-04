@@ -295,6 +295,7 @@ pt:
     url: URL
     expand: Expandir
     add_api: De API
+    on_collection: Na coleção
     i:
       locale: pt
       select:

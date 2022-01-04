@@ -299,6 +299,7 @@ es:
     url: URL
     expand: Expandir
     add_api: De API
+    on_collection: En la colección
     i:
       locale: es
       select:

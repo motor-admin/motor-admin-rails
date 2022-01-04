@@ -70,6 +70,7 @@ module Motor
 
     ACTION_DEFAULTS = {
       visible: true,
+      apply_on: 'member',
       preferences: {}
     }.with_indifferent_access
 

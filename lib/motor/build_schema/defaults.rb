@@ -13,6 +13,7 @@ module Motor
             display_name: I18n.t('motor.create'),
             action_type: BuildSchema::DEFAULT_TYPE,
             preferences: {},
+            apply_on: 'collection',
             visible: true
           },
           {
@@ -20,6 +21,7 @@ module Motor
             display_name: I18n.t('motor.edit'),
             action_type: BuildSchema::DEFAULT_TYPE,
             preferences: {},
+            apply_on: 'member',
             visible: true
           },
           {
@@ -27,6 +29,7 @@ module Motor
             display_name: I18n.t('motor.remove'),
             action_type: BuildSchema::DEFAULT_TYPE,
             preferences: {},
+            apply_on: 'member',
             visible: true
           }
         ].freeze

@@ -59,6 +59,14 @@
             <VInput v-model="dataAction.preferences.api_path" />
           </FormItem>
         </div>
+        <Checkbox
+          v-if="dataAction.action_type === 'form'"
+          :model-value="dataAction.apply_on === 'collection'"
+          class="d-block mb-4"
+          @update:model-value="toggleApplyOn"
+        >
+          {{ ' ' }} {{ i18n['on_collection'] }}
+        </Checkbox>
       </div>
     </VForm>
     <div class="d-flex justify-content-between">
@@ -193,6 +201,13 @@ export default {
     this.dataAction = { ...this.action }
   },
   methods: {
+    toggleApplyOn (value) {
+      if (value) {
+        this.dataAction.apply_on = 'collection'
+      } else {
+        this.dataAction.apply_on = 'member'
+      }
+    },
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {

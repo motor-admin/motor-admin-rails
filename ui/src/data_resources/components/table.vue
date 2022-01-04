@@ -78,7 +78,7 @@
             @click="openFiltersModal"
           />
         </Badge>
-        <NewResourceButton
+        <CollectionActions
           class="ms-1"
           :model="model"
           :association="association"
@@ -159,7 +159,7 @@ import { modelNameMap } from '../scripts/schema'
 import DataTable from 'data_tables/components/table'
 import ResourceSearch from './search'
 import ResourceActions from './actions'
-import NewResourceButton from './new_button'
+import CollectionActions from './collection_actions'
 import FiltersModal from './filters_modal'
 
 import { widthLessThan } from 'utils/scripts/dimensions'
@@ -186,7 +186,7 @@ export default {
     DataTable,
     ResourceSearch,
     ResourceActions,
-    NewResourceButton,
+    CollectionActions,
     SettingsMask
   },
   props: {
