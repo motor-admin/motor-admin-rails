@@ -369,7 +369,7 @@ export default {
       return this.model.columns.map((column) => {
         if (column.reference?.model_name !== modelNameMap[this.resourceName].name &&
             ['read_only', 'read_write'].includes(column.access_type)) {
-          return {
+          const tableColumn = {
             key: column.name,
             title: column.display_name,
             reference: column.reference,
@@ -377,6 +377,13 @@ export default {
             sortable: !column.virtual,
             type: column.column_type
           }
+
+          if (column.column_type === 'association') {
+            tableColumn.format.association_model_name =
+              this.model.associations.find((assoc) => assoc.name === column.format.association_name).model_name
+          }
+
+          return tableColumn
         } else {
           return null
         }

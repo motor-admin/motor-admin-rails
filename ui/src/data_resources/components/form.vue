@@ -21,6 +21,12 @@
         :column="column"
       />
       <FormInput
+        v-else-if="isAssociationColumn(column)"
+        v-model="resourceData[associationColumn(column).name]"
+        :column="associationColumn(column)"
+        :form-data="resource"
+      />
+      <FormInput
         v-else
         v-model="resourceData[column.name]"
         :column="column"
@@ -61,6 +67,7 @@ import { modelNameMap } from '../scripts/schema'
 import { isJsonColumn, buildColumnValidator } from '../scripts/form_utils'
 import { scrollToErrors } from 'data_forms/scripts/form_utils'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
+import singularize from 'inflected/src/singularize'
 
 import FormInput from 'data_forms/components/input'
 import FormListInput from 'data_forms/components/list_input'
@@ -220,13 +227,35 @@ export default {
         }
       })
     },
+    associationColumn (column) {
+      const association = this.model.associations.find((a) => a.name === column.format.association_name)
+      const associationModel = modelNameMap[association.model_name]
+      const idsColumnName = `${singularize(association.name)}_${associationModel.primary_key}s`
+
+      return {
+        name: idsColumnName,
+        display_name: column.display_name,
+        reference: {
+          name: association.name,
+          model_name: associationModel.name,
+          primary_key: associationModel.primary_key
+        },
+        is_array: true
+      }
+    },
+    isAssociationColumn (column) {
+      return column.column_type === 'association'
+    },
     normalizeResourceData (resource) {
       const data = {}
 
       this.columns.forEach((column) => {
         const value = resource[column.name]
 
-        if (isJsonColumn(column, this.resource)) {
+        if (this.isAssociationColumn(column)) {
+          const cellColumn = this.associationColumn(column)
+          data[cellColumn.name] = value.map((item) => item[cellColumn.reference.primary_key])
+        } else if (isJsonColumn(column, this.resource)) {
           data[column.name] = JSON.stringify(value ?? {}, null, '  ')
         } else if (value && typeof value === 'object') {
           data[column.name] = JSON.parse(JSON.stringify(value))

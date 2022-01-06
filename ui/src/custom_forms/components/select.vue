@@ -15,7 +15,7 @@
 import { formsStore, loadForms } from '../scripts/store'
 
 export default {
-  name: 'ResourceSelect',
+  name: 'FormSelect',
   props: {
     modelValue: {
       type: [String, Number],

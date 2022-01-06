@@ -2,7 +2,7 @@ import { modelNameMap } from '../scripts/schema'
 
 function selectReadableColumns (model, accessTypes = ['read_only', 'read_write']) {
   return model.columns.map((column) => {
-    return accessTypes.includes(column.access_type) || model.primary_key === column.name
+    return column.column_type !== 'association' && (accessTypes.includes(column.access_type) || model.primary_key === column.name)
       ? column.name
       : null
   }).filter(Boolean).join(',')
@@ -10,8 +10,8 @@ function selectReadableColumns (model, accessTypes = ['read_only', 'read_write']
 
 function includeParams (model, accessTypes = ['read_only', 'read_write']) {
   return model.columns.map((column) => {
-    return accessTypes.includes(column.access_type) && column.reference?.name
-      ? column.reference.name
+    return accessTypes.includes(column.access_type) && (column.reference?.name || column.column_type === 'association')
+      ? column.reference?.name || column.format?.association_name
       : null
   }).filter(Boolean).join(',')
 }
@@ -27,6 +27,14 @@ function fieldsParams (model, accessTypes = ['read_only', 'read_write']) {
 
       if (referenceModel) {
         fields[column.reference.name] ||= selectReadableColumns(referenceModel, accessTypes)
+      }
+    }
+
+    if (column.column_type === 'association' && accessTypes.includes(column.access_type)) {
+      const associationModel = modelNameMap[model.associations.find((assoc) => assoc.name === column.format.association_name)?.model_name]
+
+      if (associationModel) {
+        fields[column.format.association_name] ||= selectReadableColumns(associationModel, accessTypes)
       }
     }
   })

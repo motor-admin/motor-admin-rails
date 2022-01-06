@@ -16,6 +16,19 @@
         :always-refer="alwaysRefer"
         :polymorphic-model="polymorphicModel"
       />
+      <template
+        v-else-if="column.type === 'association'"
+      >
+        <Reference
+          v-for="item in row[column.format.association_name]"
+          :key="item[associationColumnModel.primary_key]"
+          :resource-id="item[associationColumnModel.primary_key]"
+          :reference-name="associationColumnModel.name"
+          class="me-1 mb-1"
+          :show-popover="false"
+          :reference-data="item"
+        />
+      </template>
       <DataCell
         v-else-if="withHtml && column.type === 'string' && row[column.key]?.match(/^\<.*\>$/)"
         :value="row[column.key]"
@@ -74,6 +87,9 @@ export default {
       } else {
         return null
       }
+    },
+    associationColumnModel () {
+      return modelNameMap[this.column.format.association_model_name]
     },
     referenceId () {
       const referenceModel = modelNameMap[this.column.reference.model_name]

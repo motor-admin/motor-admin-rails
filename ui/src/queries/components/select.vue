@@ -14,7 +14,7 @@
 import { queriesStore, loadQueries } from 'reports/scripts/store'
 
 export default {
-  name: 'ResourceSelect',
+  name: 'QuerySelect',
   props: {
     modelValue: {
       type: [String, Number],

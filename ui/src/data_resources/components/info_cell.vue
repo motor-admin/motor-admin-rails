@@ -1,7 +1,7 @@
 <template>
   <div
     class="d-flex align-items-center info-cell position-relative"
-    :class="isRichtext && isEdit ? 'flex-column' : 'flex-row'"
+    :class="isRichtext && isEdit ? 'flex-column' : (!isEdit && isAssociationColumn ? 'flex-wrap' : 'flex-row')"
   >
     <Spin
       v-if="isLoading"
@@ -27,9 +27,9 @@
         />
         <FormInput
           v-else
-          v-model="resourceData[column.name]"
+          v-model="resourceData[cellColumn.name]"
           :form-data="resource"
-          :column="column"
+          :column="cellColumn"
           @enter="submit"
         />
       </FormItem>
@@ -52,6 +52,20 @@
         :reference-data="resource[column.reference.name]"
         :polymorphic-model="polymorphicModel"
       />
+      <template
+        v-else-if="column.column_type === 'association' && !isEmpty"
+      >
+        <Reference
+          v-for="item in resource[column.format.association_name]"
+          :key="item[associationColumnModel.primary_key]"
+          :resource-id="item[associationColumnModel.primary_key]"
+          :reference-name="associationColumnModel.name"
+          :max-length="referenceSize"
+          class="me-1 mb-1"
+          :show-popover="false"
+          :reference-data="item"
+        />
+      </template>
       <span
         v-else-if="isEmpty"
       > - </span>
@@ -123,6 +137,7 @@ import { modelNameMap } from 'data_resources/scripts/schema'
 import { isJsonColumn, buildColumnValidator } from '../scripts/form_utils'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
 import { underscore } from 'utils/scripts/string'
+import singularize from 'inflected/src/singularize'
 import api from 'api'
 
 export default {
@@ -171,6 +186,32 @@ export default {
     }
   },
   computed: {
+    associationColumn () {
+      const association = this.associationColumnAssociation
+      const associationModel = this.associationColumnModel
+      const idsColumnName = `${singularize(association.name)}_${associationModel.primary_key}s`
+
+      return {
+        name: idsColumnName,
+        display_name: this.column.display_name,
+        reference: {
+          name: association.name,
+          model_name: associationModel.name,
+          primary_key: associationModel.primary_key
+        },
+        is_array: true
+      }
+    },
+    isAssociationColumn () {
+      return this.column.column_type === 'association'
+    },
+    cellColumn () {
+      if (this.isAssociationColumn) {
+        return this.associationColumn
+      } else {
+        return this.column
+      }
+    },
     withClipboard () {
       return !!navigator.clipboard
     },
@@ -211,7 +252,11 @@ export default {
       return isJsonColumn(this.column, this.resource)
     },
     value () {
-      return this.resource[this.column.name]
+      if (this.isAssociationColumn) {
+        return this.resource[this.column.format.association_name]
+      } else {
+        return this.resource[this.column.name]
+      }
     },
     isEditable () {
       return this.editable && (this.column.access_type === 'read_write' || this.isActiveStorage)
@@ -241,7 +286,13 @@ export default {
       return this.column.reference?.model_name === 'active_storage/attachment'
     },
     isEmpty () {
-      return [null, undefined, ''].includes(this.value)
+      return [null, undefined, ''].includes(this.value) || (Array.isArray(this.value) && !this.value.length)
+    },
+    associationColumnAssociation () {
+      return this.model.associations.find((a) => a.name === this.column.format.association_name)
+    },
+    associationColumnModel () {
+      return modelNameMap[this.associationColumnAssociation.model_name]
     }
   },
   methods: {
@@ -252,6 +303,10 @@ export default {
         promise = this.$refs.dataCell.$refs.cell.copyToClipboard()
       } else if (this.$refs.dataReference) {
         promise = this.$refs.dataReference.copyToClipboard()
+      } else if (this.column.column_type === 'association') {
+        const text = this.resource[this.column.format.association_name].map((item) => item[this.associationColumnModel.display_column]).join(', ')
+
+        promise = navigator.clipboard.writeText(text)
       }
 
       promise.then(() => {
@@ -266,7 +321,9 @@ export default {
       this.isEdit = !this.isEdit
     },
     assignResourceData () {
-      if (this.isJsonColumn) {
+      if (this.isAssociationColumn) {
+        this.resourceData[this.cellColumn.name] = this.value.map((item) => item[this.associationColumn.reference.primary_key])
+      } else if (this.isJsonColumn) {
         this.resourceData[this.column.name] = JSON.stringify(this.value || {}, null, '  ')
       } else if (this.value && typeof this.value === 'object') {
         this.resourceData[this.column.name] = JSON.parse(JSON.stringify(this.value))

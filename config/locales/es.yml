@@ -300,6 +300,7 @@ es:
     expand: Expandir
     add_api: De API
     on_collection: En la colección
+    association: Asociación
     i:
       locale: es
       select:

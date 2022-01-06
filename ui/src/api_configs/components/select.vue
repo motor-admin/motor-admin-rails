@@ -16,7 +16,7 @@
 import api from 'api'
 
 export default {
-  name: 'ResourceSelect',
+  name: 'ApiConfigSelect',
   props: {
     modelValue: {
       type: [String, Number],

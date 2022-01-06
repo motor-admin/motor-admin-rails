@@ -72,6 +72,19 @@
           </FormItem>
         </div>
       </div>
+      <FormItem
+        v-if="['association'].includes(dataColumn.column_type)"
+        :label="i18n['association']"
+        prop="format.association"
+      >
+        <MSelect
+          v-model="dataColumn.format.association_name"
+          :with-deselect="false"
+          label-key="display_name"
+          value-key="name"
+          :options="model.associations"
+        />
+      </FormItem>
       <ReferenceForm
         v-if="dataColumn.access_type !== 'hidden' && ['reference'].includes(dataColumn.column_type) && dataColumn.reference && dataColumn.reference.virtual"
         :resource-name="resourceName"
@@ -132,7 +145,7 @@
         />
       </FormItem>
       <FormItem
-        v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !dataColumn.reference"
+        v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !dataColumn.reference && !['association'].includes(dataColumn.column_type)"
         :label="i18n['validate']"
         prop="default_value"
       >
@@ -234,6 +247,9 @@ export default {
     }
   },
   computed: {
+    model () {
+      return modelNameMap[this.resourceName]
+    },
     rules () {
       const rules = {
         display_name: [{
@@ -253,6 +269,10 @@ export default {
 
         rules['reference.foreign_key'] = [{ required: true, message: fieldRequiredMessage('foreign_key') }]
         rules['reference.primary_key'] = [{ required: true, message: fieldRequiredMessage('primary_key') }]
+      }
+
+      if (this.dataColumn.column_type === 'association') {
+        rules['format.association_name'] = [{ required: true, message: fieldRequiredMessage('association') }]
       }
 
       return rules
@@ -278,6 +298,7 @@ export default {
         { label: this.i18n.integer, value: 'integer' },
         { label: this.i18n.decimal, value: 'float' },
         { label: this.i18n.reference, value: 'reference' },
+        { label: this.i18n.association, value: 'association' },
         { label: this.i18n.date_and_time, value: 'datetime' },
         { label: this.i18n.date, value: 'date' },
         { label: this.i18n.boolean, value: 'boolean' },
@@ -380,7 +401,7 @@ export default {
       return dataColumn
     },
     loadSelectOptions () {
-      const sqlBody = `SELECT DISTINCT(${this.dataColumn.name}) FROM ${modelNameMap[this.resourceName].table_name}`
+      const sqlBody = `SELECT DISTINCT(${this.dataColumn.name}) FROM ${this.model.table_name}`
 
       api.post('run_queries', {
         sql_body: sqlBody

@@ -14,6 +14,7 @@ Resource table can be customized via resource columns settings. Additional colum
 | Integer       | ![image](https://user-images.githubusercontent.com/5418788/132329871-2efd7aa4-3080-455b-8705-fe79e1b61c7d.png) | Number input |
 | Decimal       | ![image](https://user-images.githubusercontent.com/5418788/132330560-156afeb8-32a2-43b5-8230-e7869792ddf8.png) | Number with floating point |
 | Reference     | ![image](https://user-images.githubusercontent.com/5418788/132330652-6ccefa3e-b295-4527-b776-86b8cf119914.png) | Link to the related resource |
+| Association   | ![image](https://user-images.githubusercontent.com/5418788/148389931-ae2c51e1-e8e1-4441-a6c2-b3027f22f15e.png) | Associated resources selector |
 | Date and Time | ![image](https://user-images.githubusercontent.com/5418788/132330736-efeb2b7d-4a65-4938-94cf-81794d0537b0.png) | Date selector with time. Time is displayed using browser timezone |
 | Date          | ![image](https://user-images.githubusercontent.com/5418788/132330973-69f3b428-b801-49a1-bfa0-d7e891a52da7.png) | Date selector |
 | Boolean       | ![image](https://user-images.githubusercontent.com/5418788/132331042-c4aa005a-e737-42cc-9718-0aab9ebcf7b8.png) | Checkbox |

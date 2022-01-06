@@ -54,6 +54,11 @@ export default {
       type: Object,
       required: false,
       default: null
+    },
+    selectedResources: {
+      type: Array,
+      required: false,
+      default: () => ([])
     }
   },
   emits: ['update:modelValue', 'select'],
@@ -130,6 +135,9 @@ export default {
     selectedResource () {
       this.selectedOption = this.selectedResource
     },
+    selectedResources () {
+      this.selectedOptions = this.selectedResources
+    },
     resourceName () {
       this.resetData()
 
@@ -141,7 +149,11 @@ export default {
   },
   created () {
     if (this.multiple) {
-      if (this.value?.length) {
+      if (this.selectedResources.length) {
+        this.selectedOptions = [...this.selectedResources]
+        this.options = [...this.selectedResources]
+        this.value = this.modelValue
+      } else if (this.value?.length) {
         this.loadMultipleResourceoptionsById(this.value)
       } else {
         this.value ||= []
@@ -242,7 +254,14 @@ export default {
       })
 
       return this.resourcesRespCache[cacheKey].then((result) => {
-        this.options = result.data.data
+        if (!query && this.multiple) {
+          this.options = [
+            ...this.selectedOptions,
+            ...result.data.data.filter((item) => !this.value.includes(item[this.model.primary_key]))
+          ]
+        } else {
+          this.options = result.data.data
+        }
       }).catch((error) => {
         console.error(error)
       }).finally(() => {

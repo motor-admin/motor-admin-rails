@@ -296,6 +296,7 @@ pt:
     expand: Expandir
     add_api: De API
     on_collection: Na coleção
+    association: Associação
     i:
       locale: pt
       select:
