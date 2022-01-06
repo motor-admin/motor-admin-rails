@@ -239,7 +239,7 @@ export default {
       return this.model.actions.some((action) => action.name !== 'create' && action.visible)
     },
     defaultSortParams () {
-      if (this.model.primary_key && !this.model.custom_sql) {
+      if (this.model.primary_key && !this.model.custom_sql && !this.currentScope) {
         return {
           order: this.model.columns.find((c) => c.name === this.model.primary_key).column_type === 'integer' ? 'desc' : 'asc',
           key: this.model.primary_key
