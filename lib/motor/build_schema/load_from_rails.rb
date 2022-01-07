@@ -154,7 +154,8 @@ module Motor
 
         return {} if column.name == 'year'
 
-        return { number_format: true } if !column.name.match?(/_(?:id|year)\z/) &&
+        return { number_format: true } if !column.name == 'id' &&
+                                          !column.name.match?(/_(?:id|year)\z/) &&
                                           %i[integer float].include?(column.type)
 
         {}
