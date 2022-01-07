@@ -22,7 +22,7 @@ function buildColumnValidator (column, resource) {
     } else if (validator.format) {
       const regexp = validator.format.source
         ? new RegExp(validator.format.source, validator.format.options)
-        : new RegExp(validator.format, 'i')
+        : new RegExp(validator.format)
 
       return {
         pattern: regexp,

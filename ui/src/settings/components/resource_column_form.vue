@@ -144,16 +144,14 @@
           :column="dataColumn"
         />
       </FormItem>
-      <FormItem
+      <Checkbox
         v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !dataColumn.reference && !['association'].includes(dataColumn.column_type)"
-        :label="i18n['validate']"
-        prop="default_value"
+        :model-value="!!customValidator"
+        class="mb-3"
+        @update:modelValue="toggleCustomValidator"
       >
-        <Checkbox
-          :model-value="!!customValidator"
-          @update:modelValue="toggleCustomValidator"
-        />
-      </FormItem>
+        {{ ' ' }} {{ i18n['validate'] }}
+      </Checkbox>
       <FormItem
         v-if="customValidator"
         :label="i18n['validation_regexp']"
