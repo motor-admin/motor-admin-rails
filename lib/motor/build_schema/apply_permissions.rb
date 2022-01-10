@@ -21,7 +21,9 @@ module Motor
 
       def filter_associations(associations, ability)
         associations.select do |assoc|
-          ability.can?(:read, assoc[:model_name].classify.constantize)
+          model_class = assoc[:model_name].classify.safe_constantize
+
+          model_class && ability.can?(:read, model_class)
         end
       end
 
@@ -29,8 +31,11 @@ module Motor
         columns.map do |column|
           next unless ability.can?(:read, model, column[:name])
 
-          next if column.dig(:reference, :model_name).present? &&
-                  !ability.can?(:read, column[:reference][:model_name].classify.constantize)
+          reference_model_name = column.dig(:reference, :model_name)
+          model_class = reference_model_name&.classify&.safe_constantize
+
+          next if reference_model_name &&
+                  (model_class.nil? || !ability.can?(:read, model_class))
 
           unless ability.can?(:update, model, column[:name])
             column = column.merge(access_type: BuildSchema::ColumnAccessTypes::READ_ONLY)

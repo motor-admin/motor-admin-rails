@@ -13,12 +13,20 @@ module Motor
       module_function
 
       def call(current_user = nil, current_ability = nil, cache_keys: LoadFromCache.load_cache_keys)
-        CACHE_STORE.fetch("#{I18n.locale}#{cache_keys.hash}#{current_user&.id}#{current_ability&.rules_hash}") do
+        CACHE_STORE.fetch(app_tag_cache_key(cache_keys, current_user, current_ability)) do
           CACHE_STORE.clear
 
           data = build_data(cache_keys, current_user, current_ability)
           Motor::ApplicationController.helpers.tag.div('', id: 'app', data: data)
         end
+      end
+
+      def app_tag_cache_key(cache_keys, current_user, current_ability)
+        key = "#{I18n.locale}#{cache_keys.hash}#{current_user&.id}#{current_ability&.rules_hash}"
+
+        key += Motor::DefineArModels.defined_models_schema_md5.to_s if defined?(Motor::DefineArModels)
+
+        key
       end
 
       # rubocop:disable Metrics/AbcSize
