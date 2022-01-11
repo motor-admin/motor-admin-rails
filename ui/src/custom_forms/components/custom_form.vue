@@ -30,6 +30,17 @@
     >
       {{ i18n['resubmit'] }}
     </VButton>
+    <VButton
+      v-if="withGoBack"
+      icon="md-arrow-back"
+      size="large"
+      long
+      type="primary"
+      class="mt-3"
+      @click="$emit('back')"
+    >
+      {{ i18n['go_back'] }}
+    </VButton>
   </div>
   <VForm
     v-else
@@ -47,7 +58,7 @@
       v-if="withSubmit"
       type="primary"
       long
-      size="large"
+      :size="submitButtonSize"
       :disabled="isSubmitDisabled"
       @click="handleSubmit"
     >
@@ -94,9 +105,24 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    withGoBack: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    excludeFields: {
+      type: Array,
+      required: false,
+      default: () => ([])
+    },
+    submitButtonSize: {
+      type: String,
+      required: false,
+      default: 'large'
     }
   },
-  emits: ['submit', 'success', 'error', 'reset'],
+  emits: ['submit', 'success', 'error', 'reset', 'back'],
   data () {
     return {
       isLoading: false,
@@ -123,7 +149,7 @@ export default {
       return !this.form.api_path
     },
     fields () {
-      return this.form.preferences.fields
+      return this.form.preferences.fields.filter((field) => !this.excludeFields.includes(field.name))
     }
   },
   watch: {
@@ -201,7 +227,7 @@ export default {
           this.$refs.form.setErrors(error.response.data.errors)
           this.scrollToErrors()
         } else {
-          this.$Message.error(`${this.i18n.unable_to_submit_form}: ${error.response.status}`)
+          this.$refs.form.setErrors([`${this.i18n.unable_to_submit_form}: ${error.response?.status || error.message}`])
         }
 
         this.$emit('error', error)
@@ -210,9 +236,12 @@ export default {
         this.$emit('submit', this.formData)
       })
     },
+    validate (validate) {
+      this.$refs.form.validate(validate)
+    },
     handleSubmit () {
       if (!this.isSubmitDisabled) {
-        this.$refs.form.validate((valid) => {
+        this.validate((valid) => {
           if (valid) {
             this.sendData()
           } else {

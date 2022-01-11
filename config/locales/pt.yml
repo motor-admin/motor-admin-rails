@@ -297,6 +297,7 @@ pt:
     add_api: De API
     on_collection: Na coleção
     association: Associação
+    action_has_been_removed: Esta ação foi removida
     i:
       locale: pt
       select:

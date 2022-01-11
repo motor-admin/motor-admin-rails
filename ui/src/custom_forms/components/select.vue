@@ -7,6 +7,8 @@
     label-key="name"
     value-key="id"
     :placeholder="i18n['select_form']"
+    :with-create-button="withCreateButton"
+    @click-create="goToNewFormPage"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
@@ -26,6 +28,15 @@ export default {
       type: String,
       required: false,
       default: 'default'
+    },
+    withCreateButton: {
+      type: Boolean,
+      default: false
+    },
+    createParams: {
+      type: Object,
+      required: false,
+      default: () => ({})
     }
   },
   emits: ['update:modelValue'],
@@ -36,6 +47,11 @@ export default {
   },
   mounted () {
     loadForms()
+  },
+  methods: {
+    goToNewFormPage () {
+      this.$router.push({ name: 'new_form', query: { ...this.createParams } })
+    }
   }
 }
 </script>

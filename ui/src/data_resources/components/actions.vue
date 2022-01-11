@@ -15,10 +15,13 @@
     v-if="(withDeselect || hasActions) && dropdownActions.length"
     trigger="click"
     :placement="placement"
+    :class="$attrs.class"
+    @on-visible-change="onDropdownVisibleChange"
   >
     <VButton
       :ghost="buttonGhost"
       :type="buttonType"
+      class="w-100"
       :class="{ 'bg-white': buttonGhost }"
     >
       {{ dropdownLabel }}
@@ -32,7 +35,7 @@
         >
           <DropdownItem
             v-if="dropdownActions.indexOf(action) !== -1"
-            :disabled="resources.length > 1 && action.action_type === 'form'"
+            :disabled="resources.length > 1 && (!isActionWithBatchAllowed(action) || action.preferences.flow_id)"
             @click="applyAction(action)"
           >
             {{ action.display_name }}
@@ -67,16 +70,17 @@
 
 <script>
 import api from 'api'
-import axios from 'axios'
 import { h } from 'vue'
 import { modelNameMap } from '../scripts/schema'
 import ResourceForm from './form'
-import FormHeader from './form_header'
+import FormHeader from 'data_resources/components/form_header'
 import { interpolate, truncate } from 'utils/scripts/string'
 import CustomFormWrapper from 'custom_forms/components/form_wrapper'
+import { formsCache, loadFormFromCache, loadFormsToCache } from 'custom_forms/scripts/cache'
 import singularize from 'inflected/src/singularize'
-import { loadCredentials } from 'utils/scripts/auth_credentials'
 import { i18nDict } from 'utils/scripts/configs'
+import { loadCredentials } from 'utils/scripts/auth_credentials'
+import axios from 'axios'
 
 const MAX_BUTTONS_LENGTH = 50
 
@@ -124,6 +128,9 @@ export default {
   },
   emits: ['start-action', 'finish-action'],
   computed: {
+    formsCache () {
+      return formsCache
+    },
     dropdownLabel () {
       if (this.i18n.actions !== this.label) {
         return this.label
@@ -225,6 +232,9 @@ export default {
         resource._selected = false
       })
     },
+    isActionWithBatchAllowed (action) {
+      return !formsCache[action.preferences.form_id]?.preferences?.default_values_api_path
+    },
     removeRequest (resource) {
       return api.delete(`data/${this.model.slug}/${resource[this.model.primary_key]}`)
     },
@@ -237,41 +247,44 @@ export default {
         return this.remove()
       }
 
-      if (action.action_type === 'form' && this.resources.length > 1) {
+      if (action.action_type === 'form' && this.resources.length > 1 && !this.isActionWithBatchAllowed(action)) {
         return
       }
 
-      if (action.action_type === 'form') {
-        return this.openForm(this.resource, action)
-      }
+      loadFormFromCache(action.preferences.form_id).then((form) => {
+        if (!form) {
+          return this.$Message.warning(this.i18n.action_has_been_removed)
+        }
 
-      this.$emit('start-action', action.name)
-
-      const requests = this.resources.map((resource) => {
-        if (action.action_type === 'method') {
-          return this.methodRequest(resource, action)
-        } else if (action.action_type === 'api') {
-          return this.apiRequest(resource, action)
+        if (form.preferences.fields.length === 1) {
+          if (action.preferences.with_confirm) {
+            this.$Dialog.confirm({
+              title: this.i18n.are_you_sure,
+              closable: true,
+              onOk: () => {
+                this.applyRequest(action, form)
+              }
+            })
+          } else {
+            this.applyRequest(action, form)
+          }
         } else {
-          return Promise.resolve({})
+          return this.openForm(this.resources, form, action)
         }
       })
+    },
+    applyRequest (action, form) {
+      this.$emit('start-action', action.name)
 
-      Promise.all(requests).then((result) => {
+      return Promise.all(this.resources.map((resource) => {
+        return this.apiRequest(resource, form)
+      })).then((result) => {
         if (result.length === 1) {
           const resultData = result[0].data
           const redirectTo = resultData?.data?.redirect || resultData?.data?.redirect_to || resultData?.redirect || resultData?.redirect_to
 
           if (typeof redirectTo === 'string') {
-            const resolvedRoute = this.$router.resolve({ path: redirectTo.replace(location.origin, '') }, this.$route)
-
-            if (resolvedRoute?.name) {
-              this.$router.push(resolvedRoute)
-
-              this.$Message.info(this.i18n.action_has_been_applied)
-            } else {
-              location.href = redirectTo
-            }
+            this.redirectTo(redirectTo)
           } else {
             this.$Message.info(this.i18n.action_has_been_applied)
           }
@@ -279,55 +292,89 @@ export default {
           this.$Message.info(this.i18n.action_has_been_applied)
         }
       }).catch((error) => {
-        if (error.response?.data?.errors) {
-          this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
-        } else if (error?.response?.status) {
-          this.$Message.error(`${this.i18n.action_has_failed_with_code} ${error.response.status}`)
-        } else {
-          this.$Message.error(error.message)
-        }
+        this.onApiError(error)
       }).finally(() => {
         this.$emit('finish-action', action.name)
       })
     },
-    methodRequest (resource, action) {
-      return api.put(`data/${this.model.slug}/${resource[this.model.primary_key]}/${action.preferences.method_name}`)
+    onApiError (error) {
+      if (error.response?.data?.errors) {
+        this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
+      } else if (error?.response?.status) {
+        this.$Message.error(`${this.i18n.action_has_failed_with_code} ${error.response.status}`)
+      } else {
+        this.$Message.error(error.message)
+      }
     },
-    apiRequest (resource, action) {
-      const path = interpolate(action.preferences.api_path, {
+    redirectTo (redirectTo) {
+      const resolvedRoute = this.$router.resolve({ path: redirectTo.replace(location.origin, '') }, this.$route)
+
+      if (resolvedRoute?.name) {
+        this.$router.push(resolvedRoute)
+
+        this.$Message.info(this.i18n.action_has_been_applied)
+      } else {
+        location.href = redirectTo
+      }
+    },
+    apiRequest (resource, form) {
+      const params = {
         [this.model.name + '_' + this.model.primary_key]: resource[this.model.primary_key],
         ...resource
-      })
+      }
 
-      return loadCredentials().then((credentials) => {
-        return axios.post(path, {}, {
-          headers: {
-            ...this.requestHeaders,
-            ...credentials.headers
+      const path = interpolate(form.api_path, params)
+
+      if (form.api_config_name !== 'origin') {
+        return api.post('run_api_request', {
+          data: {
+            method: form.http_method,
+            body: params,
+            api_config_name: form.api_config_name,
+            path: path
           }
         })
-      })
+      } else {
+        return loadCredentials().then((credentials) => {
+          return axios[form.http_method.toLowerCase()](path, {
+            ...params
+          }, {
+            headers: {
+              ...this.requestHeaders,
+              ...credentials.headers
+            }
+          })
+        })
+      }
     },
-    openForm (resource, action) {
-      const data = action.name === 'edit'
-        ? resource
-        : {
-            id: resource[this.model.primary_key],
-            [`${this.model.name}_${this.model.primary_key}`]: resource[this.model.primary_key]
-          }
+    openForm (resources, form, action) {
+      const data = resources.length === 1 ? resources[0] : {}
 
       this.$Drawer.open(CustomFormWrapper, {
         data,
         withFooterSubmit: true,
-        formId: action.preferences.form_id,
-        onSuccess: (result) => {
+        form: form,
+        triggerRequest: resources.length === 1,
+        excludeFields: ['id', `${this.model.name}_${this.model.primary_key}`],
+        onSuccess: (data) => {
           this.$emit('finish-action', action.name)
         },
-        onError: (result) => {
+        onSubmitData: (data) => {
+          Promise.all(resources.map((resource) => {
+            return this.apiRequest(resource, form)
+          })).then((result) => {
+            this.$Message.info(this.i18n.action_has_been_applied)
+          }).catch((error) => {
+            this.onApiError(error)
+          }).finally(() => {
+            this.$emit('finish-action', action.name)
+
+            this.$Drawer.remove()
+          })
         }
       }, {
         slots: {
-          header: () => h(FormHeader, { resource: this.resource, resourceName: this.resourceName, action: action.name })
+          header: () => h(FormHeader, { resource: data, resourceName: this.resourceName, action: action.name })
         },
         closable: true
       })
@@ -347,7 +394,6 @@ export default {
           this.$Drawer.remove()
         },
         onSuccess: (data) => {
-          this.$Drawer.remove()
           this.$Message.info(`${resourceTitle} ${this.i18n.has_been_updated}`)
           this.$emit('finish-action', 'edit')
         }
@@ -358,6 +404,11 @@ export default {
         className: 'drawer-no-bottom-padding',
         closable: true
       })
+    },
+    onDropdownVisibleChange (value) {
+      if (value) {
+        loadFormsToCache(this.permittedActions.map((a) => a.preferences.form_id))
+      }
     },
     remove () {
       this.$Dialog.confirm({

@@ -29,6 +29,13 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'fugit', '~> 1.0'
   spec.add_dependency 'rails', '>= 5.2'
 
+  spec.post_install_message = "
+    ==================
+    Run `rails g motor:upgrade && rake db:migrate`
+    to perform data migration and enable the latest features'
+    ==================
+  "
+
   spec.description = <<~TEXT
     Motor Admin allows to create a flexible admin panel with writing less code.
     All customizations to the admin panel can be made directly in the UI without

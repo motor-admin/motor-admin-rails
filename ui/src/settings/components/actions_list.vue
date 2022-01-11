@@ -48,7 +48,7 @@ import { underscore } from 'utils/scripts/string'
 const defaultActionAttributes = {
   display_name: '',
   name: '',
-  action_type: '',
+  action_type: 'form',
   preferences: {},
   visible: true
 }

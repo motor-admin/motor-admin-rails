@@ -11,10 +11,14 @@
         :data="formData"
         :with-submit="!withFooterSubmit"
         :with-success-message="withSuccessMessage"
+        :with-go-back="withGoBack"
+        :exclude-fields="excludeFields"
+        :submit-button-size="submitButtonSize"
         @success="onSuccess"
         @error="$emit('error', $event)"
         @reset="resetData"
         @submit="$emit('submit', $event)"
+        @back="$emit('back')"
       />
       <div
         v-if="withFooterSubmit && !isSuccess"
@@ -23,7 +27,7 @@
         <VButton
           type="primary"
           long
-          size="large"
+          :size="submitButtonSize"
           style="position: sticky; bottom: 0"
           @click="submit"
         >
@@ -69,12 +73,32 @@ export default {
       default: true
     },
     formId: {
-      type: Number,
+      type: [String, Number],
       required: false,
       default: null
+    },
+    triggerRequest: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    excludeFields: {
+      type: Array,
+      required: false,
+      default: () => ([])
+    },
+    submitButtonSize: {
+      type: String,
+      required: false,
+      default: 'large'
+    },
+    withGoBack: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
-  emits: ['submit', 'success', 'error', 'loaded'],
+  emits: ['submit', 'success', 'error', 'loaded', 'submitData', 'back'],
   data () {
     return {
       formData: {},
@@ -131,7 +155,17 @@ export default {
   },
   methods: {
     submit () {
-      this.$refs.form.handleSubmit()
+      if (this.triggerRequest) {
+        this.$refs.form.handleSubmit()
+      } else {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$emit('submitData', this.formData)
+          } else {
+            this.$refs.form.scrollToErrors()
+          }
+        })
+      }
     },
     assignInitialDataVariablesWatchers () {
       this.intialDataVariables.forEach(variable => {

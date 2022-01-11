@@ -34,7 +34,7 @@
       </div>
     </div>
     <VForm
-      v-if="!config.showFullForm"
+      v-if="!config.showFullForm && config.name !== 'origin'"
       class="mt-3"
       :model="config"
       @submit.prevent="handleUpdate(config)"
@@ -54,7 +54,7 @@
       </VButton>
     </VForm>
     <ApiForm
-      v-else
+      v-else-if="config.name !== 'origin'"
       :config="config"
       :submit-text="'Update'"
       @submit="handleUpdate"

@@ -301,6 +301,7 @@ es:
     add_api: De API
     on_collection: En la colección
     association: Asociación
+    action_has_been_removed: Esta acción ha sido eliminada
     i:
       locale: es
       select:

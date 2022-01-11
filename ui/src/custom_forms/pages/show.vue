@@ -117,6 +117,7 @@ import { formsStore, loadForms } from '../scripts/store'
 import api from 'api'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import singularize from 'inflected/src/singularize'
+import { underscore } from 'utils/scripts/string'
 import UnsavedChanges from 'utils/components/unsaved_changes'
 
 const columnTypeToFieldMap = {
@@ -170,8 +171,8 @@ export default {
     resourceModel () {
       return modelNameMap[this.resourceName]
     },
-    resourceDefaultFormParams () {
-      const fields = this.resourceModel.columns.map((column) => {
+    resourceDefaultFieldParams () {
+      return this.resourceModel.columns.map((column) => {
         if (['read_write', 'write_only'].includes(column.access_type)) {
           const field = {
             name: column.name,
@@ -181,31 +182,32 @@ export default {
             is_array: column.is_array,
             validators: column.validators.filter((validator) => validator.required)
           }
-
           if (column.reference) {
             field.reference = { model_name: column.reference.model_name }
           }
-
           return field
         } else {
           return null
         }
       }).filter(Boolean)
+    },
+    resourceDefaultFormParams () {
+      const fields = ['create', 'update'].includes(this.resourceAction) ? this.resourceDefaultFieldParams : []
 
-      if (this.resourceAction === 'edit') {
+      if (this.resourceAction && this.resourceAction !== 'create') {
         fields.unshift({
           name: 'id',
           display_name: singularize(this.resourceModel.display_name),
           default_value: '',
           field_type: 'reference',
           reference: { model_name: this.resourceModel.name },
-          validators: []
+          validators: [{ required: true }]
         })
       }
 
       return {
         ...defaultFormParams,
-        name: `${this.i18n[this.resourceAction]} ${this.resourceModel.display_name}`,
+        name: `${this.i18n[this.resourceAction] || this.resourceAction} ${singularize(this.resourceModel.display_name)}`,
         preferences: {
           fields
         }
@@ -274,40 +276,34 @@ export default {
     },
     onSuccess (form) {
       this.$refs.unsavedChanges.resetWithDefaultValue(form)
-
       this.form = form
-
       this.$Modal.remove()
       this.$Message.info(this.i18n.form_has_been_saved)
 
       if (this.resourceModel && this.resourceAction) {
-        const action = this.resourceModel.actions.find((action) => action.name === this.resourceAction)
-        Object.assign(action, { action_type: 'form', preferences: { form_id: this.form.id } })
+        const action = this.resourceModel.actions.find((action) => action.name === underscore(this.resourceAction)) || { name: underscore(this.resourceAction), display_name: this.resourceAction }
 
-        this.updateResourceAction(action)
+        this.updateResourceAction({ ...action, action_type: 'form', preferences: { form_id: this.form.id } }, this.resourceName)
       }
 
       loadForms()
-
       this.$router.push({ name: 'form', params: { id: form.id } })
 
       this.isEditorOpened = false
     },
-    updateResourceAction (action) {
+    updateResourceAction (action, resourceName) {
       return api.post('resources', {
         data: {
           name: this.resourceModel.name,
           preferences: {
-            actions: [{
-              name: action.name,
-              action_type: 'form',
-              preferences: {
-                form_id: this.form.id
-              }
-            }]
+            actions: [action]
           }
         }
       }).then((result) => {
+        const resourceActions = modelNameMap[resourceName].actions
+        const existingAction = resourceActions.find((a) => a.name === action.name)
+
+        existingAction ? Object.assign(existingAction, action) : resourceActions.push(action)
       }).catch((error) => {
         console.error(error)
       })

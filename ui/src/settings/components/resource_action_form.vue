@@ -16,7 +16,10 @@
       </FormItem>
 
       <div class="row">
-        <div :class="dataAction.action_type && dataAction.action_type !== 'default' ? 'col-sm-4 pe-sm-1' : 'col-12'">
+        <div
+          v-if="actionTypes.length > 1"
+          :class="dataAction.action_type && dataAction.action_type !== 'default' ? 'col-sm-4 pe-sm-1' : 'col-12'"
+        >
           <FormItem
             :label="i18n['action_type']"
             prop="action_type"
@@ -31,14 +34,18 @@
         </div>
         <div
           v-if="dataAction.action_type && dataAction.action_type !== 'default'"
-          class="col-sm-8 ps-sm-1"
+          :class="actionTypes.length === 1 ? 'col-12' : 'col-sm-8 ps-sm-1'"
         >
           <FormItem
             v-if="dataAction.action_type === 'form'"
             :label="i18n['form']"
             prop="preferences.form_id"
           >
-            <FormSelect v-model="dataAction.preferences.form_id" />
+            <FormSelect
+              v-model="dataAction.preferences.form_id"
+              :with-create-button="true"
+              :create-params="{ resource: resource.name, action: dataAction.display_name }"
+            />
           </FormItem>
           <FormItem
             v-if="dataAction.action_type === 'method'"
@@ -49,14 +56,6 @@
               v-model="dataAction.preferences.method_name"
               :resource-slug="resource.slug"
             />
-          </FormItem>
-          <FormItem
-            v-if="dataAction.action_type === 'api'"
-            :label="i18n['api_path']"
-            :placeholder="'/api/path/{id}...'"
-            prop="preferences.api_path"
-          >
-            <VInput v-model="dataAction.preferences.api_path" />
           </FormItem>
         </div>
         <Checkbox
@@ -137,6 +136,7 @@ export default {
     }
   },
   computed: {
+    isStandalone: () => isStandalone,
     rules () {
       const rules = {
         action_type: [{
@@ -184,10 +184,6 @@ export default {
             { label: this.i18n.method_call, value: 'method' }
           )
         }
-
-        actions.unshift(
-          { label: this.i18n.api_request, value: 'api' }
-        )
       }
 
       if (this.isCrudAction) {
