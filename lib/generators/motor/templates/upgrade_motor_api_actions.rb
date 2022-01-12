@@ -29,7 +29,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
         next unless action[:action_type] == 'api'
 
         api_path = action[:preferences][:api_path]
-        api_url = form.api_path[%r{\Ahttps?://[^/]+}]
+        api_url = api_path[%r{\Ahttps?://[^/]+}]
         api_path = api_path.delete_prefix(api_url).sub(/\A\/?/, '/') if api_url
 
         api_config =
