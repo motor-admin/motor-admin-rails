@@ -30,6 +30,15 @@ export default {
     }
   },
   computed: {
+    truncatedValue () {
+      const value = this.value.match(/^\/rails/) ? this.value.split('/').pop() : this.value
+
+      if (this.isTruncated) {
+        return value.slice(0, 60) + '...'
+      } else {
+        return value
+      }
+    },
     linkParams () {
       const params = {}
 
