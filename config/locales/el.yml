@@ -1,0 +1,389 @@
+el:
+  motor:
+    action_has_been_applied: Η ενέργεια έχει εφαρμοστεί!
+    action_has_failed_with_code: Η ενέργεια απέτυχε με κωδικό
+    action_type: Τύπος ενέργειας
+    actions: Ενέργειες
+    add: Προσθληκη
+    add_action: Προσθήκη ενέργειας
+    add_alert: Προσθήκη ειδοποίησης
+    add_column: Προσθήκη Στήλης
+    add_dashboard: Προσθήκη Ταμπλό
+    add_field: Προσθήκη Πεδίου
+    add_filter: Προσθήκη Φίλτρου
+    add_form: Προσθήκη Φόρμας
+    add_group: Προσθήκη Ομάδας
+    add_item: Προσθήκη Αντικειμένου
+    add_link: Προσθήκη Συνδέσμου
+    add_query: Προσθήκη Ερωτήματος
+    add_scope: Προσθήκη πεδίου εφαρμογής
+    add_tab: Προσθήκη Καρτέλας
+    adjust_form: Προσαρμογή φόρμας
+    adjust_fields: Προσαρμογή πεδίων
+    alert_email_has_been_sent: Το email ειδοποίησης έχει σταλεί!
+    alert_has_been_activated: Η ειδοποίηση έχει ενεργοποιηθεί
+    alert_has_been_disabled: Η ειδοποίηση έχει απενεργοποιηθεί
+    alert_has_been_saved: Η ειδοποίηση έχει σωθεί!
+    alert_name: Όνομα ειδοποίησης
+    alerts: Ειδοποιήσεις
+    all: Όλα
+    all_resources: Όλοι οι πόροι
+    and: Και
+    api: API
+    api_path: Διαδρομή API
+    api_request: Αίτημα API
+    apply: Εφαρμογή
+    are_you_sure: Είστε σίγουροι;
+    associations: Συνδέσεις
+    bar_chart: Ραβδόγραμμα
+    base: Βάση
+    boolean: Boolean
+    build_custom_form: Δημιουργία προσαρμοσμένης φόρμας
+    cancel: Ακύρωση
+    cents: Σεντς
+    checkbox: Checkbox
+    clear_all: Εκκαθάριση όλων
+    clear_selection: Εκκαθάριση επιλογής
+    close: Κλείσιμο
+    close_editor: Κλείσιμο επεξεργαστή
+    close_settings: Κλείσιμο ρυθμίσεων
+    close_variables: Κλείσιμο μεταβλητών
+    columns: Στήλες
+    contains: Περιέχει
+    create: Δημιουργία
+    currency: Νόμισμα
+    dashboard: Ταμπλό
+    dashboard_has_been_saved: Το ταμπλό έχει αποθηκευτεί!
+    dashboard_title: Τίτλος ταμπλό
+    dashboards: Ταμπλό
+    date: Ημερομηνία
+    date_and_time: Ημερομηνία και ώρα
+    decimal: Δεκαδικό
+    default: Προεπιλεγμένο
+    default_value: Προεπιλεγμένη τιμή
+    describe_this_alert_optional: Περιγράψτε αυτή την ειδοποίηση (προαιρετικά)
+    describe_your_dashboard_optional: Περιγράψτε το ταμπλό σας (προαιρετικά)
+    describe_your_form_optional: Περιγράψτε τη φόρμα σας (προαιρετικά)
+    describe_your_query_optional: Περιγράψτε το ερώτημά σας (προαιρετικά)
+    description: Περιγραφή
+    deselect_all: Αποεπιλέξτε όλα
+    details: Λεπτομέρειες
+    disable: Απενεργοποίηση
+    display_as: Εμφάνιση ως
+    edit: Επεξεργασία
+    edit_sql: Επεξεργασία SQL
+    edit_markdown: Επεξεργασία Markdown
+    emails: Emails
+    ends_with: Τελειώνει με
+    equal_to: Ίσο με
+    every_day_at_hh_mm: κάθε μέρα στις HH:mm PM...
+    excludes: εξαιρείται
+    field_is_not_a_number: '%{field} δεν είναι αριθμός'
+    field_is_required: '%{field} απαιτείται'
+    field_list_cant_be_empty: "%{field} λίστα δεν μπορεί να είναι άδεια"
+    field_must_be_exactly_in_length: '%{field} πρέπει να είναι ακριβώς %{length} σε μήκος'
+    field_must_be_less_in_length: '%{field} πρέπει να είναι μικρότερο από %{length} σε μήκος'
+    field_must_be_more_in_length: '%{field} πρέπει να είναι μεγαλύτερο από %{length} σε μήκος'
+    field_name: Όνομα πεδίου
+    field_value_does_not_match_pattern: '%{field} η τιμή δεν ταιριάζει με %{pattern}'
+    file: Αρχείο
+    filter: Φίλτρο
+    filters: Φίλτρα
+    form: Φόρμα
+    form_has_been_saved: Η φόρμα έχει αποθηκευτεί!
+    form_has_been_submitted_successfully: Η φόρμα υποβλήθηκε επιτυχώς!
+    form_name: Όνομα φόρμας
+    forms: Φόρμες
+    funnel: Funnel
+    greater_or_equal: Μεγαλύτερο ή ίσο
+    greater_than: Μεγαλύτερο από
+    greater_than_or_equal_to: Μεγαλύτερο ή ίσο με
+    group_name: Όνομα ομάδας
+    has_been_created: έχει δημιουργηθεί
+    has_been_removed_succesfully: έχει αφαιρεθεί επιτυχώς
+    has_been_updated: έχει ενημερωθεί
+    hello_admin: Γεια σου Διαχειριστή 👋
+    hidden: Κρυφό
+    image: Εικόνα
+    includes: Περιλαμβάνει
+    input_type: Τύπος εισόδου
+    integer: Ακέραιος αριθμός
+    interval: Interval
+    is: Είναι
+    is_not: Δεν είναι
+    items_have_been_removed: τα στοιχεία έχουν αφαιρεθεί
+    items_will_be_removed: '%{count} τα στοιχεία θα αφαιρεθούν'
+    json: JSON
+    label: Νόμισμα
+    less_or_equal: Λιγότερο ή ίσο
+    less_than: Λιγότερο από
+    less_than_or_equal_to: Λιγότερο ή ίσο με
+    line_chart: Γραμμικό γράφημα
+    link_name: Όνομα συνδέσμου
+    links: Σύνδεσμοι
+    load_initial_data: Φόρτωση αρχικών δεδομένων
+    loading: Φόρτωση...
+    looks_like_you_are_new_here: Φαίνεται ότι είστε νέος εδώ 🙃
+    markdown: Markdown
+    method: Μέθοδος
+    method_call: Κλήση μεθόδου
+    multiple: Πολλαπλό
+    name: Όνομα
+    new_alert: Νέα ειδοποίηση
+    new_dashboard: Νέο ταμπλό
+    new_form: Νέα φόρμα
+    new_query: Νέο ερώτημα
+    no_data: Δεν υπάρχουν δεδομένα
+    not_found: Δεν βρέθηκε
+    number: Αριθμός
+    ok: ΟΚ
+    options_separated_with_new_line_or_comma: Επιλογές χωρισμένες με νέα γραμμή ή κόμμα
+    or: Ή
+    other_than: Άλλο εκτός από
+    param_name: Όνομα παραμέτρου
+    password: Κωδικός
+    path: Διαδρομή
+    percent: Ποσοστό
+    pie_chart: Διάγραμμα πίτας
+    queries: Ερωτήματα
+    query: Ερώτημα
+    query_has_been_saved: Το ερώτημα έχει αποθηκευτεί!
+    query_name: Όνομα ερωτήματος
+    query_not_selected: Το ερώτημα δεν έχει επιλεγεί
+    query_revisions: Αναθεωρήσεις ερωτημάτων
+    read_only: Μόνο για ανάγνωση
+    read_write: Ανάγνωση-Εγγραφή
+    reference: Παραπομπή
+    reference_resource: Πόρος αναφοράς
+    remove: Αφαίρεση
+    reports: Αναφορές
+    request_param: Παράμετρος αιτήματος
+    required: Απαιτούμενο
+    resource_filters: '%{resource} Φίλτρα'
+    resource_settings: '%{resource} Ρυθμίσεις'
+    resources: Πόροι
+    resubmit: Επαναϋποβολή
+    revert: Αναστρέψτε το
+    revision_has_been_applied: Εφαρμόστηκε η αναθεώρηση
+    revisions: Αναθεωρήσεις
+    richtext: Πλούσιο κείμενο
+    row_chart: Διάγραμμα γραμμής
+    save: Αποθήκευση
+    save_and_create_new: Αποθήκευση και δημιουργία νέου
+    save_as_new: Αποθήκευση ως νέο
+    save_dashboard: Αποθήκευση ταμπλό
+    save_form: Αποθήκευση φόρμας
+    save_query: Αποθήκευση ερωτήματος
+    scopes: Πεδία εφαρμογής
+    search: Αναζήτηση
+    search_placeholder: Αναζήτηση...
+    search_query: Ερώτημα αναζήτησης
+    select: Επιλογή
+    select_alert_tags: Επιλέξτε ετικέτες ειδοποίησης
+    select_dashboard: Επιλέξτε ταμπλό
+    select_dashboard_tags: Επιλέξτε ετικέτες ταμπλό
+    select_form: Επιλέξτε φόρμα
+    select_form_tags: Επιλέξτε ετικέτες dashform
+    select_options: Επιλέξτε επιλογές
+    select_placeholder: Επιλογή...
+    select_query: Επιλέξτε ερώτημα
+    select_query_tags: Επιλέξτε ετικέτες ερωτήματος
+    select_resource_placeholder: Επιλέξτε πόρο...
+    selected_item_has_been_removed: Το επιλεγμένο στοιχείο έχει αφαιρεθεί
+    selected_item_will_be_removed: Το επιλεγμένο στοιχείο θα αφαιρεθεί
+    selected_item_will_be_removed_are_you_sure: Το επιλεγμένο στοιχείο θα αφαιρεθεί. Είστε σίγουροι;
+    send_empty: Να σταλεί άδειο;
+    send_now: Αποστολή τώρα
+    send_to: Αποστολή προς
+    set_tags: Ορισμός ετικετών
+    settings: Ρυθμίσεις
+    should_be_a_valid_json: '%{field} θα πρέπει να είναι ένα έγκυρο JSON'
+    should_be_error_constraint: '%{field} θα πρέπει να είναι %{error} %{constraint}'
+    stacked_bars: Στοιβαγμένες μπάρες
+    starts_with: Ξεκινάει με
+    submit: Υποβολή
+    tab_type: Τύπος καρτέλας
+    table: Πίνακας
+    tabs: Καρτέλες
+    tags: Ετικέτες
+    text: Κείμενο
+    textarea: Περιοχή κειμένου
+    timezone: Ζώνη ώρας
+    title: Τίτλος
+    type: Τύπος
+    unable_to_load_form_data: Αδυναμία φόρτωσης δεδομένων φόρμας
+    unable_to_remove_item: Αδυναμία αφαίρεσης στοιχείου
+    unable_to_remove_items: Αδυναμία αφαίρεσης στοιχείων
+    unable_to_send_email: Αδυναμία αποστολής email
+    unable_to_submit_form: Αδυναμία υποβολής φόρμας
+    unit: Μονάδα
+    value: Τιμή
+    values_axis: Άξονας τιμών
+    variables: Μεταβλητές
+    visibility: Ορατότητα
+    visualization: Απεικόνιση
+    write_only: Μόνο για εγγραφή
+    long_text: Μακρύ κείμενο
+    percentage: Ποσοστό
+    change: Αλλαγή
+    chart: Διάγραμμα
+    tag: Ετικέτα
+    link: Σύνδεσμος
+    color: Χρώμα
+    link_text: Κείμενο συνδέσμου
+    copied_to_the_clipboard: Αντιγραφή στο πρόχειρο
+    queries_can_contain_variable_via_syntax_html: "Τα ερωτήματα μπορούν να περιέχουν μεταβλητές ενσωμάτωσης χρησιμοποιώντας <code>{{variable}}</code> σύνταξη:"
+    syntax_is_used_for_if_and_if_not_conditions_html: "<code>{{#variable}} ... {{/variable}}</code> και <code>{{^variable}} ... {{variable}}</code> σύνταξη χρησιμοποιείται για <code>if</code> και <code>if not</code> συνθήκες αντίστοιχα:"
+    current_user_variables_are_always_passed_explicitly_and_can_he_used_html: "<code>{{current_user_id}}</code> και <code>{{current_user_email}}</code> μεταβλητές μεταβιβάζονται πάντα ρητά και μπορούν να χρησιμοποιηθούν για να αποφασιστεί ποια δεδομένα θα πρέπει να εμφανίζονται για ορισμένους χρήστες:"
+    create_new: Δημιουργία νέου
+    conditional: Υπό προϋποθέσεις
+    condition: Προϋπόθεση
+    field: Πεδίο
+    empty: Άδειο
+    not_empty: Δεν είναι άδειο
+    general: Γενικό
+    run: Εκτέλεση
+    use_default: Χρήση προεπιλογής
+    query_editor: Επεξεργαστής ερωτημάτων
+    polymorphic: Πολυμορφικό
+    foreign_key: Ξένο κλειδί
+    primary_key: Πρωτεύον κλειδί
+    through: Μέσω
+    source: Πηγή
+    resource: Πόρος
+    add_association: Προσθήκη σύνδεσης
+    there_are_unsaved_changes_from: "Υπάρχουν μη αποθηκευμένες αλλαγές από %{timestamp}"
+    clear: Καθαρισμός
+    restore: Επαναφορά
+    more: Περισσότερα
+    add_text: Προσθήκη κειμένου
+    edit_text: Επεξεργασία κειμένου
+    open_in_markdown_editor: Άνοιγμα σε markdown συντάκτη
+    activate: Ενεργοποίηση
+    load_existing_options_from_database: Φόρτωση υφιστάμενων επιλογών από τη βάση δεδομένων
+    add_database: Προσθήκη βάσης δεδομένων
+    audio: Ήχος
+    video: Βίντεο
+    display_column: Εμφάνιση στήλης
+    not_authorized_to_perform_action: Δεν είστε εξουσιοδοτημένοι να εκτελέσετε αυτή την ενέργεια.
+    download: Λήψη
+    alert: Ειδοποίηση
+    downloading: Γίνεται λήψη
+    display_id: Εμφάνιση ID
+    display_settings: Ρυθμίσεις εμφάνισης
+    sign_out: Αποσύνδεση
+    header: Επικεφαλίδα
+    user_dropdown: Αναδιπλούμενο παράθυρο χρήστη
+    upload: Ανέβασμα
+    there_is_nothing_here_yet: Δεν υπάρχει τίποτα ακόμα εδώ 🤷‍♂️
+    is_null: Είναι null
+    is_not_null: Δεν είναι null
+    split_tags_by: Διαχωρισμός ετικετών κατά
+    do_not_split: Μην χωρίζετε
+    semicolon: Ερωτηματικό
+    hyphen: Παύλα
+    comma: Κόμμα
+    slash: Κάθετος
+    sql: SQL
+    api: API
+    searchable_columns: Στήλες με δυνατότητα αναζήτησης
+    validate: Επικύρωση
+    error_message: Μήνυμα σφάλματος
+    validation_regexp: Επικύρωση RegExp
+    regexp: RegExp
+    message: Μήνυμα
+    should_be_a_valid_regexp: Πρέπει να είναι μία έγκυρη RegExp συμβολοσειρά
+    order_by: Ταξινόμηση κατά
+    ascending: Αύξουσα
+    descending: Φθίνουσα
+    url: URL
+    expand: Επέκταση
+    add_api: Προσθήκη API
+    on_collection: Κατά τη συλλογή
+    association: Σύνδεση
+    action_has_been_removed: Η ενέργεια αυτή έχει καταργηθεί
+    i:
+      locale: el
+      select:
+        placeholder: Επιλογή
+        noMatch: Δεν βρέθηκαν αποτελέσματα
+        loading: Φόρτωση
+      table:
+        noDataText: Χωρίς δεδομένα
+        noFilteredDataText: Χωρίς φίλτρο
+        confirmFilter: Επιβεβαίωση
+        resetFilter: Επαναφορά
+        clearFilter: Όλα
+        sumText: Σύνολο
+      datepicker:
+        selectDate: Επιλέξτε ημέρα
+        selectTime: Επιλέξτε ώρα
+        startTime: Ωρα Έναρξης
+        endTime: Ωρα Λήξης
+        clear: Καθαρισμός
+        ok: Εντάξει
+        datePanelLabel: "[mmmm] [yyyy]"
+        month: Μήνας
+        month1: Ιανουάριος
+        month2: Φεβρουάριος
+        month3: Μάρτιος
+        month4: Απρίλιος
+        month5: Μάιος
+        month6: Ιούνιος
+        month7: Ιούλιος
+        month8: Αύγουστος
+        month9: Σεπτέμβριος
+        month10: Οκτώβριος
+        month11: Νοέμβριος
+        month12: Δεκέμβριος
+        year: Έτος
+        weekStartDay: '1'
+        weeks:
+          sun: Κυρ
+          mon: Δευ
+          tue: Τρι
+          wed: Τετ
+          thu: Πεμ
+          fri: Παρ
+          sat: Σαβ
+        months:
+          m1: Ιαν
+          m2: Φεβ
+          m3: Μαρ
+          m4: Απρ
+          m5: Μαϊ
+          m6: Ιουν
+          m7: Ιουλ
+          m8: Αυγ
+          m9: Σεπ
+          m10: Οκτ
+          m11: Νοε
+          m12: Δεκ
+      transfer:
+        titles:
+          source: Πηγή
+          target: Στόχος
+        filterPlaceholder: Αναζήτηση
+        notFoundText: Δεν βρέθηκαν αποτελέσματα
+      modal:
+        okText: Εντάξει
+        cancelText: Ακύρωση
+      poptip:
+        okText: Εντάξει
+        cancelText: Ακύρωση
+      page:
+        prev: Προηγούμενη Σελίδα
+        next: Επόμενη Σελίδα
+        total: Σύνολο
+        item: Αντικείμενο
+        items: Αντικείμενα
+        prev5: Προηγούμενες 5 Σελίδες
+        next5: Επόμενες 5 Σελίδες
+        page: "/Σελίδα"
+        goto: Μετάβαση σε
+        p: ''
+      rate:
+        star: Αστέρι
+        stars: Αστέρια
+      tree:
+        emptyText: Χωρίς Δεδομένα
