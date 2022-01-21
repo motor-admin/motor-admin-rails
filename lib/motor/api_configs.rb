@@ -4,6 +4,8 @@ module Motor
   module ApiConfigs
     METHODS = %w[get post put delete].freeze
 
+    DEFAULT_HEADERS = { 'Content-Type' => 'application/json' }.freeze
+
     InvalidHttpMethod = Class.new(StandardError)
 
     module_function
@@ -17,7 +19,7 @@ module Motor
         method.downcase.to_sym,
         api_config.url.to_s.sub(%r{/?\z}, '/') + path.delete_prefix('/'),
         params,
-        headers.merge(api_config.headers),
+        DEFAULT_HEADERS.merge(headers).merge(api_config.headers),
         body&.to_json
       )
     end
