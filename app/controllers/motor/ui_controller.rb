@@ -33,7 +33,7 @@ module Motor
     def set_i18n_locale
       configs = Motor::Configs::LoadFromCache.load_configs(cache_key: cache_keys[:configs])
 
-      I18n.locale = configs.find { |c| c.key == 'language' }&.value || I18n.locale
+      I18n.locale = configs.find { |c| c.key == 'language' }&.value&.to_sym || I18n.locale
     end
 
     def cache_keys
