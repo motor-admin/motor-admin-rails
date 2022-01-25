@@ -80,7 +80,7 @@ export default {
     },
     customActions () {
       return this.model.actions.filter((action) => {
-        return action.apply_on === 'collection' && action.visible && action.action_type === 'form'
+        return action.apply_on === 'collection' && action.visible && action.action_type === 'form' && action.name !== 'create'
       })
     },
     parentModel () {
