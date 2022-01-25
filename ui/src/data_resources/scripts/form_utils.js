@@ -86,7 +86,9 @@ function buildColumnValidator (column, resource) {
 
 function buildDefaultValues (model) {
   return model.columns.reduce((acc, column) => {
-    if (column.default_value !== null) {
+    if (column.column_type === 'association') {
+      acc[column.name] = column.default_value || []
+    } else if (column.default_value !== null) {
       acc[column.name] = column.default_value
     }
 

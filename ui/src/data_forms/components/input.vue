@@ -173,21 +173,29 @@ export default {
     type () {
       this.dataValue = ''
       this.$emit('update:modelValue', '')
+    },
+    modelValue () {
+      this.assignDataValue()
     }
   },
   created () {
-    if (this.modelValue) {
-      if (this.isDateTime) {
-        this.dataValue = new Date(new Date(this.modelValue).getTime())
-      } else if (this.isDate) {
-        this.dataValue = new Date(new Date(this.modelValue).getTime() + new Date().getTimezoneOffset() * 60000)
-      } else if (this.isTagSelect && this.column.format?.split_tags_by) {
-        this.dataValue = this.modelValue.split(this.column.format.split_tags_by).map((e) => e.trim())
-      }
-    }
+    this.assignDataValue()
   },
   methods: {
     titleize,
+    assignDataValue () {
+      if (this.modelValue) {
+        if (this.isDateTime) {
+          this.dataValue = new Date(new Date(this.modelValue).getTime())
+        } else if (this.isDate) {
+          this.dataValue = new Date(new Date(this.modelValue).getTime() + new Date().getTimezoneOffset() * 60000)
+        } else if (this.isTagSelect && this.column.format?.split_tags_by) {
+          this.dataValue = this.modelValue.split(this.column.format.split_tags_by).map((e) => e.trim())
+        }
+      } else if (this.isTagSelect && this.column.format?.split_tags_by) {
+        this.dataValue = []
+      }
+    },
     onFile (event) {
       const file = event.target.files[0]
       const reader = new FileReader()

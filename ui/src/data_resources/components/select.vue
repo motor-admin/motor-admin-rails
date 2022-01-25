@@ -122,6 +122,8 @@ export default {
           this.loadMultipleResourceoptionsById(value).then(() => {
             this.value = value || []
           })
+        } else if (!value || !value.length) {
+          this.selectedOptions = []
         }
       } else {
         if (this.value !== value) {
