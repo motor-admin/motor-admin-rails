@@ -123,9 +123,9 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
     end
 
     create_table :motor_audits do |t|
-      t.column :auditable_id, :bigint
+      t.column :auditable_id, :string
       t.column :auditable_type, :string
-      t.column :associated_id, :bigint
+      t.column :associated_id, :string
       t.column :associated_type, :string
       t.column :user_id, :bigint
       t.column :user_type, :string
