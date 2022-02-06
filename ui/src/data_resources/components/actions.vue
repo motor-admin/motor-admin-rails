@@ -232,6 +232,9 @@ export default {
         resource._selected = false
       })
     },
+    methodRequest (resource, action) {
+      return api.put(`data/${this.model.slug}/${resource[this.model.primary_key]}/${action.preferences.method_name}`)
+    },
     isActionWithBatchAllowed (action) {
       return !formsCache[action.preferences.form_id]?.preferences?.default_values_api_path
     },
@@ -249,6 +252,18 @@ export default {
 
       if (action.action_type === 'form' && this.resources.length > 1 && !this.isActionWithBatchAllowed(action)) {
         return
+      }
+
+      if (action.action_type === 'method') {
+        return Promise.all(this.resources.map((resource) => {
+          return this.methodRequest(resource, action)
+        })).then((result) => {
+          this.$Message.info(this.i18n.action_has_been_applied)
+        }).catch((error) => {
+          this.onApiError(error)
+        }).finally(() => {
+          this.$emit('finish-action', action.name)
+        })
       }
 
       loadFormFromCache(action.preferences.form_id).then((form) => {
