@@ -172,7 +172,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
 
     model.table_name = 'motor_api_configs'
 
-    model.create!(name: 'origin', path: '/')
+    model.create!(name: 'origin', url: '/', preferences: {}, credentials: {})
   end
 
   def self.down
