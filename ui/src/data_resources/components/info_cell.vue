@@ -53,7 +53,7 @@
         :polymorphic-model="polymorphicModel"
       />
       <template
-        v-else-if="column.column_type === 'association' && !isEmpty"
+        v-else-if="column.column_type === 'association' && !isEmpty && associationColumnModel"
       >
         <Reference
           v-for="item in resource[column.format.association_name]"
@@ -292,7 +292,7 @@ export default {
       return this.model.associations.find((a) => a.name === this.column.format.association_name)
     },
     associationColumnModel () {
-      return modelNameMap[this.associationColumnAssociation.model_name]
+      return modelNameMap[this.associationColumnAssociation?.model_name]
     }
   },
   methods: {

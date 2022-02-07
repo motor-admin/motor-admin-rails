@@ -379,8 +379,11 @@ export default {
           }
 
           if (column.column_type === 'association') {
-            tableColumn.format.association_model_name =
-              this.model.associations.find((assoc) => assoc.name === column.format.association_name).model_name
+            const association = this.model.associations.find((assoc) => assoc.name === column.format.association_name)
+
+            if (association) {
+              tableColumn.format.association_model_name = association.model_name
+            }
           }
 
           return tableColumn
