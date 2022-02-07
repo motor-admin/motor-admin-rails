@@ -110,7 +110,7 @@ export default {
   },
   computed: {
     customFormComponentData () {
-      return this.$refs.form.formData
+      return this.$refs.form?.formData || this.formData
     },
     intialDataVariables () {
       if (this.dataForm.preferences.default_values_api_path) {
@@ -183,7 +183,11 @@ export default {
       this.isSuccess = false
       this.formData = { ...this.data }
 
-      this.loadData()
+      this.isLoading = true
+
+      this.loadData().finally(() => {
+        this.isLoading = false
+      })
     },
     onSuccess (data) {
       this.isSuccess = true

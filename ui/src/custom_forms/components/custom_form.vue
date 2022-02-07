@@ -166,13 +166,11 @@ export default {
   methods: {
     scrollToErrors,
     reset () {
-      this.formData = {}
+      this.formData = { ...buildDefaultValues(this.fields), ...this.$parent.formData }
       this.$parent.resetData()
 
       this.isSuccess = false
       this.successData = null
-
-      this.formData = { ...buildDefaultValues(this.fields), ...this.$parent.formData }
     },
     sendData () {
       const path = interpolate(this.form.api_path, this.formData)
