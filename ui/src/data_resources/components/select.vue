@@ -151,7 +151,7 @@ export default {
   },
   created () {
     if (this.multiple) {
-      if (this.selectedResources.length) {
+      if (this.selectedResources?.length) {
         this.selectedOptions = [...this.selectedResources]
         this.options = [...this.selectedResources]
         this.value = this.modelValue
@@ -219,7 +219,7 @@ export default {
     loadMultipleResourceoptionsById (ids) {
       this.isLoading = true
 
-      const cacheKey = this.model.slug + ids.join()
+      const cacheKey = this.model.slug + (Array.isArray(ids) ? ids.join() : ids)
 
       this.resourcesRespCache ||= {}
       this.resourcesRespCache[cacheKey] ||= api.get(`data/${this.model.slug}`, {

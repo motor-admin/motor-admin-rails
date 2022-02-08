@@ -64,6 +64,15 @@
       />
     </FormItem>
 
+    <Checkbox
+      v-if="variable.variable_type === 'reference'"
+      v-model="variable.is_array"
+      class="d-block"
+      @update:model-value="resetDefault"
+      >
+      {{ ' ' }} {{ i18n['multiple'] }}
+    </Checkbox>
+
     <VButton
       v-if="withRemove"
       long
@@ -127,6 +136,9 @@ export default {
   methods: {
     updateDisplayName (value) {
       this.variable.display_name = titleize(value.replace(/_id$/, ''))
+    },
+    resetDefault () {
+      this.variable.default_value = this.variable.is_array ? [] : ''
     },
     onTypeChange () {
       this.variable.default_value = ''

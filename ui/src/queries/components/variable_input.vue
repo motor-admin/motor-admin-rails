@@ -18,7 +18,7 @@ export default {
   },
   props: {
     modelValue: {
-      type: [Date, Number, String, Object],
+      type: [Date, Number, String, Object, Array],
       required: false,
       default: ''
     },
@@ -34,7 +34,8 @@ export default {
 
       const props = {
         name: this.variable.name,
-        column_type: variableType === 'text' ? 'input' : variableType
+        column_type: variableType === 'text' ? 'input' : variableType,
+        is_array: !!this.variable.is_array
       }
 
       if (variableType === 'reference') {
@@ -55,6 +56,9 @@ export default {
   watch: {
     'variable.variable_type' () {
       this.$emit('update:modelValue', '')
+    },
+    'variable.is_array' (value) {
+      this.$emit('update:modelValue', value ? [] : '')
     }
   }
 }
