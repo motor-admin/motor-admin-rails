@@ -1,6 +1,7 @@
 import axios from 'axios'
 import api from 'api'
 import { interpolateForQueryParams, titleize } from 'utils/scripts/string'
+import { loadCredentials } from 'utils/scripts/auth_credentials'
 
 function loadApiQuery (query, variables) {
   const [apiPath, queryParams] = interpolateForQueryParams(query.preferences.api_path, variables)
@@ -24,8 +25,13 @@ function loadApiQuery (query, variables) {
       }
     })
   } else {
-    request = axios.get(apiPath, {
-      params: queryParams
+    request = loadCredentials().then((credentials) => {
+      return axios.get(apiPath, {
+        params: queryParams,
+        headers: {
+          ...credentials.headers
+        }
+      })
     })
   }
 

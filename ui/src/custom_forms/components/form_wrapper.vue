@@ -216,11 +216,7 @@ export default {
         } else {
           request = loadCredentials().then((credentials) => {
             return axios.get(path, {
-            }, {
-              headers: {
-                ...this.headers,
-                ...credentials.headers
-              }
+              headers: credentials.headers
             })
           })
         }
