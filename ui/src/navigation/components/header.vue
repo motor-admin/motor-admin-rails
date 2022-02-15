@@ -70,7 +70,7 @@
     </div>
     <div class="col-2 d-flex justify-content-end align-items-center">
       <Dropdown
-        v-if="currentUser?.email && !widthLessThan('sm')"
+        v-if="currentUser?.email"
         trigger="click"
         :placement="'bottom-end'"
         class="ms-2"
@@ -81,7 +81,14 @@
           class="header-btn ms-2"
           size="large"
         >
-          {{ currentUser.email }}
+          <Icon
+            type="md-contact"
+            class="d-block d-sm-none"
+            size="large"
+          />
+          <span class="d-none d-sm-block">
+            {{ currentUser.email }}
+          </span>
         </VButton>
         <template #list>
           <DropdownMenu>
@@ -363,6 +370,9 @@ export default {
   }
   .ion-md-person-add {
     font-size: 26px;
+  }
+  .ion-md-contact {
+    font-size: 27px;
   }
   .ion-md-close {
     font-size: 20px;
