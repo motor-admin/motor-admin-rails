@@ -98,7 +98,7 @@ export default {
           if (column.reference && !column.reference.polymorphic && ['read_write', 'read_only'].includes(column.access_type)) {
             const referenceModel = modelNameMap[column.reference.model_name]
 
-            return referenceModel.columns.map((refColumn) => {
+            return referenceModel && referenceModel.columns.map((refColumn) => {
               if (!refColumn.virtual && refColumn.column_source !== 'query' && ['read_write', 'read_only'].includes(refColumn.access_type)) {
                 return {
                   ...(refColumn.name === column.reference.primary_key ? column : refColumn),
@@ -117,7 +117,7 @@ export default {
           if (assoc.visible) {
             const assocModel = modelNameMap[assoc.model_name]
 
-            return assocModel.columns.map((column) => {
+            return assocModel && assocModel.columns.map((column) => {
               if (!column.virtual && column.column_source !== 'query' && ['read_write', 'read_only'].includes(column.access_type)) {
                 return {
                   ...column,
