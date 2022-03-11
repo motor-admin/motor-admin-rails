@@ -14,7 +14,7 @@ module Motor
       if hash.is_a?(Hash)
         hash.with_indifferent_access
       else
-        hash || {}
+        hash.is_a?(FalseClass) ? hash : hash || {}
       end
     end
   end
