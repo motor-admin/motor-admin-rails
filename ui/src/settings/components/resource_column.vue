@@ -114,7 +114,7 @@ export default {
         dataColumn._update = dataColumn.name
       }
 
-      if (dataColumn.virtual) {
+      if (dataColumn.virtual && dataColumn.column_type !== 'association') {
         dataColumn.name = underscore(dataColumn.display_name)
       }
 

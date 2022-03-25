@@ -79,7 +79,11 @@ export default {
       })
     },
     onColumnSubmit (column) {
-      column.name = underscore(column.display_name)
+      if (column.column_type === 'association') {
+        column.name = column.format.association_name
+      } else {
+        column.name = underscore(column.display_name)
+      }
 
       if (column.reference?.model_name === 'active_storage/attachment') {
         column.name += '_attachment'

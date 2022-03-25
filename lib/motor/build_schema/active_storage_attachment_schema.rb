@@ -16,7 +16,7 @@ module Motor
           table_name: model.table_name,
           primary_key: model.primary_key,
           display_name: model.model_name.human(count: 2, default: 'Attachments'),
-          display_column: 'filename',
+          display_column: 'id',
           icon: 'paperclip',
           columns: [
             {
@@ -113,6 +113,7 @@ module Motor
           ],
           associations: [],
           scopes: [],
+          preferences: {},
           actions: Motor::BuildSchema::Defaults.actions.reject { |e| e[:name] == 'edit' },
           tabs: Motor::BuildSchema::Defaults.tabs,
           visible: false
