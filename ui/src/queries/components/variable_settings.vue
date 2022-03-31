@@ -69,7 +69,7 @@
       v-model="variable.is_array"
       class="d-block"
       @update:model-value="resetDefault"
-      >
+    >
       {{ ' ' }} {{ i18n['multiple'] }}
     </Checkbox>
 

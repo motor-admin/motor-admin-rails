@@ -19,6 +19,7 @@
       <div
         ref="title"
         class="d-flex"
+        style="z-index: 1"
       >
         <div
           class="position-relative"
