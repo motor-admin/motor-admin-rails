@@ -14,6 +14,7 @@
         :reference-name="column.reference.model_name"
         :reference-data="row[column.reference.name]"
         :always-refer="alwaysRefer"
+        :show-popover="true"
         :polymorphic-model="polymorphicModel"
       />
       <template
@@ -25,7 +26,7 @@
           :resource-id="item[associationColumnModel.primary_key]"
           :reference-name="associationColumnModel.name"
           class="me-1 mb-1"
-          :show-popover="false"
+          :show-popover="true"
           :reference-data="item"
         />
       </template>
