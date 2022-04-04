@@ -77,8 +77,8 @@ export default {
         this.boards.push(el)
       }
     },
-    reload () {
-      return Promise.all(this.boards.map((board) => board.loadData()))
+    reload (withLoading = true) {
+      return Promise.all(this.boards.map((board) => board.loadData(withLoading)))
     }
   }
 }

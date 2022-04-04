@@ -22,6 +22,30 @@
       </div>
     </div>
     <div class="col-4 d-flex align-items-center justify-content-end">
+      <Dropdown
+        trigger="click"
+        class="me-2"
+        :placement="'bottom-end'"
+      >
+        <VButton
+          size="large"
+          icon="md-timer"
+          :type="dashboard.preferences.autorefresh_interval ? 'primary' : 'default'"
+          class="bg-white"
+          :ghost="!!dashboard.preferences.autorefresh_interval"
+        />
+        <template #list>
+          <DropdownMenu>
+            <DropdownItem
+              v-for="option in refreshTimerOptions"
+              :key="option.value"
+              @click="updateTimerValue(option.value)"
+            >
+              {{ option.title }}
+            </DropdownItem>
+          </DropdownMenu>
+        </template>
+      </Dropdown>
       <VButton
         v-if="variables.length && isCanEdit"
         size="large"
@@ -183,6 +207,15 @@ export default {
     isExisting () {
       return this.$route.params.id
     },
+    refreshTimerOptions () {
+      return [
+        { title: this.i18n.every_5_seconds, value: 5 * 1000 },
+        { title: this.i18n.every_30_seconds, value: 30 * 1000 },
+        { title: this.i18n.every_minute, value: 60 * 1000 },
+        { title: this.i18n.every_5_minutes, value: 5 * 60 * 1000 },
+        { title: this.i18n.do_not_refresh, value: 0 }
+      ]
+    },
     isCanEdit () {
       return this.dashboard.id ? this.$can('edit', 'Motor::Dashboard', this.dashboard) : this.$can('create', 'Motor::Dashboard')
     },
@@ -235,9 +268,16 @@ export default {
   },
   mounted () {
     if (this.$route.params.id) {
-      this.loadDashboard()
+      this.loadDashboard().then(() => {
+        this.setAutorefreshInterval()
+      })
     } else {
       this.isEditorOpened = true
+    }
+  },
+  beforeUnmount () {
+    if (this.timer) {
+      clearInterval(this.timer)
     }
   },
   methods: {
@@ -293,13 +333,13 @@ export default {
         console.error(error)
       })
     },
-    refresh () {
+    refresh (withLoading = true) {
       this.maybeUpdateVariablesQueryParams()
 
       this.$nextTick(() => {
         this.isLoading = true
 
-        this.$refs.layout.reload().then(() => {
+        this.$refs.layout.reload(withLoading).then(() => {
           this.isLoading = false
         })
       })
@@ -370,6 +410,20 @@ export default {
         title: this.i18n.save_dashboard,
         closable: true
       })
+    },
+    updateTimerValue (value) {
+      if (this.timer) {
+        clearInterval(this.timer)
+      }
+
+      this.dashboard.preferences.autorefresh_interval = value
+
+      this.setAutorefreshInterval()
+    },
+    setAutorefreshInterval () {
+      if (this.dashboard.preferences.autorefresh_interval) {
+        this.timer = setInterval(() => this.refresh(false), this.dashboard.preferences.autorefresh_interval)
+      }
     }
   }
 }

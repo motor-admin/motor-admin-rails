@@ -77,6 +77,7 @@
 
     <DashboardLayout
       v-else-if="dashboardId && dashboard && $route.name === 'home'"
+      ref="dashboardLayout"
       :dashboard="dashboard"
     />
     <div
@@ -180,11 +181,26 @@ export default {
     this.selectedDashboardId = homepageStore[0]?.id
 
     if (this.dashboardId) {
-      this.loadDashboard()
+      this.loadDashboard().then(() => {
+        this.setAutorefreshInterval()
+      })
+    }
+  },
+  beforeUnmount () {
+    if (this.timer) {
+      clearInterval(this.timer)
     }
   },
   methods: {
     widthLessThan,
+    setAutorefreshInterval () {
+      if (this.dashboard.preferences.autorefresh_interval) {
+        this.timer = setInterval(() => this.refresh(false), this.dashboard.preferences.autorefresh_interval)
+      }
+    },
+    refresh () {
+      this.$refs.dashboardLayout.reload(false)
+    },
     loadDashboard () {
       this.isLoading = true
 

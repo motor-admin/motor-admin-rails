@@ -156,9 +156,9 @@ export default {
     applySearch () {
       this.searchQuery = this.searchInput
     },
-    loadData () {
+    loadData (withLoading = true) {
       if (!this.isLoading) {
-        this.isLoading = true
+        this.isLoading = withLoading
 
         let apiRequest
 

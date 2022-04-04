@@ -302,3 +302,8 @@ en:
     on_collection: On collection
     association: Association
     action_has_been_removed: This action has been removed
+    every_5_seconds: Every 5 seconds
+    every_30_seconds: Every 30 seconds
+    every_minute: Every minute
+    every_5_minutes: Every 5 minutes
+    do_not_refresh: Do not refresh
