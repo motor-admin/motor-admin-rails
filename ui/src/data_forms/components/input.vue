@@ -92,6 +92,7 @@ import VueTrix from 'utils/components/vue_trix'
 import { titleize } from 'utils/scripts/string'
 import OptionsInput from 'utils/components/options_input'
 import ColorPicker from 'view3/src/components/color-picker'
+import { divide, times } from 'number-precision'
 
 export default {
   name: 'FormInput',
@@ -226,14 +227,14 @@ export default {
     },
     onNumberUpdate (value) {
       if (this.type === 'currency' && this.column.format?.currency_base === 'cents') {
-        this.$emit('update:modelValue', Math.floor(value * 10 ** 8) / 10 ** 6)
+        this.$emit('update:modelValue', times(value || 0, 100))
       } else {
         this.$emit('update:modelValue', value)
       }
     },
     maybeAdjustCurrencyNumber (value) {
       if (this.type === 'currency' && this.column.format?.currency_base === 'cents') {
-        return Math.floor(value * 10 ** 6) / 10 ** 8
+        return divide(value || 0, 100)
       } else {
         return value
       }

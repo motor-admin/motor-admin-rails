@@ -13,6 +13,7 @@
     "inflected": "^2.1.0",
     "marked": "^2.0.3",
     "mustache": "^4.2.0",
+    "number-precision": "^1.5.2",
     "photoswipe": "https://github.com/dimsemenov/PhotoSwipe#v5-beta",
     "qs": "^6.9.3",
     "scroll-behavior-polyfill": "^2.0.13",
