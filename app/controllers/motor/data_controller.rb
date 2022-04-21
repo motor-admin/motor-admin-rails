@@ -31,7 +31,7 @@ module Motor
 
           @resource = @associated_resource
         else
-          @resource.public_send(params[:association].to_sym).create!(@associated_resource.attributes) do |resource|
+          @resource.public_send(params[:association].to_sym).create!(resource_params) do |resource|
             @resource = resource
           end
         end
