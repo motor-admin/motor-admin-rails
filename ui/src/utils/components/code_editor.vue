@@ -16,6 +16,7 @@
 import { VAceEditor } from 'vue3-ace-editor'
 import ace from 'ace-builds'
 import 'ace-builds/src-noconflict/mode-pgsql'
+import 'ace-builds/src-noconflict/mode-liquid'
 import 'ace-builds/src-noconflict/mode-markdown'
 import 'ace-builds/src-noconflict/ext-language_tools'
 import { schema } from 'data_resources/scripts/schema'

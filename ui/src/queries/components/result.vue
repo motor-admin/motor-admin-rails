@@ -18,20 +18,29 @@
     :data="paginatedData"
   />
   <div
-    v-else-if="isTable || isMarkdown || isTableToggle"
+    v-else-if="isTable || isMarkdown || isHtml || isTableToggle"
     class="d-flex"
     :style="{ height: withFooter ? 'calc(100% - 34px)' : '100%' }"
   >
     <div
-      v-if="isMarkdown"
+      v-if="isMarkdown || isHtml"
       :style="{ width: showMarkdownTable ? '50%' : '100%' }"
       class="bg-white"
     >
       <Markdown
+        v-if="isMarkdown"
         :style="{ height: '100%', overflow: 'scroll', padding: '10px 13px' }"
         :class="{ 'border-right': showMarkdownTable }"
         :loading="loading"
         :markdown="preferences.visualization_options.markdown"
+        :data="markdownData"
+      />
+      <Liquid
+        v-else-if="isHtml"
+        :style="{ height: '100%', overflow: 'scroll', padding: '10px 13px' }"
+        :class="{ 'border-right': showMarkdownTable }"
+        :loading="loading"
+        :html="preferences.visualization_options.html"
         :data="markdownData"
       />
     </div>
@@ -95,7 +104,7 @@
         :page-size="pageSize"
         :page-size-opts="pageSizeOpts"
         size="small"
-        :show-sizer="!minimalPagination && !isMarkdown && !isValue"
+        :show-sizer="!minimalPagination && !isMarkdown && !isHtml && !isValue"
         :show-elevator="!minimalPagination"
         :show-total="true"
         @update:current="paginationParams.current = $event"
@@ -107,7 +116,7 @@
       style="width: 15%"
     >
       <VButton
-        v-if="withTableToggle && !isMarkdown && !isTable && !isValue"
+        v-if="withTableToggle && !isMarkdown && !isTable && !isValue && !isHtml"
         :icon="isTableToggle ? 'md-analytics' : 'md-grid'"
         type="text"
         size="small"
@@ -153,6 +162,7 @@
 import DataTable from 'data_tables/components/table'
 import Chart from './chart'
 import Markdown from 'utils/components/markdown'
+import Liquid from 'utils/components/liquid'
 import ValueResult from './value'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import csv from 'view3/src/utils/csv'
@@ -165,6 +175,7 @@ export default {
     DataTable,
     Chart,
     Markdown,
+    Liquid,
     ValueResult
   },
   props: {
@@ -278,7 +289,7 @@ export default {
       return !!this.data.length && (!this.isValue || this.withSettings || this.withAlert || this.showPagination)
     },
     showPagination () {
-      return (this.data.length && this.isTable) || ((this.isMarkdown || this.isValue) && this.data.length > 1)
+      return (this.data.length && this.isTable) || ((this.isHtml || this.isMarkdown || this.isValue) && this.data.length > 1)
     },
     markdownData () {
       if (this.data.length) {
@@ -316,6 +327,9 @@ export default {
     isMarkdown () {
       return this.preferences.visualization === 'markdown'
     },
+    isHtml () {
+      return this.preferences.visualization === 'html'
+    },
     isValue () {
       return this.preferences.visualization === 'value'
     },
@@ -330,7 +344,7 @@ export default {
       }
     },
     pageSize () {
-      return (this.isMarkdown || this.isValue) ? 1 : this.paginationParams.pageSize
+      return (this.isHtml || this.isMarkdown || this.isValue) ? 1 : this.paginationParams.pageSize
     },
     paginatedData () {
       const fromIndex = (this.paginationParams.current - 1) * this.pageSize

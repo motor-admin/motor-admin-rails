@@ -298,6 +298,8 @@ pt:
     on_collection: Na coleção
     association: Associação
     action_has_been_removed: Esta ação foi removida
+    html: HTML
+    edit_html: Edit HTML
     i:
       locale: pt
       select:

@@ -302,6 +302,8 @@ es:
     on_collection: En la colección
     association: Asociación
     action_has_been_removed: Esta acción ha sido eliminada
+    html: HTML
+    edit_html: Edit HTML
     i:
       locale: es
       select:

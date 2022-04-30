@@ -302,6 +302,8 @@ el:
     on_collection: Κατά τη συλλογή
     association: Σύνδεση
     action_has_been_removed: Η ενέργεια αυτή έχει καταργηθεί
+    html: HTML
+    edit_html: Edit HTML
     i:
       locale: el
       select:

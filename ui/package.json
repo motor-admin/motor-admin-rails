@@ -11,6 +11,7 @@
     "color-hash": "^2.0.1",
     "dompurify": "^2.2.8",
     "inflected": "^2.1.0",
+    "liquidjs": "^9.37.0",
     "marked": "^2.0.3",
     "mustache": "^4.2.0",
     "number-precision": "^1.5.2",

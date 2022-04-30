@@ -81,7 +81,7 @@
             {{ ' ' }} {{ i18n['stacked_bars'] }}
           </Checkbox>
         </template>
-        <template v-if="!['table', 'markdown', 'value'].includes(preferences.visualization)">
+        <template v-if="!['table', 'markdown', 'html', 'value'].includes(preferences.visualization)">
           <p class="fs-4 fw-bold my-1">
             Format
           </p>
@@ -102,7 +102,7 @@
             </Radio>
           </RadioGroup>
         </template>
-        <template v-if="!['table', 'markdown'].includes(preferences.visualization) && preferences.visualization_options.label_format === 'currency'">
+        <template v-if="!['table', 'markdown', 'html'].includes(preferences.visualization) && preferences.visualization_options.label_format === 'currency'">
           <p class="fs-4 fw-bold my-1">
             {{ i18n['currency'] }}
           </p>
@@ -166,6 +166,7 @@ export default {
         { label: this.i18n.table, value: 'table' },
         { label: this.i18n.value, value: 'value' },
         { label: this.i18n.markdown, value: 'markdown' },
+        { label: this.i18n.html, value: 'html' },
         { label: this.i18n.line_chart, value: 'line_chart' },
         { label: this.i18n.bar_chart, value: 'bar_chart' },
         { label: this.i18n.row_chart, value: 'row_chart' },
@@ -183,7 +184,7 @@ export default {
   },
   methods: {
     maybeSetLabelFormat (value) {
-      if (!['table', 'markdown'].includes(value)) {
+      if (!['table', 'markdown', 'html'].includes(value)) {
         this.preferences.visualization_options.label_format ||= 'decimal'
         this.preferences.visualization_options.label_format_options ||= {}
       }

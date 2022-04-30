@@ -48,6 +48,15 @@
         {{ isMarkdownEditor ? i18n['edit_sql'] : i18n['edit_markdown'] }}
       </VButton>
       <VButton
+        v-if="vSplit !== 0 && dataQuery.preferences.visualization === 'html'"
+        size="large"
+        class="me-2 md-icon-only"
+        :icon="isHtmlEditor ? 'md-code-working' : 'logo-html5'"
+        @click="isHtmlEditor = !isHtmlEditor"
+      >
+        {{ isHtmlEditor ? i18n['edit_sql'] : i18n['edit_html'] }}
+      </VButton>
+      <VButton
         v-if="vSplit === 0 && $can('edit', 'Motor::Query', query) && queryType === 'sql'"
         size="large"
         class="bg-white me-2 md-icon-only"
@@ -191,6 +200,15 @@
               @run="loadQueryData"
             />
             <CodeEditor
+              v-else-if="dataQuery.preferences.visualization === 'html' && isHtmlEditor"
+              v-model="dataQuery.preferences.visualization_options.html"
+              language="liquid"
+              :columns="columns"
+              :placeholder="'<div>Liquid HTML template: {{column}}</div>'"
+              :variables="dataQuery.preferences.variables"
+              @run="loadQueryData"
+            />
+            <CodeEditor
               v-else
               v-model="dataQuery.sql_body"
               language="pgsql"
@@ -280,6 +298,7 @@ export default {
       isLoading: false,
       isLoadingQuery: false,
       isMarkdownEditor: false,
+      isHtmlEditor: false,
       query: { ...defaultQueryParams },
       dataQuery: {
         sql_body: '',
