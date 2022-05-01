@@ -307,5 +307,5 @@ en:
     every_minute: Every minute
     every_5_minutes: Every 5 minutes
     do_not_refresh: Do not refresh
-    html: Liquid HTML
+    html: HTML
     edit_html: Edit HTML

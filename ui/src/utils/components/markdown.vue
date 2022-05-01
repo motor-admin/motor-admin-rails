@@ -9,9 +9,11 @@
 <script>
 import DOMPurify from 'dompurify'
 import marked from 'marked'
-import Mustache from 'mustache'
 import throttle from 'view3/src/utils/throttle'
-import { naiveMustache } from 'utils/scripts/string'
+
+import { Liquid } from 'liquidjs'
+
+const liquidEngine = new Liquid()
 
 export default {
   name: 'QueryMarkdown',
@@ -31,7 +33,7 @@ export default {
       required: false,
       default: false
     },
-    renderMustache: {
+    renderTemplate: {
       type: Boolean,
       required: false,
       default: true
@@ -44,23 +46,16 @@ export default {
   },
   data () {
     return {
-      dataMarkdown: ''
+      renderedTemplate: ''
     }
   },
   computed: {
     isNoData () {
       return !Object.keys(this.data).length
     },
-    mustacheRendered () {
-      try {
-        return Mustache.render(this.dataMarkdown, this.data)
-      } catch {
-        return naiveMustache(this.dataMarkdown, this.data)
-      }
-    },
     sanitizedHtml () {
       if (this.withoutData || !this.isNoData) {
-        return DOMPurify.sanitize(marked(this.renderMustache ? this.mustacheRendered : this.dataMarkdown))
+        return DOMPurify.sanitize(marked(this.renderTemplate ? this.renderedTemplate : this.markdown))
       } else {
         return this.loading ? '' : 'No data'
       }
@@ -68,11 +63,22 @@ export default {
   },
   watch: {
     markdown: throttle(function () {
-      this.dataMarkdown = this.markdown
+      this.render()
+    }, 500),
+    data: throttle(function () {
+      this.render()
     }, 500)
   },
-  created () {
-    this.dataMarkdown = this.markdown
+  mounted () {
+    this.render()
+  },
+  methods: {
+    render () {
+      liquidEngine.parseAndRender(this.markdown, this.data).then((result) => {
+        this.renderedTemplate = result
+      }).catch(() => {
+      })
+    }
   }
 }
 </script>

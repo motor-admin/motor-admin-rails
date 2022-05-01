@@ -10,7 +10,7 @@
     <Markdown
       :style="{ height: '150px', overflow: 'scroll' }"
       :markdown="dataValue"
-      :render-mustache="false"
+      :render-template="false"
       :without-data="true"
     />
     <VButton

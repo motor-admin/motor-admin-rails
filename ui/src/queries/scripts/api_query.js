@@ -61,13 +61,7 @@ function buildColumnsForData (data, columns) {
       }
     })
   } else {
-    let foundData
-
-    if (Array.isArray(data)) {
-      foundData = data
-    } else {
-      foundData = data[Object.keys(data)[0]]
-    }
+    const foundData = fetchDataArray(data)
 
     if (foundData[0]) {
       return Object.keys(foundData[0]).map((key) => {
@@ -106,14 +100,22 @@ function fetchTypeForColumnValue (value) {
   }
 }
 
-function fetchRowsFromsApi (data) {
-  let foundData
-
+function fetchDataArray (data) {
   if (Array.isArray(data)) {
-    foundData = data
+    return data
   } else {
-    foundData = data[Object.keys(data)[0]]
+    const keys = Object.keys(data)
+
+    if (keys.length === 1 && Array.isArray(data[keys[0]])) {
+      return data[Object.keys(data)[0]]
+    } else {
+      return [data]
+    }
   }
+}
+
+function fetchRowsFromsApi (data) {
+  const foundData = fetchDataArray(data)
 
   if (foundData) {
     if (Array.isArray(foundData[0])) {

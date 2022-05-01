@@ -128,6 +128,30 @@
         style="height: calc(100% - 64px)"
       >
         <div
+          v-if="isCanEdit && (isMarkdownEditor || isHtmlEditor)"
+          class="border-bottom"
+          style="height: 40%"
+        >
+          <CodeEditor
+            v-if="dataQuery.preferences.visualization === 'markdown' && isMarkdownEditor"
+            v-model="dataQuery.preferences.visualization_options.markdown"
+            language="markdown"
+            :columns="columns"
+            :placeholder="'## Heading'"
+            :variables="dataQuery.preferences.variables"
+            @run="loadQueryData"
+          />
+          <CodeEditor
+            v-else-if="dataQuery.preferences.visualization === 'html' && isHtmlEditor"
+            v-model="dataQuery.preferences.visualization_options.html"
+            language="liquid"
+            :columns="columns"
+            :placeholder="'<div>Liquid HTML template: {{column}}</div>'"
+            :variables="dataQuery.preferences.variables"
+            @run="loadQueryData"
+          />
+        </div>
+        <div
           class="p-3 bg-white d-flex"
           :class="{ 'border-bottom': !data.length && !errors.length }"
         >
@@ -149,7 +173,10 @@
             {{ i18n.settings }}
           </VButton>
         </div>
-        <div class="h-100 position-relative">
+        <div
+          class="position-relative"
+          :style="{ height: isMarkdownEditor || isHtmlEditor ? '60%' : '100%' }"
+        >
           <Spin
             v-if="isLoading || isLoadingQuery"
             fix

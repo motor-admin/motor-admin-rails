@@ -59,6 +59,7 @@ export default {
     render () {
       liquidEngine.parseAndRender(this.html, this.data).then((result) => {
         this.$el.innerHTML = result
+      }).catch(() => {
       })
     }
   }

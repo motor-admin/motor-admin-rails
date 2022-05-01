@@ -25,6 +25,7 @@
     <div
       v-if="isMarkdown || isHtml"
       :style="{ width: showMarkdownTable ? '50%' : '100%' }"
+      :class="{ 'border-top': showMarkdownTable }"
       class="bg-white"
     >
       <Markdown
@@ -37,7 +38,7 @@
       />
       <Liquid
         v-else-if="isHtml"
-        :style="{ height: '100%', overflow: 'scroll', padding: '10px 13px' }"
+        :style="{ height: '100%', overflow: 'scroll' }"
         :class="{ 'border-right': showMarkdownTable }"
         :loading="loading"
         :html="preferences.visualization_options.html"
@@ -303,7 +304,7 @@ export default {
           }
 
           return acc
-        }, {})
+        }, { data: this.data })
       } else {
         return {}
       }

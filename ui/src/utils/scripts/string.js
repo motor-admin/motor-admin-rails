@@ -38,8 +38,4 @@ function interpolateForQueryParams (string, params) {
   return [interpolatedString, queryParams]
 }
 
-function naiveMustache (string, data) {
-  return string.replace(/{{(\w+)}}/g, (expresion, key) => data[key] || expresion)
-}
-
-export { truncate, underscore, titleize, interpolate, naiveMustache, interpolateForQueryParams }
+export { truncate, underscore, titleize, interpolate, interpolateForQueryParams }
