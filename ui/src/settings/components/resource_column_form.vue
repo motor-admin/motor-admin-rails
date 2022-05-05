@@ -135,6 +135,16 @@
         />
       </FormItem>
       <FormItem
+        :label="i18n['description']"
+        prop="description"
+      >
+        <VInput
+          v-model="dataColumn.description"
+          type="textarea"
+          :autosize="{minRows: 1, maxRows: 5}"
+        />
+      </FormItem>
+      <FormItem
         v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !['image', 'file', 'audio', 'video'].includes(dataColumn.column_type) && dataColumn.reference?.model_name !== 'active_storage/attachment'"
         :label="i18n['default_value']"
         prop="default_value"

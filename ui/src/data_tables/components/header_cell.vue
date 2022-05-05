@@ -3,6 +3,11 @@
     class="ivu-table-column"
   >
     <div class="ivu-table-cell">
+      <i
+        v-if="column.description"
+        v-popover="popoverParams"
+        class="ion ion-md-information-circle me-1 cursor-pointer"
+      />
       <span
         :class="{ 'ivu-table-cell-sort': withSorting }"
         @click.prevent="toggleSort"
@@ -48,6 +53,19 @@ export default {
   },
   emits: ['update:sortParams'],
   computed: {
+    popoverParams () {
+      return {
+        content: this.column.description,
+        trigger: 'mouseenter',
+        bodyStyle: {
+          maxWidth: '350px',
+          overflowY: 'auto',
+          maxHeight: '200px',
+          whiteSpace: 'pre-wrap',
+          lineBreak: 'anywhere'
+        }
+      }
+    },
     sortKey () {
       if (this.column.reference?.reference_type === 'has_one') {
         const referenceModel = modelNameMap[this.column.reference.model_name]

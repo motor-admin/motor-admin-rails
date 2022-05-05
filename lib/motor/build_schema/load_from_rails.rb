@@ -137,6 +137,7 @@ module Motor
           validators: fetch_validators(model, column.name),
           reference: nil,
           format: fetch_format_hash(column, model),
+          description: '',
           virtual: false
         }
       end

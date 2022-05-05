@@ -15,6 +15,27 @@
       :label="column.display_name"
       :prop="column.name"
     >
+      <template #label>
+        {{ column.display_name }}
+        <i
+          v-if="column.description"
+          v-popover="
+            {
+              content: column.description,
+              trigger: 'mouseenter',
+              placement: 'left-end',
+              bodyStyle: {
+                maxWidth: '350px',
+                overflowY: 'auto',
+                maxHeight: '200px',
+                whiteSpace: 'pre-wrap',
+                lineBreak: 'anywhere'
+              }
+            }
+          "
+          class="ion ion-md-information-circle me-1 cursor-pointer"
+        />
+      </template>
       <FormListInput
         v-if="column.is_array && !multipleValuesSelectorColumnTypes.includes(column.column_type)"
         v-model="resourceData[column.name]"

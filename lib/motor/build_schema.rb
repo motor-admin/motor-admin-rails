@@ -65,7 +65,8 @@ module Motor
       default_value: nil,
       reference: nil,
       format: {},
-      validators: []
+      validators: [],
+      description: ''
     }.with_indifferent_access
 
     ACTION_DEFAULTS = {

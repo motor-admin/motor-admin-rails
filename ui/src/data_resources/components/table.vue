@@ -375,7 +375,8 @@ export default {
             reference: column.reference,
             format: column.format,
             sortable: !column.virtual,
-            type: column.column_type
+            type: column.column_type,
+            description: column.description
           }
 
           if (column.column_type === 'association') {

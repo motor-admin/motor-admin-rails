@@ -107,6 +107,24 @@
               :class="oneColumn ? 'col-12' : 'col-xxl-3 col-xl-6 col-md-12 col-12'"
               class="mb-3"
             >
+              <i
+                v-if="column.description"
+                v-popover="
+                  {
+                    content: column.description,
+                    trigger: 'mouseenter',
+                    placement: 'top-left',
+                    bodyStyle: {
+                      maxWidth: '350px',
+                      overflowY: 'auto',
+                      maxHeight: '200px',
+                      whiteSpace: 'pre-wrap',
+                      lineBreak: 'anywhere'
+                    }
+                  }
+                "
+                class="ion ion-md-information-circle me-1 cursor-pointer"
+              />
               <b>
                 {{ column.display_name }}:
               </b>
