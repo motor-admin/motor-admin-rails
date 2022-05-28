@@ -3,6 +3,7 @@
     ref="form"
     :model="resourceData"
     :rules="rules"
+    :data-form-edited="isEdited"
     label-position="top"
   >
     <Spin
@@ -40,18 +41,21 @@
         v-if="column.is_array && !multipleValuesSelectorColumnTypes.includes(column.column_type)"
         v-model="resourceData[column.name]"
         :column="column"
+        @update:model-value="isEdited = true"
       />
       <FormInput
         v-else-if="isAssociationColumn(column)"
         v-model="resourceData[associationColumn(column).name]"
         :column="associationColumn(column)"
         :form-data="resource"
+        @update:model-value="isEdited = true"
       />
       <FormInput
         v-else
         v-model="resourceData[column.name]"
         :column="column"
         :form-data="resource"
+        @update:model-value="isEdited = true"
       />
     </FormItem>
   </VForm>
@@ -144,6 +148,7 @@ export default {
   data () {
     return {
       isLoading: false,
+      isEdited: false,
       isSaveAndNewLoading: false,
       isSaveLoading: false,
       resourceData: {}

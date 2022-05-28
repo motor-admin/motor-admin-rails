@@ -47,12 +47,14 @@
     ref="form"
     :model="formData"
     label-position="top"
+    :data-form-edited="isEdited"
     @submit.prevent="handleSubmit"
   >
     <FormItems
       v-model:form-data="formData"
       :variables-data="formData"
       :items="fields"
+      @edit="isEdited = true"
     />
     <VButton
       v-if="withSubmit"
@@ -125,6 +127,7 @@ export default {
   emits: ['submit', 'success', 'error', 'reset', 'back'],
   data () {
     return {
+      isEdited: false,
       isLoading: false,
       isSuccess: false,
       successData: null,

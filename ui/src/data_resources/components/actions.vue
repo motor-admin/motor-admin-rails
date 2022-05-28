@@ -391,6 +391,19 @@ export default {
         slots: {
           header: () => h(FormHeader, { resource: data, resourceName: this.resourceName, action: action.name })
         },
+        handleClickOutside () {
+          if (this.$el.querySelector('form[data-form-edited="true"]')) {
+            this.$Dialog.confirm({
+              title: this.i18n.there_are_unsaved_changes_close_form,
+              closable: true,
+              onOk: () => {
+                this.close()
+              }
+            })
+          } else {
+            this.close()
+          }
+        },
         closable: true
       })
     },
@@ -415,6 +428,19 @@ export default {
       }, {
         slots: {
           header: () => h(FormHeader, { resource: this.resource, resourceName: this.resourceName, action: 'edit' })
+        },
+        handleClickOutside () {
+          if (this.$el.querySelector('form[data-form-edited="true"]')) {
+            this.$Dialog.confirm({
+              title: this.i18n.there_are_unsaved_changes_close_form,
+              closable: true,
+              onOk: () => {
+                this.close()
+              }
+            })
+          } else {
+            this.close()
+          }
         },
         className: 'drawer-no-bottom-padding',
         closable: true

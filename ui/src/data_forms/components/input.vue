@@ -258,7 +258,7 @@ export default {
         } else {
           this.$emit('update:modelValue', new Date(datetime.getTime() - datetime.getTimezoneOffset() * 60000))
         }
-      } else {
+      } else if (this.dataValue) {
         this.$emit('update:modelValue', '')
       }
 

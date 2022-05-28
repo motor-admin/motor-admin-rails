@@ -140,6 +140,19 @@ export default {
         slots: {
           header: () => h(FormHeader, { resource: this.resource, resourceName: this.model.name, action: 'create' })
         },
+        handleClickOutside () {
+          if (this.$el.querySelector('form[data-form-edited="true"]')) {
+            this.$Dialog.confirm({
+              title: this.i18n.there_are_unsaved_changes_close_form,
+              closable: true,
+              onOk: () => {
+                this.close()
+              }
+            })
+          } else {
+            this.close()
+          }
+        },
         className: 'drawer-no-bottom-padding',
         closable: true
       })

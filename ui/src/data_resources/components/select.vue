@@ -1,9 +1,9 @@
 <template>
   <MSelect
     :key="resourceName"
-    v-model="value"
     v-model:selected-options="selectedOptions"
     v-model:selected-option="selectedOption"
+    :model-value="value"
     filterable
     :remote-function="loadResources"
     :options="options"
@@ -12,6 +12,7 @@
     :with-create-button="canCreateNew"
     :value-key="valueKey"
     :label-function="labelFunction"
+    @update:model-value="handleValueUpdate"
     @select="$emit('select', $event)"
     @click-create="onCreateClick"
   />
@@ -144,9 +145,6 @@ export default {
       this.resetData()
 
       this.loadResources('')
-    },
-    value (value) {
-      this.$emit('update:modelValue', value)
     }
   },
   created () {
@@ -171,6 +169,12 @@ export default {
     }
   },
   methods: {
+    handleValueUpdate (value) {
+      if (value !== this.value) {
+        this.value = value
+        this.$emit('update:modelValue', value)
+      }
+    },
     onCreateSuccess (data) {
       this.selectedOption = data
 

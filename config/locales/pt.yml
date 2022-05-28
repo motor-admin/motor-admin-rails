@@ -300,6 +300,7 @@ pt:
     action_has_been_removed: Esta ação foi removida
     html: HTML
     edit_html: Edit HTML
+    there_are_unsaved_changes_close_form: "There are unsaved changes. Close form?"
     i:
       locale: pt
       select:

@@ -29,12 +29,14 @@
           v-model="formData[item.name]"
           :column="item"
           :form-data="mergedVariablesFormData"
+          @update:model-value="$emit('edit')"
         />
         <FormInput
           v-else
           v-model="formData[item.name]"
           :column="item"
           :form-data="mergedVariablesFormData"
+          @update:model-value="$emit('edit')"
         />
       </FormItem>
     </template>
@@ -78,7 +80,7 @@ export default {
       required: true
     }
   },
-  emits: ['update:form-data'],
+  emits: ['update:form-data', 'edit'],
   computed: {
     mergedVariablesFormData () {
       return { ...this.variablesData, ...this.formData }
