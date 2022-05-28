@@ -1,4 +1,8 @@
 <template>
+  <Spin
+    v-if="isLoading"
+    fix
+  />
   <input
     v-if="isFile"
     type="file"
@@ -93,6 +97,7 @@ import { titleize } from 'utils/scripts/string'
 import OptionsInput from 'utils/components/options_input'
 import ColorPicker from 'view3/src/components/color-picker'
 import { divide, times } from 'number-precision'
+import api from 'api'
 
 export default {
   name: 'FormInput',
@@ -123,6 +128,7 @@ export default {
   emits: ['update:modelValue', 'select', 'enter'],
   data () {
     return {
+      isLoading: false,
       dataValue: this.modelValue
     }
   },
@@ -205,10 +211,31 @@ export default {
       reader.readAsBinaryString(file)
 
       reader.onload = () => {
-        this.$emit('update:modelValue', {
-          filename: file.name,
-          io: reader.result
-        })
+        if (this.column.file_direct_upload) {
+          this.isLoading = true
+
+          api.post('data/active_storage__attachments', {
+            fields: {
+              attachment: 'id,path,created_at,updated_at,name'
+            },
+            data: {
+              name: 'attachments',
+              file: {
+                filename: file.name,
+                io: reader.result
+              }
+            }
+          }).then((result) => {
+            this.$emit('update:modelValue', location.origin + result.data.data.path)
+          }).finally(() => {
+            this.isLoading = false
+          })
+        } else {
+          this.$emit('update:modelValue', {
+            filename: file.name,
+            io: reader.result
+          })
+        }
       }
     },
     numberFormatter (value) {

@@ -86,6 +86,13 @@
         />
       </FormItem>
       <Checkbox
+        v-if="dataField.field_type === 'file'"
+        v-model="dataField.file_direct_upload"
+        class="d-block"
+      >
+        {{ ' ' }} {{ i18n['send_file_url'] }}
+      </Checkbox>
+      <Checkbox
         v-if="showMultiple"
         v-model="dataField.is_array"
         class="d-block"
