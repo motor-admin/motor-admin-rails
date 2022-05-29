@@ -48,6 +48,9 @@ Metrics/ModuleLength:
 Style/ClassEqualityComparison:
   Enabled: false
 
+Style/FetchEnvVar:
+  Enabled: false
+
 Rails/Date:
   Enabled: false
 

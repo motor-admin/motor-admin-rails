@@ -164,7 +164,7 @@ module Motor
       # @param params [Hash]
       # @return [Boolean]
       def limit_zero_params?(params)
-        params.dig(:page, :limit).yield_self { |limit| limit.present? && limit.to_i.zero? }
+        params.dig(:page, :limit).then { |limit| limit.present? && limit.to_i.zero? }
       end
     end
   end
