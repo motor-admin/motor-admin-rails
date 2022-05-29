@@ -28,7 +28,7 @@ Capybara.register_driver(:headless_cuprite) do |app|
                                      js_errors: true)
 end
 
-Capybara.register_driver(:cuprite) do |app|
+Capybara.register_driver(:headful_cuprite) do |app|
   Capybara::Cuprite::Driver.new(app, window_size: [1200, 800],
                                      headless: false,
                                      process_timeout: 30,
@@ -96,7 +96,7 @@ RSpec.configure do |config|
 
   config.before(:each, type: :system) do
     if ENV['HEADLESS'] == 'false'
-      driven_by :cuprite
+      driven_by :headful_cuprite
     else
       driven_by :headless_cuprite
     end

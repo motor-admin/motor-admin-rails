@@ -6,23 +6,27 @@
   <input
     v-if="isFile"
     type="file"
+    v-bind="$attrs"
     @change="onFile"
   >
   <VueTrix
     v-else-if="isRichtext"
     :model-value="modelValue"
+    v-bind="$attrs"
     @update:modelValue="onRichtextUpdate"
   />
   <ColorPicker
     v-else-if="isColor"
     :model-value="modelValue || '#ffffff'"
     :placement="'bottom-start'"
+    v-bind="$attrs"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
   <ResourceSelect
     v-else-if="column.reference && column.reference.model_name"
     :model-value="modelValue"
     :resource-name="column.reference.model_name"
+    v-bind="$attrs"
     :selected-resource="formData && !column.is_array ? formData[column.reference.name] : null"
     :selected-resources="formData && column.is_array ? formData[column.reference.name] : null"
     :multiple="column.is_array"
@@ -36,6 +40,7 @@
     :query-id="selectQueryId"
     :form-data="formData"
     :multiple="column.is_array"
+    v-bind="$attrs"
     @update:modelValue="$emit('update:modelValue', $event)"
     @select="onSelect"
   />
@@ -43,6 +48,7 @@
     v-else-if="isTagSelect"
     :model-value="dataValue"
     :options="tagOptions"
+    v-bind="$attrs"
     :allow-create="!tagOptions.length"
     :multiple="column.is_array || !!column.format?.split_tags_by"
     :label-function="tagOptions.length ? (option) => titleize(option.value.toString()) : (option) => option.value.toString()"
@@ -52,9 +58,11 @@
   <OptionsInput
     v-else-if="isTextareaList"
     :model-value="modelValue"
+    v-bind="$attrs"
   />
   <Checkbox
     v-else-if="isBoolean"
+    v-bind="$attrs"
     :model-value="modelValue"
     @update:modelValue="$emit('update:modelValue', $event)"
   />
@@ -63,6 +71,7 @@
     :model-value="maybeAdjustCurrencyNumber(modelValue)"
     :parser="numberParser"
     :formatter="numberFormatter"
+    v-bind="$attrs"
     @keydown.enter="$emit('enter')"
     @update:modelValue="onNumberUpdate"
   />
@@ -70,10 +79,12 @@
     v-else-if="isDateTime || isDate"
     :type="type"
     :model-value="dataValue"
+    v-bind="$attrs"
     @update:modelValue="updateDateTime"
   />
   <VInput
     v-else-if="isTextarea"
+    v-bind="$attrs"
     :model-value="modelValue"
     type="textarea"
     :autosize="{ minRows: 1, maxRows: 7 }"
@@ -82,6 +93,7 @@
   <VInput
     v-else
     :model-value="modelValue"
+    v-bind="$attrs"
     :type="column.name === 'password' ? 'password' : 'text'"
     @keydown.enter="$emit('enter')"
     @update:modelValue="$emit('update:modelValue', $event)"

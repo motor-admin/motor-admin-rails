@@ -94,8 +94,8 @@ RSpec.describe 'Forms' do
             ivu_fill_field 'Name', customer_attrs[:name]
             ivu_fill_field 'Country', load_random(Country).name
             ivu_fill_field 'Product', load_random(Product).id
-            ivu_fill_field 'Price', (rand * 100).to_i
-            ivu_fill_field 'Quantity', (rand * 4).to_i
+            ivu_fill_field 'Price', (rand * 100).to_i + 1
+            ivu_fill_field 'Quantity', (rand * 4).to_i + 1
             ivu_fill_field 'Body', 'Test'
 
             click_on 'Submit', match: :first

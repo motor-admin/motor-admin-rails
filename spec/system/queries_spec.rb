@@ -26,6 +26,7 @@ RSpec.describe 'Queries' do
         end
 
         click_on 'Settings'
+        click_on 'Settings'
         click_on 'Save'
 
         within '.ivu-modal' do
