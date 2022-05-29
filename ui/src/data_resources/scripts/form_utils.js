@@ -47,11 +47,11 @@ function buildColumnValidator (column, resource) {
           fullField: column.display_name
         },
         {
-          required: !validator.numeric.allow_nil,
+          required: !validator.numeric.allow_nil && !validator.numeric.allow_blank,
           message: i18nDict.field_is_required.replace('%{field}', column.display_name)
         },
         {
-          required: !validator.numeric.allow_nil,
+          required: !validator.numeric.allow_nil && !validator.numeric.allow_blank,
           validator: Validators.numeric,
           fullField: column.display_name,
           options: validator.numeric

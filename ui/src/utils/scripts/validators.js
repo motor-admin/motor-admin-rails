@@ -48,8 +48,10 @@ export default {
       return true
     } else if (valueType === 'string' && value.match(/^\d+(?:\.\d+)?$/)) {
       return true
-    } else {
+    } else if (value) {
       return new Error(i18nDict.field_is_not_a_number.replace('%{field}', rule.fullField))
+    } else {
+      return true
     }
   },
   length (rule, value, callbacks, source, options) {
@@ -61,6 +63,10 @@ export default {
       normalizedOptions.maximum = normalizedOptions.in[1]
 
       delete normalizedOptions.in
+    }
+
+    if (!value && (rule.options.allow_blank || rule.options.allow_nil)) {
+      return true
     }
 
     return Object.entries(normalizedOptions).reduce((acc, [key, value]) => {

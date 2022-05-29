@@ -256,7 +256,7 @@ export default {
       if (this.type === 'currency' && this.column.format?.currency_base === 'cents') {
         this.$emit('update:modelValue', times(value || 0, 100))
       } else {
-        this.$emit('update:modelValue', value)
+        this.$emit('update:modelValue', value || '')
       }
     },
     maybeAdjustCurrencyNumber (value) {
