@@ -90,7 +90,7 @@ export default {
     :deep(.ivu-menu-item) {
       padding-top: 7px;
       padding-bottom: 7px;
-      padding-left: 40px;
+      padding-left: 39px;
     }
 
     :deep(.ivu-menu-item.ivu-menu-item-active) {

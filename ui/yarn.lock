@@ -3678,7 +3678,7 @@ gonzales-pe@^4.3.0:
 good-listener@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/good-listener/-/good-listener-1.2.2.tgz#d53b30cdf9313dffb7dc9a0d477096aa6d145c50"
-  integrity sha1-1TswzfkxPf+33JoNR3CWqm0UXFA=
+  integrity sha512-goW1b+d9q/HIwbVYZzZ6SsTr4IgE+WA44A0GmPIQstuOrgsFcT7VEJ48nmr9GaRtNu0XTKacFLGnBPAM6Afouw==
   dependencies:
     delegate "^3.1.2"
 
@@ -7841,7 +7841,7 @@ vfile@^4.0.0:
 
 "view3@https://github.com/omohokcoj/view3#motor-admin":
   version "1.0.0"
-  resolved "https://github.com/omohokcoj/view3#a3889a19afcd82f71fc44659baca18ac395f35af"
+  resolved "https://github.com/omohokcoj/view3#75d097e9ffc26b234286fdb2a6d66ed0925a4ef4"
   dependencies:
     async-validator "^3.5.1"
     clipboard "^2.0.6"
