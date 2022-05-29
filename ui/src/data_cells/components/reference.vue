@@ -87,7 +87,7 @@ export default {
         render: (h) => {
           if (tab?.tab_type === 'query') {
             return h(require('data_resources/components/query_tab').default, {
-              tab: tab,
+              tab,
               style: 'min-width: 250px',
               class: 'richtext-no-padding',
               variables: {

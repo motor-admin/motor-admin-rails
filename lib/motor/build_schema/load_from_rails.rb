@@ -131,7 +131,7 @@ module Motor
           display_name: Utils.humanize_column_name(model.human_attribute_name(column.name)),
           column_type: fetch_column_type(column, model),
           column_source: ColumnSources::TABLE,
-          is_array: column.array?,
+          is_array: column.try(:array?),
           access_type: access_type,
           default_value: default_attrs[column.name],
           validators: fetch_validators(model, column.name),

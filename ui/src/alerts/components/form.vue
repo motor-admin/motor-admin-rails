@@ -23,7 +23,7 @@
       <SelectQuery
         v-model="dataAlert.query_id"
         size="large"
-        @update:modelValue="$emit('select-query', dataAlert.query_id)"
+        @update:model-value="$emit('select-query', dataAlert.query_id)"
       />
     </FormItem>
 

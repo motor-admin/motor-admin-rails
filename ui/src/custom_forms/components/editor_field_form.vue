@@ -50,7 +50,7 @@
           :options="fieldTypes"
           :with-deselect="false"
           :placeholder="i18n['input_type']"
-          @update:modelValue="onTypeChange"
+          @update:model-value="onTypeChange"
         />
       </FormItem>
       <FormItem
@@ -66,7 +66,7 @@
           :options="referenceModels"
           :placeholder="i18n['select_resource_placeholder']"
           filterable
-          @update:modelValue="dataField.default_value = ''"
+          @update:model-value="dataField.default_value = ''"
         />
       </FormItem>
       <FormItem

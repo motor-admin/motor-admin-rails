@@ -3,7 +3,7 @@
     :model-value="modelValue"
     size="large"
     :placeholder="i18n['every_day_at_hh_mm']"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:model-value="$emit('update:modelValue', $event)"
   />
   <VButton
     v-for="option in quickSelectOptions"

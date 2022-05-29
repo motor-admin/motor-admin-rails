@@ -123,8 +123,8 @@ export default {
 
         const crumb = {
           fragment: this.fragments[i],
-          association: association,
-          model: model
+          association,
+          model
         }
 
         normalizeFragments.push(crumb)

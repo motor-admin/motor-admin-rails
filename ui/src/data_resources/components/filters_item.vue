@@ -11,7 +11,7 @@
         :with-deselect="false"
         style="margin-left: 50px; width: calc(100% - 50px)"
         :options="columns"
-        @update:modelValue="onKeyChange"
+        @update:model-value="onKeyChange"
       />
       <slot />
     </div>

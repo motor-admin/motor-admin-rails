@@ -6,7 +6,7 @@
     :placeholder="i18n['timezone']"
     :options="options"
     :with-deselect="false"
-    @update:modelValue="updateValue"
+    @update:model-value="updateValue"
   />
 </template>
 

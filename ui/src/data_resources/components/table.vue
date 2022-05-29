@@ -227,7 +227,7 @@ export default {
       isReloading: true,
       isDownloadLoading: false,
       rows: [],
-      sortParams: { ...this.defaultSortParams },
+      sortParams: {},
       filterParams: [],
       searchQuery: '',
       paginationParams: { ...defaultPaginationParams }

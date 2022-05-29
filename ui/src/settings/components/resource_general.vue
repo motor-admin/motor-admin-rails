@@ -14,7 +14,7 @@
         :label-key="'display_name'"
         :value-key="'name'"
         :options="readableColumns"
-        @update:modelValue="persistChanges"
+        @update:model-value="persistChanges"
       />
     </FormItem>
     <FormItem
@@ -24,7 +24,7 @@
     >
       <Checkbox
         v-model="resource.display_primary_key"
-        @update:modelValue="persistChanges"
+        @update:model-value="persistChanges"
       />
     </FormItem>
     <FormItem
@@ -36,7 +36,7 @@
         v-model="resource.searchable_columns"
         multiple
         :options="searchableColumnOptions"
-        @update:modelValue="persistChanges"
+        @update:model-value="persistChanges"
       />
     </FormItem>
   </VForm>

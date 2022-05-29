@@ -4,7 +4,7 @@
     type="textarea"
     :placeholder="i18n['options_separated_with_new_line_or_comma']"
     :autosize="{ minRows: 3, maxRows: 7 }"
-    @update:modelValue="$emit('update:modelValue', optionsArray)"
+    @update:model-value="$emit('update:modelValue', optionsArray)"
   />
 </template>
 

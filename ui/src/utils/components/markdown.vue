@@ -8,7 +8,7 @@
 
 <script>
 import DOMPurify from 'dompurify'
-import marked from 'marked'
+import { marked } from 'marked'
 import throttle from 'view3/src/utils/throttle'
 
 import { Liquid } from 'liquidjs'

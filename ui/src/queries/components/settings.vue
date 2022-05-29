@@ -61,7 +61,7 @@
             border
             size="large"
             class="my-1 me-0"
-            @update:modelValue="maybeSetLabelFormat"
+            @update:model-value="maybeSetLabelFormat"
           >
             {{ option.label }}
           </Radio>
@@ -88,7 +88,7 @@
           <RadioGroup
             v-model="preferences.visualization_options.label_format"
             class="d-flex flex-column"
-            @update:modelValue="maybeSetCurrency"
+            @update:model-value="maybeSetCurrency"
           >
             <Radio
               v-for="option in formatOptions"

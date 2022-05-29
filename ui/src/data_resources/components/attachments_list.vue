@@ -80,8 +80,6 @@
             :href="attachment.path"
             target="_blank"
             class="d-block image-container mx-2 py-2 cursor-zoom-in photoswipe"
-            data-pswp-width="3000"
-            data-pswp-height="3000"
           >
 
             <VButton
@@ -95,6 +93,7 @@
             <img
               :src="attachment.path"
               style="width: 100%"
+              @load="setPswpData"
             >
           </a>
           <div
@@ -177,8 +176,8 @@ import api from 'api'
 import { modelNameMap } from '../scripts/schema'
 import { truncate } from 'utils/scripts/string'
 
-import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js'
-import PhotoSwipe from 'photoswipe/dist/photoswipe.esm.js'
+import PhotoSwipeLightbox from 'photoswipe/lightbox'
+import PhotoSwipe from 'photoswipe'
 
 export default {
   name: 'AttachmentsList',
@@ -321,6 +320,12 @@ export default {
       })).finally(() => {
         this.loadData()
       })
+    },
+    setPswpData (e) {
+      const containerEl = e.target.parentElement
+
+      containerEl.dataset.pswpWidth = e.target.width * 100
+      containerEl.dataset.pswpHeight = e.target.height * 100
     },
     loadData () {
       this.isLoading = true

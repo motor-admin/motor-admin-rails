@@ -13,14 +13,14 @@
     v-else-if="isRichtext"
     :model-value="modelValue"
     v-bind="$attrs"
-    @update:modelValue="onRichtextUpdate"
+    @update:model-value="onRichtextUpdate"
   />
   <ColorPicker
     v-else-if="isColor"
     :model-value="modelValue || '#ffffff'"
     :placement="'bottom-start'"
     v-bind="$attrs"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:model-value="$emit('update:modelValue', $event)"
   />
   <ResourceSelect
     v-else-if="column.reference && column.reference.model_name"
@@ -41,7 +41,7 @@
     :form-data="formData"
     :multiple="column.is_array"
     v-bind="$attrs"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:model-value="$emit('update:modelValue', $event)"
     @select="onSelect"
   />
   <MSelect
@@ -52,7 +52,7 @@
     :allow-create="!tagOptions.length"
     :multiple="column.is_array || !!column.format?.split_tags_by"
     :label-function="tagOptions.length ? (option) => titleize(option.value.toString()) : (option) => option.value.toString()"
-    @update:modelValue="$emit('update:modelValue', column.format?.split_tags_by ? $event.join(column.format.split_tags_by) : $event)"
+    @update:model-value="$emit('update:modelValue', column.format?.split_tags_by ? $event.join(column.format.split_tags_by) : $event)"
     @select="onSelect"
   />
   <OptionsInput
@@ -64,7 +64,7 @@
     v-else-if="isBoolean"
     v-bind="$attrs"
     :model-value="modelValue"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:model-value="$emit('update:modelValue', $event)"
   />
   <InputNumber
     v-else-if="isNumber"
@@ -73,14 +73,14 @@
     :formatter="numberFormatter"
     v-bind="$attrs"
     @keydown.enter="$emit('enter')"
-    @update:modelValue="onNumberUpdate"
+    @update:model-value="onNumberUpdate"
   />
   <DatePicker
     v-else-if="isDateTime || isDate"
     :type="type"
     :model-value="dataValue"
     v-bind="$attrs"
-    @update:modelValue="updateDateTime"
+    @update:model-value="updateDateTime"
   />
   <VInput
     v-else-if="isTextarea"
@@ -88,7 +88,7 @@
     :model-value="modelValue"
     type="textarea"
     :autosize="{ minRows: 1, maxRows: 7 }"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:model-value="$emit('update:modelValue', $event)"
   />
   <VInput
     v-else
@@ -96,7 +96,7 @@
     v-bind="$attrs"
     :type="column.name === 'password' ? 'password' : 'text'"
     @keydown.enter="$emit('enter')"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
 

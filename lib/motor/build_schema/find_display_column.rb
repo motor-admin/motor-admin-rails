@@ -55,7 +55,7 @@ module Motor
       def fetch_column_names(model)
         model.columns.map do |column|
           next unless column.type.in?(BuildSchema::SEARCHABLE_COLUMN_TYPES)
-          next if column.respond_to?(:array?) && column.array?
+          next if column.try(:array?)
 
           column.name
         end.compact

@@ -65,7 +65,7 @@
         {{ isEditorOpened ? i18n['close_editor'] : i18n['edit'] }}
       </VButton>
       <VButton
-        v-if="dashboard.id && $can('create', 'Motor::Dashboard')"
+        v-if="isExisting && $can('create', 'Motor::Dashboard')"
         size="large"
         class="bg-white me-2 d-none d-sm-block"
         @click="saveAsNew"

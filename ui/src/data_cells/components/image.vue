@@ -4,15 +4,16 @@
     class="photoswipe"
   >
     <a
+      ref="container"
       :href="value"
       target="_blank"
       class="cursor-zoom-in"
-      data-pswp-width="3000"
-      data-pswp-height="3000"
     >
       <img
+        ref="image"
         class="info-image"
         :src="value"
+        @load="initPhotoswipe"
       >
     </a>
   </div>
@@ -24,8 +25,8 @@
 </template>
 
 <script>
-import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js'
-import PhotoSwipe from 'photoswipe/dist/photoswipe.esm.js'
+import PhotoSwipeLightbox from 'photoswipe/lightbox'
+import PhotoSwipe from 'photoswipe'
 
 import 'photoswipe/dist/photoswipe.css'
 
@@ -42,19 +43,22 @@ export default {
       default: false
     }
   },
-  mounted () {
-    if (this.photoswipe) {
-      const options = {
-        gallerySelector: '.photoswipe a',
-        pswpModule: PhotoSwipe
-      }
-
-      const lightbox = new PhotoSwipeLightbox(options)
-
-      lightbox.init()
-    }
-  },
   methods: {
+    initPhotoswipe (e) {
+      this.$refs.container.dataset.pswpWidth = e.target.width * 100
+      this.$refs.container.dataset.pswpHeight = e.target.height * 100
+
+      if (this.photoswipe) {
+        const options = {
+          gallerySelector: '.photoswipe a',
+          pswpModule: PhotoSwipe
+        }
+
+        const lightbox = new PhotoSwipeLightbox(options)
+
+        lightbox.init()
+      }
+    },
     copyToClipboard () {
       const url = this.value[0] === '/' ? document.location.origin + this.value : this.value
 

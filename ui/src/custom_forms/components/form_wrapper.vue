@@ -209,7 +209,7 @@ export default {
             params: {
               data: {
                 api_config_name: this.dataForm.api_config_name,
-                path: path
+                path
               }
             }
           })

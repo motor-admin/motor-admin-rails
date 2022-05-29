@@ -346,7 +346,7 @@ export default {
             method: form.http_method,
             body: params,
             api_config_name: form.api_config_name,
-            path: path
+            path
           }
         })
       } else {
@@ -368,7 +368,7 @@ export default {
       this.$Drawer.open(CustomFormWrapper, {
         data,
         withFooterSubmit: true,
-        form: form,
+        form,
         triggerRequest: resources.length === 1,
         excludeFields: ['id', `${this.model.name}_${this.model.primary_key}`],
         onSuccess: (data) => {

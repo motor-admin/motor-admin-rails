@@ -2,7 +2,7 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-const CompressionPlugin = require("compression-webpack-plugin")
+const CompressionPlugin = require('compression-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -13,7 +13,7 @@ module.exports = (env = {}) => ({
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: '[name]-[fullhash].js',
-    publicPath: '',
+    publicPath: ''
   },
   module: {
     rules: [
@@ -52,7 +52,7 @@ module.exports = (env = {}) => ({
           MiniCssExtractPlugin.loader,
           'css-loader',
           'postcss-loader',
-          'sass-loader',
+          'sass-loader'
         ]
       },
       {
@@ -61,7 +61,7 @@ module.exports = (env = {}) => ({
           MiniCssExtractPlugin.loader,
           'css-loader',
           'postcss-loader',
-          'sass-loader',
+          'sass-loader'
         ]
       },
       {
@@ -78,7 +78,7 @@ module.exports = (env = {}) => ({
       path.resolve(__dirname, './src'),
       path.resolve(__dirname, './node_modules')
     ],
-    extensions: ['.js', '.ts', '.vue', '.json', '.less' , '.scss', '.css']
+    extensions: ['.js', '.ts', '.vue', '.json', '.less', '.scss', '.css']
   },
   plugins: [
     new CopyPlugin({
@@ -104,14 +104,11 @@ module.exports = (env = {}) => ({
   ].filter(Boolean),
   devServer: {
     port: 9090,
-    contentBase: './',
     hot: false,
-    stats: 'minimal',
-    injectClient: false,
-    overlay: {
-      warnings: true,
-      errors: true
-    },
-    historyApiFallback: true
+    client: {
+      logging: 'info',
+      overlay: true,
+      progress: true
+    }
   }
 })

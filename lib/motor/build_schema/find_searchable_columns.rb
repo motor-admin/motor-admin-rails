@@ -22,7 +22,7 @@ module Motor
       def find_searchable_columns(model)
         model.columns.map do |column|
           next unless column.type.in?(COLUMN_TYPES)
-          next if column.respond_to?(:array?) && column.array?
+          next if column.try(:array?)
           next if model.validators_on(column.name).any?(ActiveModel::Validations::InclusionValidator)
 
           column.name

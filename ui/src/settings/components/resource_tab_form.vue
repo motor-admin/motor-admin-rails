@@ -25,7 +25,7 @@
               v-model="dataTab.tab_type"
               :options="tabTypes"
               :with-deselect="false"
-              @update:modelValue="dataTab.preferences = {}"
+              @update:model-value="dataTab.preferences = {}"
             />
           </FormItem>
         </div>

@@ -28,7 +28,7 @@
               v-model="dataAction.action_type"
               :options="actionTypes"
               :placeholder="i18n['select']"
-              @update:modelValue="dataAction.preferences = {}"
+              @update:model-value="dataAction.preferences = {}"
             />
           </FormItem>
         </div>

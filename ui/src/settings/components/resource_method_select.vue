@@ -4,7 +4,7 @@
     filterable
     :options="options"
     :with-deselect="false"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
 

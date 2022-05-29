@@ -40,7 +40,7 @@
               filterable
               :with-deselect="false"
               :disabled="dataColumn.reference?.virtual === false"
-              @update:modelValue="assignDefaultData"
+              @update:model-value="assignDefaultData"
             />
           </FormItem>
         </div>
@@ -158,7 +158,7 @@
         v-if="['read_write', 'write_only'].includes(dataColumn.access_type) && !dataColumn.reference && !['association'].includes(dataColumn.column_type)"
         :model-value="!!customValidator"
         class="mb-3"
-        @update:modelValue="toggleCustomValidator"
+        @update:model-value="toggleCustomValidator"
       >
         {{ ' ' }} {{ i18n['validate'] }}
       </Checkbox>

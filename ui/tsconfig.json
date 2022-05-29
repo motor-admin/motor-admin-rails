@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "allowJs": true,
     "module": "es2015",
+    "baseUrl": "src",
     "lib": ["es2017", "es7", "es6", "dom"],
     "declaration": false,
     "outDir": "dist",
