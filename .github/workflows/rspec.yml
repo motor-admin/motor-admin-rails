@@ -57,7 +57,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
-          node-version: 14.15.4
+          node-version: 16.13.1
       - name: Cache node_modules
         uses: actions/cache@v1
         with:
@@ -76,7 +76,7 @@ jobs:
           RAILS_VERSION: ${{ matrix.rails }}
         run: |
           sudo apt-get update
-          sudo apt-get -y install chromium-browser
+          sudo apt-get -y install chromium-browser freetds-dev
           gem install bundler
           bundle config path vendor/bundle
           bundle update --jobs 4 --retry 3
