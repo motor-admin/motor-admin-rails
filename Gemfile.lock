@@ -68,6 +68,9 @@ GEM
     activerecord-filter (6.1.0.2)
       activerecord (>= 6.1.0)
       arel-extensions (>= 6.1.0)
+    activerecord-sqlserver-adapter (7.0.0.0)
+      activerecord (~> 7.0.0)
+      tiny_tds
     activestorage (7.0.3)
       actionpack (= 7.0.3)
       activejob (= 7.0.3)
@@ -306,6 +309,7 @@ GEM
     strscan (3.0.3)
     thor (1.2.1)
     timeout (0.3.0)
+    tiny_tds (2.1.5)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.1.0)
@@ -331,6 +335,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activerecord-sqlserver-adapter
   aws-sdk-s3
   bootsnap
   brakeman
@@ -355,6 +360,7 @@ DEPENDENCIES
   rubocop-rspec
   simplecov
   sqlite3
+  tiny_tds
   webmock
   webrick
   yard

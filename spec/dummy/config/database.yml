@@ -3,12 +3,20 @@ common: &common
   adapter: mysql2
   encoding: utf8mb4
   username: root
-  password:
+  password: root
   host: 127.0.0.1
   port: 3306
 <% elsif ENV['DATABASE_TYPE'] == 'sqlite' %>
 common: &common
   adapter: sqlite3
+  timeout: 30000
+<% elsif ENV['DATABASE_TYPE'] == 'sqlserver' %>
+common: &common
+  adapter: sqlserver
+  host: 127.0.0.1
+  port: 1433
+  username: sa
+  password: Passw@rd
   timeout: 30000
 <% else %>
 common: &common

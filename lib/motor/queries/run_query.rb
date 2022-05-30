@@ -7,14 +7,7 @@ module Motor
 
       QueryResult = Struct.new(:data, :columns, :error, keyword_init: true)
 
-      CTE_NAME = '__query__'
-
-      WITH_STATEMENT_START = "WITH #{CTE_NAME} AS ("
-
-      WITH_STATEMENT_TEMPLATE = <<~SQL
-        #{WITH_STATEMENT_START}%<sql_body>s
-        )
-      SQL
+      SUBQUERY_NAME = '__query__'
 
       STATEMENT_VARIABLE_REGEXP = /\$\d+/.freeze
       PG_ERROR_REGEXP = /\APG.+ERROR:/.freeze
@@ -51,7 +44,7 @@ module Motor
       # @param exception [ActiveRecord::StatementInvalid]
       # @return [String]
       def build_error_message(exception)
-        exception.message.sub(WITH_STATEMENT_START, '').sub(PG_ERROR_REGEXP, '').strip.upcase_first
+        exception.message.sub(PG_ERROR_REGEXP, '').strip.upcase_first
       end
 
       # @param query [Motor::Query]
@@ -61,7 +54,7 @@ module Motor
       # @return [ActiveRecord::Result]
       def execute_query(query, limit, variables_hash, filters)
         result = nil
-        statement = prepare_sql_statement(connection_class.connection, query, limit, variables_hash, filters)
+        statement = prepare_sql_statement(connection_class, query, limit, variables_hash, filters)
 
         connection_class.transaction do
           result =
@@ -129,38 +122,42 @@ module Motor
         end
       end
 
-      # @param connection [Object]
+      # @param connection_class [Class]
       # @param query [Motor::Query]
       # @param limit [Integer]
       # @param variables_hash [Hash]
       # @param filters [Hash]
       # @return [Array]
-      def prepare_sql_statement(connection, query, limit, variables_hash, filters)
+      def prepare_sql_statement(connection_class, query, limit, variables_hash, filters)
         variables = merge_variable_default_values(query.preferences.fetch(:variables, []), variables_hash)
 
         sql, query_variables = RenderSqlTemplate.call(query.sql_body, variables)
-        cte_sql = format(WITH_STATEMENT_TEMPLATE, sql_body: sql.strip.delete_suffix(';'))
-        cte_select_sql = build_cte_select_sql(connection, limit, filters)
+        select_sql = build_select_sql(connection_class, sql, limit, filters)
 
         attributes = build_statement_attributes(query_variables)
 
-        [[cte_sql, cte_select_sql].join, 'SQL', attributes]
+        [select_sql, 'SQL', attributes]
       end
 
+      # @param connection_class [Class]
+      # @param sql [String]
       # @param limit [Number]
       # @param filters [Hash]
       # @return [String]
-      def build_cte_select_sql(connection, limit, filters)
-        table = Arel::Table.new(CTE_NAME)
+      def build_select_sql(connection_class, sql, limit, filters)
+        sql = sql.strip.delete_suffix(';').gsub(/\A\)+/, '').gsub(/\z\(+/, '')
+
+        subquery_sql = Arel.sql("(#{sql}) as #{SUBQUERY_NAME}")
 
         arel_filters = build_filters_arel(filters)
 
-        expresion = table.project(table[Arel.star])
-        expresion = expresion.where(arel_filters) if arel_filters.present?
+        rel = connection_class.from(subquery_sql)
+                              .select(Arel::Table.new(SUBQUERY_NAME)[Arel.star])
+                              .where(arel_filters)
 
-        expresion.take(limit.to_i) unless connection.class.name.include?('SQLServerAdapter')
+        rel = rel.limit(limit.to_i) unless connection_class.connection.class.name.include?('SQLServerAdapter')
 
-        expresion.to_sql.delete('"')
+        rel.to_sql
       end
 
       # @param filters [Hash]
@@ -168,7 +165,7 @@ module Motor
       def build_filters_arel(filters)
         return nil if filters.blank?
 
-        table = Arel::Table.new(CTE_NAME)
+        table = Arel::Table.new(SUBQUERY_NAME)
 
         arel_filters = filters.map { |key, value| table[key].in(value) }
 
@@ -213,7 +210,10 @@ module Motor
       end
 
       def connection_class
-        defined?(ResourceRecord) ? ResourceRecord : ActiveRecord::Base
+        @connection_class ||=
+          'ResourceRecord'.safe_constantize ||
+          'ApplicationRecord'.safe_constantize ||
+          Class.new(ActiveRecord::Base).tap { |e| e.abstract_class = true }
       end
     end
   end
