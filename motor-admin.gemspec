@@ -6,9 +6,17 @@ Gem::Specification.new do |spec|
   spec.name        = 'motor-admin'
   spec.version     = Motor::VERSION
   spec.authors     = ['Pete Matsyburka']
-  spec.email       = ['pete.matsy@gmail.com']
+  spec.email       = ['pete@getmotoradmin.com']
   spec.summary     = 'Low-code Admin panel and Business intelligence'
   spec.license     = 'MIT'
+
+  spec.metadata = {
+    'bug_tracker_uri' => 'https://github.com/motor-admin/motor-admin-rails/issues',
+    'homepage_uri' => 'https://www.getmotoradmin.com',
+    'source_code_uri' => 'https://github.com/motor-admin/motor-admin-rails',
+    'documentation_uri' => 'https://github.com/motor-admin/motor-admin-rails/tree/master/guides',
+    'rubygems_mfa_required' => 'true'
+  }
 
   spec.files = Dir[
     '{app,config,lib}/**/*',
