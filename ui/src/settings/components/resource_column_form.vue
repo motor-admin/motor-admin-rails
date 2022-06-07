@@ -314,6 +314,7 @@ export default {
         { label: this.i18n.richtext, value: 'richtext' },
         { label: this.i18n.currency, value: 'currency' },
         { label: this.i18n.percentage, value: 'percentage' },
+        { label: this.i18n.rating, value: 'rating' },
         { label: this.i18n.change, value: 'change' },
         { label: this.i18n.chart, value: 'chart' },
         { label: this.i18n.tag, value: 'tag' },

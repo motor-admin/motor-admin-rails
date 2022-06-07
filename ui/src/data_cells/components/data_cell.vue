@@ -91,6 +91,11 @@
     :value="value"
     :with-format="format.number_format"
   />
+  <DataRating
+    v-else-if="type === 'rating'"
+    ref="cell"
+    :value="value"
+  />
   <DataText
     v-else
     ref="cell"
@@ -117,6 +122,7 @@ import DataColor from './color'
 import DataAudio from './audio'
 import DataVideo from './video'
 import DataNumber from './number'
+import DataRating from './rating'
 
 import DataTypes from '../scripts/data_types'
 
@@ -139,7 +145,8 @@ export default {
     DataColor,
     DataAudio,
     DataVideo,
-    DataNumber
+    DataNumber,
+    DataRating
   },
   props: {
     value: {

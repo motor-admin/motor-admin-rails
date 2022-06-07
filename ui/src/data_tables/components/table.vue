@@ -283,4 +283,8 @@ export default {
   background-color: #d3d3d3;
   background-clip: padding-box;
 }
+
+th.ivu-table-column {
+  z-index: 1;
+}
 </style>
