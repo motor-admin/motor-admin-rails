@@ -16,7 +16,7 @@
     <span
       class="ivu-tag-text ivu-tag-color-white cursor-unset"
       :style="textStyle"
-    >{{ titleize(value.toString()) }}</span>
+    >{{ options[value] || titleize(value.toString()) }}</span>
   </div>
 </template>
 
@@ -63,6 +63,9 @@ export default {
   computed: {
     colorClass () {
       return COLORS[this.value]
+    },
+    options () {
+      return this.format.select_options || {}
     },
     normalizedValue () {
       if (typeof this.value === 'string' && this.format.split_tags_by && this.value.includes(this.format.split_tags_by)) {

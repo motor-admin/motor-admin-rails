@@ -13,7 +13,7 @@ export default {
   name: 'OptionsSelect',
   props: {
     modelValue: {
-      type: [Array, String],
+      type: [Array, String, Object],
       required: false,
       default: () => []
     }
@@ -29,9 +29,23 @@ export default {
       if (this.optionsString) {
         const delimiter = this.optionsString.includes('\n') ? '\n' : ','
 
-        return this.optionsString.split(delimiter).map((e) => e.trim())
+        const options = this.optionsString.split(delimiter).map((e) => e.trim())
           .filter((el, i, a) => i === a.indexOf(el))
           .filter(e => !e.match(/^\s*$/))
+
+        const isMap = options.every((o) => o.match(/[;,]/))
+
+        if (isMap) {
+          return options.reduce((acc, o) => {
+            const [key, value] = o.split(/[;,]/)
+
+            acc[key.trim()] = value.trim()
+
+            return acc
+          }, {})
+        } else {
+          return options
+        }
       } else {
         return []
       }
@@ -39,15 +53,22 @@ export default {
   },
   watch: {
     modelValue () {
-      if (this.modelValue) {
-        this.optionsString = this.modelValue.join('\n')
-      } else {
+      if (!this.modelValue) {
         this.optionsString = ''
       }
     }
   },
   created () {
-    this.optionsString = Array(this.modelValue).flat().join('\n')
+    this.assignOptionsString()
+  },
+  methods: {
+    assignOptionsString () {
+      if (this.modelValue.length) {
+        this.optionsString = Array(this.modelValue).flat().join('\n')
+      } else {
+        this.optionsString = Object.entries(this.modelValue).map((e) => e.join(',')).join('\n')
+      }
+    }
   }
 }
 </script>

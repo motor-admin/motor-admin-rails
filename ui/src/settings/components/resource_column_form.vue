@@ -100,7 +100,7 @@
         />
         <div class="text-center">
           <VButton
-            v-if="!dataColumn.format.select_options?.length"
+            v-if="dataColumn.format.select_options && !Object.entries(dataColumn.format.select_options).length"
             type="text"
             @click="loadSelectOptions"
           >
