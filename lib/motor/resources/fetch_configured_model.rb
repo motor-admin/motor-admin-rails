@@ -45,7 +45,8 @@ module Motor
 
         klass.instance_eval do
           default_scope do
-            from(Arel.sql("(#{self.klass.instance_variable_get(:@__motor_custom_sql)})").as(table_name))
+            from(Arel.sql("(#{self.klass.instance_variable_get(:@__motor_custom_sql)})")
+                     .as(connection.quote_column_name(table_name)))
           end
         end
 

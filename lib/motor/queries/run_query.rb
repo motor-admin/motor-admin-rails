@@ -145,9 +145,9 @@ module Motor
       # @param filters [Hash]
       # @return [String]
       def build_select_sql(connection_class, sql, limit, filters)
-        sql = sql.strip.delete_suffix(';').gsub(/\A\)+/, '').gsub(/\z\(+/, '')
+        sql = normalize_sql(sql)
 
-        subquery_sql = Arel.sql("(#{sql}) as #{SUBQUERY_NAME}")
+        subquery_sql = Arel.sql("(#{sql})").as(connection_class.connection.quote_column_name(SUBQUERY_NAME))
 
         arel_filters = build_filters_arel(filters)
 
@@ -196,6 +196,10 @@ module Motor
                                       attributes.map(&:value))
 
         [sql, 'SQL', attributes]
+      end
+
+      def normalize_sql(sql)
+        sql.strip.delete_suffix(';').gsub(/\A\)+/, '').gsub(/\z\(+/, '')
       end
 
       # @param variable_configs [Array<Hash>]
