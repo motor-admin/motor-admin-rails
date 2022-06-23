@@ -8,7 +8,7 @@
     />
   </template>
   <div
-    v-else-if="value"
+    v-else-if="value || value == 0"
     class="ivu-tag ivu-tag-size-default ivu-tag-checked cursor-unset"
     :class="colorClass"
     :style="bgStyle"

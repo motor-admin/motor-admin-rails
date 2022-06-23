@@ -97,10 +97,10 @@
       >
         <OptionsInput
           v-model="dataColumn.format.select_options"
+          :options-text="selectedOptionsText"
         />
         <div class="text-center">
           <VButton
-            v-if="dataColumn.format.select_options && !Object.entries(dataColumn.format.select_options).length"
             type="text"
             @click="loadSelectOptions"
           >
@@ -251,7 +251,8 @@ export default {
   data () {
     return {
       isLoading: false,
-      dataColumn: {}
+      dataColumn: {},
+      selectedOptionsText: ''
     }
   },
   computed: {
@@ -416,6 +417,7 @@ export default {
         sql_body: sqlBody
       }).then((result) => {
         this.dataColumn.format.select_options = result.data.data.flat().map((e) => e?.match && e.match(/^{.*}$/) ? e.split(/[{},]/) : e).flat().filter(Boolean)
+        this.selectedOptionsText = Array(this.dataColumn.format.select_options).flat().join('\n')
       })
     },
     submit () {

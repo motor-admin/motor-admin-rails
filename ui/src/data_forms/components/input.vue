@@ -49,7 +49,7 @@
     :model-value="dataValue"
     :options="Array.isArray(tagOptions) ? tagOptions : Object.keys(tagOptions)"
     v-bind="$attrs"
-    :allow-create="!tagOptions.length"
+    :allow-create="!Object.entries(tagOptions).length"
     :multiple="column.is_array || !!column.format?.split_tags_by"
     :label-function="Object.entries(tagOptions).length ? (option) => tagOptions[option.value.toString()] || titleize(option.value.toString()) : (option) => option.value.toString()"
     @update:model-value="$emit('update:modelValue', column.format?.split_tags_by ? $event.join(column.format.split_tags_by) : $event)"
@@ -211,6 +211,8 @@ export default {
           this.dataValue = new Date(date.getTime() + date.getTimezoneOffset() * 60000)
         } else if (this.isTagSelect && this.column.format?.split_tags_by) {
           this.dataValue = this.modelValue.split(this.column.format.split_tags_by).map((e) => e.trim())
+        } else {
+          this.dataValue = this.modelValue
         }
       } else if (this.isTagSelect && this.column.format?.split_tags_by) {
         this.dataValue = []

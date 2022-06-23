@@ -16,6 +16,11 @@ export default {
       type: [Array, String, Object],
       required: false,
       default: () => []
+    },
+    optionsText: {
+      type: [String],
+      required: false,
+      default: ''
     }
   },
   emits: ['update:modelValue'],
@@ -56,6 +61,9 @@ export default {
       if (!this.modelValue) {
         this.optionsString = ''
       }
+    },
+    optionsText () {
+      this.optionsString = this.optionsText
     }
   },
   created () {
