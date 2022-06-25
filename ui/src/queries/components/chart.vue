@@ -246,17 +246,46 @@ export default {
 
       options.plugins = deepmerge(options.plugins, {
         datalabels: {
-          display: 'auto',
-          anchor: this.options.chart_stacked ? 'center' : 'end',
-          align: this.options.chart_stacked ? 'center' : (['pie', 'row'].includes(this.chartType) ? 'end' : 'top'),
-          formatter: (value) => {
-            return this.formatValue(value)
-          },
-          font: {
-            weight: 'bold'
+          labels: {
+            value: {
+              display: ['bar', 'row'].includes(this.chartType) ? true : 'auto',
+              anchor: this.options.chart_stacked ? 'center' : 'end',
+              align: this.options.chart_stacked && this.chartType !== 'line' ? 'center' : (['pie', 'row'].includes(this.chartType) ? 'end' : 'top'),
+              formatter: (value) => {
+                return this.formatValue(value)
+              },
+              font: {
+                weight: 'bold'
+              }
+            }
           }
         }
       })
+
+      if (this.options.chart_stacked && ['bar', 'row'].includes(this.chartType)) {
+        options.plugins = deepmerge(options.plugins, {
+          datalabels: {
+            labels: {
+              data: {
+                align: 'end',
+                anchor: 'end',
+                color: (ctx) => {
+                  if (ctx.datasetIndex !== this.datasets.length - 1) {
+                    return 'transparent'
+                  }
+                },
+                formatter: (value, ctx) => {
+                  const sum = this.datasets.map((d) => d.data[ctx.dataIndex]).reduce((acc, val) => acc + val, 0)
+                  return [this.i18n.total, this.formatValue(sum)].join(': ')
+                },
+                font: {
+                  weight: 'bold'
+                }
+              }
+            }
+          }
+        })
+      }
 
       if (this.chartType === 'pie') {
         options.plugins = deepmerge(options.plugins, {
@@ -275,6 +304,7 @@ export default {
         options.plugins = deepmerge(options.plugins, {
           datalabels: {
             display: 'auto',
+            align: 'end',
             formatter (value, context) {
               if (context.dataIndex !== 0) {
                 const base = context.dataset.data[0]
