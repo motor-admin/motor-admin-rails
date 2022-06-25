@@ -67,6 +67,8 @@ module Motor
 
           record.update!(attrs)
         end
+
+        ActiveRecordUtils.reset_id_sequence!(Motor::Config)
       end
 
       def sync_api_configs(configs_hash)
@@ -83,6 +85,8 @@ module Motor
         end
 
         archive_api_configs(configs_index, configs_hash[:api_configs])
+
+        ActiveRecordUtils.reset_id_sequence!(Motor::ApiConfig)
       end
 
       def archive_api_configs(configs_index, api_configs)
@@ -91,6 +95,7 @@ module Motor
         end
       end
 
+      # rubocop:disable Metrics/AbcSize
       def sync_resources(configs_hash)
         resources_index = Motor::Configs::LoadFromCache.load_resources.index_by(&:name)
 
@@ -105,7 +110,10 @@ module Motor
           record.updated_at_will_change!
           record.update!(attrs)
         end
+
+        ActiveRecordUtils.reset_id_sequence!(Motor::Resource)
       end
+      # rubocop:enable Metrics/AbcSize
 
       def sync_taggable(records, config_items, configs_timestamp, update_proc)
         processed_records, create_items = update_taggable_items(records, config_items, update_proc)
