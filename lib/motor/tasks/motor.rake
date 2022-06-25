@@ -21,6 +21,15 @@ namespace :motor do
     puts '✅ configs have been loaded from configs/motor.yml'
   end
 
+  task reload: :environment do
+    ActiveRecord::Base.transaction do
+      Motor::Configs.clear
+      Motor::Configs::SyncFromFile.call(with_exception: true)
+    end
+
+    puts '✅ configs have been loaded from configs/motor.yml'
+  end
+
   desc 'Synchronize configs with remote application'
 
   task sync: :environment do

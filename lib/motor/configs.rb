@@ -10,6 +10,16 @@ module Motor
 
     module_function
 
+    def clear
+      Motor::Resource.destroy_all
+      Motor::Alert.destroy_all
+      Motor::Query.destroy_all
+      Motor::Dashboard.destroy_all
+      Motor::Form.destroy_all
+      Motor::ApiConfig.destroy_all
+      Motor::Config.destroy_all
+    end
+
     # @return [String]
     def file_path
       if Rails.root.to_s.start_with?(MEMFS_PATH)
