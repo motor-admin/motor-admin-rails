@@ -149,7 +149,7 @@ export default {
       return headers
     },
     isSubmitDisabled () {
-      return !this.form.api_path
+      return !this.form.api_path && !this.form.preferences.graphql_mutation
     },
     fields () {
       return this.form.preferences.fields.filter((field) => !this.excludeFields.includes(field.name))
@@ -183,14 +183,24 @@ export default {
       this.isLoading = true
 
       if (this.form.api_config_name !== 'origin') {
-        request = api.post('run_api_request', {
-          data: {
-            body: this.formData,
-            api_config_name: this.form.api_config_name,
-            path,
-            method
-          }
-        })
+        if (this.form.preferences.request_type === 'graphql') {
+          request = api.post('run_graphql_request', {
+            data: {
+              query: this.form.preferences.graphql_mutation,
+              api_config_name: this.form.api_config_name,
+              variables: this.formData
+            }
+          })
+        } else {
+          request = api.post('run_api_request', {
+            data: {
+              body: this.formData,
+              api_config_name: this.form.api_config_name,
+              path,
+              method
+            }
+          })
+        }
       } else {
         request = loadCredentials().then((credentials) => {
           return axios[method](path, {
@@ -205,22 +215,29 @@ export default {
       }
 
       return request.then((result) => {
-        const redirectTo = result.data?.redirect || result.data?.redirect_to || result.redirect || result.redirect_to
+        if (result.data?.errors) {
+          this.$refs.form.setErrors(result.data.errors)
+          this.scrollToErrors()
 
-        if (typeof redirectTo === 'string') {
-          const resolvedRoute = this.$router.resolve({ path: redirectTo.replace(location.origin, '') }, this.$route)
-
-          if (resolvedRoute?.name) {
-            this.$router.push(resolvedRoute)
-          } else {
-            location.href = redirectTo
-          }
+          this.$emit('error', result)
         } else {
-          this.isSuccess = true
-          this.successData = result.data
-        }
+          const redirectTo = result.data?.redirect || result.data?.redirect_to || result.redirect || result.redirect_to
 
-        this.$emit('success', result)
+          if (typeof redirectTo === 'string') {
+            const resolvedRoute = this.$router.resolve({ path: redirectTo.replace(location.origin, '') }, this.$route)
+
+            if (resolvedRoute?.name) {
+              this.$router.push(resolvedRoute)
+            } else {
+              location.href = redirectTo
+            }
+          } else {
+            this.isSuccess = true
+            this.successData = result.data
+          }
+
+          this.$emit('success', result)
+        }
       }).catch((error) => {
         console.error(error)
 

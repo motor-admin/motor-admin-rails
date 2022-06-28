@@ -23,5 +23,19 @@ module Motor
         body&.to_json
       )
     end
+
+    def run_grapql(api_config, query:, variables: {}, headers: {})
+      body = {
+        query: query,
+        variables: variables.merge(form_data: variables)
+      }
+
+      Motor::NetHttpUtils.post(
+        api_config.url,
+        {},
+        DEFAULT_HEADERS.merge(headers).merge(api_config.headers),
+        body.to_json
+      )
+    end
   end
 end

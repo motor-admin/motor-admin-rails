@@ -18,6 +18,7 @@ import ace from 'ace-builds'
 import 'ace-builds/src-noconflict/mode-pgsql'
 import 'ace-builds/src-noconflict/mode-liquid'
 import 'ace-builds/src-noconflict/mode-markdown'
+import 'ace-builds/src-noconflict/mode-graphqlschema'
 import 'ace-builds/src-noconflict/ext-language_tools'
 import { schema } from 'data_resources/scripts/schema'
 
@@ -199,7 +200,7 @@ export default {
   emits: ['update:modelValue', 'run'],
   computed: {
     completions () {
-      if (this.language === 'markdown') {
+      if (['markdown', 'graphqlschema'].includes(this.language)) {
         return this.columnCompletions.concat(this.variablesCompletions)
       } else {
         return this.schemaCompletions.concat(this.variablesCompletions)

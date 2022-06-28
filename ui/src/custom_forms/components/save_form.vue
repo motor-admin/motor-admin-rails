@@ -31,7 +31,29 @@
         />
       </div>
     </FormItem>
-    <div class="row">
+    <div class="mb-4">
+      <RadioGroup
+        v-model="dataForm.preferences.request_type"
+        class="d-flex"
+      >
+        <Radio
+          v-for="(option, index) in formTypes"
+          :key="option.value"
+          :label="option.value"
+          border
+          size="large"
+          :style="index !== 0 ? 'margin-left: 15px !important' : ''"
+          class="my-1 me-0 w-100"
+          @update:model-value="changeFormType"
+        >
+          {{ option.label }}
+        </Radio>
+      </RadioGroup>
+    </div>
+    <div
+      v-if="!dataForm.preferences.request_type || dataForm.preferences.request_type === 'rest'"
+      class="row"
+    >
       <FormItem
         :label="i18n['method']"
         prop="http_method"
@@ -55,6 +77,15 @@
         />
       </FormItem>
     </div>
+    <CodeEditor
+      v-else-if="dataForm.preferences.request_type === 'graphql'"
+      v-model="dataForm.preferences.graphql_mutation"
+      language="graphqlschema"
+      :columns="graphqlColumns"
+      class="mb-2"
+      style="height: 200px"
+      :placeholder="'mutation { }'"
+    />
     <div class="row">
       <FormItem
         :label="i18n['load_initial_data']"
@@ -64,7 +95,7 @@
       </FormItem>
 
       <FormItem
-        v-if="loadDefault"
+        v-if="loadDefault && (!dataForm.preferences.request_type || dataForm.preferences.request_type === 'rest')"
         :label="i18n['api_path']"
         prop="default_values_api_path"
         class="col-9"
@@ -75,6 +106,15 @@
         />
       </FormItem>
     </div>
+    <CodeEditor
+      v-if="loadDefault && dataForm.preferences.request_type === 'graphql'"
+      v-model="dataForm.preferences.graphql_query"
+      language="graphqlschema"
+      :columns="graphqlColumns"
+      class="mb-2"
+      style="height: 200px"
+      :placeholder="'query { }'"
+    />
     <FormItem
       :label="i18n['description']"
       prop="description"
@@ -113,12 +153,14 @@ import TagsSelect from 'tags/components/select'
 import { fieldRequiredMessage } from 'utils/scripts/i18n'
 import ApiSelect from 'api_configs/components/select'
 import ApiSettings from 'api_configs/components/list'
+import CodeEditor from 'utils/components/code_editor'
 
 export default {
   name: 'SaveCustomForm',
   components: {
     TagsSelect,
-    ApiSelect
+    ApiSelect,
+    CodeEditor
   },
   props: {
     form: {
@@ -130,10 +172,26 @@ export default {
   data () {
     return {
       loadDefault: false,
-      dataForm: {}
+      dataForm: { preferences: { request_type: 'rest' } }
     }
   },
   computed: {
+    formTypes () {
+      return [
+        { value: 'rest', label: 'REST' },
+        { value: 'graphql', label: 'GraphQL' }
+      ]
+    },
+    graphqlColumns () {
+      return [
+        { name: '$form_data' },
+        ...this.dataForm.preferences.fields.map((field) => {
+          return {
+            name: `$${field.name}`
+          }
+        })
+      ]
+    },
     rules () {
       return {
         name: [{ required: true, message: fieldRequiredMessage('name') }],
@@ -161,10 +219,14 @@ export default {
   },
   created () {
     this.dataForm = JSON.parse(JSON.stringify(this.form))
+    this.dataForm.preferences.request_type ||= 'rest'
 
-    this.loadDefault = !!this.dataForm.preferences.default_values_api_path
+    this.loadDefault = !!this.dataForm.preferences.default_values_api_path || !!this.dataForm.preferences.graphql_query
   },
   methods: {
+    changeFormType (value) {
+      this.dataForm.preferences.request_type = value
+    },
     openApiSettings () {
       this.$Modal.remove()
 

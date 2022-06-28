@@ -15,6 +15,7 @@ Motor::Admin.routes.draw do
       resources :schema, only: %i[index show], param: 'resource'
       resources :dashboards, only: %i[index show create update destroy]
       resource :run_api_request, only: %i[show create]
+      resource :run_graphql_request, only: %i[create]
       resources :api_configs, only: %i[index create destroy]
       resources :forms, only: %i[index show create update destroy]
       resources :alerts, only: %i[index show create update destroy]

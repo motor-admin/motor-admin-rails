@@ -294,17 +294,21 @@ export default {
       return Promise.all(this.resources.map((resource) => {
         return this.apiRequest(resource, form)
       })).then((result) => {
-        if (result.length === 1) {
-          const resultData = result[0].data
-          const redirectTo = resultData?.data?.redirect || resultData?.data?.redirect_to || resultData?.redirect || resultData?.redirect_to
+        if (result.data?.errors) {
+          this.$Message.error(truncate(result.data.errors.map(e => e.message).join('\n'), 70))
+        } else {
+          if (result.length === 1) {
+            const resultData = result[0].data
+            const redirectTo = resultData?.data?.redirect || resultData?.data?.redirect_to || resultData?.redirect || resultData?.redirect_to
 
-          if (typeof redirectTo === 'string') {
-            this.redirectTo(redirectTo)
+            if (typeof redirectTo === 'string') {
+              this.redirectTo(redirectTo)
+            } else {
+              this.$Message.info(this.i18n.action_has_been_applied)
+            }
           } else {
             this.$Message.info(this.i18n.action_has_been_applied)
           }
-        } else {
-          this.$Message.info(this.i18n.action_has_been_applied)
         }
       }).catch((error) => {
         this.onApiError(error)
@@ -341,14 +345,24 @@ export default {
       const path = interpolate(form.api_path, params)
 
       if (form.api_config_name !== 'origin') {
-        return api.post('run_api_request', {
-          data: {
-            method: form.http_method,
-            body: params,
-            api_config_name: form.api_config_name,
-            path
-          }
-        })
+        if (form.preferences.request_type === 'graphql') {
+          return api.post('run_graphql_request', {
+            data: {
+              query: form.preferences.graphql_mutation,
+              api_config_name: form.api_config_name,
+              variables: params
+            }
+          })
+        } else {
+          return api.post('run_api_request', {
+            data: {
+              method: form.http_method,
+              body: params,
+              api_config_name: form.api_config_name,
+              path
+            }
+          })
+        }
       } else {
         return loadCredentials().then((credentials) => {
           return axios[form.http_method.toLowerCase()](path, {

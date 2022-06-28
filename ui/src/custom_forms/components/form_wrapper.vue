@@ -46,6 +46,10 @@ import api from 'api'
 import axios from 'axios'
 import { watch } from 'vue'
 
+function isObject (value) {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
 export default {
   name: 'CustomFormWrapper',
   components: {
@@ -117,6 +121,10 @@ export default {
         const matched = this.dataForm.preferences.default_values_api_path.match(/{{?(\w+)}}?/g)
 
         return matched ? matched.map((string) => string.replace(/[{}]/g, '')) : []
+      } else if (this.dataForm.preferences.graphql_query) {
+        return this.dataForm.preferences.graphql_query.match(/(\$\w+)/g)
+          .filter((v, i, a) => a.indexOf(v) === i)
+          .map((string) => string.replace('$', ''))
       } else {
         return []
       }
@@ -124,6 +132,9 @@ export default {
   },
   watch: {
     'dataForm.preferences.default_values_api_path' (value) {
+      this.assignInitialDataVariablesWatchers()
+    },
+    'dataForm.preferences.graphql_query' (value) {
       this.assignInitialDataVariablesWatchers()
     },
     data () {
@@ -199,30 +210,48 @@ export default {
         return ![null, undefined, ''].includes(this.customFormComponentData[variable])
       })
 
-      if (this.dataForm.preferences.default_values_api_path && hasVariablesSet) {
-        const path = interpolate(this.dataForm.preferences.default_values_api_path, this.customFormComponentData)
-
+      if ((this.dataForm.preferences.default_values_api_path || this.dataForm.preferences.graphql_query) && hasVariablesSet) {
         let request
 
-        if (this.dataForm.api_config_name !== 'origin') {
-          request = api.get('run_api_request', {
-            params: {
-              data: {
-                api_config_name: this.dataForm.api_config_name,
-                path
-              }
+        if (this.dataForm.preferences.request_type === 'graphql') {
+          request = api.post('run_graphql_request', {
+            data: {
+              query: this.dataForm.preferences.graphql_query,
+              api_config_name: this.dataForm.api_config_name,
+              variables: this.customFormComponentData
             }
           })
         } else {
-          request = loadCredentials().then((credentials) => {
-            return axios.get(path, {
-              headers: credentials.headers
+          const path = interpolate(this.dataForm.preferences.default_values_api_path, this.customFormComponentData)
+
+          if (this.dataForm.api_config_name !== 'origin') {
+            request = api.get('run_api_request', {
+              params: {
+                data: {
+                  api_config_name: this.dataForm.api_config_name,
+                  path
+                }
+              }
             })
-          })
+          } else {
+            request = loadCredentials().then((credentials) => {
+              return axios.get(path, {
+                headers: credentials.headers
+              })
+            })
+          }
         }
 
         return request.then((result) => {
-          this.formData = { ...this.data, ...result.data }
+          if (result.data?.errors) {
+            this.$Message.error(truncate(result.data.errors.map(e => e.message).join('\n'), 70))
+          } else {
+            if (result.data.data && Object.keys(result.data.data).length === 1 && isObject(Object.values(result.data.data)[0])) {
+              this.formData = { ...this.data, ...Object.values(result.data.data)[0] }
+            } else {
+              this.formData = { ...this.data, ...result.data }
+            }
+          }
         }).catch((error) => {
           console.error(error)
 
