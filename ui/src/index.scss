@@ -237,3 +237,15 @@ h5 {
   border-radius: 8px;
   box-shadow: none;
 }
+
+.ivu-select-item {
+  white-space: pre-line;
+}
+
+.ivu-tag.ivu-tag-checked {
+  height: 100%;
+
+  .ivu-tag-text {
+    white-space: pre-line !important;
+  }
+}

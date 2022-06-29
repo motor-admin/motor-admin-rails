@@ -212,12 +212,12 @@ export default {
 
       if (this.valueKey === 'id') {
         if (displayValue) {
-          return truncate(`#${option[this.valueKey]} ${displayValue}`, 50)
+          return truncate(`#${option[this.valueKey]} ${displayValue}`, 200)
         } else {
           return `#${option[this.valueKey]}`
         }
       } else {
-        return truncate(displayValue, 60)
+        return truncate(displayValue, 220)
       }
     },
     loadMultipleResourceoptionsById (ids) {
