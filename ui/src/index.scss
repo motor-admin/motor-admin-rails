@@ -242,10 +242,12 @@ h5 {
   white-space: pre-line;
 }
 
-.ivu-tag.ivu-tag-checked {
-  height: 100%;
+.ivu-select {
+  .ivu-tag.ivu-tag-checked {
+    height: 100%;
 
-  .ivu-tag-text {
-    white-space: pre-line !important;
+    .ivu-tag-text {
+      white-space: pre-line !important;
+    }
   }
 }
