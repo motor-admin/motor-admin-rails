@@ -1,14 +1,14 @@
 <template>
   <VButton
     v-popover="popoverParams"
-    :to="referenceId || alwaysRefer ? { name: 'resources', params: { fragments: [resourceSlug, referenceId || resourceId].filter(Boolean) }} : null"
+    :to="referenceId || resourceId || alwaysRefer ? { name: 'resources', params: { fragments: [resourceSlug, referenceId || resourceId].filter(Boolean) }} : null"
     type="primary"
     ghost
     shape="circle"
     @click.stop
   >
     <template v-if="isNumberId">
-      <template v-if="alwaysRefer || model.display_primary_key">
+      <template v-if="alwaysRefer || model.display_primary_key || !displayText">
         #{{ resourceId }}
       </template> <template v-if="resourceId !== displayText">
         {{ truncate(displayText, maxLength) }}

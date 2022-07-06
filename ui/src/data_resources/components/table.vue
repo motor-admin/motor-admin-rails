@@ -387,6 +387,12 @@ export default {
             }
           }
 
+          if (column.name === this.model.primary_key) {
+            tableColumn.reference = {
+              model_name: this.model.name
+            }
+          }
+
           return tableColumn
         } else {
           return null
