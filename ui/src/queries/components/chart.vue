@@ -20,10 +20,12 @@ import {
   LineElement,
   PointElement,
   LinearScale,
+  RadialLinearScale,
   BarElement,
   BarController,
   CategoryScale,
   PieController,
+  RadarController,
   ArcElement,
   Legend,
   Tooltip,
@@ -41,6 +43,8 @@ Chart.register(
   LinearScale,
   BarElement,
   BarController,
+  RadarController,
+  RadialLinearScale,
   CategoryScale,
   PieController,
   ArcElement,
@@ -161,7 +165,7 @@ export default {
             callbacks: {
               label: (context) => {
                 let label = context.dataset.label || ''
-                const key = this.chartType === 'row' ? 'x' : 'y'
+                const key = this.chartType === 'row' ? 'x' : (this.chartType === 'radar' ? 'r' : 'y')
 
                 if (label) {
                   label += ': '
@@ -248,7 +252,7 @@ export default {
         datalabels: {
           labels: {
             value: {
-              display: ['bar', 'row'].includes(this.chartType) ? true : 'auto',
+              display: ['bar', 'row'].includes(this.chartType) ? true : (this.chartType === 'radar' ? false : 'auto'),
               anchor: this.options.chart_stacked ? 'center' : 'end',
               align: this.options.chart_stacked && this.chartType !== 'line' ? 'center' : (['pie', 'row'].includes(this.chartType) ? 'end' : 'top'),
               formatter: (value) => {

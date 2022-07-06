@@ -308,6 +308,7 @@ es:
     send_file_url: Send file URL
     rating: Rating
     total: Total
+    radar_chart: Radar chart
     i:
       locale: es
       select:

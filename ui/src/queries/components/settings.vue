@@ -171,6 +171,7 @@ export default {
         { label: this.i18n.bar_chart, value: 'bar_chart' },
         { label: this.i18n.row_chart, value: 'row_chart' },
         { label: this.i18n.pie_chart, value: 'pie_chart' },
+        { label: this.i18n.radar_chart, value: 'radar_chart' },
         { label: this.i18n.funnel, value: 'funnel' }
       ]
     },
