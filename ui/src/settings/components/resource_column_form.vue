@@ -86,7 +86,7 @@
         />
       </FormItem>
       <ReferenceForm
-        v-if="dataColumn.access_type !== 'hidden' && ['reference'].includes(dataColumn.column_type) && dataColumn.reference && dataColumn.reference.virtual"
+        v-if="dataColumn.access_type !== 'hidden' && ['reference'].includes(dataColumn.column_type) && dataColumn.reference"
         :resource-name="resourceName"
         :reference="dataColumn.reference"
       />

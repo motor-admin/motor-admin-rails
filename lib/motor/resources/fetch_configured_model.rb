@@ -121,7 +121,6 @@ module Motor
           reference = column[:reference]
 
           next if reference.blank?
-          next unless reference[:virtual]
 
           if reference[:reference_type] == 'belongs_to'
             define_belongs_to_reflection(klass, reference)
