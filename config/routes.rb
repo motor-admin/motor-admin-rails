@@ -22,7 +22,7 @@ Motor::Admin.routes.draw do
       resources :icons, only: %i[index]
       resources :active_storage_attachments, only: %i[create], path: 'data/active_storage__attachments'
       resources :audits, only: %i[index]
-      resource :session, only: %i[destroy]
+      resource :session, only: %i[show destroy]
       resources :resources, path: '/data/:resource',
                             only: %i[index show update create destroy],
                             controller: 'data',
