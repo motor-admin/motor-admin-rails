@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.2.81)
+    motor-admin (0.2.83)
       activerecord-filter (>= 5.2)
       ar_lazy_preload (~> 1.0)
       audited (~> 5.0)
@@ -306,7 +306,7 @@ GEM
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
     sqlite3 (1.4.2)
-    strscan (3.0.3)
+    strscan (3.0.1)
     thor (1.2.1)
     timeout (0.3.0)
     tiny_tds (2.1.5)
