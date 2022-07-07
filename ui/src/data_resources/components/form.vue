@@ -103,6 +103,11 @@ export default {
     FormInput,
     FormListInput
   },
+  provide () {
+    return {
+      formComponent: this
+    }
+  },
   props: {
     resource: {
       type: Object,

@@ -12,6 +12,7 @@
     class="ivu-tag ivu-tag-size-default ivu-tag-checked cursor-unset"
     :class="colorClass"
     :style="bgStyle"
+    @click.stop="$emit('tag-click', value)"
   >
     <span
       class="ivu-tag-text ivu-tag-color-white cursor-unset"
@@ -60,6 +61,7 @@ export default {
       default: () => ({})
     }
   },
+  emits: ['tag-click'],
   computed: {
     colorClass () {
       return COLORS[this.value]

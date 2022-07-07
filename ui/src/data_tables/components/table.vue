@@ -72,6 +72,7 @@
             :with-html="withHtml"
             :always-refer="alwaysRefer"
             :column="column"
+            @tag-click="$emit('tag-click', $event)"
           />
         </tr>
       </tbody>
@@ -173,7 +174,7 @@ export default {
       default: false
     }
   },
-  emits: ['row-click', 'sort-change', 'update:sortParams'],
+  emits: ['row-click', 'sort-change', 'update:sortParams', 'tag-click'],
   data () {
     return {
       dataSort: {}

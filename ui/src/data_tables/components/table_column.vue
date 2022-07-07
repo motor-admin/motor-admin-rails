@@ -42,6 +42,7 @@
         :value="row[column.key]"
         :format="column.format"
         :type="column.type"
+        @tag-click="$emit('tag-click', { key: column.key, value: $event })"
       />
     </div>
   </td>
@@ -79,6 +80,7 @@ export default {
       default: false
     }
   },
+  emits: ['tag-click'],
   computed: {
     polymorphicModel () {
       if (this.column.reference?.polymorphic) {

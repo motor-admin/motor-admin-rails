@@ -111,6 +111,7 @@
         :click-rows="!!model.primary_key"
         @sort-change="applySort"
         @row-click="onRowClick"
+        @tag-click="onTagClick"
       />
       <div class="d-flex border-top justify-content-between bg-white p-1">
         <span />
@@ -560,6 +561,21 @@ export default {
           }
         })
       }
+    },
+    onTagClick (data) {
+      const existingFilterIndex = this.filterParams.findIndex((f) => f[data.key])
+
+      if (existingFilterIndex === -1) {
+        this.filterParams.push({ [data.key]: { eq: data.value } })
+      } else {
+        this.filterParams.splice(existingFilterIndex, 1, { [data.key]: { eq: data.value } })
+      }
+
+      this.pushQueryParams()
+
+      this.loadDataAndCount().then(() => {
+        this.$refs.table.scrollToTop()
+      })
     },
     loadItemsCount () {
       return api.get(this.queryPath, {

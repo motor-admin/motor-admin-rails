@@ -66,6 +66,7 @@ if (i18nDict.i) {
 const app = createApp(App)
 
 app.config.globalProperties.i18n = i18nDict
+app.config.globalProperties.$log = console.log
 
 app.directive('popover', PopoverDirective)
 

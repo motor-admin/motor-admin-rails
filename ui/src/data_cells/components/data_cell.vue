@@ -43,6 +43,7 @@
     ref="cell"
     :value="value"
     :format="format"
+    @tag-click="$emit('tag-click', $event)"
   />
   <DataImage
     v-else-if="isImage"
@@ -170,6 +171,7 @@ export default {
       default: true
     }
   },
+  emits: ['tag-click'],
   computed: {
     stringValue () {
       if (this.value && typeof this.value === 'object') {
