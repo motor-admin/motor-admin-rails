@@ -66,6 +66,13 @@
         >
           {{ ' ' }} {{ i18n['on_collection'] }}
         </Checkbox>
+        <Checkbox
+          v-if="dataAction.apply_on !== 'collection'"
+          v-model="dataAction.preferences.show_on_table"
+          class="d-block mb-4"
+        >
+          {{ ' ' }} {{ i18n['show_on_table'] }}
+        </Checkbox>
       </div>
     </VForm>
     <div class="d-flex justify-content-between">
@@ -194,7 +201,7 @@ export default {
     }
   },
   created () {
-    this.dataAction = { ...this.action }
+    this.dataAction = JSON.parse(JSON.stringify(this.action))
   },
   methods: {
     toggleApplyOn (value) {

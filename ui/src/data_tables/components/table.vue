@@ -38,6 +38,14 @@
             :class="{ 'border-top' : !borderless && headerBorder }"
             @update:sort-params="applySort"
           />
+          <th
+            v-if="renderActions"
+            class="ivu-table-column ivu-table-column-center"
+            :class="{ 'border-top' : !borderless && headerBorder }"
+            :style="{ position: 'sticky', top: 0, right: 0, zIndex: 1 }"
+          >
+            {{ i18n['actions'] }}
+          </th>
         </tr>
       </thead>
       <tbody
@@ -75,6 +83,16 @@
             :column="column"
             @tag-click="$emit('tag-click', $event)"
           />
+          <td
+            v-if="renderActions"
+            class="ivu-table-column ivu-table-column-center"
+            :style="{ position: 'sticky', right: 0 }"
+            @click.stop
+          >
+            <div class="ivu-table-cell">
+              <RenderCell :render="renderActions(row)" />
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -99,11 +117,13 @@
 <script>
 import HeaderCell from './header_cell'
 import TableColumn from './table_column'
+import RenderCell from 'view3/src/components/render-cell'
 
 export default {
   name: 'DataTable',
   components: {
     HeaderCell,
+    RenderCell,
     TableColumn
   },
   props: {
@@ -128,6 +148,11 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    renderActions: {
+      type: Function,
+      required: false,
+      default: null
     },
     alwaysRefer: {
       type: Boolean,

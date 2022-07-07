@@ -6,13 +6,14 @@
       :class="index !== (buttonActions.length - 1) || dropdownActions.length ? 'me-2' : ''"
       :type="buttonTypes[action.name]"
       :ghost="!!buttonTypes[action.name]"
+      :size="buttonSize"
       @click="applyAction(action)"
     >
       {{ action.display_name }}
     </VButton>
   </template>
   <Dropdown
-    v-if="(withDeselect || hasActions) && dropdownActions.length"
+    v-else-if="(withDeselect || hasActions) && dropdownActions.length"
     trigger="click"
     :placement="placement"
     :class="$attrs.class"
@@ -91,10 +92,20 @@ export default {
       type: Array,
       required: true
     },
+    actions: {
+      type: Array,
+      required: false,
+      default: null
+    },
     buttonType: {
       type: String,
       required: false,
       default: 'primary'
+    },
+    buttonSize: {
+      type: String,
+      required: false,
+      default: 'default'
     },
     buttonGhost: {
       type: Boolean,
@@ -216,7 +227,7 @@ export default {
       })
     },
     permittedActions () {
-      return this.model.actions.filter((action) => {
+      return (this.actions || this.model.actions).filter((action) => {
         return action.apply_on === 'member' && action.visible && this.resources.some((res) => {
           return this.$can(action.name, this.model.class_name, res)
         })

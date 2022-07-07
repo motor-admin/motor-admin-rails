@@ -48,11 +48,11 @@
         </span>
         <ResourceActions
           v-if="selectedRows.length && !isShowSettings && modelHasActions"
+          ref="actions"
           :resources="selectedRows"
           :with-deselect="true"
           :resource-name="model.name"
           :label="`${i18n['actions']} (${selectedRows.length})`"
-          ref="actions"
           @start-action="isLoading = true"
           @finish-action="onFinishAction"
         />
@@ -109,6 +109,7 @@
         :sort-params="sortParams"
         :scroll-to-top-on-data-update="false"
         :with-select="modelHasActions"
+        :render-actions="tableActions.length ? renderActions : null"
         :click-rows="!!model.primary_key"
         @sort-change="applySort"
         @row-click="onRowClick"
@@ -238,6 +239,11 @@ export default {
   },
   computed: {
     isShowSettings,
+    tableActions () {
+      return this.model.actions.filter((action) => {
+        return action.preferences.show_on_table
+      })
+    },
     editAction () {
       return this.model.actions.find((action) => {
         return action.name === 'edit' && action.visible
@@ -611,6 +617,23 @@ export default {
       }).catch((error) => {
         console.error(error)
       })
+    },
+    renderActions (row) {
+      return (h) => {
+        return h(ResourceActions, {
+          resources: [row],
+          actions: this.tableActions,
+          resourceName: this.model.name,
+          withButtons: true,
+          buttonSize: 'small',
+          onStartAction: () => {
+            this.isLoading = true
+          },
+          onFinishAction: (action) => {
+            this.onFinishAction(action)
+          }
+        })
+      }
     },
     loadData () {
       this.isLoading = true

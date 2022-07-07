@@ -305,6 +305,7 @@ pt:
     rating: Rating
     total: Total
     radar_chart: Radar chart
+    show_on_table: Show on table
     i:
       locale: pt
       select:
