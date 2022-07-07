@@ -121,6 +121,7 @@ export default {
     ColorPicker
   },
   mixins: [Emitter],
+  inject: ['formComponent'],
   props: {
     modelValue: {
       type: [String, Number, Boolean, Date, Object],
@@ -228,6 +229,10 @@ export default {
         if (this.column.file_direct_upload) {
           this.isLoading = true
 
+          if (this.formComponent) {
+            this.formComponent.isSubmitting = true
+          }
+
           api.post('data/active_storage__attachments', {
             fields: {
               attachment: 'id,path,created_at,updated_at,name'
@@ -243,6 +248,10 @@ export default {
             this.$emit('update:modelValue', location.origin + result.data.data.path)
           }).finally(() => {
             this.isLoading = false
+
+            if (this.formComponent) {
+              this.formComponent.isSubmitting = false
+            }
           })
         } else {
           this.$emit('update:modelValue', {

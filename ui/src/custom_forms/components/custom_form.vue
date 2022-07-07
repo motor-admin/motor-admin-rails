@@ -61,7 +61,8 @@
       type="primary"
       long
       :size="submitButtonSize"
-      :disabled="isSubmitDisabled"
+      :disabled="isSubmitDisabled || isSubmitting"
+      :loading="isSubmitting"
       @click="handleSubmit"
     >
       {{ i18n['submit'] }}
@@ -87,6 +88,11 @@ export default {
   name: 'DataForm',
   components: {
     FormItems
+  },
+  provide () {
+    return {
+      formComponent: this
+    }
   },
   props: {
     data: {
@@ -130,6 +136,7 @@ export default {
       isEdited: false,
       isLoading: false,
       isSuccess: false,
+      isSubmitting: false,
       successData: null,
       formData: {}
     }
