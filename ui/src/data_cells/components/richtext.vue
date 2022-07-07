@@ -60,6 +60,22 @@ export default {
       }
     }
   },
+  mounted () {
+    this.$el.querySelectorAll('.attachment__name').forEach((node) => {
+      const attrsString = node.parentElement?.parentElement?.dataset?.trixAttachment
+
+      if (attrsString) {
+        const attrs = JSON.parse(attrsString)
+
+        const img = document.createElement('a')
+
+        img.href = attrs.url
+        img.innerHTML = attrs.filename
+
+        node.innerHTML = img.outerHTML
+      }
+    })
+  },
   methods: {
     copyToClipboard
   }
