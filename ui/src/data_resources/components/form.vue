@@ -5,6 +5,7 @@
     :rules="rules"
     :data-form-edited="isEdited"
     label-position="top"
+    @submit="handleSubmit"
   >
     <Spin
       v-if="isLoading"

@@ -62,7 +62,9 @@
           class="ivu-table-row"
           draggable="false"
           @click.exact.prevent="onRowClick(row)"
-          @click.meta.prevent="$emit('row-meta-click', row)"
+          @click.alt.exact.prevent="$emit('row-alt-click', row)"
+          @click.meta.exact.prevent="$emit('row-meta-click', row)"
+          @click.shift.meta.prevent="$emit('row-shift-meta-click', row)"
         >
           <td
             v-if="withSelect"
@@ -200,7 +202,7 @@ export default {
       default: false
     }
   },
-  emits: ['row-click', 'sort-change', 'update:sortParams', 'tag-click', 'row-meta-click'],
+  emits: ['row-meta-click', 'row-shift-meta-click', 'row-click', 'sort-change', 'update:sortParams', 'tag-click', 'row-alt-click'],
   data () {
     return {
       dataSort: {}

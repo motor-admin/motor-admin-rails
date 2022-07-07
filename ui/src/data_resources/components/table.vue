@@ -113,7 +113,9 @@
         :click-rows="!!model.primary_key"
         @sort-change="applySort"
         @row-click="onRowClick"
+        @row-alt-click="onRowAltClick"
         @row-meta-click="onRowMetaClick"
+        @row-shift-meta-click="onRowShiftMetaClick"
         @tag-click="onTagClick"
       />
       <div class="d-flex border-top justify-content-between bg-white p-1">
@@ -567,15 +569,10 @@ export default {
     },
     onRowClick (value) {
       if (this.model.primary_key) {
-        this.$router.push({
-          name: 'resources',
-          params: {
-            fragments: [...this.$route.params.fragments, value[this.model.primary_key]]
-          }
-        })
+        this.$router.push(this.rowRouteParams(value))
       }
     },
-    onRowMetaClick (row) {
+    onRowAltClick (row) {
       this.rows.forEach((r) => delete r._selected)
 
       row._selected = true
@@ -585,6 +582,24 @@ export default {
           this.$refs.actions.applyAction(this.editAction)
         })
       }
+    },
+    rowRouteParams (row) {
+      return {
+        name: 'resources',
+        params: {
+          fragments: [...this.$route.params.fragments, row[this.model.primary_key]]
+        }
+      }
+    },
+    onRowMetaClick (row) {
+      const routeData = this.$router.resolve(this.rowRouteParams(row))
+
+      window.open(routeData.href, '_blank')
+    },
+    onRowShiftMetaClick (row) {
+      const routeData = this.$router.resolve(this.rowRouteParams(row))
+
+      window.open(routeData.href, '_blank').focus()
     },
     onTagClick (data) {
       const existingFilterIndex = this.filterParams.findIndex((f) => f[data.key])
