@@ -53,7 +53,8 @@
           :key="row.id || index"
           class="ivu-table-row"
           draggable="false"
-          @click.prevent="onRowClick(row)"
+          @click.exact.prevent="onRowClick(row)"
+          @click.meta.prevent="$emit('row-meta-click', row)"
         >
           <td
             v-if="withSelect"
@@ -174,7 +175,7 @@ export default {
       default: false
     }
   },
-  emits: ['row-click', 'sort-change', 'update:sortParams', 'tag-click'],
+  emits: ['row-click', 'sort-change', 'update:sortParams', 'tag-click', 'row-meta-click'],
   data () {
     return {
       dataSort: {}

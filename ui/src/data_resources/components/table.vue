@@ -52,6 +52,7 @@
           :with-deselect="true"
           :resource-name="model.name"
           :label="`${i18n['actions']} (${selectedRows.length})`"
+          ref="actions"
           @start-action="isLoading = true"
           @finish-action="onFinishAction"
         />
@@ -111,6 +112,7 @@
         :click-rows="!!model.primary_key"
         @sort-change="applySort"
         @row-click="onRowClick"
+        @row-meta-click="onRowMetaClick"
         @tag-click="onTagClick"
       />
       <div class="d-flex border-top justify-content-between bg-white p-1">
@@ -236,6 +238,11 @@ export default {
   },
   computed: {
     isShowSettings,
+    editAction () {
+      return this.model.actions.find((action) => {
+        return action.name === 'edit' && action.visible
+      })
+    },
     modelHasActions () {
       return this.model.actions.some((action) => action.name !== 'create' && action.visible)
     },
@@ -559,6 +566,17 @@ export default {
           params: {
             fragments: [...this.$route.params.fragments, value[this.model.primary_key]]
           }
+        })
+      }
+    },
+    onRowMetaClick (row) {
+      this.rows.forEach((r) => delete r._selected)
+
+      row._selected = true
+
+      if (this.editAction && this.$can('edit', this.model.class_name, row)) {
+        this.$nextTick(() => {
+          this.$refs.actions.applyAction(this.editAction)
         })
       }
     },
