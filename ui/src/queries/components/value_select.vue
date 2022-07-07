@@ -20,7 +20,7 @@
 <script>
 import api from 'api'
 
-const LOAD_ITEMS_LIMIT = 50
+const LOAD_ITEMS_LIMIT = 100
 
 export default {
   name: 'QueryValueSelect',

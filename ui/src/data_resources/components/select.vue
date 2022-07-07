@@ -254,7 +254,7 @@ export default {
         params: {
           q: query.includes(' ') ? query.replace(/^#\d+\s/, '') : query.replace(/^#/, ''),
           page: {
-            limit: 20
+            limit: 100
           }
         }
       })
