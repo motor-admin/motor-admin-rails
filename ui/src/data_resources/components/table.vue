@@ -109,7 +109,7 @@
         :sort-params="sortParams"
         :scroll-to-top-on-data-update="false"
         :with-select="modelHasActions"
-        :render-actions="tableActions.length ? renderActions : null"
+        :render-actions="tableActions.length && canUseTableActions ? renderActions : null"
         :click-rows="!!model.primary_key"
         @sort-change="applySort"
         @row-click="onRowClick"
@@ -244,6 +244,11 @@ export default {
     tableActions () {
       return this.model.actions.filter((action) => {
         return action.preferences.show_on_table
+      })
+    },
+    canUseTableActions () {
+      return this.tableActions.some((action) => {
+        return this.rows.some((row) => this.$can(action.name, this.model.class_name, row))
       })
     },
     editAction () {
