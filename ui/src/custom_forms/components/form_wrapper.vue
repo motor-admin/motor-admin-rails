@@ -113,9 +113,6 @@ export default {
     }
   },
   computed: {
-    customFormComponentData () {
-      return this.$refs.form?.formData || this.formData
-    },
     intialDataVariables () {
       if (this.dataForm.preferences.default_values_api_path) {
         const matched = this.dataForm.preferences.default_values_api_path.match(/{{?(\w+)}}?/g)
@@ -136,6 +133,20 @@ export default {
     },
     'dataForm.preferences.graphql_query' (value) {
       this.assignInitialDataVariablesWatchers()
+    },
+    isLoading (value) {
+      if (!value) {
+        this.$nextTick(() => {
+          this.assignInitialDataVariablesWatchers()
+
+          watch(
+            () => this.$refs.form.formData,
+            (value) => {
+              this.assignInitialDataVariablesWatchers()
+            }
+          )
+        })
+      }
     },
     data () {
       this.formData = { ...this.data }
@@ -161,8 +172,6 @@ export default {
 
     this.isLoading = false
     this.$emit('loaded', this.dataForm)
-
-    this.assignInitialDataVariablesWatchers()
   },
   methods: {
     submit () {
@@ -179,11 +188,13 @@ export default {
       }
     },
     assignInitialDataVariablesWatchers () {
+      const formData = this.$refs.form?.formData || this.formData
+
       this.intialDataVariables.forEach(variable => {
-        this.variableWatchers[variable] ||= watch(
-          () => this.customFormComponentData[variable],
+        this.variableWatchers[variable] = watch(
+          () => formData[variable],
           (value) => {
-            if (value) {
+            if (value || value === false || value === 0) {
               this.loadData()
             }
           }
@@ -206,8 +217,10 @@ export default {
       this.$emit('success', data)
     },
     loadData () {
+      const formData = this.$refs.form?.formData || this.formData
+
       const hasVariablesSet = this.intialDataVariables.every((variable) => {
-        return ![null, undefined, ''].includes(this.customFormComponentData[variable])
+        return ![null, undefined, ''].includes(formData[variable])
       })
 
       if ((this.dataForm.preferences.default_values_api_path || this.dataForm.preferences.graphql_query) && hasVariablesSet) {
@@ -218,11 +231,11 @@ export default {
             data: {
               query: this.dataForm.preferences.graphql_query,
               api_config_name: this.dataForm.api_config_name,
-              variables: this.customFormComponentData
+              variables: formData
             }
           })
         } else {
-          const path = interpolate(this.dataForm.preferences.default_values_api_path, this.customFormComponentData)
+          const path = interpolate(this.dataForm.preferences.default_values_api_path, formData)
 
           if (this.dataForm.api_config_name !== 'origin') {
             request = api.get('run_api_request', {
@@ -248,6 +261,8 @@ export default {
           } else {
             if (result.data.data && Object.keys(result.data.data).length === 1 && isObject(Object.values(result.data.data)[0])) {
               this.formData = { ...this.data, ...Object.values(result.data.data)[0] }
+            } else if (isObject(result.data.data)) {
+              this.formData = { ...this.data, ...result.data.data }
             } else {
               this.formData = { ...this.data, ...result.data }
             }

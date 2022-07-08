@@ -75,7 +75,7 @@ export default {
           return acc
         }, {})
       } else {
-        return {}
+        return null
       }
     },
     isSearchableQuery () {
@@ -110,7 +110,7 @@ export default {
       deep: true,
       handler (newValue, oldValue) {
         if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-          if (Array.isArray(this.modelValue) ? this.modelValue.length : !!this.modelValue) {
+          if (oldValue !== null && (Array.isArray(this.modelValue) ? this.modelValue.length : !!this.modelValue)) {
             this.$emit('update:modelValue', this.multiple ? [] : '')
           }
 
