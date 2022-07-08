@@ -67,9 +67,9 @@ RSpec.describe 'Forms' do
         it 'updates order line items' do
           ivu_fill_field 'Order', order.address_line_one
 
-          expect(page).to have_content(order.line_items.first.product.name)
-
           ivu_fill_field 'Line items', product.name
+
+          expect(page).to have_content(order.line_items.first.product.name)
 
           click_on 'Submit', match: :first
 
