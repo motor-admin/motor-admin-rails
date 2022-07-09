@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { watch } from 'vue'
 import api from 'api'
 
 const LOAD_ITEMS_LIMIT = 100
@@ -105,19 +106,22 @@ export default {
           this.dataValue = JSON.parse(JSON.stringify(this.modelValue))
         }
       }
-    },
-    variablesData: {
-      deep: true,
-      handler (newValue, oldValue) {
-        if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-          if (oldValue !== null && (Array.isArray(this.modelValue) ? this.modelValue.length : !!this.modelValue)) {
+    }
+  },
+  mounted () {
+    watch(
+      () => [this.variablesData, this.modelValue],
+      ([oldVars, oldValue], [newVars, newValue]) => {
+        if (JSON.stringify(newVars) !== JSON.stringify(oldVars)) {
+          if (JSON.stringify(newValue) === JSON.stringify(oldValue) && oldVars !== null && newVars !== null && (Array.isArray(this.modelValue) ? this.modelValue.length : !!this.modelValue)) {
             this.$emit('update:modelValue', this.multiple ? [] : '')
           }
 
           this.loadOptions()
         }
-      }
-    }
+      },
+      { deep: true }
+    )
   },
   created () {
     this.dataValue = JSON.parse(JSON.stringify(this.modelValue))

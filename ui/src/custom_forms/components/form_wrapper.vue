@@ -219,7 +219,7 @@ export default {
     loadData () {
       const formData = this.$refs.form?.formData || this.formData
 
-      const hasVariablesSet = this.intialDataVariables.every((variable) => {
+      const hasVariablesSet = this.intialDataVariables.some((variable) => {
         return ![null, undefined, ''].includes(formData[variable])
       })
 
