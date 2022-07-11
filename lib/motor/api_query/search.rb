@@ -3,7 +3,7 @@
 module Motor
   module ApiQuery
     module Search
-      STRING_COLUMN_TYPES = %i[text string].freeze
+      STRING_COLUMN_TYPES = %i[text string citext].freeze
       NUMBER_COLUMN_TYPES = %i[integer float].freeze
 
       module_function
@@ -35,11 +35,11 @@ module Motor
           if STRING_COLUMN_TYPES.include?(column_type)
             arel_table[name].matches("%#{keyword}%")
           elsif NUMBER_COLUMN_TYPES.include?(column_type)
-            arel_table[name].eq(keyword.to_f)
+            arel_table[name].eq(keyword.to_f) if keyword.match?(/\A\d/)
           else
             arel_table[name].eq(keyword)
           end
-        end
+        end.compact
       end
 
       def build_arel_or_query(filter_array)
