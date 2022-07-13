@@ -164,7 +164,7 @@ export default {
         variables.search = query
       }
 
-      const cacheKey = JSON.stringify(variables)
+      const cacheKey = JSON.stringify(variables) + this.queryId
 
       this.optionsRespCache ||= {}
       this.optionsRespCache[cacheKey] ||= api.get(`run_queries/${this.queryId}`, {
