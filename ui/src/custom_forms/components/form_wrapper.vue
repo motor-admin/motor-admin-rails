@@ -221,7 +221,7 @@ export default {
 
       const hasVariablesSet = this.intialDataVariables.some((variable) => {
         return ![null, undefined, ''].includes(formData[variable])
-      })
+      }) || Object.keys(this.intialDataVariables).length === 0
 
       if ((this.dataForm.preferences.default_values_api_path || this.dataForm.preferences.graphql_query) && hasVariablesSet) {
         let request
@@ -237,7 +237,7 @@ export default {
         } else {
           const path = interpolate(this.dataForm.preferences.default_values_api_path, formData)
 
-          if (this.dataForm.api_config_name !== 'origin') {
+          if (this.dataForm.api_config_name !== 'origin' && !path.startsWith(location.origin)) {
             request = api.get('run_api_request', {
               params: {
                 data: {
