@@ -28,6 +28,8 @@
           type="primary"
           long
           :size="submitButtonSize"
+          :disabled="isSubmitting"
+          :loading="isSubmitting"
           style="position: sticky; bottom: 0"
           @click="submit"
         >
@@ -109,7 +111,8 @@ export default {
       dataForm: {},
       variableWatchers: {},
       isSuccess: false,
-      isLoading: true
+      isLoading: true,
+      isSubmitting: false
     }
   },
   computed: {
@@ -143,6 +146,13 @@ export default {
             () => this.$refs.form.formData,
             (value) => {
               this.assignInitialDataVariablesWatchers()
+            }
+          )
+
+          watch(
+            () => this.$refs.form.isSubmitting,
+            (value) => {
+              this.isSubmitting = value
             }
           )
         })
