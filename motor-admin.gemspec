@@ -40,8 +40,11 @@ Gem::Specification.new do |spec|
 
   spec.post_install_message = "
     ==================
+    Run `rails g motor:install && rake db:migrate`
+    to configure and start using Motor Admin
+
     Run `rails g motor:upgrade && rake db:migrate`
-    to perform data migration and enable the latest features'
+    to perform data migration and enable the latest features
     ==================
   "
 
