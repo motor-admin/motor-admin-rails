@@ -1,8 +1,13 @@
-# ⚡ Motor Admin ⚡
+<div align="center">
+
+[![Motor Admin](https://user-images.githubusercontent.com/5418788/140520844-a947845d-b579-4b3f-9b49-c539ad3cf580.png)](https://www.getmotoradmin.com)
+
+# Motor Admin
 
 Low-code Admin panel and Business intelligence Rails engine **(no DSL - configurable from the UI)**.
 
-🤓 [Demo App](https://motor-admin.herokuapp.com/demo) | 👀 [Features overview](https://www.youtube.com/watch?v=ngVoci8Hll4&list=PLu7llEMh0KcOkR3Uy_RJT0cXPZQKAYVsq&index=1) | ⭐ [Pro](https://www.getmotoradmin.com/pro)
+🤓 [Demo App](https://motor-admin.herokuapp.com/demo) | 👀 [Features overview](https://www.youtube.com/watch?v=ngVoci8Hll4&list=PLu7llEMh0KcOkR3Uy_RJT0cXPZQKAYVsq&index=1) | ⭐ [Pro](https://www.getmotoradmin.com/rails)
+</div>
 
 [![Admin Panel](https://user-images.githubusercontent.com/5418788/119318538-1f30e300-bc82-11eb-94a4-107c31c93b13.png)](https://motor-admin.herokuapp.com/demo)
 
@@ -40,18 +45,17 @@ $ rails motor:install && rake db:migrate
 * [Configurations sync between environments](#configurations-sync)
 * [Authentication](#authentication)
 
-## [Pro](https://www.getmotoradmin.com/pro)
+## [Pro](https://www.getmotoradmin.com/rails)
 
 * Multiple databases support
 * Audit log
-* Live collaboration
+* Live collaboration notes
 * Multi-factor authentication
 * Custom styling
 * Personalized report alerts via Slack
 * Full-text search
-* Stripe integration
 * Shareable forms and reports
-* [learn more](https://www.getmotoradmin.com/pro)
+* [learn more](https://www.getmotoradmin.com/rails)
 
 ### Customizable CRUD
 
