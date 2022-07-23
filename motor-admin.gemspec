@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir[
     '{app,config,lib}/**/*',
+    'ui/dist/images/*.png',
     'ui/dist/icons/*.gz',
     'ui/dist/fonts/*.woff2',
     'ui/dist/*.{gz,json}',

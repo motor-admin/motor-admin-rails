@@ -14,6 +14,7 @@ module Motor
       '.js' => 'application/javascript',
       '.css' => 'text/css',
       '.svg' => 'image/svg+xml',
+      '.png' => 'image/png',
       '.woff2' => 'font/woff2'
     }.freeze
 

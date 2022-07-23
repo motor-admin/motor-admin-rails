@@ -81,7 +81,7 @@
             {{ ' ' }} {{ i18n['stacked_bars'] }}
           </Checkbox>
         </template>
-        <template v-if="!['table', 'markdown', 'html', 'value'].includes(preferences.visualization)">
+        <template v-if="!['table', 'markdown', 'html', 'value', 'map'].includes(preferences.visualization)">
           <p class="fs-4 fw-bold my-1">
             Format
           </p>
@@ -172,7 +172,8 @@ export default {
         { label: this.i18n.row_chart, value: 'row_chart' },
         { label: this.i18n.pie_chart, value: 'pie_chart' },
         { label: this.i18n.radar_chart, value: 'radar_chart' },
-        { label: this.i18n.funnel, value: 'funnel' }
+        { label: this.i18n.funnel, value: 'funnel' },
+        { label: this.i18n.map, value: 'map' }
       ]
     },
     formatOptions () {

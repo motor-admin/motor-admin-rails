@@ -310,6 +310,7 @@ es:
     total: Total
     radar_chart: Radar chart
     show_on_table: Show on table
+    map: Map
     i:
       locale: es
       select:

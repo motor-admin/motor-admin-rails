@@ -63,6 +63,13 @@
       />
     </div>
   </div>
+  <Map
+    v-else-if="isMap"
+    :loading="loading"
+    :data="data"
+    :columns="normalizedColumns"
+    :style="{ height: withFooter ? 'calc(100% - 34px)' : '100%' }"
+  />
   <div
     v-else
     :style="{ height: 'calc(100% - 34px)' }"
@@ -165,6 +172,7 @@ import Chart from './chart'
 import Markdown from 'utils/components/markdown'
 import Liquid from 'utils/components/liquid'
 import ValueResult from './value'
+import Map from './map'
 import { modelNameMap } from 'data_resources/scripts/schema'
 import csv from 'view3/src/utils/csv'
 import { underscore } from 'utils/scripts/string'
@@ -177,6 +185,7 @@ export default {
     Chart,
     Markdown,
     Liquid,
+    Map,
     ValueResult
   },
   props: {
@@ -333,6 +342,9 @@ export default {
     },
     isValue () {
       return this.preferences.visualization === 'value'
+    },
+    isMap () {
+      return this.preferences.visualization === 'map'
     },
     pageSizeOpts () {
       return [20, 50, 100, 250, 500, 1000]

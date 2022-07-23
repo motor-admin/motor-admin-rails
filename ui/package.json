@@ -11,6 +11,7 @@
     "color-hash": "^2.0.1",
     "dompurify": "^2.3.8",
     "inflected": "^2.1.0",
+    "leaflet": "^1.8.0",
     "liquidjs": "^9.37.0",
     "marked": "^4.0.16",
     "number-precision": "^1.5.2",
