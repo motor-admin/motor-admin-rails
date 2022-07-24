@@ -191,6 +191,11 @@ export default {
       required: false,
       default: () => []
     },
+    autofocus: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     variables: {
       type: Array,
       required: false,
@@ -272,9 +277,11 @@ export default {
         }
       })
 
-      setTimeout(() => {
-        editor.focus()
-      }, 100)
+      if (this.autofocus) {
+        setTimeout(() => {
+          editor.focus()
+        }, 100)
+      }
     },
     onCmdEnter (e) {
       if (e.keyCode === 13 && e.metaKey) {

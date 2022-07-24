@@ -38,6 +38,12 @@
         @click.stop
       />
       <DataCell
+        v-else-if="column.type === 'currency'"
+        :value="row[column.key]"
+        :format="{ ...column.format, currency: row[`${column.key}_currency`] || row['currency'] || column.format.currency }"
+        :type="column.type"
+      />
+      <DataCell
         v-else
         :value="row[column.key]"
         :format="column.format"

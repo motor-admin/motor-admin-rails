@@ -70,6 +70,14 @@
         v-else-if="isEmpty"
       > - </span>
       <DataCell
+        v-else-if="column.column_type === 'currency'"
+        ref="dataCell"
+        :value="value"
+        :format="{ ...column.format, currency: resource[`${column.name}_currency`] || resource['currency'] || column.format.currency }"
+        :text-truncate="false"
+        :type="columnType"
+      />
+      <DataCell
         v-else
         ref="dataCell"
         :value="value"

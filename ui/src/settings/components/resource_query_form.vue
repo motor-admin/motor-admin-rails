@@ -3,6 +3,8 @@
     <CodeEditor
       v-model="sqlBody"
       style="height: 140px"
+
+      :autofocus="true"
       language="pgsql"
       placeholder="SELECT * FROM ..."
       @run="runQuery"

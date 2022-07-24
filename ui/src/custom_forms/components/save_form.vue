@@ -81,6 +81,7 @@
       v-else-if="dataForm.preferences.request_type === 'graphql'"
       v-model="dataForm.preferences.graphql_mutation"
       language="graphqlschema"
+      :autofocus="true"
       :columns="graphqlColumns"
       class="mb-2"
       style="height: 200px"
