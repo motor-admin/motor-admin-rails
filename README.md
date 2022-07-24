@@ -129,7 +129,7 @@ Sender address can be specified using `MOTOR_ALERTS_FROM_ADDRESS` environment va
 
 ![Intelligence search](https://user-images.githubusercontent.com/5418788/119266559-eea26800-bbf3-11eb-8cb3-d0538aa386a9.png)
 
-Intelligence search can be opened via the top right corner button or using <kbd>Cmd</kbd> + <kbd>P</kbd> shortcut.
+Intelligence search can be opened via the top right corner button or using <kbd>Cmd</kbd> + <kbd>K</kbd> shortcut.
 
 ### Authorization
 

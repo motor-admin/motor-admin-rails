@@ -57,7 +57,7 @@ export default {
       }
     },
     processKey (event) {
-      if ((event.ctrlKey || event.metaKey) && event.keyCode === 80) {
+      if ((event.ctrlKey || event.metaKey) && event.keyCode === 75) {
         event.preventDefault()
 
         this.$refs.header.openSearch()
