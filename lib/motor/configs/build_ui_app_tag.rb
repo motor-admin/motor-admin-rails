@@ -26,6 +26,10 @@ module Motor
 
         key += Motor::DefineArModels.defined_models_schema_md5.to_s if defined?(Motor::DefineArModels)
 
+        if Rails.env.development?
+          key += Digest::MD5.hexdigest(ActiveRecord::Base.descendants.map(&:object_id).sort.join)
+        end
+
         key
       end
 
