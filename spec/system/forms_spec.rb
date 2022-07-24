@@ -69,7 +69,7 @@ RSpec.describe 'Forms' do
 
           ivu_fill_field 'Line items', product.name
 
-          expect(page).to have_content(order.line_items.first.product.name)
+          expect(page).to have_content(product.name)
 
           click_on 'Submit', match: :first
 
