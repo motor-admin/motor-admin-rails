@@ -238,13 +238,18 @@ module Motor
       end
 
       def build_reference(model, name, reflection)
+        primary_key = reflection.polymorphic? ? 'id' : reflection.join_primary_key
+        foreign_key = reflection.join_foreign_key
+
+        primary_key, foreign_key = foreign_key, primary_key if reflection.has_one?
+
         {
           name: name,
           display_name: model.human_attribute_name(name),
           model_name: reflection.polymorphic? ? nil : reflection.klass.name.underscore,
           reference_type: reflection.belongs_to? ? 'belongs_to' : 'has_one',
-          foreign_key: reflection.join_foreign_key,
-          primary_key: reflection.polymorphic? ? 'id' : reflection.join_primary_key,
+          foreign_key: foreign_key,
+          primary_key: primary_key,
           options: reflection.options.slice(:through, :source),
           polymorphic: reflection.polymorphic?,
           virtual: false
