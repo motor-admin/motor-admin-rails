@@ -41,6 +41,8 @@
 
 @import 'utils/styles/richtext';
 
+@import 'leaflet/dist/leaflet.css';
+
 .#{$spin-prefix-cls} {
   &-fix {
     background-color: rgba(255, 255, 255, 0.4);

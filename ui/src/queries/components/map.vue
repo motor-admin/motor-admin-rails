@@ -13,7 +13,6 @@
 
 <script>
 import Leaflet from 'leaflet'
-import 'leaflet/dist/leaflet.css'
 import DOMPurify from 'dompurify'
 import { basePath } from 'utils/scripts/configs'
 
