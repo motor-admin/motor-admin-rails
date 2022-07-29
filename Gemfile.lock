@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.3.2)
+    motor-admin (0.3.3)
       activerecord-filter (>= 5.2)
       ar_lazy_preload (~> 1.0)
       audited (~> 5.0)
