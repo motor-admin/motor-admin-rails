@@ -1,8 +1,8 @@
 <div align="center">
 
-[![Motor Admin](https://user-images.githubusercontent.com/5418788/140520844-a947845d-b579-4b3f-9b49-c539ad3cf580.png)](https://www.getmotoradmin.com)
+[![Motor Admin Rails](https://user-images.githubusercontent.com/5418788/140520844-a947845d-b579-4b3f-9b49-c539ad3cf580.png)](https://www.getmotoradmin.com/ruby-on-rails)
 
-# Motor Admin
+# Motor Admin Rails
 
 Low-code Admin panel and Business intelligence Rails engine **(no DSL - configurable from the UI)**.
 
