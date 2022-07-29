@@ -4,7 +4,7 @@
   >
     <div class="ivu-table-cell">
       <DataCell
-        v-if="column.reference?.model_name === 'active_storage/attachment'"
+        v-if="column.key !== 'id' && column.reference?.model_name === 'active_storage/attachment'"
         :value="row[column.key]?.path"
         :type="'string'"
       />
