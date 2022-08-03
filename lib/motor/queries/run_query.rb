@@ -195,7 +195,7 @@ module Motor
                                       sql.gsub(STATEMENT_VARIABLE_REGEXP, '?'),
                                       attributes.map(&:value))
 
-        [sql, 'SQL', attributes]
+        [sql, 'SQL', []]
       end
 
       def normalize_sql(sql)
