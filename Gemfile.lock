@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     motor-admin (0.3.4)
-      activerecord-filter (>= 5.2)
       ar_lazy_preload (~> 1.0)
+      arel-extensions (~> 6.0)
       audited (~> 5.0)
       cancancan (~> 3.0)
       fugit (~> 1.0)
@@ -65,9 +65,6 @@ GEM
     activerecord (7.0.3)
       activemodel (= 7.0.3)
       activesupport (= 7.0.3)
-    activerecord-filter (6.1.0.2)
-      activerecord (>= 6.1.0)
-      arel-extensions (>= 6.1.0)
     activerecord-sqlserver-adapter (7.0.0.0)
       activerecord (~> 7.0.0)
       tiny_tds

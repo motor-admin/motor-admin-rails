@@ -6,11 +6,11 @@ require 'cancancan'
 require 'ar_lazy_preload'
 require 'fugit'
 require 'csv'
-require 'active_record/filter'
 require 'audited'
 require 'uri'
 require 'net/http'
 require 'net/https'
+require 'arel/extensions'
 
 module Motor
   PATH = Pathname.new(__dir__)

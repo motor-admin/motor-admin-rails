@@ -13,8 +13,53 @@ module Motor
 
         normalized_params = normalize_params(Array.wrap(params))
 
-        rel = rel.filter(normalized_params)
+        rel = apply_filters(rel, normalized_params)
         rel = rel.distinct if can_apply_distinct?(rel)
+
+        rel
+      end
+
+      def clean_filters(value)
+        if value.class.name == 'ActionController::Parameters'
+          value.to_unsafe_h
+        elsif value.is_a?(Array)
+          value.map { |v| clean_filters(v) }
+        else
+          value
+        end
+      end
+
+      def apply_predicates(rel, filters)
+        joins = ActiveRecord::PredicateBuilder.filter_joins(rel.klass, filters)
+
+        joins.flatten.reduce(rel) do |acc, j|
+          if j.is_a?(String) || j.is_a?(Arel::Nodes::Join)
+            acc.joins(j)
+          elsif j.present?
+            acc.left_outer_joins(j)
+          else
+            acc
+          end
+        end
+      end
+
+      def apply_filters(rel, filters)
+        filters = clean_filters(filters)
+
+        rel = apply_predicates(rel, filters)
+
+        alias_tracker = ActiveRecord::Associations::AliasTracker.create(rel.connection, rel.table.name, [])
+        filter_clause_factory = ActiveRecord::Relation::FilterClauseFactory.new(rel.klass, rel.predicate_builder)
+
+        where_clause = filter_clause_factory.build(filters, alias_tracker)
+
+        rel_values = rel.instance_variable_get(:@values)
+
+        if rel_values[:where]
+          rel_values[:where] += where_clause
+        else
+          rel_values[:where] = where_clause
+        end
 
         rel
       end

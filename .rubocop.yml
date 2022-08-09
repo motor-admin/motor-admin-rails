@@ -11,6 +11,7 @@ AllCops:
     - bin/*
     - vendor/**/*
     - lib/generators/motor/templates/**/*
+    - lib/motor/active_record_utils/active_record_filter.rb
     - motor-admin.gemspec
   TargetRubyVersion: '2.6'
 
