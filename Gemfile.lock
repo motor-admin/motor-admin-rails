@@ -3,7 +3,6 @@ PATH
   specs:
     motor-admin (0.3.5)
       ar_lazy_preload (~> 1.0)
-      arel-extensions (>= 6.0)
       audited (~> 5.0)
       cancancan (~> 3.0)
       fugit (~> 1.0)
@@ -84,8 +83,6 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     ar_lazy_preload (1.0.0)
       rails (>= 5.2)
-    arel-extensions (6.1.0)
-      activerecord (>= 6.1.0)
     ast (2.4.2)
     audited (5.0.2)
       activerecord (>= 5.0, < 7.1)

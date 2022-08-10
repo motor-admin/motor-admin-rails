@@ -10,7 +10,6 @@ require 'audited'
 require 'uri'
 require 'net/http'
 require 'net/https'
-require 'arel/extensions'
 
 module Motor
   PATH = Pathname.new(__dir__)

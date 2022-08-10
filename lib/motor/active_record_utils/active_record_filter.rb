@@ -5,14 +5,44 @@ module ActiveRecord
   end
 end
 
-ActiveRecord::QueryMethods.module_eval do
-  def build_arel_with_distinct_on(aliases = nil)
-    arel = build_arel_without_distinct_on(aliases)
-    arel.distinct_on(distinct_on_values) unless distinct_on_values.empty?
-    arel
-  end
+module Arel
+  module Attributes
+    class Relation < Attribute
+      attr_accessor :collection, :for_write
 
-  alias_method :build_arel, :build_arel_with_distinct_on
+      def initialize(relation, name, collection = false, for_write = false)
+        self[:relation] = relation
+        self[:name] = name
+        @collection = collection
+        @for_write = for_write
+      end
+
+      delegate :able_to_type_cast?, to: :relation
+
+      def table_name
+        nil
+      end
+
+      def eql?(other)
+        self.class == other.class &&
+          relation == other.relation &&
+          name == other.name &&
+          collection == other.collection
+      end
+
+      delegate :type_cast_for_database, to: :relation
+    end
+  end
+end
+
+module Arel
+  module Visitors
+    class ToSql
+      def visit_Arel_Attributes_Relation(o, collector)
+        visit(o.relation, collector)
+      end
+    end
+  end
 end
 
 module ActiveRecord
@@ -64,29 +94,30 @@ module ActiveRecord
             end
           elsif reflection = klass._reflections[key.to_s]
             if value.is_a?(Hash)
-              relations << if reflection.polymorphic?
-                             value = value.dup
-                             join_klass = value.delete(:as).safe_constantize
-                             right_table = join_klass.arel_table
-                             left_table = reflection.active_record.arel_table
+              relations <<
+                if reflection.polymorphic?
+                  value = value.dup
+                  join_klass = value.delete(:as).safe_constantize
+                  right_table = join_klass.arel_table
+                  left_table = reflection.active_record.arel_table
 
-                             on = right_table[join_klass.primary_key]
-                                  .eq(left_table[reflection.foreign_key])
-                                  .and(left_table[reflection.foreign_type].eq(join_klass.name))
+                  on = right_table[join_klass.primary_key]
+                       .eq(left_table[reflection.foreign_key])
+                       .and(left_table[reflection.foreign_type].eq(join_klass.name))
 
-                             cross_boundry_joins = join_klass.left_outer_joins(ActiveRecord::PredicateBuilder.filter_joins(join_klass, value).flatten).send(
-                               :build_joins, []
-                             )
+                  cross_boundry_joins = join_klass.left_outer_joins(ActiveRecord::PredicateBuilder.filter_joins(join_klass, value).flatten).send(
+                    :build_joins, []
+                  )
 
-                             [
-                               left_table.join(right_table, Arel::Nodes::OuterJoin).on(on).join_sources,
-                               cross_boundry_joins
-                             ]
-                           else
-                             {
-                               key => build_filter_joins(reflection.klass, value, [], custom)
-                             }
-                           end
+                  [
+                    left_table.join(right_table, Arel::Nodes::OuterJoin).on(on).join_sources,
+                    cross_boundry_joins
+                  ]
+                else
+                  {
+                    key => build_filter_joins(reflection.klass, value, [], custom)
+                  }
+                end
             elsif value.is_a?(Array)
               value.each do |v|
                 relations << {
@@ -233,37 +264,6 @@ module ActiveRecord
         attribute.has_any_key(*Array(value).map { |x| Arel::Nodes.build_quoted(x) })
       when :in
         attribute.in(value)
-      when :intersects
-        # geometry_value = if value.is_a?(Hash) # GeoJSON
-        #   Arel::Nodes::NamedFunction.new('ST_GeomFromGeoJSON', [JSON.generate(value)])
-        # elsif # EWKB
-        # elsif # WKB
-        # elsif # EWKT
-        # elsif # WKT
-        # end
-
-        # TODO: us above if to determin if SRID sent
-        geometry_value = if value.is_a?(Hash)
-                           Arel::Nodes::NamedFunction.new('ST_SetSRID',
-                                                          [
-                                                            Arel::Nodes::NamedFunction.new('ST_GeomFromGeoJSON',
-                                                                                           [Arel::Nodes.build_quoted(JSON.generate(subvalue))]), 4326
-                                                          ])
-                         elsif value[0, 1] == "\x00" || value[0, 1] == "\x01" || value[0, 4] =~ /[0-9a-fA-F]{4}/
-                           Arel::Nodes::NamedFunction.new('ST_SetSRID',
-                                                          [
-                                                            Arel::Nodes::NamedFunction.new('ST_GeomFromEWKB',
-                                                                                           [Arel::Nodes.build_quoted(subvalue)]), 4326
-                                                          ])
-                         else
-                           Arel::Nodes::NamedFunction.new('ST_SetSRID',
-                                                          [
-                                                            Arel::Nodes::NamedFunction.new('ST_GeomFromText',
-                                                                                           [Arel::Nodes.build_quoted(subvalue)]), 4326
-                                                          ])
-                         end
-
-        Arel::Nodes::NamedFunction.new('ST_Intersects', [attribute, geometry_value])
       when :less_than, :lt
         attribute.lt(value)
       when :less_than_or_equal_to, :lteq, :lte
