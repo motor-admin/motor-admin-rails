@@ -123,7 +123,7 @@ export default {
   methods: {
     customActionProps (action) {
       return {
-        data: this.resource,
+        data: this.parentResource ? { [`${this.parentModel.name}_${this.parentModel.primary_key}`]: this.parentResource.id } : {},
         formId: action.preferences.form_id,
         withFooterSubmit: true,
         onSuccess: (result) => {
