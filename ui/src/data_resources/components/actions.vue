@@ -3,7 +3,7 @@
     <VButton
       v-for="(action, index) in buttonActions"
       :key="action.name"
-      :class="index !== (buttonActions.length - 1) || dropdownActions.length ? 'me-2' : ''"
+      :class="index !== (buttonActions.length - 1) || (withDropdown && dropdownActions.length) ? 'me-2' : ''"
       :type="buttonTypes[action.name]"
       :ghost="!!buttonTypes[action.name]"
       :size="buttonSize"
@@ -13,7 +13,7 @@
     </VButton>
   </template>
   <Dropdown
-    v-else-if="(withDeselect || hasActions) && dropdownActions.length"
+    v-if="(withDeselect || hasActions) && withDropdown && dropdownActions.length"
     trigger="click"
     :placement="placement"
     :class="$attrs.class"
@@ -23,6 +23,7 @@
       :ghost="buttonGhost"
       :type="buttonType"
       class="w-100"
+      :size="buttonSize"
       :class="{ 'bg-white': buttonGhost }"
     >
       {{ dropdownLabel }}
@@ -121,6 +122,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    withDropdown: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     placement: {
       type: String,

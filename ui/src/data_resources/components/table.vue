@@ -645,6 +645,7 @@ export default {
           actions: this.tableActions,
           resourceName: this.model.name,
           withButtons: true,
+          withDropdown: false,
           buttonSize: 'small',
           onStartAction: () => {
             this.isLoading = true
