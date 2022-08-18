@@ -13,12 +13,12 @@ jobs:
           - postgresql
           - mysql
         rails:
-          - '~> 6.0'
-          - '>= 7.0'
+          - '~> 5.2'
+          - '>= 6.0'
         include:
-          - rails: '~> 6.0'
+          - rails: '~> 5.2'
             ruby: 2.7.0
-          - rails: '>= 7.0'
+          - rails: '>= 6.0'
             ruby: 3.0.0
 
     services:

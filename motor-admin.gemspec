@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'audited', '~> 5.0'
   spec.add_dependency 'cancancan', '~> 3.0'
   spec.add_dependency 'fugit', '~> 1.0'
-  spec.add_dependency 'rails', '>= 6.0'
+  spec.add_dependency 'rails', '>= 5.2'
 
   spec.post_install_message = "
     ==================
