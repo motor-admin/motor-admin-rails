@@ -24,6 +24,7 @@ import { modelNameMap } from '../scripts/schema'
 import { buildDefaultValues } from '../scripts/form_utils'
 import { truncate } from 'utils/scripts/string'
 import { defineAsyncComponent } from 'vue'
+import { fieldsParams } from 'data_resources/scripts/query_utils'
 import singularize from 'inflected/src/singularize'
 
 const ResourceForm = defineAsyncComponent(() => import('./form'))
@@ -228,6 +229,7 @@ export default {
       this.resourcesRespCache ||= {}
       this.resourcesRespCache[cacheKey] ||= api.get(`data/${this.model.slug}`, {
         params: {
+          fields: fieldsParams(this.model),
           filter: {
             [this.valueKey]: ids
           }
@@ -253,6 +255,7 @@ export default {
       this.resourcesRespCache[cacheKey] ||= api.get(`data/${this.model.slug}`, {
         params: {
           q: query.includes(' ') ? query.replace(/^#\d+\s/, '') : query.replace(/^#/, ''),
+          fields: fieldsParams(this.model),
           page: {
             limit: 100
           }
