@@ -55,7 +55,12 @@ module ActiveRecord
       end
 
       def aliased_table_for_relation(trail, arel_table, &block)
-        @relation_trail[trail] ||= aliased_table_for(arel_table, &block)
+        @relation_trail[trail] ||=
+          if Rails::VERSION::MAJOR >= 6
+            aliased_table_for(arel_table, &block)
+          else
+            aliased_table_for(arel_table.name, trail.last, nil)
+          end
       end
     end
   end
@@ -210,7 +215,7 @@ module ActiveRecord
     end
 
     def expand_filter_for_column(key, column, value, relation_trail)
-      attribute = table.arel_table[column.name]
+      attribute = table.send(:arel_table)[column.name]
       relation_trail.each do |rt|
         attribute = Arel::Attributes::Relation.new(attribute, rt)
       end
