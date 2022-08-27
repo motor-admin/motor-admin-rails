@@ -529,7 +529,7 @@ export default {
       }
 
       this.paginationParams.current = parseInt(query.page) || 1
-      this.paginationParams.pageSize = parseInt(query.per_page) || defaultPaginationParams.pageSize
+      this.paginationParams.pageSize = parseInt(query.per_page) || parseInt(localStorage.getItem(`motor:${this.model.name}:pageSize`) || '0') || defaultPaginationParams.pageSize
     },
     loadDataAndCount () {
       return Promise.all([
@@ -553,6 +553,8 @@ export default {
     onPageSizeChange () {
       this.pushQueryParams()
       this.loadData()
+
+      localStorage.setItem(`motor:${this.model.name}:pageSize`, this.paginationParams.pageSize)
     },
     applySearch () {
       this.paginationParams.current = 1
