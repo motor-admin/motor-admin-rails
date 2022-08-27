@@ -179,7 +179,13 @@ export default {
     onCreateSuccess (data) {
       this.selectedOption = data
 
-      this.value = data[this.valueKey]
+      if (this.multiple) {
+        this.value.push(data[this.valueKey])
+      } else {
+        this.value = data[this.valueKey]
+      }
+
+      this.$emit('update:modelValue', this.value)
     },
     onCreateClick () {
       const component = this.createAction.action_type === 'default' ? ResourceForm : CustomFormWrapper
