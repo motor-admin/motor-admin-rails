@@ -315,14 +315,34 @@ export default {
           this.$Message.error(truncate(result.data.errors.map(e => e.message).join('\n'), 70))
         } else {
           if (result.length === 1) {
-            const resultData = result[0].data
-            const redirectTo = resultData?.data?.redirect || resultData?.data?.redirect_to || resultData?.redirect || resultData?.redirect_to
+            const blob = result[0].data
 
-            if (typeof redirectTo === 'string') {
-              this.redirectTo(redirectTo)
-            } else {
-              this.$Message.info(this.i18n.action_has_been_applied)
-            }
+            blob.text().then(text => {
+              try {
+                result[0].data = JSON.parse(text)
+              } catch (e) {
+                result[0].data = text
+              }
+
+              const resultData = result[0].data
+              const redirectTo = resultData?.data?.redirect || resultData?.data?.redirect_to || resultData?.redirect || resultData?.redirect_to
+
+              if (typeof redirectTo === 'string') {
+                this.redirectTo(redirectTo)
+              } else if (result[0].headers['content-disposition']?.startsWith('attachment')) {
+                const fileName = result[0].headers['content-disposition'].match(/filename="(.*?)"/)?.[1]
+                const dataUrl = URL.createObjectURL(blob)
+
+                const link = document.createElement('a')
+
+                link.setAttribute('href', dataUrl)
+                link.setAttribute('download', `${fileName || 'attachment'}`)
+
+                link.click()
+              } else {
+                this.$Message.info(this.i18n.action_has_been_applied)
+              }
+            })
           } else {
             this.$Message.info(this.i18n.action_has_been_applied)
           }
@@ -369,6 +389,8 @@ export default {
               api_config_name: form.api_config_name,
               variables: params
             }
+          }, {
+            responseType: 'blob'
           })
         } else {
           return api.post('run_api_request', {
@@ -378,6 +400,8 @@ export default {
               api_config_name: form.api_config_name,
               path
             }
+          }, {
+            responseType: 'blob'
           })
         }
       } else {
@@ -385,6 +409,7 @@ export default {
           return axios[form.http_method.toLowerCase()](path, {
             ...params
           }, {
+            responseType: 'blob',
             headers: {
               ...this.requestHeaders,
               ...credentials.headers

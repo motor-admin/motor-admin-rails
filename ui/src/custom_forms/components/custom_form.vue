@@ -197,6 +197,8 @@ export default {
               api_config_name: this.form.api_config_name,
               variables: this.formData
             }
+          }, {
+            responseType: 'blob'
           })
         } else {
           request = api.post('run_api_request', {
@@ -206,6 +208,8 @@ export default {
               path,
               method
             }
+          }, {
+            responseType: 'blob'
           })
         }
       } else {
@@ -213,6 +217,7 @@ export default {
           return axios[method](path, {
             ...this.formData
           }, {
+            responseType: 'blob',
             headers: {
               ...this.headers,
               ...credentials.headers
@@ -228,22 +233,45 @@ export default {
 
           this.$emit('error', result)
         } else {
-          const redirectTo = result.data?.redirect || result.data?.redirect_to || result.redirect || result.redirect_to
+          const blob = result.data
 
-          if (typeof redirectTo === 'string') {
-            const resolvedRoute = this.$router.resolve({ path: redirectTo.replace(location.origin, '') }, this.$route)
-
-            if (resolvedRoute?.name) {
-              this.$router.push(resolvedRoute)
-            } else {
-              location.href = redirectTo
+          blob.text().then(text => {
+            try {
+              result.data = JSON.parse(text)
+            } catch (e) {
+              result.data = text
             }
-          } else {
-            this.isSuccess = true
-            this.successData = result.data
-          }
 
-          this.$emit('success', result)
+            const redirectTo = result.data?.redirect || result.data?.redirect_to || result.redirect || result.redirect_to
+
+            if (typeof redirectTo === 'string') {
+              const resolvedRoute = this.$router.resolve({ path: redirectTo.replace(location.origin, '') }, this.$route)
+
+              if (resolvedRoute?.name) {
+                this.$router.push(resolvedRoute)
+              } else {
+                location.href = redirectTo
+              }
+            } else if (result.headers['content-disposition']?.startsWith('attachment')) {
+              const fileName = result.headers['content-disposition'].match(/filename="(.*?)"/)?.[1]
+              const dataUrl = URL.createObjectURL(blob)
+
+              const link = document.createElement('a')
+
+              link.setAttribute('href', dataUrl)
+              link.setAttribute('download', `${fileName || 'attachment'}`)
+
+              link.click()
+
+              this.successData = '<div class="text-center">File attachment has started downloading</div>'
+            } else {
+              this.successData = result.data
+            }
+
+            this.isSuccess = true
+
+            this.$emit('success', result)
+          })
         }
       }).catch((error) => {
         console.error(error)
