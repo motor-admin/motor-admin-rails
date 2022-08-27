@@ -5,7 +5,7 @@ module Motor
     module ActiveStorageAttachmentSchema
       module_function
 
-      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def call
         model = ActiveStorage::Attachment
 
@@ -119,7 +119,7 @@ module Motor
           visible: false
         }.with_indifferent_access
       end
-      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end

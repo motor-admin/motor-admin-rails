@@ -256,7 +256,6 @@ module Motor
         }
       end
 
-      # rubocop:disable Metrics/AbcSize
       def fetch_associations(model)
         model.reflections.map do |name, ref|
           next if ref.has_one? || ref.belongs_to?
@@ -281,7 +280,6 @@ module Motor
           }
         end.compact
       end
-      # rubocop:enable Metrics/AbcSize
 
       def fetch_validators(model, column_name, reflection = nil)
         validators =

@@ -140,18 +140,18 @@ module Motor
       end
 
       def define_has_one_reflection(klass, config)
-        options = {
-          class_name: config[:model_name].classify,
-          foreign_key: config[:foreign_key],
-          primary_key: config[:primary_key]
-        }
-
-        options = options.merge(config[:options] || {})
-
         if config[:model_name] == 'active_storage/attachment'
-          klass.has_one_attached config[:name].delete_suffix('_attachment').to_sym
+          klass.has_one_attached(config[:name].delete_suffix('_attachment').to_sym)
         else
-          klass.has_one(config[:name].to_sym, **options.symbolize_keys)
+          options = {
+            **klass.reflections[config[:name]]&.options.to_h,
+            class_name: config[:model_name].classify,
+            foreign_key: config[:foreign_key],
+            primary_key: config[:primary_key],
+            **config[:options].to_h
+          }.symbolize_keys
+
+          klass.has_one(config[:name].to_sym, **options)
         end
       end
 

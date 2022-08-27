@@ -95,7 +95,6 @@ module Motor
         end
       end
 
-      # rubocop:disable Metrics/AbcSize
       def sync_resources(configs_hash)
         resources_index = Motor::Configs::LoadFromCache.load_resources.index_by(&:name)
 
@@ -113,7 +112,6 @@ module Motor
 
         ActiveRecordUtils.reset_id_sequence!(Motor::Resource)
       end
-      # rubocop:enable Metrics/AbcSize
 
       def sync_taggable(records, config_items, configs_timestamp, update_proc)
         processed_records, create_items = update_taggable_items(records, config_items, update_proc)

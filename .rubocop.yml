@@ -35,7 +35,7 @@ Metrics/PerceivedComplexity:
   Max: 10
 
 Metrics/AbcSize:
-  Max: 20
+  Max: 22
 
 Naming/FileName:
   Enabled: false

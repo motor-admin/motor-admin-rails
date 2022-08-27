@@ -5,7 +5,6 @@ module Motor
     module BuildConfigsHash
       module_function
 
-      # rubocop:disable Metrics/AbcSize
       def call
         cache_keys = LoadFromCache.load_cache_keys
 
@@ -21,7 +20,6 @@ module Motor
           api_configs: build_api_configs_hash(cache_keys[:api_configs])
         )
       end
-      # rubocop:enable Metrics/AbcSize
 
       def build_queries_hash(cache_key = nil)
         Motor::Configs::LoadFromCache.load_queries(cache_key: cache_key).sort_by(&:id).map do |query|
