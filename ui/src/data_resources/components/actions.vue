@@ -250,7 +250,9 @@ export default {
       })
     },
     methodRequest (resource, action) {
-      return api.put(`data/${this.model.slug}/${resource[this.model.primary_key]}/${action.preferences.method_name}`)
+      return api.put(`data/${this.model.slug}/${resource[this.model.primary_key]}/${action.preferences.method_name}`, {}, {
+        responseType: 'blob'
+      })
     },
     isActionWithBatchAllowed (action) {
       return !formsCache[action.preferences.form_id]?.preferences?.default_values_api_path
@@ -311,19 +313,19 @@ export default {
       return Promise.all(this.resources.map((resource) => {
         return this.apiRequest(resource, form)
       })).then((result) => {
-        if (result.data?.errors) {
-          this.$Message.error(truncate(result.data.errors.map(e => e.message).join('\n'), 70))
-        } else {
-          if (result.length === 1) {
-            const blob = result[0].data
+        const blob = result[0].data
 
-            blob.text().then(text => {
-              try {
-                result[0].data = JSON.parse(text)
-              } catch (e) {
-                result[0].data = text
-              }
+        blob.text().then(text => {
+          try {
+            result[0].data = JSON.parse(text)
+          } catch (e) {
+            result[0].data = text
+          }
 
+          if (result[0].data?.errors) {
+            this.$Message.error(truncate(result.data.errors.map(e => e.message).join('\n'), 70))
+          } else {
+            if (result.length === 1) {
               const resultData = result[0].data
               const redirectTo = resultData?.data?.redirect || resultData?.data?.redirect_to || resultData?.redirect || resultData?.redirect_to
 
@@ -342,11 +344,11 @@ export default {
               } else {
                 this.$Message.info(this.i18n.action_has_been_applied)
               }
-            })
-          } else {
-            this.$Message.info(this.i18n.action_has_been_applied)
+            } else {
+              this.$Message.info(this.i18n.action_has_been_applied)
+            }
           }
-        }
+        })
       }).catch((error) => {
         this.onApiError(error)
       }).finally(() => {
@@ -354,13 +356,20 @@ export default {
       })
     },
     onApiError (error) {
-      if (error.response?.data?.errors) {
-        this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
-      } else if (error?.response?.status) {
-        this.$Message.error(`${this.i18n.action_has_failed_with_code} ${error.response.status}`)
-      } else {
-        this.$Message.error(error.message)
-      }
+      error.response.data.text().then(text => {
+        try {
+          error.response.data = JSON.parse(text)
+        } catch (e) {
+          error.response.data = text
+        }
+        if (error.response?.data?.errors) {
+          this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
+        } else if (error?.response?.status) {
+          this.$Message.error(`${this.i18n.action_has_failed_with_code} ${error.response.status}`)
+        } else {
+          this.$Message.error(error.message)
+        }
+      })
     },
     redirectTo (redirectTo) {
       const resolvedRoute = this.$router.resolve({ path: redirectTo.replace(location.origin, '') }, this.$route)

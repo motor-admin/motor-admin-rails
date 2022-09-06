@@ -227,21 +227,21 @@ export default {
       }
 
       return request.then((result) => {
-        if (result.data?.errors) {
-          this.$refs.form.setErrors(result.data.errors)
-          this.scrollToErrors()
+        const blob = result.data
 
-          this.$emit('error', result)
-        } else {
-          const blob = result.data
+        blob.text().then(text => {
+          try {
+            result.data = JSON.parse(text)
+          } catch (e) {
+            result.data = text
+          }
 
-          blob.text().then(text => {
-            try {
-              result.data = JSON.parse(text)
-            } catch (e) {
-              result.data = text
-            }
+          if (result.data?.errors) {
+            this.$refs.form.setErrors(result.data.errors)
+            this.scrollToErrors()
 
+            this.$emit('error', result)
+          } else {
             const redirectTo = result.data?.redirect || result.data?.redirect_to || result.redirect || result.redirect_to
 
             if (typeof redirectTo === 'string') {
@@ -271,19 +271,27 @@ export default {
             this.isSuccess = true
 
             this.$emit('success', result)
-          })
-        }
+          }
+        })
       }).catch((error) => {
         console.error(error)
 
-        if (error.response?.data?.errors) {
-          this.$refs.form.setErrors(error.response.data.errors)
-          this.scrollToErrors()
-        } else {
-          this.$refs.form.setErrors([`${this.i18n.unable_to_submit_form}: ${error.response?.status || error.message}`])
-        }
+        error.response.data.text().then(text => {
+          try {
+            error.response.data = JSON.parse(text)
+          } catch (e) {
+            error.response.data = text
+          }
 
-        this.$emit('error', error)
+          if (error.response?.data?.errors) {
+            this.$refs.form.setErrors(error.response.data.errors)
+            this.scrollToErrors()
+          } else {
+            this.$refs.form.setErrors([`${this.i18n.unable_to_submit_form}: ${error.response?.status || error.message}`])
+          }
+
+          this.$emit('error', error)
+        })
       }).finally(() => {
         this.isLoading = false
         this.$emit('submit', this.formData)
