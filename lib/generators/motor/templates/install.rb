@@ -186,5 +186,6 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
     drop_table :motor_configs
     drop_table :motor_queries
     drop_table :motor_dashboards
+    drop_table :motor_api_configs
   end
 end
