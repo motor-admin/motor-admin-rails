@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.3.11)
+    motor-admin (0.3.12)
       ar_lazy_preload (~> 1.0)
       audited (~> 5.0)
       cancancan (~> 3.0)
@@ -151,7 +151,7 @@ GEM
       concurrent-ruby (~> 1.1)
       websocket-driver (>= 0.6, < 0.8)
     ffi (1.15.5)
-    fugit (1.6.0)
+    fugit (1.7.0)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
     globalid (1.0.0)
