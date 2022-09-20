@@ -7,6 +7,7 @@
     v-if="isFile"
     type="file"
     v-bind="$attrs"
+    :multiple="column.is_array"
     @change="onFile"
   >
   <VueTrix
@@ -220,46 +221,56 @@ export default {
       }
     },
     onFile (event) {
-      const file = event.target.files[0]
-      const reader = new FileReader()
+      const promises = [...event.target.files].map((file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
 
-      reader.readAsBinaryString(file)
+          reader.readAsBinaryString(file)
 
-      reader.onload = () => {
-        if (this.column.file_direct_upload) {
-          this.isLoading = true
-
-          if (this.formComponent) {
-            this.formComponent.isSubmitting = true
+          reader.onload = () => {
+            if (this.column.file_direct_upload) {
+              api.post('data/active_storage__attachments', {
+                fields: {
+                  attachment: 'id,path,created_at,updated_at,name'
+                },
+                data: {
+                  name: 'attachments',
+                  file: {
+                    filename: file.name,
+                    io: reader.result
+                  }
+                }
+              }).then((result) => {
+                resolve(location.origin + result.data.data.path)
+              }).catch((error) => {
+                reject(error)
+              })
+            } else {
+              resolve({ filename: file.name, io: reader.result })
+            }
           }
+        })
+      })
 
-          api.post('data/active_storage__attachments', {
-            fields: {
-              attachment: 'id,path,created_at,updated_at,name'
-            },
-            data: {
-              name: 'attachments',
-              file: {
-                filename: file.name,
-                io: reader.result
-              }
-            }
-          }).then((result) => {
-            this.$emit('update:modelValue', location.origin + result.data.data.path)
-          }).finally(() => {
-            this.isLoading = false
+      this.isLoading = true
 
-            if (this.formComponent) {
-              this.formComponent.isSubmitting = false
-            }
-          })
-        } else {
-          this.$emit('update:modelValue', {
-            filename: file.name,
-            io: reader.result
-          })
-        }
+      if (this.formComponent) {
+        this.formComponent.isSubmitting = true
       }
+
+      Promise.all(promises).then((result) => {
+        if (this.column.is_array) {
+          this.$emit('update:modelValue', result)
+        } else {
+          this.$emit('update:modelValue', result[0])
+        }
+      }).finally(() => {
+        this.isLoading = false
+
+        if (this.formComponent) {
+          this.formComponent.isSubmitting = false
+        }
+      })
     },
     numberFormatter (value) {
       if (this.type === 'currency') {

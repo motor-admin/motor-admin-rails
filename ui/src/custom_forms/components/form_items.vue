@@ -25,7 +25,7 @@
         :prop="propPrefix ? `${propPrefix}.${item.name}` : item.name"
       >
         <FormListInput
-          v-if="item.is_array && ['file', 'json', 'textarea'].includes(item.field_type)"
+          v-if="item.is_array && ['json', 'textarea'].includes(item.field_type)"
           v-model="formData[item.name]"
           :column="item"
           :form-data="mergedVariablesFormData"
