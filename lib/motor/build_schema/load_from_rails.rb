@@ -294,6 +294,8 @@ module Motor
         validators += [{ includes: enum.keys }] if enum
 
         validators += model.validators_on(column_name).map do |validator|
+          next if validator.options[:if] || validator.options[:unless]
+
           build_validator_hash(validator)
         end.compact
 
