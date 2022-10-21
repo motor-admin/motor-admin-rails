@@ -341,6 +341,8 @@ export default {
                 link.setAttribute('download', `${fileName || 'attachment'}`)
 
                 link.click()
+              } else if (typeof resultData === 'string') {
+                this.$Dialog.success({ title: this.i18n.action_has_been_applied, content: resultData })
               } else {
                 this.$Message.info(this.i18n.action_has_been_applied)
               }
