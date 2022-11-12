@@ -2,6 +2,8 @@
 
 module Motor
   class SessionsController < ApiBaseController
+    include ActionController::Cookies
+
     skip_authorization_check
 
     def show
@@ -13,6 +15,7 @@ module Motor
 
     def destroy
       session.clear
+      cookies.clear
 
       head :ok
     end
