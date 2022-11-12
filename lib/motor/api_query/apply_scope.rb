@@ -25,6 +25,7 @@ module Motor
         scope_configs = configs.preferences[:scopes].find { |s| s[:name] == scope }
 
         return rel unless scope_configs
+        return rel unless scope_configs[:preferences]
 
         rel = ApiQuery::Filter.call(rel, scope_configs[:preferences][:filter])
 
