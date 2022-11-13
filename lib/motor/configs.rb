@@ -5,8 +5,7 @@ module Motor
     FILE_PATH = 'config/motor.yml'
     SYNC_API_PATH = '/motor_configs_sync'
     SYNC_ACCESS_KEY = ENV.fetch('MOTOR_SYNC_API_KEY', '')
-    MEMFS_PATH = '/__enclose_io_memfs__/'
-    PWD_FILE_NAME = 'motor-admin.yml'
+    WORKDIR_FILE_NAME = 'motor-admin.yml'
 
     module_function
 
@@ -22,8 +21,8 @@ module Motor
 
     # @return [String]
     def file_path
-      if Rails.root.to_s.start_with?(MEMFS_PATH)
-        [ENV['PWD'], PWD_FILE_NAME].join('/')
+      if defined?(MotorAdmin::Application)
+        [ENV['WORKDIR'], WORKDIR_FILE_NAME].compact.join('/')
       else
         Rails.root.join(FILE_PATH).to_s
       end
