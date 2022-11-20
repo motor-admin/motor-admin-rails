@@ -1,93 +1,21 @@
 <template>
   <div>
-    <div
-      class="row"
-      :style="{ margin: '10px 0' }"
-    >
-      <div
-        v-if="(withTitle && !widthLessThan('sm')) || selectedRows.length"
-        class="col-6 d-flex align-items-center pe-0"
-      >
-        <VButton
-          v-if="withMenu"
-          icon="md-menu"
-          size="small"
-          type="dashed"
-          class="me-2 bg-transparent align-bottom"
-          @click="$emit('click-menu')"
-        />
-        <VButton
-          v-if="withResize"
-          icon="md-resize"
-          size="small"
-          type="dashed"
-          class="me-2 bg-transparent d-none d-md-block"
-          @click="$emit('click-resize')"
-        />
-        <SettingsMask
-          v-if="isShowSettings"
-          class="me-2"
-          :settings-type="'actions'"
-          :button-only="true"
-          :resource="model"
-        />
-        <SettingsMask
-          v-if="isShowSettings && !withResize"
-          class="me-2"
-          :settings-type="'scopes'"
-          :button-only="true"
-          :resource="model"
-        />
-        <span
-          v-if="withTitle && !widthLessThan('sm') && (!selectedRows.length || !modelHasActions)"
-          class="fs-4 fw-bold nowrap overflow-hidden text-truncate"
-        >{{ title }}
-          <template v-if="currentScope">
-            ({{ currentScope.display_name }})
-          </template>
-        </span>
-        <ResourceActions
-          v-if="selectedRows.length && !isShowSettings && modelHasActions"
-          ref="actions"
-          :resources="selectedRows"
-          :with-deselect="true"
-          :resource-name="model.name"
-          :label="`${i18n['actions']} (${selectedRows.length})`"
-          @start-action="isLoading = true"
-          @finish-action="onFinishAction"
-        />
-      </div>
-      <div
-        class="d-flex justify-content-end"
-        :class="(withTitle && !widthLessThan('sm')) || selectedRows.length ? 'col-6' : 'col-12'"
-      >
-        <ResourceSearch
-          v-model="searchQuery"
-          style="max-width: 470px"
-          class="me-1"
-          :placeholder="`${i18n['search']} ${(association?.display_name || model.display_name).toLowerCase()}...`"
-          @search="applySearch"
-        />
-        <Badge
-          :count="filtersCount"
-          type="primary"
-        >
-          <VButton
-            icon="ios-funnel"
-            data-role="filter"
-            class="mx-1 bg-white"
-            @click="openFiltersModal"
-          />
-        </Badge>
-        <CollectionActions
-          class="ms-1"
-          :model="model"
-          :association="association"
-          :parent-resource="associationParams ? { name: resourceName, id: associationParams.id } : null"
-          @success="loadDataAndCount"
-        />
-      </div>
-    </div>
+    <ResourceNavbar
+      v-model:searchQuery="searchQuery"
+      v-model:filterParams="filterParams"
+      :selected-rows="selectedRows"
+      :with-title="withTitle"
+      :association-params="associationParams"
+      :with-menu="withMenu"
+      :with-resize="withResize"
+      :resource-name="resourceName"
+      @click-menu="$emit('click-menu')"
+      @click-resize="$emit('click-resize')"
+      @apply-search="applySearch"
+      @reload="loadDataAndCount"
+      @action-applied="loadDataAndCount"
+      @apply-filters="onApplyFilters"
+    />
     <div
       v-if="!isReloading"
       class="position-relative"
@@ -151,9 +79,7 @@
       v-else
       :style="{ height: height.replace(/\)$/, ' + 34px)'), paddingBottom: '1px', position: 'relative' }"
     >
-      <Spin
-        fix
-      />
+      <Spin fix />
     </div>
   </div>
 </template>
@@ -163,10 +89,8 @@ import api from 'api'
 import { reactive } from 'vue'
 import { modelNameMap } from '../scripts/schema'
 import DataTable from 'data_tables/components/table'
-import ResourceSearch from './search'
+import ResourceNavbar from './navbar'
 import ResourceActions from './actions'
-import CollectionActions from './collection_actions'
-import FiltersModal from './filters_modal'
 
 import { widthLessThan } from 'utils/scripts/dimensions'
 import { truncate, underscore } from 'utils/scripts/string'
@@ -190,9 +114,7 @@ export default {
   name: 'ResourceTable',
   components: {
     DataTable,
-    ResourceSearch,
-    ResourceActions,
-    CollectionActions,
+    ResourceNavbar,
     SettingsMask
   },
   props: {
@@ -493,26 +415,12 @@ export default {
         this.isDownloadLoading = false
       })
     },
-    openFiltersModal () {
-      this.$Drawer.open(FiltersModal, {
-        filters: this.filterParams,
-        model: this.model,
-        onCancel: () => {
-          this.$Drawer.remove()
-        },
-        onApply: (filters) => {
-          this.filterParams = filters
-          this.paginationParams.current = 1
-          this.pushQueryParams()
-          this.loadDataAndCount().then(() => {
-            this.$refs.table.scrollToTop()
-          })
-          this.$Drawer.remove()
-        }
-      }, {
-        title: this.i18n.resource_filters.replace('%{resource}', this.model.display_name),
-        className: 'drawer-no-bottom-padding',
-        closable: true
+    onApplyFilters (filters) {
+      this.filterParams = filters
+      this.paginationParams.current = 1
+      this.pushQueryParams()
+      this.loadDataAndCount().then(() => {
+        this.$refs.table.scrollToTop()
       })
     },
     assignFromQueryParams (query = {}) {

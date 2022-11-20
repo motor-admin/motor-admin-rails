@@ -18,6 +18,7 @@
         />
       </FormItem>
       <FormItem
+        v-if="!['forms', 'reports'].includes(dataLink.link_type)"
         :label="i18n['path']"
         prop="path"
       >
@@ -28,6 +29,7 @@
         />
       </FormItem>
       <FormItem
+        v-if="!['forms', 'reports'].includes(dataLink.link_type)"
         :label="i18n['type']"
         prop="type"
       >
@@ -37,6 +39,48 @@
         />
       </FormItem>
     </VForm>
+    <Checkbox
+      :model-value="!!dataLink.conditions.length"
+      class="d-block mb-3"
+      @update:model-value="toggleConditions"
+    >
+      {{ ' ' }} {{ i18n['conditional'] }}
+    </Checkbox>
+    <div
+      v-for="(item, index) in dataLink.conditions"
+      :key="index"
+      class="d-flex justify-content-between mt-2"
+    >
+      <MSelect
+        v-model="item.field"
+        style="width: 45%"
+        :placeholder="i18n.field"
+        :options="['role', 'email']"
+        :with-deselect="false"
+      />
+      <MSelect
+        v-model="item.value"
+        multiple
+        allow-create
+        style="width: 45%"
+        :placeholder="i18n.value"
+      />
+      <VButton
+        icon="md-close"
+        type="text"
+        @click="dataLink.conditions.splice(index, 1)"
+      />
+    </div>
+    <VButton
+      v-if="!!dataLink.conditions.length"
+      :icon="'md-add'"
+      type="text"
+      class="bg-transparent"
+      long
+      @click="dataLink.conditions.push({ field: 'role', value: ''})"
+    >
+      {{ i18n.add_condition }}
+    </VButton>
     <div class="d-flex justify-content-between">
       <div>
         <VButton
@@ -90,7 +134,11 @@ export default {
   data () {
     return {
       isLoading: false,
-      dataLink: { ...this.link }
+      dataLink: {
+        conditions: [],
+        type: 'header',
+        ...this.link
+      }
     }
   },
   computed: {
@@ -108,6 +156,13 @@ export default {
     }
   },
   methods: {
+    toggleConditions (value) {
+      if (this.dataLink.conditions.length) {
+        this.dataLink.conditions = []
+      } else {
+        this.dataLink.conditions = [{ field: 'role', value: [] }]
+      }
+    },
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {

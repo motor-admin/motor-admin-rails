@@ -38,25 +38,25 @@ module Motor
       def build_data(cache_keys = {}, current_user = nil, current_ability = nil)
         configs_cache_key = cache_keys[:configs]
 
-        {
-          version: Motor::VERSION,
-          current_user: current_user&.as_json(only: %i[id email]),
+        { version: Motor::VERSION,
+          current_user: serialize_current_user(current_user),
           current_rules: current_ability.serialized_rules,
           audits_count: Motor::Audit.count,
           i18n: i18n_data,
           base_path: Motor::Admin.routes.url_helpers.motor_path,
+          cabel_path: Motor::Admin.routes.url_helpers.try(:motor_cabel_path),
           admin_settings_path: Rails.application.routes.url_helpers.try(:admin_settings_general_path),
           schema: Motor::BuildSchema.call(cache_keys, current_ability),
-          header_links: header_links_data_hash(configs_cache_key),
+          header_links: header_links_data_hash(current_user, current_ability, configs_cache_key),
           homepage_layout: homepage_layout_data_hash(configs_cache_key),
+          databases: database_names,
           queries: queries_data_hash(build_cache_key(cache_keys, :queries, current_user, current_ability),
                                      current_ability),
           dashboards: dashboards_data_hash(build_cache_key(cache_keys, :dashboards, current_user, current_ability),
                                            current_ability),
           alerts: alerts_data_hash(build_cache_key(cache_keys, :alerts, current_user, current_ability),
                                    current_ability),
-          forms: forms_data_hash(build_cache_key(cache_keys, :forms, current_user, current_ability), current_ability)
-        }
+          forms: forms_data_hash(build_cache_key(cache_keys, :forms, current_user, current_ability), current_ability) }
       end
       # rubocop:enable Metrics/AbcSize
 
@@ -64,21 +64,86 @@ module Motor
         I18n.t('motor', default: I18n.t('motor', locale: :en))
       end
 
+      def serialize_current_user(user)
+        return unless user
+
+        attrs = user.as_json(only: %i[id email first_name last_name])
+
+        attrs['role'] = user.role if user.respond_to?(:role)
+        attrs['role_names'] = user.role_names if user.respond_to?(:role_names)
+
+        attrs
+      end
+
       # @return [String]
       def build_cache_key(cache_keys, key, current_user, current_ability)
         "#{cache_keys[key].hash}#{current_user&.id}#{current_ability&.rules_hash}"
       end
 
-      def header_links_data_hash(cache_key = nil)
+      def header_links_data_hash(current_user, current_ability, cache_key = nil)
         configs = Motor::Configs::LoadFromCache.load_configs(cache_key: cache_key)
 
-        configs.find { |c| c.key == 'header.links' }&.value || []
+        links = configs.find { |c| c.key == 'header.links' }&.value || []
+        links = add_default_links(links)
+
+        return links unless current_user
+        return links if current_ability.can?(:manage, :all)
+
+        filter_links_for_user(current_user, links)
+      end
+
+      def add_default_links(links)
+        new_links = links.clone
+
+        unless links.find { |l| l['link_type'] == 'forms' }
+          new_links.unshift({ 'name' => I18n.t('motor.forms'), 'link_type' => 'forms' })
+        end
+
+        unless links.find { |l| l['link_type'] == 'reports' }
+          new_links.unshift({ 'name' => I18n.t('motor.reports'), 'link_type' => 'reports' })
+        end
+
+        new_links
+      end
+
+      def filter_links_for_user(current_user, links)
+        links.select do |link|
+          conditions = link['conditions']
+
+          next true if conditions.blank?
+
+          conditions.all? do |cond|
+            field_name =
+              if cond['field'] == 'role' && !current_user.respond_to?(:role)
+                :role_names
+              else
+                cond['field'].to_sym
+              end
+
+            next false unless field_name.in?(%i[email role role_names])
+            next false unless current_user.respond_to?(field_name)
+
+            Array.wrap(current_user.public_send(field_name)).intersection(Array.wrap(cond['value'])).present?
+          end
+        end
       end
 
       def homepage_layout_data_hash(cache_key = nil)
         configs = Motor::Configs::LoadFromCache.load_configs(cache_key: cache_key)
 
         configs.find { |c| c.key == 'homepage.layout' }&.value || []
+      end
+
+      def database_names
+        if defined?(Motor::EncryptedConfig)
+          Motor::DatabaseClasses.constants.map { |e| e.to_s.titleize }
+        elsif ActiveRecord::Base.configurations.try(:configurations)
+          ActiveRecord::Base.configurations.configurations
+                            .select { |c| c.env_name == Rails.env }
+                            .map { |c| c.try(:name) || c.try(:spec_name) }.compact
+        else
+          ['primary']
+        end
       end
 
       def queries_data_hash(cache_key = nil, current_ability = nil)

@@ -15,21 +15,28 @@ module Motor
       source_root File.expand_path('templates', __dir__)
 
       def copy_migration
-        has_api_actions = Motor::Resource.all.any? do |resource|
-          resource.preferences[:actions]&.any? { |action| action[:action_type] == 'api' }
-        end
-
         unless Motor::ApiConfig.table_exists?
           migration_template 'install_api_configs.rb', 'db/migrate/install_motor_api_configs.rb'
         end
 
-        migration_template 'upgrade_motor_api_actions.rb', 'db/migrate/upgrade_motor_api_actions.rb' if has_api_actions
+        if with_api_actions?
+          migration_template 'upgrade_motor_api_actions.rb', 'db/migrate/upgrade_motor_api_actions.rb'
+        end
 
-        if Motor::ApiConfig.table_exists? && !has_api_actions
+        migration_template 'install_notes.rb', 'db/migrate/install_motor_notes.rb' unless Motor::Note.table_exists?
+
+        if Motor::ApiConfig.table_exists? && !with_api_actions? && Motor::Note.table_exists?
           puts 'The latest Motor Admin features are already configured'
         else
           puts 'Run `rake db:migrate` to update DB schema'
         end
+      end
+
+      def with_api_actions?
+        @with_api_actions ||=
+          Motor::Resource.all.any? do |resource|
+            resource.preferences[:actions]&.any? { |action| action[:action_type] == 'api' }
+          end
       end
     end
   end

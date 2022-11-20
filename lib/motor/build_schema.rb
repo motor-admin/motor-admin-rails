@@ -102,6 +102,13 @@ module Motor
 
       ReorderSchema.call(schema, cache_keys)
     end
+
+    def for_model(model)
+      schema = Motor::BuildSchema::LoadFromRails.build_model_schema(model)
+      configs = Motor::Resource.find_by(name: schema[:name]).preferences
+
+      MergeSchemaConfigs.merge_model(schema, configs)
+    end
   end
 end
 

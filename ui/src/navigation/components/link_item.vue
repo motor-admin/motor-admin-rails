@@ -29,7 +29,7 @@
           v-if="isForm"
           :link="link"
           class="py-3"
-          :with-remove="true"
+          :with-remove="!['forms', 'reports'].includes(link.link_type)"
           @cancel="toggleForm"
           @remove="onRemove"
           @submit="onSubmit"

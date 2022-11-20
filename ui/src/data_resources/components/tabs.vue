@@ -22,59 +22,73 @@
         :settings-type="selectedTab.tab_type"
         :preferences="selectedTab.preferences"
       />
-      <KeepAlive>
-        <ResourcesMenu
-          v-if="selectedTabName === 'associations'"
-          :key="'associations'"
-          :resources="associations"
-          :size="'small'"
-          :with-scopes="false"
-          :path-fragments="$route.params.fragments.length % 2 === 1 ? $route.params.fragments.slice(0, -1) : $route.params.fragments"
-          :style="{ minHeight: '100%' }"
-        />
-        <ResourceInfo
-          v-else-if="isDefaultDetails"
-          :key="'details'"
-          ref="details"
-          class="px-3 pb-3"
-          :resource-name="resourceName"
-          :resource-id="resourceId"
-          :with-actions="true"
-          :with-sticky-title="true"
-          :editable="true"
-          :one-column="!minimized"
-          @remove="$emit('remove')"
-        />
-        <ResourceInfoQuery
-          v-else-if="isQueryDetails"
-          :key="selectedTab.tab_type + selectedTab.preferences.query_id"
-          ref="query"
-          class="px-3 pt-3"
-          :resource-name="resourceName"
-          :resource-id="resourceId"
-          @remove="$emit('remove')"
-        />
-        <FormTab
-          v-else-if="selectedTab.tab_type === 'form'"
-          :key="selectedTab.tab_type + selectedTab.preferences.form_id"
-          :tab="selectedTab"
-          :data="resourceData"
-        />
-        <QueryTab
-          v-else-if="selectedTab.tab_type === 'query'"
-          :key="selectedTab.tab_type + selectedTab.preferences.query_id"
-          ref="query"
-          :tab="selectedTab"
-          :variables="resourceData"
-        />
-        <DashboardTab
-          v-else-if="selectedTab.tab_type === 'dashboard'"
-          :key="selectedTab.tab_type + selectedTab.preferences.dashboard_id"
-          ref="dashboard"
-          :tab="selectedTab"
-          :variables="resourceData"
-        />
-      </KeepAlive>
+      <ResourcesMenu
+        v-if="selectedTabName === 'associations'"
+        :key="'associations'"
+        :resources="associations"
+        :size="'small'"
+        :with-scopes="false"
+        :path-fragments="$route.params.fragments.length % 2 === 1 ? $route.params.fragments.slice(0, -1) : $route.params.fragments"
+        :style="{ minHeight: '100%' }"
+      />
+      <ResourceInfo
+        v-else-if="isDefaultDetails"
+        :key="'details'"
+        ref="details"
+        class="px-3 pb-3"
+        :resource-name="resourceName"
+        :resource-id="resourceId"
+        :with-actions="true"
+        :with-sticky-title="true"
+        :editable="true"
+        :one-column="!minimized"
+        @remove="$emit('remove')"
+      />
+      <AuditsTab
+        v-else-if="isDefaultAudits"
+        :key="'audits'"
+        ref="audits"
+        class="px-3 pb-3"
+        :resource-name="resourceName"
+        :resource-id="resourceId"
+      />
+      <NotesTab
+        v-else-if="isDefaultNotes"
+        :key="'notes'"
+        ref="notes"
+        :resource-name="resourceName"
+        :minimized="minimized"
+        :resource-id="resourceId"
+      />
+      <ResourceInfoQuery
+        v-else-if="isQueryDetails"
+        :key="selectedTab.tab_type + selectedTab.preferences.query_id"
+        ref="query"
+        class="px-3 pt-3"
+        :resource-name="resourceName"
+        :resource-id="resourceId"
+        @remove="$emit('remove')"
+      />
+      <FormTab
+        v-else-if="selectedTab.tab_type === 'form'"
+        :key="selectedTab.tab_type + selectedTab.preferences.form_id"
+        :tab="selectedTab"
+        :data="resourceData"
+      />
+      <QueryTab
+        v-else-if="selectedTab.tab_type === 'query'"
+        :key="selectedTab.tab_type + selectedTab.preferences.query_id"
+        ref="query"
+        :tab="selectedTab"
+        :variables="resourceData"
+      />
+      <DashboardTab
+        v-else-if="selectedTab.tab_type === 'dashboard'"
+        :key="selectedTab.tab_type + selectedTab.preferences.dashboard_id"
+        ref="dashboard"
+        :tab="selectedTab"
+        :variables="resourceData"
+      />
     </div>
   </div>
 </template>
@@ -87,7 +101,9 @@ import { modelNameMap } from '../scripts/schema'
 import QueryTab from './query_tab'
 import FormTab from './form_tab'
 import DashboardTab from './dashboard_tab'
+import AuditsTab from './audits_tab'
 import ResourcesMenu from 'navigation/components/resources'
+import NotesTab from 'notes/components/notes'
 
 import { dashboardsStore, queriesStore } from 'reports/scripts/store'
 import { formsStore } from 'custom_forms/scripts/store'
@@ -112,7 +128,9 @@ export default {
     DashboardTab,
     ResourcesMenu,
     SettingsMask,
-    ResourceInfoQuery
+    ResourceInfoQuery,
+    AuditsTab,
+    NotesTab
   },
   props: {
     resourceName: {
@@ -154,6 +172,12 @@ export default {
     },
     isDefaultDetails () {
       return this.selectedTabName === 'details' && this.selectedTab.tab_type === 'default'
+    },
+    isDefaultAudits () {
+      return this.selectedTabName === 'audits' && this.selectedTab.tab_type === 'default'
+    },
+    isDefaultNotes () {
+      return this.selectedTabName === 'notes' && this.selectedTab.tab_type === 'default'
     },
     isQueryDetails () {
       return this.selectedTabName === 'details' && this.selectedTab.tab_type === 'query'

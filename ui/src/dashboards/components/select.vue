@@ -6,6 +6,7 @@
     :options="dashboards"
     label-key="title"
     value-key="id"
+    :with-deselect="withDeselect"
     :placeholder="i18n['select_dashboard']"
     @update:model-value="$emit('update:modelValue', $event)"
   />
@@ -26,6 +27,11 @@ export default {
       type: String,
       required: false,
       default: 'default'
+    },
+    withDeselect: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   emits: ['update:modelValue'],

@@ -14,12 +14,16 @@ require 'net/https'
 module Motor
   PATH = Pathname.new(__dir__)
 
+  module DatabaseClasses
+  end
+
   module_function
 
   def reload!
     Kernel.silence_warnings do
       Dir[PATH.join('./motor/**/*.rb')].each do |f|
         next if f.ends_with?('alerts/scheduler.rb')
+        next if f.ends_with?('notes/reminders_scheduler.rb')
         next if f.ends_with?('alerts/scheduled_alerts_cache.rb')
         next if f.ends_with?('configs/load_from_cache.rb')
         next if f.ends_with?('configs/sync_from_file.rb')
@@ -43,6 +47,19 @@ module Motor
       defined?(::Trinidad::Server)
   end
 
+  def app_host
+    Rails.application.config.action_dispatch.default_url_options&.fetch(:host) ||
+      ENV.fetch('HOST', 'example.com')
+  end
+
+  def company_name
+    'Motor Admin'
+  end
+
+  def with_public_access?
+    ENV['MOTOR_PUBLIC_ACCESS'].to_s == 'true'
+  end
+
   def development?
     ENV['MOTOR_DEVELOPMENT'].present?
   end
@@ -62,7 +79,9 @@ require 'motor/dashboards'
 require 'motor/forms'
 require 'motor/api_configs'
 require 'motor/alerts'
+require 'motor/slack'
 require 'motor/resources'
+require 'motor/notes'
 require 'motor/hash_serializer'
 require 'motor/net_http_utils'
 require 'motor/railtie'

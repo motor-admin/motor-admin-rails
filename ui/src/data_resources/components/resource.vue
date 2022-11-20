@@ -46,10 +46,10 @@
         @action-applied="reloadTabs"
         @click-resize="toggleSize"
       />
-      <ResourceTable
-        v-else-if="showTable"
+      <ResourceKanban
+        v-else-if="showTable && associationModel.preferences.display_as === 'kanban' && isKanban"
         :key="resourceName + resourceId + associationName"
-        :height="isFullscreenTable ? 'calc(var(--vh, 100vh) - 199px)' : 'calc((var(--vh) / 2) - 108px)'"
+        :height="isFullscreenTable ? 'calc(var(--vh, 100vh) - 219px)' : 'calc((var(--vh) / 2) - 128px)'"
         :with-resize="true"
         :resource-name="resourceName"
         :with-title="true"
@@ -57,6 +57,21 @@
         :association-params="{ name: associationName, id: resourceId }"
         @action-applied="reloadTabs"
         @click-resize="toggleSize"
+        @toggle-kanban="toggleKanban"
+      />
+      <ResourceTable
+        v-else-if="showTable"
+        :key="resourceName + resourceId + associationName"
+        :height="isFullscreenTable ? 'calc(var(--vh, 100vh) - 199px)' : 'calc((var(--vh) / 2) - 108px)'"
+        :with-resize="true"
+        :resource-name="resourceName"
+        :with-title="true"
+        :with-kanban-toggle="associationModel.preferences.display_as === 'kanban'"
+        class="border-top"
+        :association-params="{ name: associationName, id: resourceId }"
+        @action-applied="reloadTabs"
+        @click-resize="toggleSize"
+        @toggle-kanban="toggleKanban"
       />
     </Layout>
   </Layout>
@@ -67,6 +82,7 @@ import { modelNameMap } from '../scripts/schema'
 
 import ResourcesMenu from 'navigation/components/resources'
 import ResourceTable from './table'
+import ResourceKanban from './kanban'
 import ResourceTabs from './tabs'
 import AttachmentsList from './attachments_list'
 
@@ -83,6 +99,7 @@ export default {
     ResourceTable,
     ResourceTabs,
     SettingsMask,
+    ResourceKanban,
     AttachmentsList
   },
   props: {
@@ -102,7 +119,8 @@ export default {
   },
   data () {
     return {
-      isFullscreenTable: false
+      isFullscreenTable: false,
+      isKanban: this.$route.query?.display_as === 'kanban'
     }
   },
   computed: {
@@ -125,6 +143,9 @@ export default {
     association () {
       return this.associations.find((assoc) => assoc.name === this.associationName)
     },
+    associationModel () {
+      return modelNameMap[this.association.model_name]
+    },
     associations () {
       return this.model.associations.filter((assoc) => assoc.visible && modelNameMap[assoc.model_name])
     }
@@ -135,6 +156,8 @@ export default {
     } else {
       this.isFullscreenTable = localStorage.getItem(fullscreenTableKey) === 'true'
     }
+
+    this.isKanban ||= localStorage.getItem(`motor:${this.model.name}:is_kanban`) !== 'false'
   },
   methods: {
     widthLessThan,
@@ -147,6 +170,11 @@ export default {
       this.isFullscreenTable = !this.isFullscreenTable
 
       localStorage.setItem(fullscreenTableKey, this.isFullscreenTable.toString())
+    },
+    toggleKanban () {
+      this.isKanban = !this.isKanban
+
+      localStorage.setItem(`motor:${this.model.name}:is_kanban`, this.isKanban)
     },
     goToParent () {
       this.$router.push({

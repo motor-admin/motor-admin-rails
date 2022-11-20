@@ -248,6 +248,21 @@
               :variables="dataQuery.preferences.variables"
               @run="loadQueryData"
             />
+            <div
+              v-if="databaseNames.length > 1"
+              style="position: relative; bottom: 31px; right: -1px; z-index: 10"
+            >
+              <MSelect
+                v-model="dataQuery.preferences.database"
+                :options="databaseNames"
+                class="float-right"
+                :with-deselect="false"
+                style="float: right; width: 200px"
+                :option-component="dbLabelComponent"
+                data-role="db-selector"
+                @update:model-value="loadQueryData"
+              />
+            </div>
           </template>
         </template>
         <template #bottom>
@@ -296,6 +311,8 @@ import { modelNameMap } from 'data_resources/scripts/schema'
 import { queriesStore } from 'reports/scripts/store'
 import RevisionsModal from 'utils/components/revisions_modal'
 import ApiSelect from 'api_configs/components/select'
+import { databaseNames } from 'utils/scripts/configs'
+import DbLabel from '../components/db_label'
 
 import api from 'api'
 import { loadApiQuery } from '../scripts/api_query'
@@ -309,6 +326,7 @@ const defaultQueryParams = {
   tags: [],
   preferences: {
     query_type: 'sql',
+    database: (databaseNames.includes('Default') ? 'Default' : 'primary'),
     visualization: 'table',
     visualization_options: {},
     variables: []
@@ -345,6 +363,8 @@ export default {
     }
   },
   computed: {
+    databaseNames: () => databaseNames,
+    dbLabelComponent: () => DbLabel,
     queryParamsVariables () {
       return this.$route.query || {}
     },
@@ -581,7 +601,7 @@ export default {
           })
 
           variables.forEach((variableName) => {
-            if (!RESERVED_VARIABLES.includes(variableName)) {
+            if (!RESERVED_VARIABLES.includes(variableName) && !variableName.match(/_database_url$/)) {
               const variable = {
                 name: variableName,
                 display_name: titleize(variableName),
@@ -755,4 +775,11 @@ export default {
 </script>
 
 <style lang="scss">
+[data-role="db-selector"] {
+  .ivu-select-selection {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
 </style>

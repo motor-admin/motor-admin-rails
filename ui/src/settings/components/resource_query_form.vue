@@ -159,7 +159,10 @@ export default {
       return api.post('run_queries', {
         limit: 20,
         data: {
-          sql_body: this.sqlBody
+          sql_body: this.sqlBody,
+          preferences: {
+            database: this.resource.name.includes('/') ? this.resource.name.split('/')[0] : 'default'
+          }
         }
       }).then((result) => {
         this.errors = []

@@ -38,16 +38,31 @@
               :association-name="associationName"
             />
           </template>
-          <ResourceTable
-            v-if="fragments.length === 1"
-            :key="resourceName"
-            :height="`calc(var(--vh, 100vh) - ${widthLessThan('sm') ? '200px' : '148px'})`"
-            :with-title="!widthLessThan('sm')"
-            :with-menu="isShowSiderScreen && !widthLessThan('sm')"
-            class="border-top border-md-0"
-            :resource-name="resourceName"
-            @click-menu="toggleResourcesMenu"
-          />
+          <template v-if="fragments.length === 1">
+            <ResourceKanban
+              v-if="model.preferences.display_as === 'kanban' && isKanban"
+              :key="resourceName"
+              :height="`calc(var(--vh, 100vh) - ${widthLessThan('sm') ? '220px' : '168px'})`"
+              :with-title="!widthLessThan('sm')"
+              :with-menu="isShowSiderScreen && !widthLessThan('sm')"
+              class="border-top border-md-0"
+              :resource-name="resourceName"
+              @click-menu="toggleResourcesMenu"
+              @toggle-kanban="toggleKanban"
+            />
+            <ResourceTable
+              v-else
+              :key="resourceName"
+              :height="`calc(var(--vh, 100vh) - ${widthLessThan('sm') ? '200px' : '148px'})`"
+              :with-title="!widthLessThan('sm')"
+              :with-menu="isShowSiderScreen && !widthLessThan('sm')"
+              :with-kanban-toggle="model.preferences.display_as === 'kanban'"
+              class="border-top border-md-0"
+              :resource-name="resourceName"
+              @click-menu="toggleResourcesMenu"
+              @toggle-kanban="toggleKanban"
+            />
+          </template>
         </template>
         <div
           v-else
@@ -65,6 +80,7 @@
 import { schema, modelSlugMap, modelNameMap } from '../scripts/schema'
 import Resource from '../components/resource'
 import ResourceTable from '../components/table'
+import ResourceKanban from '../components/kanban'
 import Breadcrumbs from 'navigation/components/breadcrumbs'
 import ResourcesMenu from 'navigation/components/resources'
 import Home from 'navigation/components/home'
@@ -81,12 +97,14 @@ export default {
     Resource,
     Breadcrumbs,
     ResourcesMenu,
+    ResourceKanban,
     Home,
     SettingsMask
   },
   data () {
     return {
-      isMenuSider: false
+      isMenuSider: false,
+      isKanban: this.$route.query?.display_as === 'kanban'
     }
   },
   computed: {
@@ -213,9 +231,18 @@ export default {
   },
   created () {
     this.isMenuSider = this.isShowSiderScreen
+
+    if (this.model) {
+      this.isKanban ||= localStorage.getItem(`motor:${this.model.name}:is_kanban`) !== 'false'
+    }
   },
   methods: {
     widthLessThan,
+    toggleKanban () {
+      this.isKanban = !this.isKanban
+
+      localStorage.setItem(`motor:${this.model.name}:is_kanban`, this.isKanban)
+    },
     onMenuSelect (value) {
       if (modelSlugMap[value]?.scopes?.find((s) => s.visible)) {
         if (this.fragments[0] === value) {

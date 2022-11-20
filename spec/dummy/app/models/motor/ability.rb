@@ -40,6 +40,9 @@ module Motor
 
     def motor_abilities
       can :read, Motor::Tag
+      can :read, Motor::NoteTag
+      can :manage, Motor::Reminder
+      can :manage, Motor::Notification
       can :read, ActiveStorage::Attachment
       can :read, Motor::Form, %i[name tags], tags: { name: %w[Orders Customers] }
       can :manage, Motor::Form, tags: { name: %w[Orders Customers] }

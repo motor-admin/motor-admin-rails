@@ -13,6 +13,7 @@ AllCops:
     - lib/generators/motor/templates/**/*
     - lib/motor/active_record_utils/active_record_filter.rb
     - motor-admin.gemspec
+    - spec/dummy/db/schema.rb
   TargetRubyVersion: '2.6'
 
 Metrics/BlockLength:
@@ -44,6 +45,9 @@ Naming/MethodParameterName:
   MinNameLength: 2
 
 Metrics/ModuleLength:
+  Max: 300
+
+Metrics/ClassLength:
   Max: 300
 
 Style/ClassEqualityComparison:

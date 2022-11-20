@@ -20,7 +20,7 @@ module Motor
     private
 
     def render_result
-      query_result = Queries::RunQuery.call(@query, variables_hash: variables_params,
+      query_result = Queries::RunQuery.call(@query, variables_hash: variables_params.to_unsafe_h,
                                                     limit: params[:limit].presence,
                                                     filters: filter_params)
 

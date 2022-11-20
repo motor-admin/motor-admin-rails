@@ -2,6 +2,8 @@
 
 module Motor
   class Admin < ::Rails::Engine
+    config.custom_html = ''
+
     initializer 'motor.startup_message' do
       config.after_initialize do
         next unless Motor.server?
@@ -48,6 +50,7 @@ module Motor
         next unless Rails.env.production?
 
         Motor::Alerts::Scheduler::SCHEDULER_TASK.execute
+        Motor::Notes::RemindersScheduler::SCHEDULER_TASK.execute
       end
     end
 
@@ -75,6 +78,15 @@ module Motor
             ['POST', /\A#{Regexp.escape(Motor::Admin.routes.url_helpers.motor_api_auth_tokens_path)}\z/]
           ]
         end
+      end
+    end
+
+    initializer 'action_cable.connection_class' do
+      config.after_initialize do
+        next if defined?(::ApplicationCable::Connection)
+        next unless defined?(::ActionCable)
+
+        ActionCable.server.config.connection_class = -> { Motor::ApplicationCable::Connection }
       end
     end
 
@@ -107,7 +119,7 @@ module Motor
           raise
         end
 
-        unless Motor::ApiConfig.table_exists?
+        if !Motor::ApiConfig.table_exists? || !Motor::Note.table_exists?
           puts
           puts '  => Run `rails g motor:upgrade && rake db:migrate`' \
                ' to perform data migration and enable the latest features'

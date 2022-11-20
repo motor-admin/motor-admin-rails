@@ -6,6 +6,7 @@ import ResourcesBase from 'data_resources/pages/base'
 import QueriesShow from 'queries/pages/show'
 import ReportsIndex from 'reports/pages/index'
 import FormsIndex from 'custom_forms/pages/index'
+import NotificationsIndex from 'notifications/pages/index'
 import FormsShow from 'custom_forms/pages/show'
 import DashboardsShow from 'dashboards/pages/show'
 import AlertsShow from 'alerts/pages/show'
@@ -20,6 +21,11 @@ const routes = [
     path: '/data',
     component: ResourcesBase,
     name: 'data_home'
+  },
+  {
+    path: '/notifications',
+    component: NotificationsIndex,
+    name: 'notifications'
   },
   {
     path: '/data/:fragments+',

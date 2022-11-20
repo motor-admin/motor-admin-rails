@@ -204,7 +204,7 @@ export default {
       default: true
     }
   },
-  emits: ['remove'],
+  emits: ['remove', 'update'],
   data () {
     return {
       resource: {},
@@ -299,6 +299,8 @@ export default {
       this.resource = data
 
       this.assignBreadcrumbLabel()
+
+      this.$emit('update', data)
     },
     assignBreadcrumbLabel () {
       const labelParts = this.model.display_primary_key ? [`${this.resourceId.toString().match(/^\d+$/) ? '#' : ''}${this.resourceId}`] : []

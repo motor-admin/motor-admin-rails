@@ -5,7 +5,7 @@ module Motor
     load_and_authorize_resource :tag
 
     def index
-      render json: { data: @tags }
+      render json: { data: @tags.to_a }
     end
   end
 end

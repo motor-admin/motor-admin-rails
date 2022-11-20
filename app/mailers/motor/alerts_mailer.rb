@@ -6,9 +6,10 @@ module Motor
     SENDER_NOT_SET_ERROR_MESSAGE =
       'Please specify your sender address via MOTOR_ALERTS_FROM_ADDRESS environment variable'
 
-    def alert_email(alert)
+    def alert_email(alert, email: nil)
       @alert = alert
-      @query_result = Queries::RunQuery.call(alert.query)
+      @query_result = Queries::RunQuery.call(alert.query,
+                                             variables_hash: { current_user_email: email })
 
       return if @alert.preferences[:send_empty].blank? && @query_result.data.blank?
 
@@ -18,7 +19,7 @@ module Motor
 
       mail(
         from: from_address,
-        to: alert.to_emails,
+        to: email || alert.to_emails,
         subject: alert.name.presence || @alert.query.name
       )
     end
@@ -29,34 +30,10 @@ module Motor
       attachments["#{alert.name.presence || 'data'}.csv"] = generate_csv(query_result)
     end
 
-    def generate_csv(_query_result)
-      rows = [@query_result.columns.pluck(:name)] + @query_result.data
+    def generate_csv(query_result)
+      rows = [query_result.columns.pluck(:name)] + query_result.data
 
       rows.map(&:to_csv).join
-    end
-
-    def from_address
-      from = ENV['MOTOR_ALERTS_FROM_ADDRESS'].presence || ENV['MOTOR_EMAIL_ADDRESS'].presence
-
-      from ||= application_mailer_default_from
-      from ||= mailer_config_from_address
-      from ||= "reports@#{ENV['HOST'].delete_prefix('www.')}" if ENV['HOST'].present?
-
-      from ||= 'reports@example.com' if Rails.env.development?
-
-      from
-    end
-
-    def application_mailer_default_from
-      return if !defined?(::ApplicationMailer) || ::ApplicationMailer.default[:from].to_s.include?('example.com')
-
-      ::ApplicationMailer.default[:from].presence
-    end
-
-    def mailer_config_from_address
-      return if Rails.application.config.action_mailer.default_url_options&.dig(:host).blank?
-
-      "reports@#{Rails.application.config.action_mailer.default_url_options[:host].delete_prefix('www.')}"
     end
   end
 end

@@ -414,7 +414,10 @@ export default {
       const sqlBody = `SELECT DISTINCT(${this.dataColumn.name}) FROM ${this.model.table_name}`
 
       api.post('run_queries', {
-        sql_body: sqlBody
+        sql_body: sqlBody,
+        preferences: {
+          database: this.model.name.includes('/') ? this.model.name.split('/')[0] : 'default'
+        }
       }).then((result) => {
         this.dataColumn.format.select_options = result.data.data.flat().map((e) => e?.match && e.match(/^{.*}$/) ? e.split(/[{},]/) : e).flat().filter(Boolean)
         this.selectedOptionsText = Array(this.dataColumn.format.select_options).flat().join('\n')

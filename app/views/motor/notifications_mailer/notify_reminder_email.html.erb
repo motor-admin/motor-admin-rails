@@ -1,0 +1,28 @@
+<table border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #f9fbfc;">
+  <tr>
+    <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">&nbsp;</td>
+    <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; Margin: 0 auto; padding: 10px;">
+      <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto;padding: 10px;">
+        <h1 style="margin: 0">Reminder Notification</h1>
+        <a href="<%= Motor::Admin.routes.url_helpers.motor_ui_data_url([Motor::BuildSchema::Utils.slugify(@note.record.class), @note.record[@note.class.primary_key]], { tab: 'notes', host: 'localhost:3000' }.merge(Rails.application.config.action_mailer.default_url_options || {})) %>" target="blank" style="margin: 7px 0; float: right">Go to Reminder</a>
+        <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
+          <tr>
+            <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px; max-width: 0px; overflow: scroll">
+              <%= simple_format(@note.body.gsub(URI.regexp, '<a href="\0">\0</a>')) %>
+            </td>
+          </tr>
+        </table>
+        <div class="footer" style="clear: both; Margin-top: 10px; text-align: center; width: 100%;">
+          <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
+            <tr>
+              <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
+                Sent from <%= Motor.company_name %>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </td>
+    <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">&nbsp;</td>
+  </tr>
+</table>

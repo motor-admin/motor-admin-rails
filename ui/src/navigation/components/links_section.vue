@@ -49,25 +49,35 @@ export default {
     },
     defaultLinks () {
       return [
-        widthLessThan('sm') && {
+        widthLessThan('sm') && (this.reportsLink || this.formsLink) && {
           is: 'RouterLink',
           name: 'Data',
           to: { name: 'data_home' }
         },
-        this.canReadReports && {
+        this.canReadReports && this.reportsLink && {
           is: 'RouterLink',
           name: 'Reports',
           to: { name: 'reports' }
         },
-        this.$can('read', 'Motor::Form') && {
+        this.$can('read', 'Motor::Form') && this.formsLink && {
           is: 'RouterLink',
           name: 'Forms',
           to: { name: 'forms' }
         }
       ].filter(Boolean)
     },
+    reportsLink () {
+      return linksStore.find((l) => l.link_type === 'reports')
+    },
+    formsLink () {
+      return linksStore.find((l) => l.link_type === 'forms')
+    },
     customLinks () {
       return linksStore.map((link) => {
+        if (['reports', 'forms'].includes(link.link_type)) {
+          return null
+        }
+
         const params = { name: link.name }
 
         const path = link.path.replace(location.origin, '').replace(new RegExp(`^${basePath}`), '/')

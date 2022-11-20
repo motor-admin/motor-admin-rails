@@ -16,7 +16,7 @@
       />
     </div>
     <div
-      v-if="$route.name === 'home'"
+      v-if="$route.name === 'home' && !isEdit"
       class="row"
     >
       <LinksSection />
@@ -24,10 +24,10 @@
   </div>
   <div class="mx-2 mx-md-3 position-relative">
     <h1
-      v-if="widthLessThan('sm') && $route.name === 'home'"
+      v-if="widthLessThan('sm') && $route.name === 'home' && !filteredHomeItems.length"
       class="mt-3 mb-2"
     >
-      {{ dashboardId ? dashboard?.title : i18n['resources'] }}
+      {{ i18n['resources'] }}
     </h1>
     <div
       v-else-if="!widthLessThan('sm')"
@@ -50,38 +50,23 @@
       v-if="isLoading"
       fix
     />
-    <div
+    <LayoutEditor
       v-if="isEdit"
+      :model-value="homepageStore"
       style="max-width: 450px; margin: auto;"
-    >
-      <DashboardSelect v-model="selectedDashboardId" />
-      <div class="text-center">
-        <VButton
-          icon="md-close"
-          type="text"
-          class="bg-transparent"
-          @click="isEdit = false"
-        >
-          {{ i18n.cancel }}
-        </VButton>
-        <VButton
-          icon="md-checkmark"
-          class="bg-transparent"
-          type="text"
-          @click="selectDashboard"
-        >
-          {{ i18n.submit }}
-        </VButton>
-      </div>
-    </div>
-
-    <DashboardLayout
-      v-else-if="dashboardId && dashboard && $route.name === 'home'"
-      ref="dashboardLayout"
-      :dashboard="dashboard"
+      @submit="submitLayout"
     />
     <div
-      v-else
+      v-else-if="$route.name === 'home'"
+    >
+      <Dashboard
+        v-for="item in filteredHomeItems"
+        :key="item.id"
+        :dashboard-id="item.id"
+      />
+    </div>
+    <div
+      v-if="!isEdit && (filteredHomeItems.length === 0 || $route.name === 'data_home')"
       class="row"
     >
       <div
@@ -129,37 +114,41 @@
 <script>
 import api from 'api'
 import LinksSection from 'navigation/components/links_section'
-import DashboardSelect from 'dashboards/components/select'
-import DashboardLayout from 'dashboards/components/layout'
+import LayoutEditor from './layout_editor'
+import Dashboard from './dashboard'
 import { widthLessThan } from 'utils/scripts/dimensions'
 import { schema } from 'data_resources/scripts/schema'
 import { homepageStore } from '../scripts/homepage_store'
 import { version, isStandalone, adminSettingsPath } from 'utils/scripts/configs'
+import { currentUser } from 'navigation/scripts/user_store'
 
 export default {
   name: 'Home',
   components: {
     LinksSection,
-    DashboardSelect,
-    DashboardLayout
+    LayoutEditor,
+    Dashboard
   },
   data () {
     return {
       isEdit: false,
-      isLoading: false,
-      selectedDashboardId: null,
-      dashboard: null
+      isLoading: false
     }
   },
   computed: {
     version: () => version,
     schema: () => schema,
     isStandalone: () => isStandalone,
+    currentUser: () => currentUser,
     homepageStore () {
       return homepageStore
     },
-    dashboardId () {
-      return homepageStore[0]?.id
+    filteredHomeItems () {
+      return homepageStore.filter((item) => {
+        return !item.conditions || item.conditions.every((cond) => {
+          return [currentUser[cond.field === 'role' ? 'role_names' : cond.field]].flat().includes(cond.value)
+        })
+      })
     },
     databaseSettingsPath () {
       return adminSettingsPath?.replace('general', 'database')
@@ -168,78 +157,19 @@ export default {
       return schema.filter((model) => model.visible)
     }
   },
-  watch: {
-    dashboardId () {
-      if (this.dashboardId) {
-        this.loadDashboard()
-      } else {
-        this.dashboard = null
-      }
-    }
-  },
-  created () {
-    this.selectedDashboardId = homepageStore[0]?.id
-
-    if (this.dashboardId) {
-      this.loadDashboard().then(() => {
-        this.setAutorefreshInterval()
-      })
-    }
-  },
-  beforeUnmount () {
-    if (this.timer) {
-      clearInterval(this.timer)
-    }
-  },
   methods: {
     widthLessThan,
-    setAutorefreshInterval () {
-      if (this.dashboard.preferences.autorefresh_interval) {
-        this.timer = setInterval(() => this.refresh(false), this.dashboard.preferences.autorefresh_interval)
-      }
-    },
-    refresh () {
-      this.$refs.dashboardLayout.reload(false)
-    },
-    loadDashboard () {
-      this.isLoading = true
-
-      return api.get(`dashboards/${this.dashboardId}`, {
-        params: {
-          include: 'tags,queries',
-          fields: {
-            queries: 'id,name,preferences'
-          }
-        }
-      }).then((result) => {
-        this.dashboard = result.data.data
-      }).catch((error) => {
-        if (error.response?.data?.errors) {
-          this.$Message.error(error.response.data.errors.join('\n'))
-        } else {
-          this.$Message.error(error.message)
-        }
-      }).finally(() => {
-        this.isLoading = false
-      })
-    },
-    selectDashboard () {
+    submitLayout (data) {
       this.isLoading = true
 
       api.post('configs', {
         key: 'homepage.layout',
-        value: this.selectedDashboardId ? [{ type: 'dashboard', id: this.selectedDashboardId }] : []
+        value: data
       }).then((result) => {
         homepageStore.splice(0, homepageStore.length, ...result.data.data.value)
 
-        if (this.dashboardId) {
-          this.loadDashboard().finally(() => {
-            this.isEdit = false
-          })
-        } else {
-          this.isEdit = false
-          this.isLoading = false
-        }
+        this.isEdit = false
+        this.isLoading = false
       }).catch((error) => {
         console.error(error)
 

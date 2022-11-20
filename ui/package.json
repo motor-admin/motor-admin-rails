@@ -2,6 +2,7 @@
   "name": "motor",
   "private": true,
   "dependencies": {
+    "@rails/actioncable": "^6.1.4-1",
     "@rails/actiontext": "^6.0.5",
     "@tabler/icons": "^1.68.0",
     "axios": "^0.27.2",

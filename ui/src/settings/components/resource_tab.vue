@@ -22,7 +22,7 @@
               @on-change="toggleVisible"
             />
             <p
-              v-if="'details' === tab.name"
+              v-if="['details', 'audits', 'notes'].includes(tab.name)"
               class="fs-5 fw-bold"
             >
               {{ tab.display_name }}
@@ -43,8 +43,8 @@
           v-if="isForm"
           :tab="tab"
           class="py-3"
-          :with-remove="'details' !== tab.name"
-          :with-name="'details' !== tab.name"
+          :with-remove="!['details', 'audits', 'notes'].includes(tab.name)"
+          :with-name="!['details', 'audits', 'notes'].includes(tab.name)"
           :resource="resource"
           @cancel="toggleForm"
           @remove="removeTab"
@@ -124,7 +124,7 @@ export default {
         dataTab._update = dataTab.name
       }
 
-      if (dataTab.name !== 'details') {
+      if (!['details', 'audits', 'notes'].includes(dataTab.name)) {
         dataTab.name = underscore(dataTab.display_name)
       }
 

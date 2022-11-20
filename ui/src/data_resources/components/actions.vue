@@ -27,7 +27,7 @@
       :class="{ 'bg-white': buttonGhost }"
     >
       {{ dropdownLabel }}
-      <Icon type="ios-arrow-down" />
+      <Icon :type="buttonIcon" />
     </VButton>
     <template #list>
       <DropdownMenu>
@@ -97,6 +97,11 @@ export default {
       type: Array,
       required: false,
       default: null
+    },
+    buttonIcon: {
+      type: String,
+      required: false,
+      default: 'ios-arrow-down'
     },
     buttonType: {
       type: String,

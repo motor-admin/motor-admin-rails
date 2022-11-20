@@ -5,7 +5,7 @@ module Motor
     def perform(alert)
       Motor::AlertLock.create!(alert_id: alert.id, lock_timestamp: alert.cron.previous_time.to_i)
 
-      Motor::AlertsMailer.alert_email(alert).deliver_now!
+      Motor::Alerts.send_alert(alert)
     rescue ActiveRecord::RecordNotUnique
       nil
     end

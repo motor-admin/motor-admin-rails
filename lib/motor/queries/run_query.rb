@@ -14,6 +14,13 @@ module Motor
 
       RESERVED_VARIABLES = %w[current_user_id current_user_email].freeze
 
+      DATABASE_URL_VARIABLE_SUFFIX = '_database_url'
+
+      DB_LINK_VALIDATE_REGEXP = /(.*?)\s*\{\{\s*\w+_database_url\s*\}\}/i.freeze
+
+      UnknownDatabase = Class.new(StandardError)
+      UnsafeDatabaseUrlUsage = Class.new(StandardError)
+
       module_function
 
       # @param query [Motor::Query]
@@ -23,6 +30,7 @@ module Motor
       # @return [Motor::Queries::RunQuery::QueryResult]
       def call!(query, variables_hash: nil, limit: nil, filters: nil)
         variables_hash ||= {}
+        variables_hash = variables_hash.with_indifferent_access
         limit ||= DEFAULT_LIMIT
         filters ||= {}
 
@@ -54,6 +62,9 @@ module Motor
       # @return [ActiveRecord::Result]
       def execute_query(query, limit, variables_hash, filters)
         result = nil
+
+        connection_class = fetch_connection_class(query)
+
         statement = prepare_sql_statement(connection_class, query, limit, variables_hash, filters)
 
         connection_class.transaction do
@@ -71,6 +82,12 @@ module Motor
         end
 
         result
+      end
+
+      def validate_query!(sql)
+        return if sql.scan(DB_LINK_VALIDATE_REGEXP).flatten.all? { |line| line.ends_with?('dblink(') }
+
+        raise UnsafeDatabaseUrlUsage, 'Database URL variable is allowed only with dblink'
       end
 
       # @param result [ActiveRecord::Result]
@@ -131,6 +148,8 @@ module Motor
       def prepare_sql_statement(connection_class, query, limit, variables_hash, filters)
         variables = merge_variable_default_values(query.preferences.fetch(:variables, []), variables_hash)
 
+        validate_query!(query.sql_body)
+
         sql, query_variables = RenderSqlTemplate.call(query.sql_body, variables)
         select_sql = build_select_sql(connection_class, sql, limit, filters)
 
@@ -177,6 +196,8 @@ module Motor
       def build_statement_attributes(variables)
         variables.map do |variable_name, value|
           [value].flatten.map do |val|
+            val = fetch_variable_database_url(variable_name) if variable_name.ends_with?(DATABASE_URL_VARIABLE_SUFFIX)
+
             ActiveRecord::Relation::QueryAttribute.new(
               variable_name,
               val,
@@ -184,6 +205,14 @@ module Motor
             )
           end
         end.flatten
+      end
+
+      def fetch_variable_database_url(variable_name)
+        class_name = variable_name.delete_suffix(DATABASE_URL_VARIABLE_SUFFIX).classify
+
+        Motor::DatabaseClasses.const_get(class_name).connection_db_config.url
+      rescue NameError
+        raise UnknownDatabase, "#{class_name} database is not defined"
       end
 
       # @param array [Array]
@@ -213,9 +242,43 @@ module Motor
         end
       end
 
-      def connection_class
-        @connection_class ||=
-          'ResourceRecord'.safe_constantize ||
+      def fetch_connection_class(query)
+        database_name = query.preferences[:database]
+
+        return default_connection_class if database_name.blank? || database_name == 'default'
+
+        return default_connection_class if database_name == 'primary'
+
+        ar_configurations = ActiveRecord::Base.configurations.configurations
+                                              .find { |c| c.name == database_name && c.env_name == Rails.env }
+
+        if ar_configurations
+          fetch_ar_configurations_connection(database_name, ar_configurations)
+        else
+          Motor::DatabaseClasses.const_get(database_name.sub(/\A\d+/, '').parameterize.underscore.classify)
+        end
+      end
+
+      def fetch_ar_configurations_connection(database_name, ar_configurations)
+        Motor::DatabaseClasses.const_get(database_name.classify)
+      rescue NameError
+        klass = Class.new(ActiveRecord::Base)
+
+        Motor::DatabaseClasses.const_set(database_name.classify, klass)
+
+        klass.establish_connection(ar_configurations.name.to_sym)
+
+        klass
+      end
+
+      def find_connection_in_pool(database_name)
+        ActiveRecord::Base.connection_pool.connections.find do |conn|
+          conn.pool.db_config.name == database_name
+        end
+      end
+
+      def default_connection_class
+        'ResourceRecord'.safe_constantize ||
           'ApplicationRecord'.safe_constantize ||
           Class.new(ActiveRecord::Base).tap { |e| e.abstract_class = true }
       end

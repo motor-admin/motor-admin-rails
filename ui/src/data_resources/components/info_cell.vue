@@ -1,7 +1,7 @@
 <template>
   <div
     class="d-flex align-items-center info-cell position-relative"
-    :class="isRichtext && isEdit ? 'flex-column' : (!isEdit && isAssociationColumn ? 'flex-wrap' : 'flex-row')"
+    :class="isBottomControl && isEdit ? 'flex-column' : (!isEdit && isAssociationColumn ? 'flex-wrap' : 'flex-row')"
   >
     <Spin
       v-if="isLoading"
@@ -91,7 +91,7 @@
       class="d-inline-flex"
     >
       <VButton
-        v-if="isRichtext"
+        v-if="isBottomControl"
         icon="md-close"
         type="text"
         @click="toggleEdit"
@@ -105,7 +105,7 @@
         @click="toggleEdit"
       />
       <VButton
-        v-if="isRichtext"
+        v-if="isBottomControl"
         icon="md-checkmark"
         type="text"
         @click="submit"
@@ -178,6 +178,11 @@ export default {
       type: Number,
       required: false,
       default: 30
+    },
+    isKanban: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     editable: {
       type: Boolean,
@@ -255,6 +260,9 @@ export default {
     },
     isRichtext () {
       return this.column.column_type === 'richtext'
+    },
+    isBottomControl () {
+      return this.isRichtext || (this.isKanban && this.isActiveStorage)
     },
     isJsonColumn () {
       return isJsonColumn(this.column, this.resource)

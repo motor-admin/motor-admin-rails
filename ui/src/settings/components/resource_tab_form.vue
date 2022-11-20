@@ -164,7 +164,7 @@ export default {
         { label: this.i18n.form, value: 'form' }
       ]
 
-      if (this.dataTab.name === 'details') {
+      if (['details', 'audits'].includes(this.dataTab.name)) {
         tabs.unshift({ label: this.i18n.default, value: 'default' })
       }
 

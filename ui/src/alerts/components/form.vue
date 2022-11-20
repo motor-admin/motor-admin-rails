@@ -26,12 +26,37 @@
         @update:model-value="$emit('select-query', dataAlert.query_id)"
       />
     </FormItem>
-
+    <FormItem
+      :label="i18n['send_via']"
+      prop="preferences.adapter"
+    >
+      <RadioGroup
+        v-model="dataAlert.preferences.adapter"
+        class="d-flex flex-row justify-content-between"
+      >
+        <Radio
+          v-for="option in adapterOptions"
+          :key="option.value"
+          style="width: 49%; height: 40px"
+          :label="option.value"
+          border
+          size="large"
+          class="py-1"
+        >
+          {{ option.label }}
+        </Radio>
+      </RadioGroup>
+    </FormItem>
     <FormItem
       :label="i18n['send_to']"
       prop="to_emails"
     >
+      <SlackConversationsSelect
+        v-if="adapter === 'slack'"
+        v-model="dataAlert.preferences.slack_conversation_ids"
+      />
       <MSelect
+        v-else
         v-model="dataAlert.to_emails"
         filterable
         allow-create
@@ -111,6 +136,7 @@
 import SelectQuery from 'queries/components/select'
 import TagsSelect from 'tags/components/select'
 import IntervalInput from 'utils/components/interval_input'
+import SlackConversationsSelect from './slack_conversations_select'
 import TimezoneSelect from 'utils/components/timezone_select'
 import { fieldRequiredMessage } from 'utils/scripts/i18n'
 
@@ -120,7 +146,8 @@ export default {
     SelectQuery,
     TagsSelect,
     IntervalInput,
-    TimezoneSelect
+    TimezoneSelect,
+    SlackConversationsSelect
   },
   props: {
     alert: {
@@ -145,11 +172,20 @@ export default {
     }
   },
   computed: {
+    adapter () {
+      return this.dataAlert.preferences.adapter
+    },
+    adapterOptions () {
+      return [
+        { label: 'Email', value: 'email' },
+        { label: 'Slack', value: 'slack' }
+      ]
+    },
     rules () {
       return {
         name: [{ required: true, message: fieldRequiredMessage('name') }],
         query_id: [{ required: true, message: fieldRequiredMessage('query') }],
-        to_emails: [{ required: true, message: this.i18n.field_list_cant_be_empty.replace('%{field}', this.i18n.emails) }],
+        to_emails: [{ required: this.adapter !== 'slack', message: this.i18n.field_list_cant_be_empty.replace('%{field}', this.i18n.emails) }],
         'preferences.interval': [{ required: true, message: fieldRequiredMessage('interval') }],
         'preferences.timezone': [{ required: true, message: fieldRequiredMessage('timezone') }]
       }
@@ -168,7 +204,11 @@ export default {
       return {
         ...alert,
         to_emails: alert.to_emails.split(',').filter(Boolean),
-        tags: alert.tags.map((tag) => tag.name)
+        tags: alert.tags.map((tag) => tag.name),
+        preferences: {
+          adapter: 'email',
+          ...alert.preferences
+        }
       }
     },
     submit () {

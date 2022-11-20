@@ -79,7 +79,10 @@ module Motor
           searchable_columns: FindSearchableColumns.call(model),
           custom_sql: nil,
           visible: true,
-          display_primary_key: true
+          display_primary_key: true,
+          preferences: {
+            display_as: 'table'
+          }
         }.with_indifferent_access
       end
       # rubocop:enable Metrics/MethodLength

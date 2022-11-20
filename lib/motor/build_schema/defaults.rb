@@ -34,7 +34,6 @@ module Motor
           }
         ].freeze
       end
-      # rubocop:enable Metrics/MethodLength
 
       def tabs
         [
@@ -44,9 +43,24 @@ module Motor
             tab_type: BuildSchema::DEFAULT_TYPE,
             preferences: {},
             visible: true
+          },
+          {
+            name: 'audits',
+            display_name: I18n.t('motor.audits'),
+            tab_type: BuildSchema::DEFAULT_TYPE,
+            preferences: {},
+            visible: true
+          },
+          {
+            name: 'notes',
+            display_name: I18n.t('motor.notes'),
+            tab_type: BuildSchema::DEFAULT_TYPE,
+            preferences: {},
+            visible: true
           }
         ].freeze
       end
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end

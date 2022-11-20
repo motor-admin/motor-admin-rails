@@ -22,7 +22,7 @@
         {{ alert.is_enabled ? i18n['disable'] : i18n['activate'] }}
       </VButton>
       <VButton
-        v-if="alert.query_id && alert.to_emails.length && $can('manage', 'Motor::Alert')"
+        v-if="alert.query_id && (alert.to_emails.length || alert.preferences.adapter === 'slack') && $can('manage', 'Motor::Alert')"
         size="large"
         icon="md-send"
         :loading="isSendingLoading"
@@ -48,7 +48,7 @@
     :style="{ height: 'calc(var(--vh, 100vh) - 134px)' }"
   >
     <div
-      class="col-6 col-lg-7 d-none d-md-block p-0 text-center"
+      class="col-6 col-lg-7 d-none d-md-block p-0"
       style="height: 100%; position: relative"
     >
       <Spin
@@ -67,6 +67,7 @@
         :data="data"
         :errors="errors"
         :borderless="true"
+        :preferences="alert.query?.preferences"
         :with-settings="false"
         :columns="columns"
       />
@@ -111,7 +112,7 @@ const defaultAlertParams = {
   to_emails: '',
   query_id: null,
   tags: [],
-  preferences: {}
+  preferences: { adapter: 'email' }
 }
 
 export default {
@@ -170,11 +171,15 @@ export default {
         data: {
           query_id: this.alert.query_id,
           to_emails: this.alert.to_emails,
-          name: this.alert.name
+          description: this.alert.description,
+          name: this.alert.name,
+          preferences: this.alert.preferences
         }
       }).then((result) => {
         this.$Message.info(this.i18n.alert_email_has_been_sent)
       }).catch((error) => {
+        console.error(error)
+
         if (error.response.data?.errors?.length) {
           this.$Message.error(error.response.data.errors.join('\n'))
         } else {
@@ -252,7 +257,7 @@ export default {
 
       return api.get(`alerts/${this.$route.params.id}`, {
         params: {
-          include: 'tags'
+          include: 'tags,query'
         }
       }).then((result) => {
         this.alert = result.data.data

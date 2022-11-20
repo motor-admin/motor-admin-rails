@@ -14,6 +14,7 @@ module Motor
           model[:associations] = filter_associations(model[:associations], ability)
           model[:columns] = filter_columns(klass, model[:columns], ability)
           model[:actions] = filter_actions(klass, model[:actions], ability)
+          model[:tabs] = filter_tabs(klass, model[:tabs], ability)
 
           model
         end.compact
@@ -25,6 +26,13 @@ module Motor
 
           model_class && ability.can?(:read, model_class)
         end
+      end
+
+      def filter_tabs(_model, tabs, ability)
+        tabs = tabs.reject { |t| t[:name] == 'audits' } unless ability.can?(:read, Motor::Audit)
+        tabs = tabs.reject { |t| t[:name] == 'notes' } unless ability.can?(:read, Motor::Note)
+
+        tabs
       end
 
       def filter_columns(model, columns, ability)

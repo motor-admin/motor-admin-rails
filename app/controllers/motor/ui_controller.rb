@@ -4,7 +4,7 @@ module Motor
   class UiController < ApplicationController
     layout 'motor/application'
 
-    helper_method :current_user, :current_ability, :cache_keys
+    helper_method :current_user, :current_ability, :cache_keys, :custom_html
 
     before_action :set_i18n_locale
 
@@ -28,6 +28,14 @@ module Motor
       Motor::Configs::SyncFromFile.call
 
       render :show
+    end
+
+    def custom_html
+      Motor::Admin.config.custom_html.presence || begin
+        configs = Motor::Configs::LoadFromCache.load_configs(cache_key: cache_keys[:configs])
+
+        configs.find { |c| c.key == 'ui.custom_html' }&.value
+      end
     end
 
     def set_i18n_locale

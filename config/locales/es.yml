@@ -284,8 +284,6 @@ es:
     hyphen: Guión
     comma: Coma
     slash: Slash
-    sql: SQL
-    api: API
     searchable_columns: Columnas de búsqueda
     validate: Validar
     error_message: Mensaje de error
@@ -311,6 +309,39 @@ es:
     radar_chart: Radar chart
     show_on_table: Show on table
     map: Map
+    audits: Audits
+    nothing_to_show_here_yet: Nothing to show here yet 🤷
+    internal: Internal/Anonymous
+    updated: updated
+    created: created
+    deleted: deleted
+    sign_out: Sign out
+    header: Header
+    user_dropdown: User dropdown
+    add_condition: Add Condition
+    remove_condition: Remove Condition
+    unable_to_send_alert: Unable to send alert
+    send_via: Send via
+    download: Descargar
+    alert: Alerta
+    downloading: Descargando
+    display_id: Visualizar ID
+    display_settings: Configuración de la pantalla
+    sql: SQL
+    api: API
+    variable_name: Nombre de la variable
+    add_variable: Añadir variable
+    notes: Notes
+    new_mention_for: "New Mention for %{resource}"
+    user_mentioned_you_with_note: "%{user} mentioned you with:\n%{note}"
+    edit_note: Edit Note
+    create_reminder: Create Reminder
+    new_reminder_for: "New Reminder for %{resource}"
+    reminder_has_been_removed: Reminder has been removed
+    note_has_been_removed: Note has been removed
+    schedule_at: Schedule at
+    kanban_columns: Kanban columns
+    kanban_card_columns: Kanban card columns
     i:
       locale: es
       select:

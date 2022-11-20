@@ -27,7 +27,7 @@ module Motor
         klass = Class.new(model)
         klass.inheritance_column = nil if model.superclass.abstract_class
 
-        define_class_name_method(klass, model)
+        define_class_properties(klass, model)
 
         define_columns_hash(klass, config)
         define_default_scope(klass, config)
@@ -53,7 +53,23 @@ module Motor
         klass
       end
 
-      def define_class_name_method(klass, model)
+      def define_audited_class(klass)
+        default_audit_class = Audited.audit_class
+
+        Audited.audit_class = Motor::Audit
+
+        klass.audited
+
+        klass
+      ensure
+        Audited.audit_class = default_audit_class
+      end
+
+      def define_class_properties(klass, model)
+        define_audited_class(klass) if model != Motor::Audit
+
+        klass.table_name = model.table_name
+
         klass.instance_variable_set(:@__motor_model_name, model.name)
 
         klass.instance_eval do
@@ -228,7 +244,7 @@ module Motor
         if resource_config
           build_configured_model(model, resource_config.preferences)
         else
-          define_class_name_method(Class.new(model), model)
+          define_class_properties(Class.new(model), model)
         end
       end
 
