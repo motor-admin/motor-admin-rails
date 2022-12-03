@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.4.0)
+    motor-admin (0.4.2)
       ar_lazy_preload (~> 1.0)
       audited (~> 5.0)
       cancancan (~> 3.0)
@@ -81,7 +81,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
-    ar_lazy_preload (1.0.0)
+    ar_lazy_preload (1.1.1)
       rails (>= 5.2)
     ast (2.4.2)
     audited (5.0.2)
