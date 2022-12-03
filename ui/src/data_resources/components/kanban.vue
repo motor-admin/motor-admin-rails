@@ -303,7 +303,7 @@ export default {
     buildGroupedRows () {
       const options = this.model.preferences.kanban_columns?.length
         ? this.model.preferences.kanban_columns
-        : this.kanbanColumn.format.select_options
+        : (Array.isArray(this.kanbanColumn.format.select_options) ? this.kanbanColumn.format.select_options : Object.keys(this.kanbanColumn.format.select_options))
 
       const groupsObject = options.reduce((acc, option) => {
         acc[option] = []

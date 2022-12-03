@@ -122,12 +122,21 @@ export default {
       return this.kanbanColumns.find((c) => c.name === this.resource.preferences.kanban_column)
     },
     kanbanStatusValueOptions () {
-      return (this.kanbanColumn.format.select_options || []).map((e) => {
-        return {
-          value: e,
-          label: titleize(e)
-        }
-      })
+      if (Array.isArray(this.kanbanColumn.format.select_options)) {
+        return (this.kanbanColumn.format.select_options || []).map((e) => {
+          return {
+            value: e,
+            label: titleize(e)
+          }
+        })
+      } else {
+        return Object.entries(this.kanbanColumn.format.select_options || {}).map(([k, v]) => {
+          return {
+            value: k,
+            label: v
+          }
+        })
+      }
     },
     readableColumns () {
       return this.resource.columns.filter((c) => {
