@@ -64,7 +64,7 @@ module Motor
 
     def execute
       resource_preferences = Motor::Resource.find_by(name: @resource.class.name.underscore).preferences
-      resource_action = resource_preferences[:actions].find { |a| a[:preferences][:method_name] == params[:method] }
+      resource_action = resource_preferences[:actions].find { |a| a.dig(:preferences, :method_name) == params[:method] }
 
       authorize!(resource_action[:name].to_sym, @resource)
 
