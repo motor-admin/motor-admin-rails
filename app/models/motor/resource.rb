@@ -4,7 +4,7 @@ module Motor
   class Resource < ::Motor::ApplicationRecord
     audited
 
-    attribute :preferences, default: -> { HashWithIndifferentAccess.new }
+    attribute :preferences, default: -> { ActiveSupport::HashWithIndifferentAccess.new }
     serialize :preferences, HashSerializer
   end
 end

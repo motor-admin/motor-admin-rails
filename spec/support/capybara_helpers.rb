@@ -3,8 +3,8 @@
 module CapybaraHelpers
   FIELD_XPATH =
     ".//div[./label[@class='ivu-form-item-label' and normalize-space() = '%<name>s']]" \
-    "/div[@class='ivu-form-item-content']//*[contains(@class, 'ivu-input') or" \
-    " contains(@class, 'ivu-select') or contains(@class, 'trix-container')]"
+    "/div[@class='ivu-form-item-content']//*[contains(@class, 'ivu-input') or " \
+    "contains(@class, 'ivu-select') or contains(@class, 'trix-container')]"
   SELECT_ITEM_XPATH =
     %|.//li[contains(@class, 'ivu-select-item') and normalize-space() = "%<value>s"]|
   SELECT_ITEM_CONTAINING_XPATH =

@@ -29,7 +29,7 @@ module Motor
       end
 
       def parse_tag_names(note)
-        note.body.scan(TAG_REGEXP).map { |tag| tag[1..] }
+        note.body.scan(TAG_REGEXP).pluck(1..)
       end
     end
   end

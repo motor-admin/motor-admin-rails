@@ -71,6 +71,9 @@ Rails/Output:
 Rails/LexicallyScopedActionFilter:
   Enabled: false
 
+Rails/ActiveSupportOnLoad:
+  Enabled: false
+
 Rails/ApplicationRecord:
   Enabled: false
 

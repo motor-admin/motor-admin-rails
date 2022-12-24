@@ -12,11 +12,11 @@ module Motor
       render_ui
     end
 
-    def new
+    def show
       render_ui
     end
 
-    def show
+    def new
       render_ui
     end
 

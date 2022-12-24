@@ -3,7 +3,7 @@
 module Motor
   module Resources
     module FetchConfiguredModel
-      CACHE_HASH = HashWithIndifferentAccess.new
+      CACHE_HASH = ActiveSupport::HashWithIndifferentAccess.new
 
       HAS_AND_BELONGS_TO_MANY_JOIN_MODEL_PREFIX = 'HABTM_'
 

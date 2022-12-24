@@ -4,8 +4,8 @@ module Motor
   class ApiConfig < ::Motor::ApplicationRecord
     encrypts :credentials if defined?(::Motor::EncryptedConfig)
 
-    attribute :preferences, default: -> { HashWithIndifferentAccess.new }
-    attribute :credentials, default: -> { HashWithIndifferentAccess.new }
+    attribute :preferences, default: -> { ActiveSupport::HashWithIndifferentAccess.new }
+    attribute :credentials, default: -> { ActiveSupport::HashWithIndifferentAccess.new }
 
     serialize :credentials, Motor::HashSerializer
     serialize :preferences, Motor::HashSerializer

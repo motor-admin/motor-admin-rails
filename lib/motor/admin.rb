@@ -121,8 +121,8 @@ module Motor
 
         if !Motor::ApiConfig.table_exists? || !Motor::Note.table_exists?
           puts
-          puts '  => Run `rails g motor:upgrade && rake db:migrate`' \
-               ' to perform data migration and enable the latest features'
+          puts '  => Run `rails g motor:upgrade && rake db:migrate` ' \
+               'to perform data migration and enable the latest features'
           puts
 
           raise

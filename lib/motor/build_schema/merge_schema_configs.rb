@@ -148,7 +148,7 @@ module Motor
       def load_configs(cache_keys)
         resources = Motor::Configs::LoadFromCache.load_resources(cache_key: cache_keys[:resources])
 
-        resources.each_with_object(HashWithIndifferentAccess.new) do |resource, acc|
+        resources.each_with_object(ActiveSupport::HashWithIndifferentAccess.new) do |resource, acc|
           acc[resource.name] = resource.preferences
         end
       end

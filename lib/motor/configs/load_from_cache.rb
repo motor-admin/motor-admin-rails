@@ -3,7 +3,7 @@
 module Motor
   module Configs
     module LoadFromCache
-      CACHE_HASH = HashWithIndifferentAccess.new
+      CACHE_HASH = ActiveSupport::HashWithIndifferentAccess.new
 
       module_function
 

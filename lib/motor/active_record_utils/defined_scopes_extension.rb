@@ -22,4 +22,4 @@ module Motor
   end
 end
 
-ActiveRecord::Base.extend(Motor::ActiveRecordUtils::DefinedScopesExtension)
+ActiveSupport.on_load(:active_record) { extend Motor::ActiveRecordUtils::DefinedScopesExtension }

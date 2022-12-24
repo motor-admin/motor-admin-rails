@@ -39,10 +39,9 @@ module Motor
 
         display_value = note.record.attributes[configs['display_column']]
 
-        I18n.t('new_reminder_for',
+        I18n.t('motor.new_reminder_for',
                resource: ["#{configs['display_name'].singularize} ##{note.record[note.record.class.primary_key]}",
-                          display_value].join(' '),
-               scope: :motor)
+                          display_value].join(' '))
       end
     end
   end

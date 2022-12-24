@@ -77,7 +77,7 @@ module Motor
 
       def normalize_hash(value)
         case value
-        when Hash, HashWithIndifferentAccess
+        when Hash, ActiveSupport::HashWithIndifferentAccess
           value.to_h.stringify_keys.transform_values { |v| normalize_hash(v) }
         when Array
           value.map { |e| normalize_hash(e) }

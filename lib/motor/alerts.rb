@@ -27,7 +27,7 @@ module Motor
 
       column_index = result.columns.find_index { |c| c[:name] == column_name }
 
-      emails = result.data.map { |row| row[column_index] }.uniq
+      emails = result.data.pluck(column_index).uniq
 
       emails.each do |email|
         Motor::AlertsMailer.alert_email(alert, email: email).deliver_now!

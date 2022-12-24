@@ -47,17 +47,15 @@ module Motor
 
         display_value = note.record.attributes[configs['display_column']]
 
-        I18n.t('new_mention_for',
+        I18n.t('motor.new_mention_for',
                resource: ["#{configs['display_name'].singularize} ##{note.record[note.record.class.primary_key]}",
-                          display_value].join(' '),
-               scope: :motor)
+                          display_value].join(' '))
       end
 
       def build_mention_description(note, current_user)
-        I18n.t('user_mentioned_you_with_note',
+        I18n.t('motor.user_mentioned_you_with_note',
                user: current_user&.email || 'Anonymous',
-               note: note.body.truncate(NOTIFICATION_DESCRIPTION_LIMIT),
-               scope: :motor)
+               note: note.body.truncate(NOTIFICATION_DESCRIPTION_LIMIT))
       end
 
       def fetch_users_class(current_user)

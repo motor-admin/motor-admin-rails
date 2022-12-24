@@ -10,7 +10,7 @@ module Motor
     has_many :tags, through: :taggable_tags, class_name: 'Motor::Tag'
     has_many :alerts, dependent: :destroy
 
-    attribute :preferences, default: -> { HashWithIndifferentAccess.new }
+    attribute :preferences, default: -> { ActiveSupport::HashWithIndifferentAccess.new }
     serialize :preferences, HashSerializer
 
     scope :active, -> { where(deleted_at: nil) }
