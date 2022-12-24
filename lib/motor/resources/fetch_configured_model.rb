@@ -56,7 +56,7 @@ module Motor
       def define_audited_class(klass)
         default_audit_class = Audited.audit_class
 
-        Audited.audit_class = Motor::Audit
+        Audited.audit_class = 'Motor::Audit'
 
         klass.audited
 

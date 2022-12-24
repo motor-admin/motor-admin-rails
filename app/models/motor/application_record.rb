@@ -8,7 +8,7 @@ module Motor
     def self.audited(*args)
       default_class = Audited.audit_class
 
-      Audited.audit_class = Motor::Audit
+      Audited.audit_class = 'Motor::Audit'
 
       super
     ensure
