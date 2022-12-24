@@ -6,10 +6,10 @@
 
 Low-code Admin panel and Business intelligence Rails engine **(no DSL - configurable from the UI)**.
 
-🤓 [Demo App](https://motor-admin.herokuapp.com/demo) | 👀 [Features overview](https://www.youtube.com/watch?v=ngVoci8Hll4&list=PLu7llEMh0KcOkR3Uy_RJT0cXPZQKAYVsq&index=1) | ⭐ [Pro](https://www.getmotoradmin.com/ruby-on-rails)
+🤓 [Demo App](https://app.getmotoradmin.com/demo/) | 👀 [Features overview](https://www.youtube.com/watch?v=ngVoci8Hll4&list=PLu7llEMh0KcOkR3Uy_RJT0cXPZQKAYVsq&index=1) | ⭐ [Pro](https://www.getmotoradmin.com/ruby-on-rails)
 </div>
 
-[![Admin Panel](https://user-images.githubusercontent.com/5418788/119318538-1f30e300-bc82-11eb-94a4-107c31c93b13.png)](https://motor-admin.herokuapp.com/demo)
+[![Admin Panel](https://user-images.githubusercontent.com/5418788/119318538-1f30e300-bc82-11eb-94a4-107c31c93b13.png)](https://app.getmotoradmin.com/demo/)
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -109,7 +109,7 @@ Queries can include embedded variables via `{{variable}}` syntax ([mustache](htt
 
 ![motor-visualization](https://user-images.githubusercontent.com/5418788/119264625-a2075e80-bbec-11eb-986c-6106dd6e47ce.png)
 
-Data from the SQL query can be represented as: [table](https://motor-admin.herokuapp.com/demo/queries/12), [number](https://motor-admin.herokuapp.com/demo/queries/6), [line chart](https://motor-admin.herokuapp.com/demo/queries/3), [bar chart](https://motor-admin.herokuapp.com/demo/queries/1), [pie chart](https://motor-admin.herokuapp.com/demo/queries/9), [funnel](https://motor-admin.herokuapp.com/demo/queries/7), [markdown](https://motor-admin.herokuapp.com/demo/queries/8)
+Data from the SQL query can be represented as: table, number, line chart, bar chart, pie chart, funnel, markdown.
 
 ### Dashboards
 

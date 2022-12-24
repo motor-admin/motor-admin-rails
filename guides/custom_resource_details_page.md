@@ -1,7 +1,5 @@
 # Custom resource details page
 
-## [Demo](https://motor-admin.herokuapp.com/demo/data/countries/1)
-
 It's possible to create a completely custom resource page via SQL queries with markdown visualization and tabs.
 
 The result of an SQL query can be visualized with Markdown, where all columns of the query can be embedded into the Markdown via `{{column_name}}` syntax. Markdown visualization also supports safe HTML code for links, buttons, tables and images.

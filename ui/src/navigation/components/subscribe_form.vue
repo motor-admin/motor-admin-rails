@@ -84,7 +84,7 @@ export default {
     submit () {
       this.isLoading = true
 
-      axios.post('https://motor-admin.herokuapp.com/api/subscribe', {
+      axios.post('https://app.getmotoradmin.com/api/subscribe', {
         email: this.value.email
       }).then((result) => {
         currentUser.isSubscribed = true

@@ -1,7 +1,5 @@
 # Building custom forms
 
-## [Demo](https://motor-admin.herokuapp.com/demo/forms/2)
-
 Custom forms can include regular field, field groups, and lists which allow to send complex JSON data to the API to process the form.
 
 ![Form builder](https://user-images.githubusercontent.com/5418788/122927844-f29be400-d371-11eb-8f11-0efd2268d941.png)

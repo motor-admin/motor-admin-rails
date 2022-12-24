@@ -1,7 +1,5 @@
 # Customizing resource table
 
-## [Demo](https://motor-admin.herokuapp.com/demo/data/customers)
-
 Resource table can be customized via resource columns settings. Additional columns can be added via custom SQL query:
 
 ![Resource SQL](https://user-images.githubusercontent.com/5418788/132258795-0ea5f4aa-cc96-4fb8-8524-0eea0c7663ea.png)
