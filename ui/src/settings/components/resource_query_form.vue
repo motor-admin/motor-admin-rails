@@ -74,6 +74,7 @@
 import api from 'api'
 import CodeEditor from 'utils/components/code_editor'
 import QueryResult from 'queries/components/result'
+import { databaseNames } from 'utils/scripts/configs'
 
 export default {
   name: 'ResourceQueryForm',
@@ -156,12 +157,15 @@ export default {
     runQuery () {
       this.isLoading = true
 
+      const databaseName =
+        this.resource.name.includes('/') ? this.resource.name.split('/')[0] : 'default'
+
       return api.post('run_queries', {
         limit: 20,
         data: {
           sql_body: this.sqlBody,
           preferences: {
-            database: this.resource.name.includes('/') ? this.resource.name.split('/')[0] : 'default'
+            database: databaseNames.includes(databaseName) ? databaseName : 'default'
           }
         }
       }).then((result) => {
