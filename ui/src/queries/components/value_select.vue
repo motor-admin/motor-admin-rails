@@ -20,6 +20,7 @@
 <script>
 import { watch } from 'vue'
 import api from 'api'
+import { loadApiQuery } from 'queries/scripts/api_query'
 
 const LOAD_ITEMS_LIMIT = 100
 
@@ -167,16 +168,26 @@ export default {
       const cacheKey = JSON.stringify(variables) + this.queryId
 
       this.optionsRespCache ||= {}
-      this.optionsRespCache[cacheKey] ||= api.get(`run_queries/${this.queryId}`, {
-        params: {
-          variables,
-          limit: this.isSearchableQuery ? LOAD_ITEMS_LIMIT : null
-        }
-      })
+
+      if (this.query?.preferences?.query_type === 'api') {
+        this.optionsRespCache[cacheKey] ||= loadApiQuery(this.query, variables)
+      } else {
+        this.optionsRespCache[cacheKey] ||= api.get(`run_queries/${this.queryId}`, {
+          params: {
+            variables,
+            limit: this.isSearchableQuery ? LOAD_ITEMS_LIMIT : null
+          }
+        }).then((result) => {
+          return {
+            data: result.data.data,
+            columns: result.data.meta.columns
+          }
+        })
+      }
 
       return this.optionsRespCache[cacheKey].then((result) => {
-        this.columns = result.data.meta.columns
-        this.data = result.data.data
+        this.columns = result.columns
+        this.data = result.data
 
         this.assignOptionIndexesFromColumns(this.columns)
       }).catch((error) => {
