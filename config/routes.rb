@@ -2,7 +2,7 @@
 
 Motor::Admin.routes.draw do
   namespace :motor, path: '' do
-    mount ActionCable.server => '/cable', as: :cabel if defined?(ActionCable)
+    mount ActionCable.server => '/cable', as: :cable if defined?(ActionCable)
 
     scope 'api', as: :api do
       resources :run_queries, only: %i[show create]

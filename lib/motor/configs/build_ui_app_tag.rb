@@ -44,7 +44,7 @@ module Motor
           audits_count: Motor::Audit.count,
           i18n: i18n_data,
           base_path: Motor::Admin.routes.url_helpers.motor_path,
-          cabel_path: Motor::Admin.routes.url_helpers.try(:motor_cabel_path),
+          cable_path: Motor::Admin.routes.url_helpers.try(:motor_cable_path),
           admin_settings_path: Rails.application.routes.url_helpers.try(:admin_settings_general_path),
           schema: Motor::BuildSchema.call(cache_keys, current_ability),
           header_links: header_links_data_hash(current_user, current_ability, configs_cache_key),

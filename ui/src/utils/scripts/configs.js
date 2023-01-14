@@ -1,7 +1,7 @@
 const appNode = document.getElementById('app')
 
 const basePath = appNode.getAttribute('data-base-path')
-const cabelPath = appNode.getAttribute('data-cabel-path')
+const cablePath = appNode.getAttribute('data-cable-path')
 const adminSettingsPath = appNode.getAttribute('data-admin-settings-path')
 const version = appNode.getAttribute('data-version')
 const canCanRules = JSON.parse(appNode.getAttribute('data-current-rules'))
@@ -12,7 +12,7 @@ const isStandalone = !!adminSettingsPath
 export {
   version,
   basePath,
-  cabelPath,
+  cablePath,
   adminSettingsPath,
   canCanRules,
   i18nDict,

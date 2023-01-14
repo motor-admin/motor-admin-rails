@@ -1,12 +1,12 @@
-import { cabelPath } from 'utils/scripts/configs'
+import { cablePath } from 'utils/scripts/configs'
 import { createConsumer } from '@rails/actioncable'
 
 let consumer
 
 const dummyConsumer = { subscriptions: { create: () => {}, remove: () => {} } }
 
-if (cabelPath) {
-  consumer = createConsumer(cabelPath)
+if (cablePath) {
+  consumer = createConsumer(cablePath)
 } else {
   consumer = dummyConsumer
 }
