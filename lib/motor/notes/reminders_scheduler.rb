@@ -12,7 +12,7 @@ module Motor
 
       REMINDER_NOTIFICATIONS_JOIN_SQL = <<~SQL.squish
         LEFT JOIN motor_notifications
-        ON motor_notifications.record_id = motor_reminders.id
+        ON cast(motor_notifications.record_id as int) = motor_reminders.id
         AND motor_notifications.record_type = 'Motor::Reminder'
       SQL
 
