@@ -4,6 +4,16 @@ module Motor
   class Admin < ::Rails::Engine
     config.custom_html = ''
 
+    unless Motor.development?
+      config.eager_load_paths.delete(File.expand_path('../../app/controllers', __dir__))
+      config.eager_load_paths.delete(File.expand_path('../../app/controllers/concerns', __dir__))
+      config.eager_load_paths.delete(File.expand_path('../../app/models', __dir__))
+
+      config.autoload_once_paths << File.expand_path('../../app/models', __dir__)
+      config.autoload_once_paths << File.expand_path('../../app/controllers', __dir__)
+      config.autoload_once_paths << File.expand_path('../../app/controllers/concerns', __dir__)
+    end
+
     initializer 'motor.startup_message' do
       config.after_initialize do
         next unless Motor.server?
@@ -108,15 +118,13 @@ module Motor
     end
 
     initializer 'motor.upgrade' do
-      config.after_initialize do
+      ActiveSupport.on_load(:motor_query) do
         next unless Motor.server?
 
         unless Motor::Query.table_exists?
           puts
           puts '  => Run `rails g motor:install && rake db:migrate` in order to create Motor Admin configuration tables'
           puts
-
-          raise
         end
 
         if !Motor::ApiConfig.table_exists? || !Motor::Note.table_exists?
@@ -124,8 +132,6 @@ module Motor
           puts '  => Run `rails g motor:upgrade && rake db:migrate` ' \
                'to perform data migration and enable the latest features'
           puts
-
-          raise
         end
       end
     end

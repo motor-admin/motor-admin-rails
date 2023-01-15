@@ -24,3 +24,5 @@ module Motor
     alias run result
   end
 end
+
+ActiveSupport.run_load_hooks(:motor_query, Motor::Query)
