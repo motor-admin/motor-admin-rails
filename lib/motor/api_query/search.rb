@@ -30,7 +30,9 @@ module Motor
         arel_table = model.arel_table
 
         column_names.map do |name|
-          column_type = model.columns_hash[name].type
+          column_type = model.columns_hash[name]&.type
+
+          next unless column_type
 
           if STRING_COLUMN_TYPES.include?(column_type)
             arel_table[name].matches("%#{keyword}%")
