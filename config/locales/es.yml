@@ -315,20 +315,11 @@ es:
     updated: updated
     created: created
     deleted: deleted
-    sign_out: Sign out
-    header: Header
-    user_dropdown: User dropdown
     add_condition: Add Condition
     remove_condition: Remove Condition
     unable_to_send_alert: Unable to send alert
     send_via: Send via
-    download: Descargar
-    alert: Alerta
-    downloading: Descargando
-    display_id: Visualizar ID
-    display_settings: Configuración de la pantalla
     sql: SQL
-    api: API
     variable_name: Nombre de la variable
     add_variable: Añadir variable
     notes: Notes

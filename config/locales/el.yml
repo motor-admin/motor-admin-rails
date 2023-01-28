@@ -29,7 +29,6 @@ el:
     all: Όλα
     all_resources: Όλοι οι πόροι
     and: Και
-    api: API
     api_path: Διαδρομή API
     api_request: Αίτημα API
     apply: Εφαρμογή
@@ -317,8 +316,6 @@ el:
     updated: ενημερωμένο
     created: δημιουργήθηκε
     deleted: διαγράφηκε
-    sign_out: Αποσυνδεθείτε
-    user_dropdown: Χρήστης dropdown
     add_condition: Προσθήκη συνθήκης
     remove_condition: Αφαίρεση συνθήκης
     unable_to_send_alert: Αδυναμία αποστολής ειδοποίησης

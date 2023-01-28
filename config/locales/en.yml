@@ -29,7 +29,6 @@ en:
     all: All
     all_resources: All Resources
     and: And
-    api: API
     api_path: API path
     api_request: API request
     apply: Apply
@@ -266,14 +265,6 @@ en:
     video: Video
     display_column: Display column
     not_authorized_to_perform_action: You are not authorized to perform this action.
-    download: Download
-    alert: Alert
-    downloading: Downloading
-    display_id: Display ID
-    display_settings: Display settings
-    sign_out: Sign out
-    header: Header
-    user_dropdown: User dropdown
     upload: Upload
     there_is_nothing_here_yet: There is nothing here yet 🤷‍♂️
     is_null: Is null
