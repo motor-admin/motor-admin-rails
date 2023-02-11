@@ -4,7 +4,7 @@ module Motor
   class Admin < ::Rails::Engine
     config.custom_html = ''
 
-    unless Motor.development?
+    if !Motor.development? && !Rails.env.production?
       config.eager_load_paths.delete(File.expand_path('../../app/controllers', __dir__))
       config.eager_load_paths.delete(File.expand_path('../../app/controllers/concerns', __dir__))
       config.eager_load_paths.delete(File.expand_path('../../app/models', __dir__))
