@@ -4,6 +4,8 @@ module Motor
   module LoadAndAuthorizeDynamicResource
     extend ActiveSupport::Concern
 
+    MUTEX = Mutex.new
+
     INSTANCE_VARIABLE_NAME = 'resource'
     ASSOCIATION_INSTANCE_VARIABLE_NAME = 'associated_resource'
 
@@ -13,11 +15,12 @@ module Motor
     end
 
     def resource_class
-      @resource_class ||=
+      @resource_class ||= MUTEX.synchronize do
         Motor::Resources::FetchConfiguredModel.call(
           Motor::BuildSchema::Utils.classify_slug(resource_name_prefix + params[:resource]),
           cache_key: Motor::Resource.maximum(:updated_at)
         )
+      end
     end
 
     def resource_name_prefix
