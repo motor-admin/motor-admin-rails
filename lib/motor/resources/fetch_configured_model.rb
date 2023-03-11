@@ -13,7 +13,7 @@ module Motor
         configs = Motor::Configs::LoadFromCache.load_resources(cache_key: cache_key)
 
         return model if model.name == 'ActiveStorage::Attachment'
-        return model if configs.blank? || sti_model?(model)
+        return model if sti_model?(model)
 
         maybe_fetch_from_cache(
           model,
