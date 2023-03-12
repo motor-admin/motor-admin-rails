@@ -513,7 +513,8 @@ export default {
         if (value) {
           this.selectedOptionsData = value.map((val) => {
             return this.selectedOptionsData.find((option) => this.getValue(option).toString() === (val ?? '').toString()) ||
-              this.optionsData.find((option) => this.getValue(option).toString() === (val ?? '').toString())
+              this.optionsData.find((option) => this.getValue(option).toString() === (val ?? '').toString()) ||
+              { value: val, label: val }
           })
         }
       } else {
