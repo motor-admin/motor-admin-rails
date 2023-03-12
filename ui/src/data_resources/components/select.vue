@@ -156,6 +156,9 @@ export default {
         this.value = this.modelValue
       } else if (this.value?.length) {
         this.loadMultipleResourceoptionsById(this.value)
+      } else if (this.modelValue && typeof this.modelValue === 'object') {
+        this.value = Object.values(this.modelValue)
+        this.loadMultipleResourceoptionsById(this.value)
       } else {
         this.value ||= []
       }
