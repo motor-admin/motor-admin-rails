@@ -132,7 +132,7 @@ export default {
             return []
           }
         }).flat()
-      ]
+      ].filter(Boolean)
     },
     actions () {
       const actions = [
