@@ -66,7 +66,7 @@ module Motor
       end
 
       def define_class_properties(klass, model)
-        define_audited_class(klass) if model != Motor::Audit
+        define_audited_class(klass) unless [Audited::Audit, Motor::Audit].include?(model)
 
         klass.table_name = model.table_name
 
