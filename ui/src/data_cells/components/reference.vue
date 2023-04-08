@@ -1,10 +1,10 @@
 <template>
   <VButton
-    v-popover="popoverParams"
     :to="referenceId || resourceId || alwaysRefer ? { name: 'resources', params: { fragments: [resourceSlug, referenceId || resourceId].filter(Boolean) }} : null"
     type="primary"
     ghost
     shape="circle"
+    class="position-relative"
     @click.stop
   >
     <template v-if="isNumberId">
@@ -17,6 +17,16 @@
     <template v-else>
       {{ truncate(model.display_primary_key ? resourceId.toString() : displayText, maxLength) }}
     </template>
+    <span
+      v-if="!popoverParams.disabled"
+      class="info-popup"
+    >
+      <span
+        v-popover="popoverParams"
+        style="vertical-align: middle; font-size: 16px; margin-bottom: 2px"
+        class="ion ion-ios-information-circle-outline"
+      />
+    </span>
   </VButton>
 </template>
 
@@ -144,7 +154,30 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+@import 'utils/styles/variables';
+
 .ivu-btn {
   user-select: initial
+}
+
+.info-popup {
+  display: none;
+  width: 30px;
+  height: calc(100% + 2px);
+  top: -1px;
+  right: -15px;
+  position: absolute;
+  background: #fff;
+  border-top: 1px $primary-color solid;
+  border-bottom: 1px $primary-color solid;
+  border-top-right-radius: 32px;
+  border-bottom-right-radius: 32px;
+  border-right: 1px $primary-color solid
+}
+
+.ivu-btn:hover {
+  .info-popup {
+    display: inline;
+  }
 }
 </style>

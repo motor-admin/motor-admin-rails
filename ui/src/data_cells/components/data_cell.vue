@@ -43,6 +43,7 @@
     ref="cell"
     :value="value"
     :format="format"
+    :with-filter-button="isTable"
     @tag-click="$emit('tag-click', $event)"
   />
   <DataImage
@@ -164,6 +165,11 @@ export default {
       type: Object,
       required: false,
       default: () => ({})
+    },
+    isTable: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     textTruncate: {
       type: Boolean,

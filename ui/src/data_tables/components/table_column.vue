@@ -47,6 +47,7 @@
         v-else
         :value="row[column.key]"
         :format="column.format"
+        :is-table="true"
         :type="column.type"
         @tag-click="$emit('tag-click', { key: column.key, value: $event })"
       />

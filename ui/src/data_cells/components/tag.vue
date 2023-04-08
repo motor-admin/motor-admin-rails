@@ -9,15 +9,27 @@
   </template>
   <div
     v-else-if="value || value == 0"
-    class="ivu-tag ivu-tag-size-default ivu-tag-checked cursor-unset"
+    class="ivu-tag ivu-tag-size-default ivu-tag-checked cursor-unset position-relative"
     :class="colorClass"
     :style="bgStyle"
-    @click.stop="$emit('tag-click', value)"
   >
     <span
       class="ivu-tag-text ivu-tag-color-white cursor-unset"
       :style="textStyle"
     >{{ options[value] || titleize(value.toString()) }}</span>
+    <span
+      v-if="withFilterButton"
+      class="filter-popup"
+      :style="bgStyle"
+      style="border-left-width: 0"
+      :class="colorClass"
+      @click.stop="$emit('tag-click', value)"
+    >
+      <span
+        style="vertical-align: middle; margin-bottom: 2px"
+        class="ion ion-ios-funnel"
+      />
+    </span>
   </div>
 </template>
 
@@ -59,6 +71,11 @@ export default {
       type: Object,
       required: false,
       default: () => ({})
+    },
+    withFilterButton: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   emits: ['tag-click'],
@@ -93,5 +110,27 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import 'utils/styles/variables';
+.ivu-tag {
+  overflow: visible;
+}
+
+.filter-popup {
+  display: none;
+  width: 15px;
+  height: calc(100% + 2px);
+  top: -1px;
+  right: -12px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  position: absolute;
+  background: #fff;
+}
+
+.ivu-tag:hover {
+  .filter-popup {
+    display: inline;
+  }
+}
 </style>
