@@ -232,7 +232,14 @@ export default {
   },
   methods: {
     scrollToTop () {
-      this.$refs.wrapper.scrollTop = 0
+      this.scrollTo(0)
+    },
+    scrollTo (top, left) {
+      this.$refs.wrapper.scrollTop = top
+
+      if (typeof left === 'number') {
+        this.$refs.wrapper.scrollLeft = left
+      }
     },
     onRowClick (row) {
       setTimeout(() => {

@@ -373,7 +373,13 @@ export default {
   mounted () {
     this.assignCachedItemsCount()
     this.assignFromQueryParams(this.$route.query)
-    this.loadDataAndCount()
+    this.loadDataAndCount().then(() => {
+      if (typeof history.state.resourceTableScrollTop === 'number') {
+        this.$nextTick(() => {
+          this.$refs.table.scrollTo(history.state.resourceTableScrollTop, history.state.resourceTableScrollLeft)
+        })
+      }
+    })
   },
   methods: {
     widthLessThan,

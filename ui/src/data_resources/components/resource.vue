@@ -61,6 +61,7 @@
       />
       <ResourceTable
         v-else-if="showTable"
+        ref="table"
         :key="resourceName + resourceId + associationName"
         :height="isFullscreenTable ? 'calc(var(--vh, 100vh) - 199px)' : 'calc((var(--vh) / 2) - 108px)'"
         :with-resize="true"

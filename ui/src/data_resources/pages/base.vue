@@ -33,6 +33,7 @@
             />
             <Resource
               v-if="fragments.length > 1"
+              ref="resource"
               :resource-name="resourceName"
               :resource-id="resourceId"
               :association-name="associationName"
@@ -52,6 +53,7 @@
             />
             <ResourceTable
               v-else
+              ref="table"
               :key="resourceName"
               :height="`calc(var(--vh, 100vh) - ${widthLessThan('sm') ? '200px' : '148px'})`"
               :with-title="!widthLessThan('sm')"
@@ -90,6 +92,22 @@ import { breadcrumbStore } from 'navigation/scripts/breadcrumb_store'
 import { isShowSettings, closeSettings } from 'settings/scripts/toggle'
 import SettingsMask from 'settings/components/mask'
 
+function pushResourceTableScrollState () {
+  if (this.$refs.table) {
+    history.replaceState({
+      ...history.state,
+      resourceTableScrollTop: this.$refs.table.$refs.table.$refs.wrapper.scrollTop,
+      resourceTableScrollLeft: this.$refs.table.$refs.table.$refs.wrapper.scrollLeft
+    }, document.title, location.href)
+  } else if (this.$refs.resource?.$refs?.table) {
+    history.replaceState({
+      ...history.state,
+      resourceTableScrollTop: this.$refs.resource.$refs.table.$refs.table.$refs.wrapper.scrollTop,
+      resourceTableScrollLeft: this.$refs.resource.$refs.table.$refs.table.$refs.wrapper.scrollLeft
+    }, document.title, location.href)
+  }
+}
+
 export default {
   name: 'ResourcesBase',
   components: {
@@ -101,6 +119,8 @@ export default {
     Home,
     SettingsMask
   },
+  beforeRouteUpdate: pushResourceTableScrollState,
+  beforeRouteLeave: pushResourceTableScrollState,
   data () {
     return {
       isMenuSider: false,

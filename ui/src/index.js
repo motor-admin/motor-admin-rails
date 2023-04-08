@@ -122,3 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   subscribeToNotifications()
 })
+
+window.onbeforeunload = () => {
+  history.replaceState({ ...history.state, resourceTableScrollTop: 0, resourceTableScrollLeft: 0 }, document.title, location.href)
+}
