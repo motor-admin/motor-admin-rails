@@ -22,7 +22,7 @@ FactoryBot.define do
 
   factory :customer do
     sequence(:name) { "#{Faker::Name.first_name} #{Faker::Name.last_name}" }
-    sequence(:email) { Faker::Internet.safe_email }
+    sequence(:email) { Faker::Internet.email }
     sequence(:country_code) { Country.pluck(:code).sample }
     sequence(:kind) { Customer::KINDS.sample }
     sequence(:reputation) { (20..90).to_a.sample }

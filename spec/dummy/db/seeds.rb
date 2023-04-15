@@ -39,7 +39,7 @@ customer_attributes = Array.new(120) do
   {
     name: name,
     reputation: (20..100).to_a.sample,
-    email: Faker::Internet.safe_email(name: name),
+    email: Faker::Internet.email(name: name),
     territory: countries.sample,
     kind: Customer::KINDS.sample
   }
