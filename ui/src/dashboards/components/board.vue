@@ -10,7 +10,7 @@
         style="padding: 10px 8px"
       >
         <RouterLink
-          :to="{ name: 'query', params: { id: query.id } }"
+          :to="{ name: 'query', params: { id: query.id }, query: queryVariables }"
           class="text-dark"
         >
           <b>{{ item.title || query.name }}</b>
