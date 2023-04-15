@@ -38,6 +38,7 @@
         :scroll-to-top-on-data-update="false"
         :with-select="modelHasActions"
         :render-actions="tableActions.length && canUseTableActions ? renderActions : null"
+        :render-context-menu="modelHasActions && (!tableActions.length || !canUseTableActions) ? renderContextMenu : null"
         :click-rows="!!model.primary_key"
         @sort-change="applySort"
         @row-click="onRowClick"
@@ -553,6 +554,27 @@ export default {
       }).catch((error) => {
         console.error(error)
       })
+    },
+    renderContextMenu (row) {
+      return (h) => {
+        return h(ResourceActions, {
+          resources: [row],
+          label: '',
+          resourceName: this.model.name,
+          withButtons: false,
+          withDropdown: true,
+          buttonType: 'default',
+          buttonGhost: false,
+          buttonIcon: 'md-more',
+          buttonSize: 'small',
+          onStartAction: () => {
+            this.isLoading = true
+          },
+          onFinishAction: (action) => {
+            this.onFinishAction(action)
+          }
+        })
+      }
     },
     renderActions (row) {
       return (h) => {

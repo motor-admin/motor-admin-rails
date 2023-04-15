@@ -46,6 +46,12 @@
           >
             {{ i18n['actions'] }}
           </th>
+          <th
+            v-if="renderContextMenu"
+            class="ivu-table-column ivu-table-column-center"
+            :class="{ 'border-top' : !borderless && headerBorder }"
+            :style="{ position: 'sticky', top: 0, zIndex: 2 }"
+          />
         </tr>
       </thead>
       <tbody
@@ -85,6 +91,20 @@
             :column="column"
             @tag-click="$emit('tag-click', $event)"
           />
+          <td
+            v-if="renderContextMenu"
+            :style="{ position: 'sticky', right: 0, zIndex: 0 }"
+            @click.stop
+          >
+            <span
+              class="table-context-menu"
+              :style="{ position: 'absolute', top: 'calc(50% - 14px)', right: '10px' }"
+            >
+              <RenderCell
+                :render="renderContextMenu(row)"
+              />
+            </span>
+          </td>
           <td
             v-if="renderActions"
             class="ivu-table-column ivu-table-column-center"
@@ -152,6 +172,11 @@ export default {
       default: true
     },
     renderActions: {
+      type: Function,
+      required: false,
+      default: null
+    },
+    renderContextMenu: {
       type: Function,
       required: false,
       default: null
@@ -264,6 +289,16 @@ export default {
 </script>
 
 <style lang="scss">
+.table-context-menu {
+  display: none;
+}
+
+.ivu-table-row:hover {
+  .table-context-menu {
+    display: inline;
+  }
+}
+
 .ivu-table {
   overflow: auto;
   width: 100%;
