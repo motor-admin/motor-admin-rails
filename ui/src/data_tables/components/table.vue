@@ -18,7 +18,7 @@
             v-if="withSelect && columns.length"
             class="ivu-table-column ivu-table-column-center"
             :class="{ 'border-top' : !borderless && headerBorder }"
-            :style="{ position: 'sticky', top: 0, left: 0, zIndex: 1 }"
+            :style="{ position: 'sticky', top: 0, left: 0, zIndex: 2 }"
           >
             <div class="ivu-table-cell ivu-table-cell-with-selection">
               <Checkbox
@@ -42,7 +42,7 @@
             v-if="renderActions"
             class="ivu-table-column ivu-table-column-center"
             :class="{ 'border-top' : !borderless && headerBorder }"
-            :style="{ position: 'sticky', top: 0, right: 0, zIndex: 1 }"
+            :style="{ position: 'sticky', top: 0, right: 0, zIndex: 2 }"
           >
             {{ i18n['actions'] }}
           </th>
@@ -69,7 +69,7 @@
           <td
             v-if="withSelect"
             class="ivu-table-column ivu-table-column-center"
-            :style="{ position: 'sticky', left: 0 }"
+            :style="{ position: 'sticky', left: 0, zIndex: 1 }"
             @click.stop
           >
             <div class="ivu-table-cell ivu-table-cell-with-selection">
@@ -88,7 +88,7 @@
           <td
             v-if="renderActions"
             class="ivu-table-column ivu-table-column-center"
-            :style="{ position: 'sticky', right: 0 }"
+            :style="{ position: 'sticky', right: 0, zIndex: 1 }"
             @click.stop
           >
             <div class="ivu-table-cell">
