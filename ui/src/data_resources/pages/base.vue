@@ -92,18 +92,18 @@ import { breadcrumbStore } from 'navigation/scripts/breadcrumb_store'
 import { isShowSettings, closeSettings } from 'settings/scripts/toggle'
 import SettingsMask from 'settings/components/mask'
 
-function pushResourceTableScrollState () {
+function pushTableScrollState () {
   if (this.$refs.table) {
     history.replaceState({
       ...history.state,
-      resourceTableScrollTop: this.$refs.table.$refs.table.$refs.wrapper.scrollTop,
-      resourceTableScrollLeft: this.$refs.table.$refs.table.$refs.wrapper.scrollLeft
+      tableScrollTop: this.$refs.table.$refs.table.$refs.wrapper.scrollTop,
+      tableScrollLeft: this.$refs.table.$refs.table.$refs.wrapper.scrollLeft
     }, document.title, location.href)
   } else if (this.$refs.resource?.$refs?.table) {
     history.replaceState({
       ...history.state,
-      resourceTableScrollTop: this.$refs.resource.$refs.table.$refs.table.$refs.wrapper.scrollTop,
-      resourceTableScrollLeft: this.$refs.resource.$refs.table.$refs.table.$refs.wrapper.scrollLeft
+      tableScrollTop: this.$refs.resource.$refs.table.$refs.table.$refs.wrapper.scrollTop,
+      tableScrollLeft: this.$refs.resource.$refs.table.$refs.table.$refs.wrapper.scrollLeft
     }, document.title, location.href)
   }
 }
@@ -119,8 +119,8 @@ export default {
     Home,
     SettingsMask
   },
-  beforeRouteUpdate: pushResourceTableScrollState,
-  beforeRouteLeave: pushResourceTableScrollState,
+  beforeRouteUpdate: pushTableScrollState,
+  beforeRouteLeave: pushTableScrollState,
   data () {
     return {
       isMenuSider: false,

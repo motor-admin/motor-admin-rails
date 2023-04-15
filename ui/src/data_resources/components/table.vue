@@ -375,9 +375,9 @@ export default {
     this.assignCachedItemsCount()
     this.assignFromQueryParams(this.$route.query)
     this.loadDataAndCount().then(() => {
-      if (typeof history.state.resourceTableScrollTop === 'number') {
+      if (typeof history.state.tableScrollTop === 'number') {
         this.$nextTick(() => {
-          this.$refs.table.scrollTo(history.state.resourceTableScrollTop, history.state.resourceTableScrollLeft)
+          this.$refs.table.scrollTo(history.state.tableScrollTop, history.state.tableScrollLeft)
         })
       }
     })

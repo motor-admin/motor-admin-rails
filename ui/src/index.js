@@ -124,5 +124,5 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 window.onbeforeunload = () => {
-  history.replaceState({ ...history.state, resourceTableScrollTop: 0, resourceTableScrollLeft: 0 }, document.title, location.href)
+  history.replaceState({ ...history.state, tableScrollTop: 0, tableScrollLeft: 0 }, document.title, location.href)
 }

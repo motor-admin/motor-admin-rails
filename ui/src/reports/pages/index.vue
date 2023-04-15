@@ -57,9 +57,12 @@
         :placeholder="i18n['search']"
         size="large"
         class="mb-2"
-        @update:model-value="updateQueryParams"
+        @update:model-value="[pageParams.current = 1, updateQueryParams()]"
       />
-      <div :style="{ height: 'calc(var(--vh, 100vh) - 274px)', overflowY: 'auto', position: 'relative' }">
+      <div
+        ref="table"
+        :style="{ height: 'calc(var(--vh, 100vh) - 274px)', overflowY: 'auto', position: 'relative' }"
+      >
         <Spin
           v-if="isLoading"
           fix
@@ -129,7 +132,7 @@
           show-sizer
           show-elevator
           show-total
-          @update:current="pageParams.current = $event"
+          @update:current="[pageParams.current = $event, updateQueryParams()]"
           @update:page-size="pageParams.pageSize = $event"
         />
       </div>
@@ -149,6 +152,14 @@ const TYPES_MAP = {
   alerts: 'alert'
 }
 
+function pushTableScrollState () {
+  history.replaceState({
+    ...history.state,
+    tableScrollTop: this.$refs.table.scrollTop,
+    tableScrollLeft: this.$refs.table.scrollLeft
+  }, document.title, location.href)
+}
+
 export default {
   name: 'ReportsIndex',
   components: {
@@ -156,6 +167,8 @@ export default {
     TagsNav,
     ReportItem
   },
+  beforeRouteUpdate: pushTableScrollState,
+  beforeRouteLeave: pushTableScrollState,
   data () {
     return {
       isLoading: false,
@@ -179,6 +192,14 @@ export default {
 
       if (this.searchQuery) {
         params.q = this.searchQuery
+      }
+
+      if (this.pageParams.current > 1) {
+        params.page = this.pageParams.current
+      }
+
+      if (this.pageParams.pageSize !== 20) {
+        params.per_page = this.pageParams.pageSize
       }
 
       return params
@@ -244,6 +265,9 @@ export default {
       if (to.query?.q) {
         this.searchQuery = to.query?.q
       }
+    },
+    selectedType () {
+      this.$refs.table.scrollTop = 0
     }
   },
   mounted () {
@@ -255,12 +279,27 @@ export default {
       this.isLoading = false
     })
 
+    if (typeof history.state.tableScrollTop === 'number') {
+      this.$nextTick(() => {
+        this.$refs.table.scrollTop = history.state.tableScrollTop
+        this.$refs.table.scrollLeft = history.state.tableScrollLeft
+      })
+    }
+
     if (this.$route.query?.tags) {
       this.selectedTags = this.$route.query.tags.split(',')
     }
 
     if (this.$route.query?.q) {
       this.searchQuery = this.$route.query?.q
+    }
+
+    if (this.$route.query?.page) {
+      this.pageParams.current = this.$route.query.page
+    }
+
+    if (this.$route.query?.per_page) {
+      this.pageParams.pageSize = this.$route.query.per_page
     }
   },
   methods: {
