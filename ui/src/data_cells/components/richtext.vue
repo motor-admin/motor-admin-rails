@@ -1,6 +1,5 @@
 <template>
   <div
-    v-popover="popoverParams"
     class="richtext richtext-cell trix-content"
     v-html="truncate ? truncatedValue : safeHtml"
   />
