@@ -44,17 +44,16 @@ $ rails motor:install && rake db:migrate
 * [Optimized for mobile](#optimized-for-mobile)
 * [Configurations sync between environments](#configurations-sync)
 * [Authentication](#authentication)
-
-## [Pro](https://www.getmotoradmin.com/ruby-on-rails)
-
 * Multiple databases support
 * Audit log
 * Live collaboration notes
-* Multi-factor authentication
-* Custom styling
 * Personalized report alerts via Slack
-* Full-text search
-* Shareable forms and reports
+
+## [Pro](https://www.getmotoradmin.com/ruby-on-rails)
+
+* Custom styling and logo (white label)
+* Multi-factor authentication
+* SSO/SAML
 * [learn more](https://www.getmotoradmin.com/ruby-on-rails)
 
 ### Customizable CRUD
@@ -204,4 +203,4 @@ MOTOR_DEVELOPMENT=true rails s
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://github.com/motor-admin/motor-admin-rails/blob/master/LICENSE).
+Motor Admin is licensed under the AGPL v3 license.
