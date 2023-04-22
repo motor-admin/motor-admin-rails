@@ -93,7 +93,7 @@
           />
           <td
             v-if="renderContextMenu"
-            :style="{ position: 'sticky', right: 0, zIndex: 0 }"
+            :style="{ position: 'sticky', right: 0, zIndex: 1 }"
             @click.stop
           >
             <span
@@ -341,9 +341,9 @@ export default {
 }
 
 .table-wrapper::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
   border-top: 1px solid #dee2e6;
-  height: 4px;
+  height: 5px;
   z-index: 12;
 }
 

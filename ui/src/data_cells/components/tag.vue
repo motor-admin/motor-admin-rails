@@ -21,7 +21,6 @@
       v-if="withFilterButton"
       class="filter-popup"
       :style="bgStyle"
-      style="border-left-width: 0"
       :class="colorClass"
       @click.stop="$emit('tag-click', value)"
     >
@@ -124,8 +123,10 @@ export default {
   right: -12px;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
+  border-left-width: 0 !important;
   position: absolute;
-  background: #fff;
+  border-width: 1px;
+  border-style: solid;
 }
 
 .ivu-tag:hover {

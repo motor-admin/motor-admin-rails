@@ -31,7 +31,7 @@
     </div>
   </div>
   <div
-    class="ivu-card-body p-0 overflow-auto"
+    class="ivu-card-body p-0"
     :style="{ height: heightsMap[item.size[2]] }"
   >
     <Spin
