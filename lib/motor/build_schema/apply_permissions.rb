@@ -45,6 +45,11 @@ module Motor
           next if reference_model_name &&
                   (model_class.nil? || !ability.can?(:read, model_class))
 
+          if !ability.can?(:update, model, column[:name]) &&
+             column[:access_type] != BuildSchema::ColumnAccessTypes::HIDDEN
+            column = column.merge(access_type: BuildSchema::ColumnAccessTypes::READ_ONLY)
+          end
+
           column
         end.compact
       end
