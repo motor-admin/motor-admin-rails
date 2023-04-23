@@ -22,7 +22,7 @@
         :key="item.value"
         :type="queryType === item.value ? 'primary' : 'dashed'"
         class="bg-transparent mx-1"
-        :class="queryType === item.value ? 'text-primary' : 'text-dark'"
+        :class="queryType === item.value ? 'ivu-tag-color-primary' : 'text-dark'"
         @click="changeQueryType(item.value)"
       >
         {{ item.label }}
