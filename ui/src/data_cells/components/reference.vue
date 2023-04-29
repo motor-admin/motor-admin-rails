@@ -155,6 +155,7 @@ export default {
 
 <style lang="scss" scoped>
 @import 'utils/styles/variables';
+@import 'view3/src/styles/color/colors';
 
 .ivu-btn {
   user-select: initial
@@ -168,11 +169,11 @@ export default {
   right: -15px;
   position: absolute;
   background: #fff;
-  border-top: 1px $primary-color solid;
-  border-bottom: 1px $primary-color solid;
+  border-top: 1px tint($primary-color, 20%) solid;
+  border-bottom: 1px tint($primary-color, 20%) solid;
   border-top-right-radius: 32px;
   border-bottom-right-radius: 32px;
-  border-right: 1px $primary-color solid
+  border-right: 1px tint($primary-color, 20%) solid
 }
 
 .ivu-btn:hover {
