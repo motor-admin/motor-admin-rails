@@ -152,8 +152,8 @@ export default {
   emits: ['click-resize', 'click-menu', 'action-applied'],
   data () {
     return {
-      isLoading: false,
-      isReloading: false,
+      isLoading: true,
+      isReloading: true,
       isDownloadLoading: false,
       rows: [],
       sortParams: {},
@@ -379,11 +379,6 @@ export default {
     this.assignCachedItemsCount()
     this.assignCachedRows()
 
-    if (!this.rows.length) {
-      this.isLoading = true
-      this.isReloading = true
-    }
-
     this.loadDataAndCount({ loading: !this.rows.length }).then(() => {
       if (typeof history.state.tableScrollTop === 'number') {
         this.$nextTick(() => {
@@ -574,7 +569,9 @@ export default {
       }).then((result) => {
         this.paginationParams.total = result.data.meta.count
 
-        itemsCountCache.set(this.itemsCountCacheKey, result.data.meta.count)
+        this.$nextTick(() => {
+          itemsCountCache.set(this.itemsCountCacheKey, result.data.meta.count)
+        })
       }).catch((error) => {
         console.error(error)
       })
@@ -626,7 +623,9 @@ export default {
       }).then((result) => {
         this.rows = result.data.data
 
-        rowsCache.set(this.rowsCacheKey, result.data.data)
+        this.$nextTick(() => {
+          rowsCache.set(this.rowsCacheKey, result.data.data)
+        })
       }).catch((error) => {
         if (error.response) {
           this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
