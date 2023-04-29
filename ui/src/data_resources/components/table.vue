@@ -87,7 +87,6 @@
 
 <script>
 import api from 'api'
-import { reactive } from 'vue'
 import { modelNameMap } from '../scripts/schema'
 import DataTable from 'data_tables/components/table'
 import ResourceNavbar from './navbar'
@@ -109,7 +108,8 @@ const defaultPaginationParams = {
   pageSizeOpts: [20, 50, 100, 250, 500]
 }
 
-const itemsCountCache = reactive({})
+const itemsCountCache = new Map()
+const rowsCache = new Map()
 
 export default {
   name: 'ResourceTable',
@@ -152,8 +152,8 @@ export default {
   emits: ['click-resize', 'click-menu', 'action-applied'],
   data () {
     return {
-      isLoading: true,
-      isReloading: true,
+      isLoading: false,
+      isReloading: false,
       isDownloadLoading: false,
       rows: [],
       sortParams: {},
@@ -241,6 +241,9 @@ export default {
         ...this.queryParams,
         page: {}
       })
+    },
+    rowsCacheKey () {
+      return JSON.stringify(this.queryParams)
     },
     selectedRows () {
       return this.rows.filter((row) => row._selected)
@@ -372,9 +375,16 @@ export default {
     }
   },
   mounted () {
-    this.assignCachedItemsCount()
     this.assignFromQueryParams(this.$route.query)
-    this.loadDataAndCount().then(() => {
+    this.assignCachedItemsCount()
+    this.assignCachedRows()
+
+    if (!this.rows.length) {
+      this.isLoading = true
+      this.isReloading = true
+    }
+
+    this.loadDataAndCount({ loading: !this.rows.length }).then(() => {
       if (typeof history.state.tableScrollTop === 'number') {
         this.$nextTick(() => {
           this.$refs.table.scrollTo(history.state.tableScrollTop, history.state.tableScrollLeft)
@@ -446,17 +456,31 @@ export default {
       this.paginationParams.current = parseInt(query.page) || 1
       this.paginationParams.pageSize = parseInt(query.per_page) || parseInt(localStorage.getItem(`motor:${this.model.name}:pageSize`) || '0') || defaultPaginationParams.pageSize
     },
-    loadDataAndCount () {
+    loadDataAndCount (opts = { loading: true }) {
       return Promise.all([
-        this.loadData(),
+        this.loadData(opts),
         this.loadItemsCount()
       ])
     },
     assignCachedItemsCount () {
-      const count = itemsCountCache[this.itemsCountCacheKey]
+      const count = itemsCountCache.get(this.itemsCountCacheKey)
 
       if (count) {
         this.paginationParams.total = count
+      }
+    },
+    assignCachedRows () {
+      const rows = rowsCache.get(this.rowsCacheKey)
+
+      if (rows) {
+        this.isLoading = false
+        this.isReloading = false
+
+        this.rows = rows
+
+        this.$nextTick(() => {
+          this.$refs.table.scrollTo(history.state.tableScrollTop, history.state.tableScrollLeft)
+        })
       }
     },
     onPageChange () {
@@ -550,7 +574,7 @@ export default {
       }).then((result) => {
         this.paginationParams.total = result.data.meta.count
 
-        itemsCountCache[this.itemsCountCacheKey] = result.data.meta.count
+        itemsCountCache.set(this.itemsCountCacheKey, result.data.meta.count)
       }).catch((error) => {
         console.error(error)
       })
@@ -594,13 +618,15 @@ export default {
         })
       }
     },
-    loadData () {
-      this.isLoading = true
+    loadData ({ loading } = { loading: true }) {
+      this.isLoading = loading
 
       return api.get(this.queryPath, {
         params: this.queryParams
       }).then((result) => {
         this.rows = result.data.data
+
+        rowsCache.set(this.rowsCacheKey, result.data.data)
       }).catch((error) => {
         if (error.response) {
           this.$Message.error(truncate(error.response.data.errors.join('\n'), 70))
