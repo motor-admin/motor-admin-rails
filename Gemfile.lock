@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.4.14)
+    motor-admin (0.4.16)
       ar_lazy_preload (~> 1.0)
       audited (~> 5.0)
       cancancan (~> 3.0)
@@ -84,8 +84,9 @@ GEM
     ar_lazy_preload (1.1.2)
       rails (>= 5.2)
     ast (2.4.2)
-    audited (5.3.2)
+    audited (5.3.3)
       activerecord (>= 5.0, < 7.1)
+      request_store (~> 1.2)
     aws-eventstream (1.2.0)
     aws-partitions (1.684.0)
     aws-sdk-core (3.168.4)
@@ -245,6 +246,8 @@ GEM
     rainbow (3.1.1)
     rake (13.0.6)
     regexp_parser (2.6.1)
+    request_store (1.5.1)
+      rack (>= 1.4)
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
