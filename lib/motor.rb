@@ -53,7 +53,7 @@ module Motor
   end
 
   def company_name
-    'Motor Admin'
+    'AlexanderMohan Administration'
   end
 
   def with_public_access?
