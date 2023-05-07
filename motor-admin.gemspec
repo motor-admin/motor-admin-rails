@@ -4,9 +4,9 @@ require_relative 'lib/motor/version'
 
 Gem::Specification.new do |spec|
   spec.name        = 'motor-admin'
-  spec.version     = Motor::VERSION
-  spec.authors     = ['Pete Matsyburka']
-  spec.email       = ['pete@getmotoradmin.com']
+  spec.version     = 0.4.16.1
+  spec.authors     = ['Alexander Mohan Morzeria-Davis']
+  spec.email       = ['me+git@alexandermohan.com']
   spec.summary     = 'Low-code Admin panel and Business intelligence'
   spec.license     = 'AGPL-3.0'
 
