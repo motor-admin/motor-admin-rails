@@ -33,7 +33,7 @@ jobs:
         
     - name: Build production bundle
       uses: borales/actions-yarn@v4
-       with:
+      with:
           cmd: build:prod # will run `yarn build:prod` command
 
     - name: Publish to GPR
