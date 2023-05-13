@@ -291,7 +291,7 @@ export default {
     },
     polymorphicModel () {
       if (this.column.reference?.polymorphic) {
-        const polymorphicName = this.resource[this.column.reference.name + '_type']
+        const polymorphicName = this.resource[this.column.reference.foreign_key.replace(/_id$/, '_type')]
 
         return modelNameMap[underscore(polymorphicName).replace(/:{2}/g, '/')]
       } else {

@@ -56,7 +56,7 @@ export default {
 
       if (this.association?.polymorphic) {
         resource[this.association.foreign_key] = parseInt(this.parentResource.id)
-        resource[this.association.foreign_key.replace('_id', '_type')] = this.parentModel.class_name
+        resource[this.association.foreign_key.replace(/_id$/, '_type')] = this.parentModel.class_name
 
         if (this.association.model_name === 'active_storage/attachment') {
           resource.name = this.association.name.replace(/_attachments?$/, '')
