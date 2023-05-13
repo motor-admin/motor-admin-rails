@@ -239,11 +239,12 @@ export default {
     itemsCountCacheKey () {
       return JSON.stringify({
         ...this.queryParams,
+        queryPath: this.queryPath,
         page: {}
       })
     },
     rowsCacheKey () {
-      return JSON.stringify(this.queryParams)
+      return JSON.stringify({ queryPath: this.queryPath, ...this.queryParams })
     },
     selectedRows () {
       return this.rows.filter((row) => row._selected)
