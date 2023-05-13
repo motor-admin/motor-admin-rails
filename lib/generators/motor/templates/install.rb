@@ -165,6 +165,9 @@ class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Mi
 
       t.timestamps
 
+      t.index %i[record_id record_type],
+              name: 'motor_notes_record_id_record_type_index'
+
       t.index %i[author_id author_type],
               name: 'motor_notes_author_id_author_type_index'
     end
