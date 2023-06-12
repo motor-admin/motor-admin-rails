@@ -36,7 +36,13 @@ module Motor
     end
 
     def file_params
-      params.require(:data).require(:file).permit(:io, :filename).to_h.symbolize_keys
+      attrs = params.require(:data).require(:file).permit(:io, :filename).to_h.symbolize_keys
+
+      return attrs if params.dig(:data, :file, :base64).blank?
+
+      attrs[:io] = StringIO.new(Base64.urlsafe_decode64(params[:data][:file][:base64]))
+
+      attrs
     end
 
     def attachment_params
