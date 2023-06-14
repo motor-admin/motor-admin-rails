@@ -47,7 +47,7 @@ module Motor
 
     def attachment_params
       if params[:data].present?
-        params.require(:data).except(:file).permit!
+        params.require(:data).except(:file).permit(:name, :record_type, :record_id)
       else
         {}
       end
