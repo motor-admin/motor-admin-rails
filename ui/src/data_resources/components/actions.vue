@@ -239,7 +239,7 @@ export default {
     },
     permittedActions () {
       return (this.actions || this.model.actions).filter((action) => {
-        return action.apply_on === 'member' && action.visible && this.resources.some((res) => {
+        return (!action.apply_on || action.apply_on === 'member') && action.visible && this.resources.some((res) => {
           return this.$can(action.name, this.model.class_name, res)
         })
       })
