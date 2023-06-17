@@ -275,7 +275,7 @@ export default {
       }
     },
     isEditable () {
-      return this.editable && (this.column.access_type === 'read_write' || this.isActiveStorage)
+      return this.editable && this.column.access_type === 'read_write'
     },
     columnType () {
       return this.column.column_type
