@@ -5,6 +5,7 @@
   >
     {{ truncatedValue }}<span
       v-if="isTruncated"
+      :key="value"
       v-popover="popoverParams"
     >...</span>
   </div>
