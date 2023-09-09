@@ -266,7 +266,7 @@ export default {
   },
   methods: {
     isImage (path) {
-      return !!path.match(/\.(jpg|png|jpeg|webp|svg|gif)$/i)
+      return !!path.match(/\.(jpg|png|jpeg|webp|svg|gif|heic|heif)$/i)
     },
     isVideo (path) {
       return !!path.match(/\.(mp4|mov|flv|webm)$/i)

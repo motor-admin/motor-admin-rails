@@ -216,7 +216,7 @@ export default {
       return this.type === 'chart'
     },
     isImage () {
-      return this.type === 'image' || (this.isPath && !!this.stringValue.match(/\.(jpg|png|jpeg|webp|svg|gif)$/i))
+      return this.type === 'image' || (this.isPath && !!this.stringValue.match(/\.(jpg|png|jpeg|webp|svg|gif|heic|heif)$/i))
     },
     isAudio () {
       return this.type === 'audio' || (this.isPath && !!this.stringValue.match(/\.(mp3|ogg|wav|aif)$/i))
