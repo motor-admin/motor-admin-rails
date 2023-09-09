@@ -18,6 +18,8 @@ module Motor
                                               variables: request_params[:variables],
                                               headers: { 'Authorization' => "Bearer #{current_user_jwt}" })
 
+      response.to_hash.each { |key, (value)| headers[key] = value }
+
       self.response_body = response.body
       self.status = response.code.to_i
     end
