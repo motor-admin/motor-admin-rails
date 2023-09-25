@@ -46,6 +46,7 @@ module Motor
           base_path: Motor::Admin.routes.url_helpers.motor_path,
           cable_path: Motor::Admin.routes.url_helpers.try(:motor_cable_path),
           admin_settings_path: Rails.application.routes.url_helpers.try(:admin_settings_general_path),
+          active_storage_direct_uploads_enabled: ENV['MOTOR_ACTIVE_STORAGE_DIRECT_UPLOADS_ENABLED'] === 'true',
           schema: Motor::BuildSchema.call(cache_keys, current_ability),
           header_links: header_links_data_hash(current_user, current_ability, configs_cache_key),
           homepage_layout: homepage_layout_data_hash(configs_cache_key),
