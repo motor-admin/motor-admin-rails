@@ -2,10 +2,10 @@
 common: &common
   adapter: mysql2
   encoding: utf8mb4
-  username: root
-  password:
   host: 127.0.0.1
-  port: 3306
+  password:
+  port: <%= ENV['DATABASE_PORT'] || 3306 %>
+  username: root
 <% elsif ENV['DATABASE_TYPE'] == 'sqlite' %>
 common: &common
   adapter: sqlite3
@@ -14,20 +14,21 @@ common: &common
 common: &common
   adapter: sqlserver
   host: 127.0.0.1
-  port: 1433
-  username: sa
   password: Passw@rd
+  port: <%= ENV['DATABASE_PORT'] || 1433 %>
   timeout: 30000
+  username: sa
 <% else %>
 common: &common
   adapter: postgresql
   encoding: unicode
-  pool: 10
-  timeout: 5000
-  min_messages: warning
-  username: postgres
-  password: postgres
   host: localhost
+  min_messages: warning
+  password: postgres
+  pool: 10
+  port: <%= ENV['DATABASE_PORT'] || 5432 %>
+  timeout: 5000
+  username: postgres
 <% end %>
 
 development:
