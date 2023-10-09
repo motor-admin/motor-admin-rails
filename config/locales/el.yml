@@ -1,14 +1,19 @@
 el:
   motor:
     action_has_been_applied: Η ενέργεια έχει εφαρμοστεί!
+    action_has_been_removed: Η ενέργεια αυτή έχει καταργηθεί
     action_has_failed_with_code: Η ενέργεια απέτυχε με κωδικό
     action_type: Τύπος ενέργειας
     actions: Ενέργειες
-    add: Προσθληκη
+    activate: Ενεργοποίηση
     add_action: Προσθήκη ενέργειας
     add_alert: Προσθήκη ειδοποίησης
+    add_api: Προσθήκη API
+    add_association: Προσθήκη σύνδεσης
     add_column: Προσθήκη Στήλης
+    add_condition: Προσθήκη συνθήκης
     add_dashboard: Προσθήκη Ταμπλό
+    add_database: Προσθήκη βάσης δεδομένων
     add_field: Προσθήκη Πεδίου
     add_filter: Προσθήκη Φίλτρου
     add_form: Προσθήκη Φόρμας
@@ -18,48 +23,71 @@ el:
     add_query: Προσθήκη Ερωτήματος
     add_scope: Προσθήκη πεδίου εφαρμογής
     add_tab: Προσθήκη Καρτέλας
-    adjust_form: Προσαρμογή φόρμας
+    add_text: Προσθήκη κειμένου
+    add_variable: Προσθήκη μεταβλητής
+    add: Προσθληκη
     adjust_fields: Προσαρμογή πεδίων
+    adjust_form: Προσαρμογή φόρμας
     alert_email_has_been_sent: Το email ειδοποίησης έχει σταλεί!
     alert_has_been_activated: Η ειδοποίηση έχει ενεργοποιηθεί
     alert_has_been_disabled: Η ειδοποίηση έχει απενεργοποιηθεί
     alert_has_been_saved: Η ειδοποίηση έχει σωθεί!
     alert_name: Όνομα ειδοποίησης
+    alert: Ειδοποίηση
     alerts: Ειδοποιήσεις
-    all: Όλα
     all_resources: Όλοι οι πόροι
+    all: Όλα
     and: Και
     api_path: Διαδρομή API
     api_request: Αίτημα API
+    api: API
     apply: Εφαρμογή
     are_you_sure: Είστε σίγουροι;
+    ascending: Αύξουσα
+    association: Σύνδεση
     associations: Συνδέσεις
+    audio: Ήχος
+    audits: Έλεγχοι
     bar_chart: Ραβδόγραμμα
     base: Βάση
     boolean: Boolean
     build_custom_form: Δημιουργία προσαρμοσμένης φόρμας
     cancel: Ακύρωση
     cents: Σεντς
+    change: Αλλαγή
+    chart: Διάγραμμα
     checkbox: Checkbox
     clear_all: Εκκαθάριση όλων
     clear_selection: Εκκαθάριση επιλογής
-    close: Κλείσιμο
+    clear: Καθαρισμός
     close_editor: Κλείσιμο επεξεργαστή
     close_settings: Κλείσιμο ρυθμίσεων
     close_variables: Κλείσιμο μεταβλητών
+    close: Κλείσιμο
+    color: Χρώμα
     columns: Στήλες
+    comma: Κόμμα
+    condition: Προϋπόθεση
+    conditional: Υπό προϋποθέσεις
     contains: Περιέχει
+    copied_to_the_clipboard: Αντιγραφή στο πρόχειρο
+    create_new: Δημιουργία νέου
+    create_reminder: Δημιουργία υπενθύμισης
     create: Δημιουργία
+    created: δημιουργήθηκε
     currency: Νόμισμα
-    dashboard: Ταμπλό
+    current_user_variables_are_always_passed_explicitly_and_can_he_used_html: "<code>{{current_user_id}}</code> και <code>{{current_user_email}}</code> μεταβλητές μεταβιβάζονται πάντα ρητά και μπορούν να χρησιμοποιηθούν για να αποφασιστεί ποια δεδομένα θα πρέπει να εμφανίζονται για ορισμένους χρήστες:"
     dashboard_has_been_saved: Το ταμπλό έχει αποθηκευτεί!
     dashboard_title: Τίτλος ταμπλό
+    dashboard: Ταμπλό
     dashboards: Ταμπλό
-    date: Ημερομηνία
     date_and_time: Ημερομηνία και ώρα
+    date: Ημερομηνία
     decimal: Δεκαδικό
-    default: Προεπιλεγμένο
     default_value: Προεπιλεγμένη τιμή
+    default: Προεπιλεγμένο
+    deleted: διαγράφηκε
+    descending: Φθίνουσα
     describe_this_alert_optional: Περιγράψτε αυτή την ειδοποίηση (προαιρετικά)
     describe_your_dashboard_optional: Περιγράψτε το ταμπλό σας (προαιρετικά)
     describe_your_form_optional: Περιγράψτε τη φόρμα σας (προαιρετικά)
@@ -69,14 +97,31 @@ el:
     details: Λεπτομέρειες
     disable: Απενεργοποίηση
     display_as: Εμφάνιση ως
-    edit: Επεξεργασία
-    edit_sql: Επεξεργασία SQL
+    display_column: Εμφάνιση στήλης
+    display_id: Εμφάνιση ID
+    display_settings: Ρυθμίσεις εμφάνισης
+    do_not_refresh: Να μην ανανεώνεται
+    do_not_split: Μην χωρίζετε
+    download: Λήψη
+    downloading: Γίνεται λήψη
+    edit_html: Edit HTML
     edit_markdown: Επεξεργασία Markdown
+    edit_note: Επεξεργασία σημείωσης
+    edit_sql: Επεξεργασία SQL
+    edit_text: Επεξεργασία κειμένου
+    edit: Επεξεργασία
     emails: Emails
+    empty: Άδειο
     ends_with: Τελειώνει με
     equal_to: Ίσο με
+    error_message: Μήνυμα σφάλματος
+    every_30_seconds: Every 30 seconds
+    every_5_minutes: Every 5 minutes
+    every_5_seconds: Every 5 seconds
     every_day_at_hh_mm: κάθε μέρα στις HH:mm PM...
+    every_minute: Every minute
     excludes: εξαιρείται
+    expand: Επέκταση
     field_is_not_a_number: '%{field} δεν είναι αριθμός'
     field_is_required: '%{field} απαιτείται'
     field_list_cant_be_empty: "%{field} λίστα δεν μπορεί να είναι άδεια"
@@ -85,254 +130,215 @@ el:
     field_must_be_more_in_length: '%{field} πρέπει να είναι μεγαλύτερο από %{length} σε μήκος'
     field_name: Όνομα πεδίου
     field_value_does_not_match_pattern: '%{field} η τιμή δεν ταιριάζει με %{pattern}'
+    field: Πεδίο
     file: Αρχείο
     filter: Φίλτρο
     filters: Φίλτρα
-    form: Φόρμα
+    foreign_key: Ξένο κλειδί
     form_has_been_saved: Η φόρμα έχει αποθηκευτεί!
     form_has_been_submitted_successfully: Η φόρμα υποβλήθηκε επιτυχώς!
     form_name: Όνομα φόρμας
+    form: Φόρμα
     forms: Φόρμες
     funnel: Funnel
+    general: Γενικό
     greater_or_equal: Μεγαλύτερο ή ίσο
-    greater_than: Μεγαλύτερο από
     greater_than_or_equal_to: Μεγαλύτερο ή ίσο με
+    greater_than: Μεγαλύτερο από
     group_name: Όνομα ομάδας
     has_been_created: έχει δημιουργηθεί
     has_been_removed_succesfully: έχει αφαιρεθεί επιτυχώς
     has_been_updated: έχει ενημερωθεί
+    header: Επικεφαλίδα
     hello_admin: Γεια σου Διαχειριστή 👋
     hidden: Κρυφό
+    html: HTML
+    hyphen: Παύλα
     image: Εικόνα
     includes: Περιλαμβάνει
     input_type: Τύπος εισόδου
     integer: Ακέραιος αριθμός
+    internal: Internal/Anonymous
     interval: Interval
-    is: Είναι
+    is_not_null: Δεν είναι null
     is_not: Δεν είναι
+    is_null: Είναι null
+    is: Είναι
     items_have_been_removed: τα στοιχεία έχουν αφαιρεθεί
     items_will_be_removed: '%{count} τα στοιχεία θα αφαιρεθούν'
     json: JSON
+    kanban_card_columns: Kanban card columns
+    kanban_columns: Kanban columns
     label: Νόμισμα
     less_or_equal: Λιγότερο ή ίσο
-    less_than: Λιγότερο από
     less_than_or_equal_to: Λιγότερο ή ίσο με
+    less_than: Λιγότερο από
     line_chart: Γραμμικό γράφημα
     link_name: Όνομα συνδέσμου
+    link_text: Κείμενο συνδέσμου
+    link: Σύνδεσμος
     links: Σύνδεσμοι
+    load_existing_options_from_database: Φόρτωση υφιστάμενων επιλογών από τη βάση δεδομένων
     load_initial_data: Φόρτωση αρχικών δεδομένων
     loading: Φόρτωση...
+    long_text: Μακρύ κείμενο
     looks_like_you_are_new_here: Φαίνεται ότι είστε νέος εδώ 🙃
+    map: Map
     markdown: Markdown
-    method: Μέθοδος
+    message: Μήνυμα
     method_call: Κλήση μεθόδου
+    method: Μέθοδος
+    more: Περισσότερα
     multiple: Πολλαπλό
     name: Όνομα
     new_alert: Νέα ειδοποίηση
     new_dashboard: Νέο ταμπλό
     new_form: Νέα φόρμα
+    new_mention_for: "νέα αναφορά για %{resource}"
     new_query: Νέο ερώτημα
+    new_reminder_for: "Νέα υπενθύμιση για %{resource}"
     no_data: Δεν υπάρχουν δεδομένα
+    not_authorized_to_perform_action: Δεν είστε εξουσιοδοτημένοι να εκτελέσετε αυτή την ενέργεια.
+    not_empty: Δεν είναι άδειο
     not_found: Δεν βρέθηκε
+    note_has_been_removed: Η σημείωση έχει αφαιρεθεί
+    notes: Σημειώσεις
+    nothing_to_show_here_yet: Δεν υπάρχει τίποτα ακόμα εδώ 🤷‍♂️
     number: Αριθμός
     ok: ΟΚ
+    on_collection: Κατά τη συλλογή
+    only_send_form_data: Αποστολή μόνο δεδομένων φόρμας (παράλειψη δεδομένων σειρών πίνακα)
+    open_in_markdown_editor: Άνοιγμα σε markdown συντάκτη
     options_separated_with_new_line_or_comma: Επιλογές χωρισμένες με νέα γραμμή ή κόμμα
     or: Ή
+    order_by: Ταξινόμηση κατά
     other_than: Άλλο εκτός από
     param_name: Όνομα παραμέτρου
     password: Κωδικός
     path: Διαδρομή
     percent: Ποσοστό
+    percentage: Ποσοστό
     pie_chart: Διάγραμμα πίτας
+    polymorphic: Πολυμορφικό
+    primary_key: Πρωτεύον κλειδί
+    queries_can_contain_variable_via_syntax_html: "Τα ερωτήματα μπορούν να περιέχουν μεταβλητές ενσωμάτωσης χρησιμοποιώντας <code>{{variable}}</code> σύνταξη:"
     queries: Ερωτήματα
-    query: Ερώτημα
+    query_editor: Επεξεργαστής ερωτημάτων
     query_has_been_saved: Το ερώτημα έχει αποθηκευτεί!
     query_name: Όνομα ερωτήματος
     query_not_selected: Το ερώτημα δεν έχει επιλεγεί
     query_revisions: Αναθεωρήσεις ερωτημάτων
+    query: Ερώτημα
+    radar_chart: Radar chart
+    rating: Rating
     read_only: Μόνο για ανάγνωση
     read_write: Ανάγνωση-Εγγραφή
-    reference: Παραπομπή
     reference_resource: Πόρος αναφοράς
+    reference: Παραπομπή
+    regexp: RegExp
+    reminder_has_been_removed: Η υπενθύμιση έχει αφαιρεθεί
+    remove_condition: Αφαίρεση συνθήκης
     remove: Αφαίρεση
     reports: Αναφορές
     request_param: Παράμετρος αιτήματος
     required: Απαιτούμενο
     resource_filters: '%{resource} Φίλτρα'
     resource_settings: '%{resource} Ρυθμίσεις'
+    resource: Πόρος
     resources: Πόροι
+    restore: Επαναφορά
     resubmit: Επαναϋποβολή
     revert: Αναστρέψτε το
     revision_has_been_applied: Εφαρμόστηκε η αναθεώρηση
     revisions: Αναθεωρήσεις
     richtext: Πλούσιο κείμενο
     row_chart: Διάγραμμα γραμμής
-    save: Αποθήκευση
+    run: Εκτέλεση
     save_and_create_new: Αποθήκευση και δημιουργία νέου
     save_as_new: Αποθήκευση ως νέο
     save_dashboard: Αποθήκευση ταμπλό
     save_form: Αποθήκευση φόρμας
     save_query: Αποθήκευση ερωτήματος
+    save: Αποθήκευση
+    schedule_at: Χρονοδιάγραμμα στο
     scopes: Πεδία εφαρμογής
-    search: Αναζήτηση
     search_placeholder: Αναζήτηση...
     search_query: Ερώτημα αναζήτησης
-    select: Επιλογή
+    search: Αναζήτηση
+    searchable_columns: Στήλες με δυνατότητα αναζήτησης
     select_alert_tags: Επιλέξτε ετικέτες ειδοποίησης
-    select_dashboard: Επιλέξτε ταμπλό
     select_dashboard_tags: Επιλέξτε ετικέτες ταμπλό
-    select_form: Επιλέξτε φόρμα
+    select_dashboard: Επιλέξτε ταμπλό
     select_form_tags: Επιλέξτε ετικέτες dashform
+    select_form: Επιλέξτε φόρμα
     select_options: Επιλέξτε επιλογές
     select_placeholder: Επιλογή...
-    select_query: Επιλέξτε ερώτημα
     select_query_tags: Επιλέξτε ετικέτες ερωτήματος
+    select_query: Επιλέξτε ερώτημα
     select_resource_placeholder: Επιλέξτε πόρο...
+    select: Επιλογή
     selected_item_has_been_removed: Το επιλεγμένο στοιχείο έχει αφαιρεθεί
-    selected_item_will_be_removed: Το επιλεγμένο στοιχείο θα αφαιρεθεί
     selected_item_will_be_removed_are_you_sure: Το επιλεγμένο στοιχείο θα αφαιρεθεί. Είστε σίγουροι;
+    selected_item_will_be_removed: Το επιλεγμένο στοιχείο θα αφαιρεθεί
+    semicolon: Ερωτηματικό
     send_empty: Να σταλεί άδειο;
+    send_file_url: Send file URL
     send_now: Αποστολή τώρα
     send_to: Αποστολή προς
+    send_via: Αποστολή μέσω
     set_tags: Ορισμός ετικετών
     settings: Ρυθμίσεις
     should_be_a_valid_json: '%{field} θα πρέπει να είναι ένα έγκυρο JSON'
+    should_be_a_valid_regexp: Πρέπει να είναι μία έγκυρη RegExp συμβολοσειρά
     should_be_error_constraint: '%{field} θα πρέπει να είναι %{error} %{constraint}'
+    show_on_table: Show on table
+    sign_out: Αποσύνδεση
+    slash: Κάθετος
+    source: Πηγή
+    split_tags_by: Διαχωρισμός ετικετών κατά
+    sql: SQL
     stacked_bars: Στοιβαγμένες μπάρες
     starts_with: Ξεκινάει με
     submit: Υποβολή
+    syntax_is_used_for_if_and_if_not_conditions_html: "<code>{{#variable}} ... {{/variable}}</code> και <code>{{^variable}} ... {{variable}}</code> σύνταξη χρησιμοποιείται για <code>if</code> και <code>if not</code> συνθήκες αντίστοιχα:"
     tab_type: Τύπος καρτέλας
     table: Πίνακας
     tabs: Καρτέλες
+    tag: Ετικέτα
     tags: Ετικέτες
     text: Κείμενο
     textarea: Περιοχή κειμένου
+    there_are_unsaved_changes_close_form: "There are unsaved changes. Close form?"
+    there_are_unsaved_changes_from: "Υπάρχουν μη αποθηκευμένες αλλαγές από %{timestamp}"
+    there_is_nothing_here_yet: Δεν υπάρχει τίποτα ακόμα εδώ 🤷‍♂️
+    through: Μέσω
     timezone: Ζώνη ώρας
     title: Τίτλος
+    total: Total
     type: Τύπος
     unable_to_load_form_data: Αδυναμία φόρτωσης δεδομένων φόρμας
     unable_to_remove_item: Αδυναμία αφαίρεσης στοιχείου
     unable_to_remove_items: Αδυναμία αφαίρεσης στοιχείων
+    unable_to_send_alert: Αδυναμία αποστολής ειδοποίησης
     unable_to_send_email: Αδυναμία αποστολής email
     unable_to_submit_form: Αδυναμία υποβολής φόρμας
     unit: Μονάδα
+    updated: ενημερωμένο
+    upload: Ανέβασμα
+    url: URL
+    use_default: Χρήση προεπιλογής
+    user_dropdown: Αναδιπλούμενο παράθυρο χρήστη
+    user_mentioned_you_with_note: "%{user} σας ανέφερε με:\n%{note}"
+    validate: Επικύρωση
+    validation_regexp: Επικύρωση RegExp
     value: Τιμή
     values_axis: Άξονας τιμών
+    variable_name: Όνομα μεταβλητής
     variables: Μεταβλητές
+    video: Βίντεο
     visibility: Ορατότητα
     visualization: Απεικόνιση
     write_only: Μόνο για εγγραφή
-    long_text: Μακρύ κείμενο
-    percentage: Ποσοστό
-    change: Αλλαγή
-    chart: Διάγραμμα
-    tag: Ετικέτα
-    link: Σύνδεσμος
-    color: Χρώμα
-    link_text: Κείμενο συνδέσμου
-    copied_to_the_clipboard: Αντιγραφή στο πρόχειρο
-    queries_can_contain_variable_via_syntax_html: "Τα ερωτήματα μπορούν να περιέχουν μεταβλητές ενσωμάτωσης χρησιμοποιώντας <code>{{variable}}</code> σύνταξη:"
-    syntax_is_used_for_if_and_if_not_conditions_html: "<code>{{#variable}} ... {{/variable}}</code> και <code>{{^variable}} ... {{variable}}</code> σύνταξη χρησιμοποιείται για <code>if</code> και <code>if not</code> συνθήκες αντίστοιχα:"
-    current_user_variables_are_always_passed_explicitly_and_can_he_used_html: "<code>{{current_user_id}}</code> και <code>{{current_user_email}}</code> μεταβλητές μεταβιβάζονται πάντα ρητά και μπορούν να χρησιμοποιηθούν για να αποφασιστεί ποια δεδομένα θα πρέπει να εμφανίζονται για ορισμένους χρήστες:"
-    create_new: Δημιουργία νέου
-    conditional: Υπό προϋποθέσεις
-    condition: Προϋπόθεση
-    field: Πεδίο
-    empty: Άδειο
-    not_empty: Δεν είναι άδειο
-    general: Γενικό
-    run: Εκτέλεση
-    use_default: Χρήση προεπιλογής
-    query_editor: Επεξεργαστής ερωτημάτων
-    polymorphic: Πολυμορφικό
-    foreign_key: Ξένο κλειδί
-    primary_key: Πρωτεύον κλειδί
-    through: Μέσω
-    source: Πηγή
-    resource: Πόρος
-    add_association: Προσθήκη σύνδεσης
-    there_are_unsaved_changes_from: "Υπάρχουν μη αποθηκευμένες αλλαγές από %{timestamp}"
-    clear: Καθαρισμός
-    restore: Επαναφορά
-    more: Περισσότερα
-    add_text: Προσθήκη κειμένου
-    edit_text: Επεξεργασία κειμένου
-    open_in_markdown_editor: Άνοιγμα σε markdown συντάκτη
-    activate: Ενεργοποίηση
-    load_existing_options_from_database: Φόρτωση υφιστάμενων επιλογών από τη βάση δεδομένων
-    add_database: Προσθήκη βάσης δεδομένων
-    audio: Ήχος
-    video: Βίντεο
-    display_column: Εμφάνιση στήλης
-    not_authorized_to_perform_action: Δεν είστε εξουσιοδοτημένοι να εκτελέσετε αυτή την ενέργεια.
-    download: Λήψη
-    alert: Ειδοποίηση
-    downloading: Γίνεται λήψη
-    display_id: Εμφάνιση ID
-    display_settings: Ρυθμίσεις εμφάνισης
-    sign_out: Αποσύνδεση
-    header: Επικεφαλίδα
-    user_dropdown: Αναδιπλούμενο παράθυρο χρήστη
-    upload: Ανέβασμα
-    there_is_nothing_here_yet: Δεν υπάρχει τίποτα ακόμα εδώ 🤷‍♂️
-    is_null: Είναι null
-    is_not_null: Δεν είναι null
-    split_tags_by: Διαχωρισμός ετικετών κατά
-    do_not_split: Μην χωρίζετε
-    semicolon: Ερωτηματικό
-    hyphen: Παύλα
-    comma: Κόμμα
-    slash: Κάθετος
-    sql: SQL
-    api: API
-    searchable_columns: Στήλες με δυνατότητα αναζήτησης
-    validate: Επικύρωση
-    error_message: Μήνυμα σφάλματος
-    validation_regexp: Επικύρωση RegExp
-    regexp: RegExp
-    message: Μήνυμα
-    should_be_a_valid_regexp: Πρέπει να είναι μία έγκυρη RegExp συμβολοσειρά
-    order_by: Ταξινόμηση κατά
-    ascending: Αύξουσα
-    descending: Φθίνουσα
-    url: URL
-    expand: Επέκταση
-    add_api: Προσθήκη API
-    on_collection: Κατά τη συλλογή
-    association: Σύνδεση
-    action_has_been_removed: Η ενέργεια αυτή έχει καταργηθεί
-    html: HTML
-    edit_html: Edit HTML
-    there_are_unsaved_changes_close_form: "There are unsaved changes. Close form?"
-    send_file_url: Send file URL
-    rating: Rating
-    total: Total
-    radar_chart: Radar chart
-    show_on_table: Show on table
-    map: Map
-    audits: Έλεγχοι
-    nothing_to_show_here_yet: Δεν υπάρχει τίποτα ακόμα εδώ 🤷‍♂️
-    internal: Internal/Anonymous
-    updated: ενημερωμένο
-    created: δημιουργήθηκε
-    deleted: διαγράφηκε
-    add_condition: Προσθήκη συνθήκης
-    remove_condition: Αφαίρεση συνθήκης
-    unable_to_send_alert: Αδυναμία αποστολής ειδοποίησης
-    send_via: Αποστολή μέσω
-    variable_name: Όνομα μεταβλητής
-    add_variable: Προσθήκη μεταβλητής
-    notes: Σημειώσεις
-    new_mention_for: "νέα αναφορά για %{resource}"
-    user_mentioned_you_with_note: "%{user} σας ανέφερε με:\n%{note}"
-    edit_note: Επεξεργασία σημείωσης
-    create_reminder: Δημιουργία υπενθύμισης
-    new_reminder_for: "Νέα υπενθύμιση για %{resource}"
-    reminder_has_been_removed: Η υπενθύμιση έχει αφαιρεθεί
-    note_has_been_removed: Η σημείωση έχει αφαιρεθεί
-    schedule_at: Χρονοδιάγραμμα στο
-    kanban_columns: Kanban columns
-    kanban_card_columns: Kanban card columns
     i:
       locale: el
       select:

@@ -1,14 +1,19 @@
 es:
   motor:
     action_has_been_applied: ¡Acción aplicada!
+    action_has_been_removed: Esta acción ha sido eliminada
     action_has_failed_with_code: La acción falló con código
     action_type: Tipo de acción
     actions: Acciones
-    add: Añadir
+    activate: Activar
     add_action: Añadir Acción
     add_alert: Añadir Alerta
+    add_api: De API
+    add_association: Añadir Asociación
     add_column: Añadir Columna
+    add_condition: Añadir Condición
     add_dashboard: Añadir Dashboard
+    add_database: Añadir base de datos
     add_field: Añadir Campo
     add_filter: Añadir Filtro
     add_form: Añadir Formulario
@@ -18,321 +23,322 @@ es:
     add_query: Añadir Consulta
     add_scope: Añadir Alcance
     add_tab: Añadir Pestaña
+    add_text: Añadir Texto
+    add_variable: Añadir variable
+    add: Añadir
+    adjust_fields: Ajustar campos
+    adjust_form: Ajustar formulario
     alert_email_has_been_sent: ¡Email de alerta enviado!
     alert_has_been_activated: Alerta activada
     alert_has_been_disabled: Alerta desactivada
     alert_has_been_saved: ¡Alerta guardada!
     alert_name: Nombre de la alerta
+    alert: Alerta
+    alerts: Alertas
     all_resources: Todos los Recursos
+    all: Todo
     and: Y
     api_path: Dirección en API
+    api_request: Request a una API
+    api: API
     apply: Aplicar
     are_you_sure: ¿Estás seguro?
+    ascending: Ascendente
+    association: Asociación
     associations: Asociaciones
+    audio: Audio
+    audits: Auditorías
     bar_chart: Gráfico de barras
     base: Base
+    boolean: Booleano
+    build_custom_form: Crear formulario personalizado
     cancel: Cancelar
+    cents: Centavos
+    change: Cambia
+    chart: Gráfico
+    checkbox: Checkbox
     clear_all: Quitar todos
     clear_selection: Quitar selección
-    close: Cerrar
+    clear: Quitar
     close_editor: Cerrar editor
     close_settings: Cerrar Configuración
     close_variables: Cerrar Variables
+    close: Cerrar
+    color: Color
     columns: Columnas
+    comma: Coma
+    condition: Condicion
+    conditional: Condicional
+    contains: Contiene
+    copied_to_the_clipboard: Copiado al portapapeles
+    create_new: Crear nuevo
+    create_reminder: Crear Recordatorio
     create: Crear
+    created: created
     currency: Moneda
+    current_user_variables_are_always_passed_explicitly_and_can_he_used_html: "<code>{{current_user_id}}</code> and <code>{{current_user_email}}</code> variables are always passed explicitly, and can be used to decide which data should be displayed for certain user:"
     dashboard_has_been_saved: ¡Dashboard guardado!
     dashboard_title: Título del dashboard
+    dashboard: Dashboard
+    dashboards: Dashboards
+    date_and_time: Fecha y hora
+    date: Fecha
     decimal: Decimal
     default_value: Valor por defecto
+    default: Por defecto
+    deleted: deleted
+    descending: Descendente
     describe_this_alert_optional: Describe esta alerta (opcional)
     describe_your_dashboard_optional: Describe tu dashboard (opcional)
     describe_your_form_optional: Describe tu formulario (opcional)
     describe_your_query_optional: Describe tu consulta (opcional)
     description: Descripción
     deselect_all: Deseleccionar todo
+    details: Detalles
     disable: Desactivar
     display_as: Mostrar como
-    edit: Editar
-    edit_sql: Editar SQL
+    display_column: Columna de visualización
+    display_id: Visualizar ID
+    display_settings: Configuración de la pantalla
+    do_not_refresh: No refrescar
+    do_not_split: No dividir
+    download: Descargar
+    downloading: Descargando
+    edit_html: Editar HTML
     edit_markdown: Editar Markdown
+    edit_note: Editar Nota
+    edit_sql: Editar SQL
+    edit_text: Editar Texto
+    edit: Editar
     emails: Emails
-    every_day_at_hh_mm: todos los días a las HH:mm PM...
-    field_name: Nombre del campo
-    filter: Filtrar
-    filters: Filtros
-    form: Formulario
-    form_has_been_saved: ¡Formulario guardado!
-    form_has_been_submitted_successfully: ¡Formulario enviado con éxito!
-    form_name: Nombre del formulario
-    forms: Formularios
-    funnel: Embudo
-    group_name: Nombre del grupo
-    has_been_created: creado
-    has_been_removed_succesfully: eliminado con éxito
-    has_been_updated: actualizado
-    hello_admin: Hola Admin 👋
-    input_type: Tipo de campo
-    interval: Intervalo
-    items_have_been_removed: elementos fueron eliminados
-    label: Moneda
-    line_chart: Gráfico de líneas
-    link_name: Nombre del link
-    links: Links
-    load_initial_data: Cargar datos iniciales
-    loading: Cargando...
-    looks_like_you_are_new_here: Parece que eres nuevo aquí 🙃
-    markdown: Markdown
-    method: Método
-    multiple: Múltiple
-    name: Nombre
-    new_alert: Nueva alerta
-    new_dashboard: Nuevo dashboard
-    new_form: Nuevo formulario
-    new_query: Nueva consulta
-    no_data: Sin datos
-    not_found: Sin resultados
-    ok: OK
-    options_separated_with_new_line_or_comma: Las opciones van separadas con una nueva línea o una coma
-    param_name: Nombre del parámetro
-    path: Dirección
-    percent: Porcentaje
-    pie_chart: Gráfico circular
-    query: Consulta
-    query_has_been_saved: ¡Consulta guardada!
-    query_name: Nombre de la consulta
-    query_not_selected: Consulta no seleccionada
-    query_revisions: Revisiones de la consulta
-    reference: Referencia
-    reference_resource: Recurso de referencia
-    remove: Eliminar
-    reports: Reportes
-    request_param: Parametro de request
-    resources: Recursos
-    resubmit: Reenviar
-    revert: Revertir
-    revision_has_been_applied: Revisión aplicada
-    revisions: Revisiones
-    row_chart: Gráfico de filas
-    save: Guardar
-    save_and_create_new: Guardar y crear otro
-    save_as_new: Guardar como nuevo
-    save_dashboard: Guardar dashboard
-    save_form: Guardar formulario
-    save_query: Guardar consulta
-    scopes: Alcances
-    search: Buscar
-    search_placeholder: Buscar...
-    select_alert_tags: Etiquetas de alerta
-    select_dashboard: Seleccionar dashboard
-    select_dashboard_tags: Etiquetas de dashboard
-    select_form: Seleccionar formulario
-    select_form_tags: Etiquetas de formulario
-    select_options: Seleccionar opciones
-    select_placeholder: Seleccionar...
-    select_query: Seleccionar consulta
-    select_query_tags: Etiquetas de consulta
-    select_resource_placeholder: Seleccionar recurso...
-    selected_item_has_been_removed: El elemento seleccionado fue eliminado
-    selected_item_will_be_removed_are_you_sure: El elemento seleccionado será eliminado. ¿Estás seguro?
-    send_empty: ¿Enviar sin contenido?
-    send_now: Enviar ahora
-    send_to: Enviar a
-    set_tags: Seleccionar etiquetas
-    settings: Configuración
-    stacked_bars: Barras apiladas
-    submit: Enviar
-    tab_type: Tipo de pestaña
-    table: Tabla
-    tabs: Pestañas
-    tags: Etiquetas
-    timezone: Zona horaria
-    title: Título
-    type: Tipo
-    unable_to_load_form_data: No se pudieron cargar los datos del formulario
-    unable_to_remove_item: No se pudo eliminar el elemento
-    unable_to_remove_items: No se pudieron eliminar los elementos
-    unable_to_send_email: No se pudo enviar el email
-    unable_to_submit_form: No se pudo enviar el formulario
-    value: Valor
-    values_axis: Eje de valores
-    variables: Variables
-    visibility: Visibilidad
-    visualization: Visualización
-    alerts: Alertas
-    all: Todo
-    api: API
-    api_request: Request a una API
-    boolean: Booleano
-    cents: Centavos
-    checkbox: Checkbox
-    contains: Contiene
-    dashboard: Dashboard
-    dashboards: Dashboards
-    date: Fecha
-    date_and_time: Fecha y hora
-    default: Por defecto
-    details: Detalles
+    empty: Vacío
     ends_with: Termina con
     equal_to: Igual a
+    error_message: Mensaje de error
+    every_30_seconds: Cada 30 segundos
+    every_5_minutes: Cada 5 minutos
+    every_5_seconds: Every 5 segundos
+    every_day_at_hh_mm: todos los días a las HH:mm PM...
+    every_minute: Cada minuto
     excludes: no contiene
+    expand: Expandir
     field_is_not_a_number: '%{field} no es un número'
     field_is_required: '%{field} es obligatorio'
     field_list_cant_be_empty: "La lista %{field} no puede estar vacía"
     field_must_be_exactly_in_length: '%{field} debe tener un largo de %{length} caracteres'
     field_must_be_less_in_length: '%{field} debe tener una longitud inferior a %{length}'
     field_must_be_more_in_length: '%{field} debe tener una longitud superior a %{length}'
+    field_name: Nombre del campo
     field_value_does_not_match_pattern: 'El valor de %{field} no coincide con %{pattern}'
+    field: Campo
     file: Archivo
+    filter: Filtrar
+    filters: Filtros
+    foreign_key: Clave externa
+    form_has_been_saved: ¡Formulario guardado!
+    form_has_been_submitted_successfully: ¡Formulario enviado con éxito!
+    form_name: Nombre del formulario
+    form: Formulario
+    forms: Formularios
+    funnel: Embudo
+    general: General
     greater_or_equal: Mayor o igual
-    greater_than: Mayor que
     greater_than_or_equal_to: Mayor o igual a
+    greater_than: Mayor que
+    group_name: Nombre del grupo
+    has_been_created: creado
+    has_been_removed_succesfully: eliminado con éxito
+    has_been_updated: actualizado
+    header: Cabecera
+    hello_admin: Hola Admin 👋
     hidden: Esconder
+    html: HTML
+    hyphen: Guión
     image: Imagen
     includes: Incluye
+    input_type: Tipo de campo
     integer: Entero
-    is: Es
+    internal: Interno/Anónimo
+    interval: Intervalo
+    is_not_null: No es nulo
     is_not: No es
+    is_null: Es nulo
+    is: Es
+    items_have_been_removed: elementos fueron eliminados
     items_will_be_removed: 'Se eliminarán %{count} elementos'
     json: JSON
+    kanban_card_columns: Tarjeta de columnas Kanban
+    kanban_columns: Columnas Kanban
+    label: Moneda
     less_or_equal: Menor o igual
-    less_than: Menor que
     less_than_or_equal_to: Menor o igual a
+    less_than: Menor que
+    line_chart: Gráfico de líneas
+    link_name: Nombre del link
+    link_text: Texto del enlace
+    link: Enlace
+    links: Enlaces
+    load_existing_options_from_database: Cargar las opciones existentes de la base de datos
+    load_initial_data: Cargar datos iniciales
+    loading: Cargando...
+    long_text: Texto largo
+    looks_like_you_are_new_here: Parece que eres nuevo aquí 🙃
+    map: Mapa
+    markdown: Markdown
+    message: Mensaje
     method_call: Llamado a método
+    method: Método
+    more: Más
+    multiple: Múltiple
+    name: Nombre
+    new_alert: Nueva alerta
+    new_dashboard: Nuevo dashboard
+    new_form: Nuevo formulario
+    new_mention_for: "Nueva Mención para %{resource}"
+    new_query: Nueva consulta
+    new_reminder_for: "Nuevo Recordatorio para %{resource}"
+    no_data: Sin datos
+    not_authorized_to_perform_action: No está autorizado a realizar esta acción.
+    not_empty: No vacío
+    not_found: Sin resultados
+    note_has_been_removed: La nota ha sido removida
+    notes: Notas
+    nothing_to_show_here_yet: Nada para mostrar aun 🤷
     number: Número
+    ok: OK
+    on_collection: En la colección
+    only_send_form_data: Solo enviar datos del formulario (omitir datos de la tabla)
+    open_in_markdown_editor: Abrir en el editor de markdown
+    options_separated_with_new_line_or_comma: Las opciones van separadas con una nueva línea o una coma
     or: O
+    order_by: Ordenar por
     other_than: Otro que no sea
+    param_name: Nombre del parámetro
+    password: Contraseña
+    path: Dirección
+    percent: Porcentaje
+    percentage: Porcentaje
+    pie_chart: Gráfico circular
+    polymorphic: Polimórfico
+    primary_key: Clave primaria
+    queries_can_contain_variable_via_syntax_html: "Las consultas pueden contener variables usando la sintaxis <code>{{variable}}</code>:"
     queries: Consultas
+    query_editor: Editor de consultas
+    query_has_been_saved: ¡Consulta guardada!
+    query_name: Nombre de la consulta
+    query_not_selected: Consulta no seleccionada
+    query_revisions: Revisiones de la consulta
+    query: Consulta
+    radar_chart: Gráfico de radar
+    rating: Calificación
     read_only: Sólo lectura
     read_write: Lectura y escritura
+    reference_resource: Recurso de referencia
+    reference: Referencia
+    regexp: RegExp
+    reminder_has_been_removed: El recordatorio ha sido removido
+    remove_condition: Remover Condición
+    remove: Eliminar
+    reports: Reportes
+    request_param: Parametro de request
     required: Obligatorio
     resource_filters: 'Filtros de %{resource}'
     resource_settings: 'Configuración de %{resource}'
+    resource: Recurso
+    resources: Recursos
+    restore: Restaurar
+    resubmit: Reenviar
+    revert: Revertir
+    revision_has_been_applied: Revisión aplicada
+    revisions: Revisiones
+    richtext: Texto enriquecido
+    row_chart: Gráfico de filas
+    run: Ejecutar
+    save_and_create_new: Guardar y crear otro
+    save_as_new: Guardar como nuevo
+    save_dashboard: Guardar dashboard
+    save_form: Guardar formulario
+    save_query: Guardar consulta
+    save: Guardar
+    schedule_at: Programar para
+    scopes: Alcances
+    search_placeholder: Buscar...
     search_query: Buscar consulta
+    search: Buscar
+    searchable_columns: Columnas de búsqueda
+    select_alert_tags: Etiquetas de alerta
+    select_dashboard_tags: Etiquetas de dashboard
+    select_dashboard: Seleccionar dashboard
+    select_form_tags: Etiquetas de formulario
+    select_form: Seleccionar formulario
+    select_options: Seleccionar opciones
+    select_placeholder: Seleccionar...
+    select_query_tags: Etiquetas de consulta
+    select_query: Seleccionar consulta
+    select_resource_placeholder: Seleccionar recurso...
     select: Selección
+    selected_item_has_been_removed: El elemento seleccionado fue eliminado
+    selected_item_will_be_removed_are_you_sure: El elemento seleccionado será eliminado. ¿Estás seguro?
     selected_item_will_be_removed: El elemento seleccionado será eliminado
+    semicolon: Punto y coma
+    send_empty: ¿Enviar sin contenido?
+    send_file_url: Enviar URL del archivo
+    send_now: Enviar ahora
+    send_to: Enviar a
+    send_via: Enviar vía
+    set_tags: Seleccionar etiquetas
+    settings: Configuración
     should_be_a_valid_json: '%{field} debe ser un JSON válido'
+    should_be_a_valid_regexp: Debe ser una cadena RegExp válida
     should_be_error_constraint: '%{field} debe ser %{error} %{constraint}'
+    show_on_table: Mostrar en la tabla
+    sign_out: Firmar la salida
+    slash: Slash
+    source: Fuente
+    split_tags_by: Dividir las etiquetas por
+    sql: SQL
+    stacked_bars: Barras apiladas
     starts_with: Empieza con
+    submit: Enviar
+    syntax_is_used_for_if_and_if_not_conditions_html: "<code>{{#variable}} ... {{/variable}}</code> and <code>{{^variable}} ... {{variable}}</code> syntax is used for <code>if</code> and <code>if not</code> conditions respectively:"
+    tab_type: Tipo de pestaña
+    table: Tabla
+    tabs: Pestañas
+    tag: Etiqueta
+    tags: Etiquetas
     text: Texto
     textarea: Área de texto
-    unit: Unidad
-    write_only: Sólo escritura
-    richtext: Texto enriquecido
-    adjust_form: Ajustar formulario
-    adjust_fields: Ajustar campos
-    build_custom_form: Crear formulario personalizado
-    password: Contraseña
-    long_text: Texto largo
-    percentage: Porcentaje
-    change: Cambia
-    chart: Gráfico
-    tag: Etiqueta
-    link: Enlace
-    color: Color
-    link_text: Texto del enlace
-    copied_to_the_clipboard: Copiado al portapapeles
-    queries_can_contain_variable_via_syntax_html: "Queries can contain embed variables using <code>{{variable}}</code> syntax:"
-    syntax_is_used_for_if_and_if_not_conditions_html: "<code>{{#variable}} ... {{/variable}}</code> and <code>{{^variable}} ... {{variable}}</code> syntax is used for <code>if</code> and <code>if not</code> conditions respectively:"
-    current_user_variables_are_always_passed_explicitly_and_can_he_used_html: "<code>{{current_user_id}}</code> and <code>{{current_user_email}}</code> variables are always passed explicitly, and can be used to decide which data should be displayed for certain user:"
-    create_new: Crear nuevo
-    conditional: Condicional
-    condition: Condicion
-    field: Campo
-    empty: Vacío
-    not_empty: No vacío
-    general: General
-    run: Ejecutar
-    use_default: Uso por defecto
-    query_editor: Editor de consultas
-    polymorphic: Polimórfico
-    foreign_key: Clave externa
-    primary_key: Clave primaria
-    through: Mediante
-    source: Fuente
-    resource: Recurso
-    add_association: Añadir Asociación
+    there_are_unsaved_changes_close_form: "Hay cambios sin guardar. ¿Cerrar el formulario?"
     there_are_unsaved_changes_from: "Hay cambios sin guardar de %{timestamp}"
-    clear: Quitar
-    restore: Restaurar
-    more: Más
-    add_text: Añadir Texto
-    edit_text: Editar Texto
-    open_in_markdown_editor: Abrir en el editor de markdown
-    activate: Activar
-    load_existing_options_from_database: Cargar las opciones existentes de la base de datos
-    add_database: Añadir base de datos
-    audio: Audio
-    video: Video
-    display_column: Columna de visualización
-    not_authorized_to_perform_action: No está autorizado a realizar esta acción.
-    download: Descargar
-    alert: Alerta
-    downloading: Descargando
-    display_id: Visualizar ID
-    display_settings: Configuración de la pantalla
-    sign_out: Firmar la salida
-    header: Cabecera
-    user_dropdown: Despliegue del usuario
-    upload: Subir a
     there_is_nothing_here_yet: Todavía no hay nada aquí 🤷‍♂️
-    is_null: Es nulo
-    is_not_null: No es nulo
-    split_tags_by: Dividir las etiquetas por
-    do_not_split: No dividir
-    semicolon: Punto y coma
-    hyphen: Guión
-    comma: Coma
-    slash: Slash
-    searchable_columns: Columnas de búsqueda
-    validate: Validar
-    error_message: Mensaje de error
-    validation_regexp: Validación RegExp
-    regexp: RegExp
-    message: Mensaje
-    should_be_a_valid_regexp: Debe ser una cadena RegExp válida
-    order_by: Ordenar por
-    ascending: Ascendente
-    descending: Descendente
-    url: URL
-    expand: Expandir
-    add_api: De API
-    on_collection: En la colección
-    association: Asociación
-    action_has_been_removed: Esta acción ha sido eliminada
-    html: HTML
-    edit_html: Edit HTML
-    there_are_unsaved_changes_close_form: "There are unsaved changes. Close form?"
-    send_file_url: Send file URL
-    rating: Rating
+    through: Mediante
+    timezone: Zona horaria
+    title: Título
     total: Total
-    radar_chart: Radar chart
-    show_on_table: Show on table
-    map: Map
-    audits: Audits
-    nothing_to_show_here_yet: Nothing to show here yet 🤷
-    internal: Internal/Anonymous
+    type: Tipo
+    unable_to_load_form_data: No se pudieron cargar los datos del formulario
+    unable_to_remove_item: No se pudo eliminar el elemento
+    unable_to_remove_items: No se pudieron eliminar los elementos
+    unable_to_send_alert: No se pudo enviar la alerta
+    unable_to_send_email: No se pudo enviar el email
+    unable_to_submit_form: No se pudo enviar el formulario
+    unit: Unidad
     updated: updated
-    created: created
-    deleted: deleted
-    add_condition: Add Condition
-    remove_condition: Remove Condition
-    unable_to_send_alert: Unable to send alert
-    send_via: Send via
-    sql: SQL
+    upload: Subir a
+    url: URL
+    use_default: Uso por defecto
+    user_dropdown: Despliegue del usuario
+    user_mentioned_you_with_note: "%{user} le menciono con:\n%{note}"
+    validate: Validar
+    validation_regexp: Validación RegExp
+    value: Valor
+    values_axis: Eje de valores
     variable_name: Nombre de la variable
-    add_variable: Añadir variable
-    notes: Notes
-    new_mention_for: "New Mention for %{resource}"
-    user_mentioned_you_with_note: "%{user} mentioned you with:\n%{note}"
-    edit_note: Edit Note
-    create_reminder: Create Reminder
-    new_reminder_for: "New Reminder for %{resource}"
-    reminder_has_been_removed: Reminder has been removed
-    note_has_been_removed: Note has been removed
-    schedule_at: Schedule at
-    kanban_columns: Kanban columns
-    kanban_card_columns: Kanban card columns
+    variables: Variables
+    video: Video
+    visibility: Visibilidad
+    visualization: Visualización
+    write_only: Sólo escritura
     i:
       locale: es
       select:

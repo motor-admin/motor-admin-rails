@@ -1,14 +1,19 @@
 en:
   motor:
     action_has_been_applied: Action has been applied!
+    action_has_been_removed: This action has been removed
     action_has_failed_with_code: Action failed with code
     action_type: Action type
     actions: Actions
-    add: Add
+    activate: Activate
     add_action: Add Action
     add_alert: Add Alert
+    add_api: Add API
+    add_association: Add Association
     add_column: Add Column
+    add_condition: Add Condition
     add_dashboard: Add Dashboard
+    add_database: Add Database
     add_field: Add Field
     add_filter: Add Filter
     add_form: Add Form
@@ -18,48 +23,71 @@ en:
     add_query: Add Query
     add_scope: Add Scope
     add_tab: Add Tab
-    adjust_form: Adjust form
+    add_text: Add Text
+    add_variable: Add variable
+    add: Add
     adjust_fields: Adjust fields
+    adjust_form: Adjust form
     alert_email_has_been_sent: Alert email has been sent!
     alert_has_been_activated: Alert has been activated
     alert_has_been_disabled: Alert has been disabled
     alert_has_been_saved: Alert has been saved!
     alert_name: Alert name
+    alert: Alert
     alerts: Alerts
-    all: All
     all_resources: All Resources
+    all: All
     and: And
     api_path: API path
     api_request: API request
+    api: API
     apply: Apply
     are_you_sure: Are you sure?
+    ascending: Ascending
+    association: Association
     associations: Associations
+    audio: Audio
+    audits: Audits
     bar_chart: Bar chart
     base: Base
     boolean: Boolean
     build_custom_form: Build custom form
     cancel: Cancel
     cents: Cents
+    change: Change
+    chart: Chart
     checkbox: Checkbox
     clear_all: Clear All
     clear_selection: Clear selection
-    close: Close
+    clear: Clear
     close_editor: Close editor
     close_settings: Close Settings
     close_variables: Close Variables
+    close: Close
+    color: Color
     columns: Columns
+    comma: Comma
+    condition: Condition
+    conditional: Conditional
     contains: Contains
+    copied_to_the_clipboard: Copied to the clipboard
+    create_new: Create New
+    create_reminder: Create Reminder
     create: Create
+    created: created
     currency: Currency
-    dashboard: Dashboard
+    current_user_variables_are_always_passed_explicitly_and_can_he_used_html: "<code>{{current_user_id}}</code> and <code>{{current_user_email}}</code> variables are always passed explicitly, and can be used to decide which data should be displayed for certain user:"
     dashboard_has_been_saved: Dashboard has been saved!
     dashboard_title: Dashboard title
+    dashboard: Dashboard
     dashboards: Dashboards
-    date: Date
     date_and_time: Date and Time
+    date: Date
     decimal: Decimal
-    default: Default
     default_value: Default value
+    default: Default
+    deleted: deleted
+    descending: Descending
     describe_this_alert_optional: Describe this alert (optional)
     describe_your_dashboard_optional: Describe your dashboard (optional)
     describe_your_form_optional: Describe your form (optional)
@@ -69,14 +97,31 @@ en:
     details: Details
     disable: Disable
     display_as: Display as
-    edit: Edit
-    edit_sql: Edit SQL
+    display_column: Display column
+    display_id: Display ID
+    display_settings: Display settings
+    do_not_refresh: Do not refresh
+    do_not_split: Do not split
+    download: Download
+    downloading: Downloading
+    edit_html: Edit HTML
     edit_markdown: Edit Markdown
+    edit_note: Edit Note
+    edit_sql: Edit SQL
+    edit_text: Edit Text
+    edit: Edit
     emails: Emails
+    empty: Empty
     ends_with: Ends with
     equal_to: Equal to
+    error_message: Error message
+    every_30_seconds: Every 30 seconds
+    every_5_minutes: Every 5 minutes
+    every_5_seconds: Every 5 seconds
     every_day_at_hh_mm: every day at HH:mm PM...
+    every_minute: Every minute
     excludes: excludes
+    expand: Expand
     field_is_not_a_number: '%{field} is not a number'
     field_is_required: '%{field} is required'
     field_list_cant_be_empty: "%{field} list can't be empty"
@@ -85,256 +130,212 @@ en:
     field_must_be_more_in_length: '%{field} must be more than %{length} in length'
     field_name: Field name
     field_value_does_not_match_pattern: '%{field} value does not match %{pattern}'
+    field: Field
     file: File
     filter: Filter
     filters: Filters
-    form: Form
+    foreign_key: Foreign key
     form_has_been_saved: Form has been saved!
     form_has_been_submitted_successfully: Form has been submitted successfully!
     form_name: Form name
+    form: Form
     forms: Forms
     funnel: Funnel
+    general: General
     greater_or_equal: Greater or equal
-    greater_than: Greater than
     greater_than_or_equal_to: Greater than or equal to
+    greater_than: Greater than
     group_name: Group name
     has_been_created: has been created
     has_been_removed_succesfully: has been removed succesfully
     has_been_updated: has been updated
+    header: Header
     hello_admin: Hello Admin 👋
     hidden: Hidden
+    html: HTML
+    hyphen: Hyphen
     image: Image
     includes: Includes
     input_type: Input type
     integer: Integer
+    internal: Internal/Anonymous
     interval: Interval
-    is: Is
+    is_not_null: Is not null
     is_not: Is not
+    is_null: Is null
+    is: Is
     items_have_been_removed: items have been removed
     items_will_be_removed: '%{count} items will be removed'
     json: JSON
+    kanban_card_columns: Kanban card columns
+    kanban_columns: Kanban columns
     label: Currency
     less_or_equal: Less or equal
-    less_than: Less than
     less_than_or_equal_to: Less than or equal to
+    less_than: Less than
     line_chart: Line chart
     link_name: Link name
+    link_text: Link text
+    link: Link
     links: Links
+    load_existing_options_from_database: Load existing options from the database
     load_initial_data: Load initial data
     loading: Loading...
+    long_text: Long text
     looks_like_you_are_new_here: Looks like you are new here 🙃
+    map: Map
     markdown: Markdown
-    method: Method
+    message: Message
     method_call: Method call
+    method: Method
+    more: More
     multiple: Multiple
     name: Name
     new_alert: New alert
     new_dashboard: New dashboard
     new_form: New form
+    new_mention_for: "New Mention for %{resource}"
     new_query: New query
+    new_reminder_for: "New Reminder for %{resource}"
     no_data: No data
+    not_authorized_to_perform_action: You are not authorized to perform this action.
+    not_empty: Not empty
     not_found: Not Found
+    note_has_been_removed: Note has been removed
+    notes: Notes
+    nothing_to_show_here_yet: Nothing to show here yet 🤷
     number: Number
     ok: OK
+    on_collection: On collection
+    only_send_form_data: Only send form data (omit table row data)
+    open_in_markdown_editor: Open in markdown editor
     options_separated_with_new_line_or_comma: Options separated with new line or comma
     or: Or
+    order_by: Order by
     other_than: Other than
     param_name: Param name
     password: Password
     path: Path
     percent: Percent
+    percentage: Percentage
     pie_chart: Pie chart
+    polymorphic: Polymorphic
+    primary_key: Primary key
+    queries_can_contain_variable_via_syntax_html: "Queries can contain embed variables using <code>{{variable}}</code> syntax:"
     queries: Queries
-    query: Query
+    query_editor: Query Editor
     query_has_been_saved: Query has been saved!
     query_name: Query name
     query_not_selected: Query not selected
     query_revisions: Query Revisions
+    query: Query
+    radar_chart: Radar chart
+    rating: Rating
     read_only: Read-Only
     read_write: Read-Write
-    reference: Reference
     reference_resource: Reference resource
+    reference: Reference
+    regexp: RegExp
+    reminder_has_been_removed: Reminder has been removed
+    remove_condition: Remove Condition
     remove: Remove
     reports: Reports
     request_param: Request param
     required: Required
     resource_filters: '%{resource} Filters'
     resource_settings: '%{resource} Settings'
+    resource: Resource
     resources: Resources
+    restore: Restore
     resubmit: Resubmit
     revert: Revert
     revision_has_been_applied: Revision has been applied
     revisions: Revisions
     richtext: Richtext
     row_chart: Row chart
-    save: Save
+    run: Run
     save_and_create_new: Save and Create New
     save_as_new: Save as new
     save_dashboard: Save dashboard
     save_form: Save form
     save_query: Save query
+    save: Save
+    schedule_at: Schedule at
     scopes: Scopes
-    search: Search
     search_placeholder: Search...
     search_query: Search Query
-    select: Select
+    search: Search
+    searchable_columns: Searchable columns
     select_alert_tags: Select alert tags
-    select_dashboard: Select dashboard
     select_dashboard_tags: Select dashboard tags
-    select_form: Select form
+    select_dashboard: Select dashboard
     select_form_tags: Select dashform tags
+    select_form: Select form
     select_options: Select options
     select_placeholder: Select...
-    select_query: Select query
     select_query_tags: Select query tags
+    select_query: Select query
     select_resource_placeholder: Select resource...
+    select: Select
     selected_item_has_been_removed: Selected item has been removed
-    selected_item_will_be_removed: Selected item will be removed
     selected_item_will_be_removed_are_you_sure: Selected item will be removed. Are you sure?
+    selected_item_will_be_removed: Selected item will be removed
+    semicolon: Semicolon
     send_empty: Send empty?
+    send_file_url: Send file URL
     send_now: Send Now
     send_to: Send to
+    send_via: Send via
     set_tags: Set tags
     settings: Settings
     should_be_a_valid_json: '%{field} should be a valid JSON'
+    should_be_a_valid_regexp: Should be a valid RegExp string
     should_be_error_constraint: '%{field} should be %{error} %{constraint}'
+    show_on_table: Show on table
+    sign_out: Sign out
+    slash: Slash
+    source: Source
+    split_tags_by: Split tags by
+    sql: SQL
     stacked_bars: Stacked bars
     starts_with: Starts with
     submit: Submit
+    syntax_is_used_for_if_and_if_not_conditions_html: "<code>{{#variable}} ... {{/variable}}</code> and <code>{{^variable}} ... {{variable}}</code> syntax is used for <code>if</code> and <code>if not</code> conditions respectively:"
     tab_type: Tab type
     table: Table
     tabs: Tabs
+    tag: Tag
     tags: Tags
     text: Text
     textarea: Textarea
+    there_are_unsaved_changes_close_form: "There are unsaved changes. Close form?"
+    there_are_unsaved_changes_from: "There are unsaved changes from %{timestamp}"
+    there_is_nothing_here_yet: There is nothing here yet 🤷‍♂️
+    through: Through
     timezone: Timezone
     title: Title
+    total: Total
     type: Type
     unable_to_load_form_data: Unable to load form data
     unable_to_remove_item: Unable to remove item
     unable_to_remove_items: Unable to remove items
+    unable_to_send_alert: Unable to send alert
     unable_to_send_email: Unable to send email
     unable_to_submit_form: Unable to submit form
     unit: Unit
+    updated: updated
+    upload: Upload
+    url: URL
+    use_default: Use Default
+    user_dropdown: User dropdown
+    user_mentioned_you_with_note: "%{user} mentioned you with:\n%{note}"
+    validate: Validate
+    validation_regexp: Validation RegExp
     value: Value
     values_axis: Values axis
+    variable_name: Variable name
     variables: Variables
+    video: Video
     visibility: Visibility
     visualization: Visualization
     write_only: Write-Only
-    long_text: Long text
-    percentage: Percentage
-    change: Change
-    chart: Chart
-    tag: Tag
-    link: Link
-    color: Color
-    link_text: Link text
-    copied_to_the_clipboard: Copied to the clipboard
-    queries_can_contain_variable_via_syntax_html: "Queries can contain embed variables using <code>{{variable}}</code> syntax:"
-    syntax_is_used_for_if_and_if_not_conditions_html: "<code>{{#variable}} ... {{/variable}}</code> and <code>{{^variable}} ... {{variable}}</code> syntax is used for <code>if</code> and <code>if not</code> conditions respectively:"
-    current_user_variables_are_always_passed_explicitly_and_can_he_used_html: "<code>{{current_user_id}}</code> and <code>{{current_user_email}}</code> variables are always passed explicitly, and can be used to decide which data should be displayed for certain user:"
-    create_new: Create New
-    conditional: Conditional
-    condition: Condition
-    field: Field
-    empty: Empty
-    not_empty: Not empty
-    general: General
-    run: Run
-    use_default: Use Default
-    query_editor: Query Editor
-    polymorphic: Polymorphic
-    foreign_key: Foreign key
-    primary_key: Primary key
-    through: Through
-    source: Source
-    resource: Resource
-    add_association: Add Association
-    there_are_unsaved_changes_from: "There are unsaved changes from %{timestamp}"
-    clear: Clear
-    restore: Restore
-    more: More
-    add_text: Add Text
-    edit_text: Edit Text
-    open_in_markdown_editor: Open in markdown editor
-    activate: Activate
-    load_existing_options_from_database: Load existing options from the database
-    add_database: Add Database
-    audio: Audio
-    video: Video
-    display_column: Display column
-    not_authorized_to_perform_action: You are not authorized to perform this action.
-    upload: Upload
-    there_is_nothing_here_yet: There is nothing here yet 🤷‍♂️
-    is_null: Is null
-    is_not_null: Is not null
-    split_tags_by: Split tags by
-    do_not_split: Do not split
-    semicolon: Semicolon
-    hyphen: Hyphen
-    comma: Comma
-    slash: Slash
-    searchable_columns: Searchable columns
-    validate: Validate
-    error_message: Error message
-    validation_regexp: Validation RegExp
-    regexp: RegExp
-    message: Message
-    should_be_a_valid_regexp: Should be a valid RegExp string
-    order_by: Order by
-    ascending: Ascending
-    descending: Descending
-    url: URL
-    expand: Expand
-    add_api: Add API
-    on_collection: On collection
-    association: Association
-    action_has_been_removed: This action has been removed
-    every_5_seconds: Every 5 seconds
-    every_30_seconds: Every 30 seconds
-    every_minute: Every minute
-    every_5_minutes: Every 5 minutes
-    do_not_refresh: Do not refresh
-    html: HTML
-    edit_html: Edit HTML
-    there_are_unsaved_changes_close_form: "There are unsaved changes. Close form?"
-    send_file_url: Send file URL
-    rating: Rating
-    total: Total
-    radar_chart: Radar chart
-    show_on_table: Show on table
-    map: Map
-    audits: Audits
-    nothing_to_show_here_yet: Nothing to show here yet 🤷
-    internal: Internal/Anonymous
-    updated: updated
-    created: created
-    deleted: deleted
-    sign_out: Sign out
-    header: Header
-    user_dropdown: User dropdown
-    add_condition: Add Condition
-    remove_condition: Remove Condition
-    unable_to_send_alert: Unable to send alert
-    send_via: Send via
-    download: Download
-    alert: Alert
-    downloading: Downloading
-    display_id: Display ID
-    display_settings: Display settings
-    sql: SQL
-    api: API
-    variable_name: Variable name
-    add_variable: Add variable
-    notes: Notes
-    new_mention_for: "New Mention for %{resource}"
-    user_mentioned_you_with_note: "%{user} mentioned you with:\n%{note}"
-    edit_note: Edit Note
-    create_reminder: Create Reminder
-    new_reminder_for: "New Reminder for %{resource}"
-    reminder_has_been_removed: Reminder has been removed
-    note_has_been_removed: Note has been removed
-    schedule_at: Schedule at
-    kanban_columns: Kanban columns
-    kanban_card_columns: Kanban card columns
