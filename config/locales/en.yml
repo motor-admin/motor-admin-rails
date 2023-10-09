@@ -207,7 +207,8 @@ en:
     number: Number
     ok: OK
     on_collection: On collection
-    only_send_form_data: Only send form data (omit table row data)
+    only_send_form_data: Only send form fields
+    only_send_form_data_tooltip: By default, a form used with a database resource will send the values of the form fields plus the database record fields to the API endpoint. If this option is enabled, the table data is omitted and only values from the form fields will be sent.
     open_in_markdown_editor: Open in markdown editor
     options_separated_with_new_line_or_comma: Options separated with new line or comma
     or: Or

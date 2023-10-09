@@ -50,6 +50,7 @@ import Badge from 'view3/src/components/badge'
 import Collapse from 'view3/src/components/collapse'
 import Progress from 'view3/src/components/progress'
 import Rate from 'view3/src/components/rate'
+import Tooltip from 'view3/src/components/tooltip'
 
 import { VueDraggableNext } from 'vue-draggable-next'
 import MinimalSelect from 'utils/components/minimal_select'
@@ -107,6 +108,7 @@ app.component('VueDraggableNext', VueDraggableNext)
 app.component('Contenteditable', Contenteditable)
 app.component('Progress', Progress)
 app.component('Rate', Rate)
+app.component('Tooltip', Tooltip)
 
 app.use(router)
 

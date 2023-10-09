@@ -207,7 +207,8 @@ pt:
     number: "Número"
     ok: "Ok"
     on_collection: Na coleção
-    only_send_form_data: Somente enviar dados do formulario (omitir os dados da tabela)
+    only_send_form_data: Somente enviar dados do formulario
+    only_send_form_data_tooltip: Por padrão, um formulário usado com um recurso de banco de dados enviará os valores dos campos do formulário mais os campos de registro do banco de dados para a API. Se esta opção estiver habilitada, os dados da tabela serão omitidos e somente os valores dos campos do formulário serão enviados.
     open_in_markdown_editor: "Abrir no editor de markdown"
     options_separated_with_new_line_or_comma: "Opções separadas com nova linha ou vírgula"
     or: "Ou"
