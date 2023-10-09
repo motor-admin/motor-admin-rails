@@ -160,18 +160,21 @@ export default {
     },
     fields () {
       return this.form.preferences.fields.filter((field) => !this.excludeFields.includes(field.name))
+    },
+    tableData () {
+      return this.form.preferences.only_send_form_data ? undefined : this.data
     }
   },
   watch: {
     data () {
-      this.formData = { ...buildDefaultValues(this.fields), ...this.formData, ...this.data }
+      this.formData = { ...buildDefaultValues(this.fields), ...this.formData, ...this.tableData }
     },
     form () {
-      this.formData = { ...buildDefaultValues(this.fields), ...this.formData, ...this.data }
+      this.formData = { ...buildDefaultValues(this.fields), ...this.formData, ...this.tableData }
     }
   },
   created () {
-    this.formData = { ...buildDefaultValues(this.fields), ...this.data }
+    this.formData = { ...buildDefaultValues(this.fields), ...this.tableData }
   },
   methods: {
     scrollToErrors,
@@ -183,7 +186,7 @@ export default {
       this.successData = null
     },
     sendData () {
-      const path = interpolate(this.form.api_path, this.formData)
+      const path = interpolate(this.form.api_path, {...this.data, ...this.formData})
       const method = this.form.http_method.toLowerCase()
       let request
 

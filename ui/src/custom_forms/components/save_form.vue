@@ -107,6 +107,14 @@
         />
       </FormItem>
     </div>
+    <div class="row">
+      <FormItem
+        :label="i18n['only_send_form_data']"
+        class="col-6 pe-0"
+      >
+        <Checkbox v-model="this.dataForm.preferences.only_send_form_data" />
+      </FormItem>
+    </div>
     <CodeEditor
       v-if="loadDefault && dataForm.preferences.request_type === 'graphql'"
       v-model="dataForm.preferences.graphql_query"
@@ -223,6 +231,7 @@ export default {
     this.dataForm.preferences.request_type ||= 'rest'
 
     this.loadDefault = !!this.dataForm.preferences.default_values_api_path || !!this.dataForm.preferences.graphql_query
+    this.dataForm.preferences.only_send_form_data ||= false
   },
   methods: {
     changeFormType (value) {
