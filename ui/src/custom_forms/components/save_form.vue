@@ -106,11 +106,11 @@
           :placeholder="'/api/path/{id}...'"
         />
       </FormItem>
-    </div>
+      </div>
     <div class="row">
       <FormItem
         :label="i18n['only_send_form_data']"
-        class="col-6 pe-0"
+        class="col-12 pe-0"
       >
         <Checkbox v-model="this.dataForm.preferences.only_send_form_data" />
         <Tooltip placement="top-left" :content="i18n['only_send_form_data_tooltip']"><i class="ion ion-md-help-circle" /> More info</Tooltip>
