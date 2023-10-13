@@ -34,6 +34,7 @@ module Motor
       end
 
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       # @return [Hash]
       def build_data(cache_keys = {}, current_user = nil, current_ability = nil)
         configs_cache_key = cache_keys[:configs]
@@ -60,6 +61,7 @@ module Motor
           forms: forms_data_hash(build_cache_key(cache_keys, :forms, current_user, current_ability), current_ability) }
       end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def i18n_data
         I18n.t('motor', default: I18n.t('motor', locale: :en))
