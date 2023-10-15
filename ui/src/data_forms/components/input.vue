@@ -102,10 +102,12 @@
 </template>
 
 <script>
+import { DirectUpload } from '@rails/activestorage'
 import Emitter from 'view3/src/mixins/emitter'
 import ResourceSelect from 'data_resources/components/select'
 import QueryValueSelect from 'queries/components/value_select'
 import VueTrix from 'utils/components/vue_trix'
+import { isActiveStorageDirectUploadsEnabled } from 'utils/scripts/configs'
 import { titleize } from 'utils/scripts/string'
 import OptionsInput from 'utils/components/options_input'
 import ColorPicker from 'view3/src/components/color-picker'
@@ -244,6 +246,14 @@ export default {
                 resolve(location.origin + result.data.data.path)
               }).catch((error) => {
                 reject(error)
+              })
+            } else if (isActiveStorageDirectUploadsEnabled) {
+              new DirectUpload(file, '/rails/active_storage/direct_uploads').create((error, blob) => {
+                if (error) {
+                  reject(error)
+                } else {
+                  resolve(blob.signed_id)
+                }
               })
             } else {
               resolve({ filename: file.name, io: reader.result })
