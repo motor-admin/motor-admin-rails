@@ -17,8 +17,9 @@ module Motor
                                               query: request_params[:query],
                                               variables: request_params[:variables],
                                               headers: { 'Authorization' => "Bearer #{current_user_jwt}" })
-      response.to_hash.each do |key, (value)| 
-        next if key.downcase == 'transfer-encoding'
+      response.to_hash.each do |key, (value)|
+        next if key.casecmp('transfer-encoding').zero?
+
         headers[key] = value
       end
 

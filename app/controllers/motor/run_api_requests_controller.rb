@@ -16,6 +16,7 @@ module Motor
 
     private
 
+    # rubocop:disable Metrics/AbcSize
     def respond_with_result
       response = Motor::ApiConfigs.run(find_or_initialize_api_config,
                                        method: request_params[:method],
@@ -23,14 +24,16 @@ module Motor
                                        body: request_params[:body],
                                        params: request_params[:params],
                                        headers: { 'Authorization' => "Bearer #{current_user_jwt}" })
-      response.to_hash.each do |key, (value)| 
-        next if key.downcase == 'transfer-encoding'
+      response.to_hash.each do |key, (value)|
+        next if key.casecmp('transfer-encoding').zero?
+
         headers[key] = value
       end
 
       self.response_body = response.body
       self.status = response.code.to_i
     end
+    # rubocop:enable Metrics/AbcSize
 
     def find_or_initialize_api_config
       Motor::ApiConfig.find_by(name: request_params[:api_config_name]) ||
