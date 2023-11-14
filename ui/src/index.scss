@@ -43,6 +43,9 @@
 
 @import 'leaflet/dist/leaflet.css';
 
+@import url('https://use.typekit.net/xri4kel.css');
+
+              
 .#{$spin-prefix-cls} {
   &-fix {
     background-color: rgba(255, 255, 255, 0.4);
@@ -53,6 +56,9 @@ html,
 body {
   height: 100%;
   overflow-x: hidden;
+  font-family: $font-family-base, sans-serif !important;
+  font-weight: 500 !important;
+  color: #6c757d !important;
 }
 
 input,
@@ -252,4 +258,14 @@ h5 {
       white-space: pre-line !important;
     }
   }
+}
+
+.ivu-menu-primary { 
+  .ivu-btn-primary { 
+    font-weight: 500 !important;
+  }
+}
+
+.fw-bold{ 
+  font-weight: 500 !important;
 }

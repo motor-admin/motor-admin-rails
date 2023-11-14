@@ -18,6 +18,7 @@ function titleize (string) {
   }
 }
 
+
 function interpolate (string, params) {
   return string.replace(/{{?(\w+)}}?/g, (expr, key) => params[key] || expr)
 }
@@ -38,4 +39,11 @@ function interpolateForQueryParams (string, params) {
   return [interpolatedString, queryParams]
 }
 
-export { truncate, underscore, titleize, interpolate, interpolateForQueryParams }
+function humanize(str) {
+  return str
+      .replace(/^[\s_]+|[\s_]+$/g, '')
+      .replace(/[_\s]+/g, ' ')
+      .replace(/^[a-z]/, function(m) { return m.toUpperCase(); });
+}
+
+export { truncate, underscore, titleize, interpolate, interpolateForQueryParams, humanize }
