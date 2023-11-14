@@ -1,5 +1,5 @@
 <template>
-  <div class="ivu-menu ivu-menu-primary ivu-menu-horizontal row m-0">
+  <div class="ivu-menu ivu-menu-primary ivu-menu-horizontal row m-0" >
     <div class="col-10 d-flex align-items-center">
       <VButton
         :to="{ name: 'home' }"
@@ -8,25 +8,7 @@
         :style="{ width: '44px', height: '42px' }"
       >
         <div class="d-flex align-items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="icon icon-tabler icon-tabler-bolt"
-            width="26"
-            height="26"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke="currentColor"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path
-              stroke="none"
-              d="M0 0h26v26H0z"
-              fill="none"
-            />
-            <polyline points="13 3 13 10 19 10 11 21 11 14 5 14 13 3" />
-          </svg>
+          <img :src="logoPath" height="25"  />
         </div>
       </VButton>
       <template v-if="!widthLessThan('sm')">
@@ -311,6 +293,9 @@ export default {
           return acc
         }
       }, {})
+    },
+    logoPath () { 
+      return `https://rotessa.com/wp-content/uploads/2020/07/Rotessa_logo_icon_white-uai-258x218.png`
     }
   },
   mounted () {

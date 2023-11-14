@@ -137,6 +137,7 @@
 </template>
 
 <script>
+import { humanize } from 'utils/scripts/string'
 import HeaderCell from './header_cell'
 import TableColumn from './table_column'
 import RenderCell from 'view3/src/components/render-cell'
@@ -256,6 +257,9 @@ export default {
     this.dataSort = this.sortParams
   },
   methods: {
+    humanizeKey (key) { 
+      return humanize(key)
+    },
     scrollToTop () {
       this.scrollTo(0)
     },
@@ -343,11 +347,12 @@ export default {
 .table-wrapper::-webkit-scrollbar {
   width: 5px;
   border-top: 1px solid #dee2e6;
-  height: 5px;
+  height: 10px;
   z-index: 12;
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
+  height: 10px;
   border-radius: 8px;
   box-shadow: none;
   border-top: 1px solid #dee2e6;

@@ -45,7 +45,7 @@
       />
       <span
         v-if="withTitle && !widthLessThan('sm') && (!selectedRows.length || !modelHasActions)"
-        class="fs-4 fw-bold nowrap overflow-hidden text-truncate"
+        class="fs-2 fw-bold nowrap overflow-hidden text-truncate"
       >{{ title }}
         <template v-if="currentScope">
           ({{ currentScope.display_name }})

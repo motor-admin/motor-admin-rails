@@ -5,7 +5,6 @@
   >
     <div class="d-flex justify-content-between align-items-center">
       <h1 class="mt-3 mb-2">
-        {{ i18n['hello_admin'] }}
       </h1>
       <VButton
         v-if="$can('manage', 'all') && $route.name === 'home'"
@@ -36,7 +35,6 @@
       <h1
         class="mt-3 mb-2"
       >
-        {{ i18n['hello_admin'] }}
       </h1>
       <VButton
         v-if="$can('manage', 'all') && $route.name === 'home'"
