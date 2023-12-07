@@ -184,6 +184,7 @@ en:
     select_form: Select form
     select_form_tags: Select dashform tags
     select_options: Select options
+    color_options: Color options
     select_placeholder: Select...
     select_query: Select query
     select_query_tags: Select query tags

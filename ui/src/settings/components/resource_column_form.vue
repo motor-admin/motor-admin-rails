@@ -135,6 +135,16 @@
         />
       </FormItem>
       <FormItem
+        v-if="dataColumn.column_type === 'tag'"
+        :label="i18n['color_options']"
+        prop="format.color_options"
+      >
+        <OptionsInput
+          v-model="dataColumn.format.color_options"
+          :options-text="colorOptionsText"
+        />
+      </FormItem>
+      <FormItem
         :label="i18n['description']"
         prop="description"
       >
