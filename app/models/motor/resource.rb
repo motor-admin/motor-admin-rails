@@ -5,6 +5,11 @@ module Motor
     audited
 
     attribute :preferences, default: -> { ActiveSupport::HashWithIndifferentAccess.new }
-    serialize :preferences, HashSerializer
+
+    if Rails.version.to_f >= 7.1
+      serialize :preferences, coder: HashSerializer
+    else
+      serialize :preferences, HashSerializer
+    end
   end
 end
