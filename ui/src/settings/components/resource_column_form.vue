@@ -91,6 +91,16 @@
         :reference="dataColumn.reference"
       />
       <FormItem
+        v-if="dataColumn.column_type === 'select' || dataColumn.column_type === 'tag'"
+        :label="i18n['select_query']"
+        prop="format.select_query_id"
+      >
+        <QuerySelect v-model="dataColumn.format.select_query_id" />
+      </FormItem>
+      <p v-if="dataColumn.column_type === 'tag'" class="text-center">
+        - or -
+      </p>
+      <FormItem
         v-if="dataColumn.column_type === 'tag'"
         :label="i18n['select_options']"
         prop="format.select_options"
@@ -107,13 +117,6 @@
             {{ i18n.load_existing_options_from_database }}
           </VButton>
         </div>
-      </FormItem>
-      <FormItem
-        v-if="dataColumn.column_type === 'select'"
-        :label="i18n['select_query']"
-        prop="format.select_query_id"
-      >
-        <QuerySelect v-model="dataColumn.format.select_query_id" />
       </FormItem>
       <FormItem
         v-if="dataColumn.column_type === 'link'"
