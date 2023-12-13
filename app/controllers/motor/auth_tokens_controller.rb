@@ -28,7 +28,7 @@ module Motor
 
     def respond_with_generic_jwt
       payload = { uid: current_user.id, exp: GENERIC_TOKEN_TTL.from_now.to_i }
-      token = JWT.encode(payload, Rails.application.secrets.secret_key_base)
+      token = JWT.encode(payload, Rails.application.credentials.secret_key_base)
 
       render json: { token: token }
     end
