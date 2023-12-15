@@ -7,11 +7,11 @@ module Motor
     attribute :preferences, default: -> { ActiveSupport::HashWithIndifferentAccess.new }
     attribute :credentials, default: -> { ActiveSupport::HashWithIndifferentAccess.new }
 
-    serialize :credentials, Motor::HashSerializer
-
     if Rails.version.to_f >= 7.1
+      serialize :credentials, coder: Motor::HashSerializer
       serialize :preferences, coder: Motor::HashSerializer
     else
+      serialize :credentials, Motor::HashSerializer
       serialize :preferences, Motor::HashSerializer
     end
 
