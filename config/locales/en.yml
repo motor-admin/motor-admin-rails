@@ -305,6 +305,7 @@ en:
     total: Total
     radar_chart: Radar chart
     show_on_table: Show on table
+    with_confirm: With confirm
     map: Map
     audits: Audits
     nothing_to_show_here_yet: Nothing to show here yet 🤷

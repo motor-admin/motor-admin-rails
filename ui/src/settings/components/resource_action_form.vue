@@ -73,6 +73,13 @@
         >
           {{ ' ' }} {{ i18n['show_on_table'] }}
         </Checkbox>
+        <Checkbox
+          v-if="dataAction.action_type === 'form'"
+          v-model="dataAction.preferences.with_confirm"
+          class="d-block mb-4"
+        >
+          {{ ' ' }} {{ i18n['with_confirm'] }}
+        </Checkbox>
       </div>
     </VForm>
     <div class="d-flex justify-content-between">
