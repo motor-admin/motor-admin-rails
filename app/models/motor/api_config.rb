@@ -7,8 +7,13 @@ module Motor
     attribute :preferences, default: -> { ActiveSupport::HashWithIndifferentAccess.new }
     attribute :credentials, default: -> { ActiveSupport::HashWithIndifferentAccess.new }
 
-    serialize :credentials, Motor::HashSerializer
-    serialize :preferences, Motor::HashSerializer
+    if Rails.version.to_f >= 7.1
+      serialize :credentials, coder: Motor::HashSerializer
+      serialize :preferences, coder: Motor::HashSerializer
+    else
+      serialize :credentials, Motor::HashSerializer
+      serialize :preferences, Motor::HashSerializer
+    end
 
     has_one :form, dependent: nil, foreign_key: :api_config_name, primary_key: :name, inverse_of: :api_config
 
