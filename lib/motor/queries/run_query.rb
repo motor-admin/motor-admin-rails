@@ -67,21 +67,14 @@ module Motor
 
         statement = prepare_sql_statement(connection_class, query, limit, variables_hash, filters)
 
-        connection_class.transaction do
-          result =
-            case connection_class.connection.class.name
-            when 'ActiveRecord::ConnectionAdapters::PostgreSQLAdapter'
-              PostgresqlExecQuery.call(connection_class.connection, statement)
-            else
-              statement = normalize_statement_for_sql(statement)
+        case connection_class.connection.class.name
+        when 'ActiveRecord::ConnectionAdapters::PostgreSQLAdapter'
+          PostgresqlExecQuery.call(connection_class.connection, statement)
+        else
+          statement = normalize_statement_for_sql(statement)
 
-              connection_class.connection.exec_query(*statement)
-            end
-
-          raise ActiveRecord::Rollback
+          connection_class.connection.exec_query(*statement)
         end
-
-        result
       end
 
       def validate_query!(sql)
