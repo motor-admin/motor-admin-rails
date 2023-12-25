@@ -61,8 +61,6 @@ module Motor
       # @param filters [Hash]
       # @return [ActiveRecord::Result]
       def execute_query(query, limit, variables_hash, filters)
-        result = nil
-
         connection_class = fetch_connection_class(query)
 
         statement = prepare_sql_statement(connection_class, query, limit, variables_hash, filters)
