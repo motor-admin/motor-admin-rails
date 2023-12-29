@@ -55,6 +55,8 @@ module Motor
     def destroy
       if @resource.respond_to?(:deleted_at)
         @resource.update(deleted_at: Time.current)
+      elsif @resource.respond_to?(:archived_at)
+        @resource.update(archived_at: Time.current)
       else
         @resource.destroy!
       end
