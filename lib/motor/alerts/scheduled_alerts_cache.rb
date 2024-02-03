@@ -9,7 +9,11 @@ module Motor
 
       def all
         ActiveRecord::Base.logger.silence do
-          CACHE_STORE.fetch(Motor::Alert.all.maximum(:updated_at)) do
+          cache_key = Motor::Alert.all.maximum(:updated_at)
+
+          return [] if cache_key.nil?
+
+          CACHE_STORE.fetch(cache_key) do
             clear
 
             Motor::Alert.all.active.enabled.to_a
