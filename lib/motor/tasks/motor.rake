@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 namespace :motor do
-  desc 'Update configs/motor.yml file'
+  desc 'Create migratione and add route'
 
   task install: :environment do
     Rails::Generators.invoke('motor:install')
   end
+
+  desc 'Update configs/motor.yml file'
 
   task dump: :environment do
     Motor::Configs::WriteToFile.write_with_lock
@@ -20,6 +22,8 @@ namespace :motor do
 
     puts '✅ configs have been loaded from configs/motor.yml'
   end
+
+  desc 'Reload configs from configs/motor.yml file'
 
   task reload: :environment do
     ActiveRecord::Base.transaction do
