@@ -1,0 +1,340 @@
+ja:
+  motor:
+    action_has_been_applied: アクションが適用されました
+    action_has_failed_with_code: アクションが失敗しました コード
+    action_type: アクションタイプ
+    actions: アクション
+    add: 追加
+    add_action: アクションを追加
+    add_alert: アラートを追加
+    add_column: 列を追加
+    add_dashboard: ダッシュボードを追加
+    add_field: フィールドを追加
+    add_filter: フィルターを追加
+    add_form: フォームを追加
+    add_group: グループを追加
+    add_item: アイテムを追加
+    add_link: リンクを追加
+    add_query: クエリを追加
+    add_scope: スコープを追加
+    add_tab: タブを追加
+    adjust_form: フォームを調整
+    adjust_fields: フィールドを調整
+    alert_email_has_been_sent: アラートメールが送信されました
+    alert_has_been_activated: アラートが有効化されました
+    alert_has_been_disabled: アラートが無効化されました
+    alert_has_been_saved: アラートが保存されました
+    alert_name: アラート名
+    alerts: アラート
+    all: すべて
+    all_resources: すべてのリソース
+    and: そして
+    api_path: APIパス
+    api_request: APIリクエスト
+    apply: 適用
+    are_you_sure: 本当によろしいですか?
+    associations: 関連付け
+    bar_chart: 棒グラフ
+    base: 基本
+    boolean: 真理値型
+    build_custom_form: カスタムフォームを作成
+    cancel: キャンセル
+    cents: セント
+    checkbox: チェックボックス
+    clear_all: すべてクリア
+    clear_selection: 選択をクリア
+    close: 閉じる
+    close_editor: エディターを閉じる
+    close_settings: 設定を閉じる
+    close_variables: 変数を閉じる
+    columns: 列
+    contains: 含む
+    create: 作成
+    currency: 通貨
+    dashboard: ダッシュボード
+    dashboard_has_been_saved: ダッシュボードが保存されました
+    dashboard_title: ダッシュボードタイトル
+    dashboards: ダッシュボード
+    date: 日付
+    date_and_time: 日時
+    decimal: 小数
+    default: デフォルト
+    default_value: 初期値
+    describe_this_alert_optional: このアラートの説明 (オプション)
+    describe_your_dashboard_optional: ダッシュボードの説明 (オプション)
+    describe_your_form_optional: フォームの説明 (オプション)
+    describe_your_query_optional: クエリの説明 (オプション)
+    description: 説明
+    deselect_all: 全て選択解除
+    details: 詳細
+    disable: 無効化
+    display_as: 表示形式
+    edit: 編集
+    edit_sql: SQLを編集
+    edit_markdown: マークダウンを編集
+    emails: メール
+    ends_with: で終わる
+    equal_to: 等しい
+    every_day_at_hh_mm: 毎日 HH:mm に...
+    excludes: 除外
+    field_is_not_a_number: '%{field} は数値ではありません'
+    field_is_required: '%{field} は必須です'
+    field_list_cant_be_empty: "%{field} リストを空にすることはできません"
+    field_must_be_exactly_in_length: '%{field} の長さは %{length} でなければなりません'
+    field_must_be_less_in_length: '%{field} の長さは %{length} 未満でなければなりません'
+    field_must_be_more_in_length: '%{field} の長さは %{length} より大きくなければなりません'
+    field_name: フィールド名
+    field_value_does_not_match_pattern: '%{field} の値が %{pattern} と一致しません'
+    file: ファイル
+    filter: フィルター
+    filters: フィルター
+    form: フォーム
+    form_has_been_saved: フォームが保存されました
+    form_has_been_submitted_successfully: フォームが正常に送信されました
+    form_name: フォーム名
+    forms: フォーム
+    funnel: ファンネル
+    greater_or_equal: 以上
+    greater_than: より大きい
+    greater_than_or_equal_to: 以上
+    group_name: グループ名
+    has_been_created: が作成されました
+    has_been_removed_succesfully: が正常に削除されました
+    has_been_updated: が更新されました
+    hello_admin: こんにちは、管理者さん👋
+    hidden: 非表示
+    image: 画像
+    includes: 含む
+    input_type: 入力タイプ
+    integer: 整数
+    interval: 間隔
+    is: は
+    is_not: ではない
+    items_have_been_removed: 件のアイテムが削除されました
+    items_will_be_removed: '%{count} 件のアイテムが削除されます'
+    json: JSON
+    label: 通貨
+    less_or_equal: 以下
+    less_than: 未満
+    less_than_or_equal_to: 以下
+    line_chart: 線グラフ
+    link_name: リンク名
+    links: リンク
+    load_initial_data: 初期データをロード
+    loading: 読み込み中...
+    looks_like_you_are_new_here: 初めてですね🙃
+    markdown: マークダウン
+    method: メソッド
+    method_call: メソッド呼び出し
+    multiple: 複数
+    name: 名前
+    new_alert: 新しいアラート
+    new_dashboard: 新しいダッシュボード
+    new_form: 新しいフォーム
+    new_query: 新しいクエリ
+    no_data: データがありません
+    not_found: 見つかりませんでした
+    number: 数値
+    ok: OK
+    options_separated_with_new_line_or_comma: 改行またはカンマで区切られたオプション
+    or: または
+    other_than: 以外
+    param_name: パラメータ名
+    password: パスワード
+    path: パス
+    percent: パーセント
+    pie_chart: 円グラフ
+    queries: クエリ
+    query: クエリ
+    query_has_been_saved: クエリが保存されました
+    query_name: クエリ名
+    query_not_selected: クエリが選択されていません
+    query_revisions: クエリリビジョン
+    read_only: 読み取り専用
+    read_write: 読み書き
+    reference: 参照
+    reference_resource: リソースを参照
+    remove: 削除
+    reports: レポート
+    request_param: リクエストパラメータ
+    required: 必須
+    resource_filters: '%{resource} フィルター'
+    resource_settings: '%{resource} 設定'
+    resources: リソース
+    resubmit: 再送信
+    revert: 元に戻す
+    revision_has_been_applied: リビジョンが適用されました
+    revisions: リビジョン
+    richtext: リッチテキスト
+    row_chart: 行グラフ
+    save: 保存
+    save_and_create_new: 保存して新規作成
+    save_as_new: 新規として保存
+    save_dashboard: ダッシュボードを保存
+    save_form: フォームを保存
+    save_query: クエリを保存
+    scopes: スコープ
+    search: 検索
+    search_placeholder: 検索...
+    search_query: 検索クエリ
+    select: 選択
+    select_alert_tags: アラートタグを選択
+    select_dashboard: ダッシュボードを選択
+    select_dashboard_tags: ダッシュボードタグを選択
+    select_form: フォームを選択
+    select_form_tags: フォームタグを選択
+    select_options: オプションを選択
+    select_placeholder: 選択...
+    select_query: クエリを選択
+    select_query_tags: クエリタグを選択
+    select_resource_placeholder: リソースを選択...
+    selected_item_has_been_removed: 選択したアイテムが削除されました
+    selected_item_will_be_removed: 選択したアイテムが削除されます
+    selected_item_will_be_removed_are_you_sure: 選択したアイテムが削除されます。よろしいですか?
+    send_empty: 空で送信しますか?
+    send_now: 今すぐ送信
+    send_to: 送信先
+    set_tags: タグを設定
+    settings: 設定
+    should_be_a_valid_json: '%{field} は有効なJSONでなければなりません'
+    should_be_error_constraint: '%{field} は %{error} %{constraint} でなければなりません'
+    stacked_bars: 積み上げ棒グラフ
+    starts_with: で始まる
+    submit: 送信
+    tab_type: タブタイプ
+    table: テーブル
+    tabs: タブ
+    tags: タグ
+    text: テキスト
+    textarea: テキストエリア
+    timezone: タイムゾーン
+    title: タイトル
+    type: 型
+    unable_to_load_form_data: フォームデータの読み込みに失敗しました
+    unable_to_remove_item: アイテムを削除できませんでした
+    unable_to_remove_items: アイテムを削除できませんでした
+    unable_to_send_email: メールを送信できませんでした
+    unable_to_submit_form: フォームを送信できませんでした
+    unit: 単位
+    value: 値
+    values_axis: 値の軸
+    variables: 変数
+    visibility: 表示設定
+    visualization: 可視化
+    write_only: 書き込み専用
+    long_text: 長文テキスト
+    percentage: パーセンテージ
+    change: 変更
+    chart: チャート
+    tag: タグ
+    link: リンク
+    color: 色
+    link_text: リンクテキスト
+    copied_to_the_clipboard: クリップボードにコピーしました
+    queries_can_contain_variable_via_syntax_html: "クエリでは <code>{{variable}}</code> 構文を使って変数を埋め込むことができます:"
+    syntax_is_used_for_if_and_if_not_conditions_html: "<code>{{#variable}} ... {{/variable}}</code> と <code>{{^variable}} ... {{variable}}</code> 構文は、それぞれ <code>if</code> と <code>if not</code> 条件で使用されます:"
+    current_user_variables_are_always_passed_explicitly_and_can_he_used_html: "<code>{{current_user_id}}</code> と <code>{{current_user_email}}</code> 変数は常に明示的に渡されるため、特定のユーザーにどのデータを表示するかを決めるのに使用できます:"
+    create_new: 新規作成
+    conditional: 条件付き
+    condition: 条件
+    field: フィールド
+    empty: 空
+    not_empty: 空ではない
+    general: 一般
+    run: 実行
+    use_default: デフォルトを使用
+    query_editor: クエリエディター
+    polymorphic: 多態
+    foreign_key: 外部キー
+    primary_key: 主キー
+    through: 経由
+    source: ソース
+    resource: リソース
+    add_association: 関連付けを追加
+    there_are_unsaved_changes_from: "%{timestamp} から未保存の変更があります"
+    clear: クリア
+    restore: 復元
+    more: 詳細
+    add_text: テキストを追加
+    edit_text: テキストを編集
+    open_in_markdown_editor: マークダウンエディターで開く
+    activate: 有効化
+    load_existing_options_from_database: データベースから既存のオプションをロード
+    add_database: データベースを追加
+    audio: 音声
+    video: 動画
+    display_column: 表示列
+    not_authorized_to_perform_action: この操作を実行する権限がありません。
+    upload: アップロード
+    there_is_nothing_here_yet: 表示する項目はまだありません🤷‍♂️
+    is_null: nullです
+    is_not_null: nullではありません
+    split_tags_by: タグの区切り文字
+    do_not_split: 区切らない
+    semicolon: セミコロン
+    hyphen: ハイフン
+    comma: カンマ
+    slash: スラッシュ
+    searchable_columns: 検索可能な列
+    validate: 検証
+    error_message: エラーメッセージ
+    validation_regexp: 検証用の正規表現
+    regexp: 正規表現
+    message: メッセージ
+    should_be_a_valid_regexp: 有効な正規表現文字列でなければなりません
+    order_by: 並び替え
+    ascending: 昇順
+    descending: 降順
+    url: URL
+    expand: 展開
+    add_api: APIを追加
+    on_collection: コレクション上
+    association: 関連付け
+    action_has_been_removed: このアクションは削除されました
+    every_5_seconds: 5秒ごと
+    every_30_seconds: 30秒ごと
+    every_minute: 1分ごと
+    every_5_minutes: 5分ごと
+    do_not_refresh: 更新しない
+    html: HTML
+    edit_html: HTMLを編集
+    there_are_unsaved_changes_close_form: "未保存の変更があります。フォームを閉じますか?"
+    send_file_url: ファイルURLを送信
+    rating: 評価
+    total: 合計
+    radar_chart: レーダーチャート
+    show_on_table: テーブルに表示
+    map: マップ
+    audits: 監査ログ
+    nothing_to_show_here_yet: まだ何も表示する内容がありません🤷
+    internal: 内部/匿名
+    updated: 更新済み
+    created: 作成済み
+    deleted: 削除済み
+    sign_out: ログアウト
+    header: ヘッダー
+    user_dropdown: ユーザードロップダウン
+    add_condition: 条件を追加
+    remove_condition: 条件を削除
+    unable_to_send_alert: アラートを送信できませんでした
+    send_via: 送信経路
+    download: ダウンロード
+    alert: アラート
+    downloading: ダウンロード中...
+    display_id: 表示ID
+    display_settings: 表示設定
+    sql: SQL
+    api: API
+    variable_name: 変数名
+    add_variable: 変数を追加
+    notes: 備考
+    new_mention_for: "%{resource} の新しいメンション"
+    user_mentioned_you_with_note: "%{user} があなたにメンションしました:\n%{note}"
+    edit_note: 備考を編集
+    create_reminder: リマインダーを作成
+    new_reminder_for: "%{resource} の新しいリマインダー"
+    reminder_has_been_removed: リマインダーが削除されました
+    note_has_been_removed: 備考が削除されました
+    schedule_at: 予定日時
+    kanban_columns: カンバン列
+    kanban_card_columns: カンバンカード列
