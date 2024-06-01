@@ -20,6 +20,8 @@ module Motor
     private
 
     def render_result
+      authorize_queries!(@query)
+
       query_result = Queries::RunQuery.call(@query, variables_hash: variables_params.to_unsafe_h,
                                                     limit: params[:limit].presence,
                                                     filters: filter_params)
@@ -28,6 +30,12 @@ module Motor
         render json: { errors: [{ detail: query_result.error }] }, status: :unprocessable_entity
       else
         render json: query_result_hash(query_result)
+      end
+    end
+
+    def authorize_queries!(query)
+      query.sql_body.to_s.scan(/query_\d+/).each do |name|
+        Motor::Query.accessible_by(current_ability).find(name.split('_').last)
       end
     end
 

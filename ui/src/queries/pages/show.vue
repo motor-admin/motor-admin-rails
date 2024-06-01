@@ -601,7 +601,7 @@ export default {
           })
 
           variables.forEach((variableName) => {
-            if (!RESERVED_VARIABLES.includes(variableName) && !variableName.match(/_database_url$/)) {
+            if (!RESERVED_VARIABLES.includes(variableName) && !variableName.match(/_database_url$/) && !variableName.match(/^query_/)) {
               const variable = {
                 name: variableName,
                 display_name: titleize(variableName),

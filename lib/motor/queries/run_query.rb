@@ -15,6 +15,7 @@ module Motor
       RESERVED_VARIABLES = %w[current_user_id current_user_email].freeze
 
       DATABASE_URL_VARIABLE_SUFFIX = '_database_url'
+      QUERY_VARIABLE_PREFIX = 'query_'
 
       DB_LINK_VALIDATE_REGEXP = /(.*?)\s*\{\{\s*\w+_database_url\s*\}\}/i.freeze
 
@@ -188,6 +189,7 @@ module Motor
         variables.map do |variable_name, value|
           [value].flatten.map do |val|
             val = fetch_variable_database_url(variable_name) if variable_name.ends_with?(DATABASE_URL_VARIABLE_SUFFIX)
+            val = fetch_query_data(variable_name) if variable_name.starts_with?(QUERY_VARIABLE_PREFIX)
 
             ActiveRecord::Relation::QueryAttribute.new(
               variable_name,
@@ -204,6 +206,15 @@ module Motor
         Motor::DatabaseClasses.const_get(class_name).connection_db_config.url
       rescue NameError
         raise UnknownDatabase, "#{class_name} database is not defined"
+      end
+
+      def fetch_query_data(variable_name)
+        query = Motor::Query.find(variable_name.split('_').last)
+
+        result = Motor::Queries::RunQuery.call(query)
+        columns = result.columns.pluck(:name)
+
+        result.data.map { |row| columns.zip(row).to_h }.to_json
       end
 
       # @param array [Array]
