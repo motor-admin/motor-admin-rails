@@ -4,7 +4,7 @@ module Motor
   class Admin < ::Rails::Engine
     config.custom_html = ''
 
-    ActiveSupport.cache_format_version = Rails.version.to_f
+    ActiveSupport.cache_format_version = (Rails.version.to_f > 7.1) ? 7.1 : Rails.version.to_f
 
     if !Motor.development? && Rails.env.development?
       config.eager_load_paths.delete(File.expand_path('../../app/controllers', __dir__))
