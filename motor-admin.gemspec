@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors     = ['Pete Matsyburka']
   spec.email       = ['pete@getmotoradmin.com']
   spec.summary     = 'Low-code Admin panel and Business intelligence'
-  spec.license     = 'AGPL-3.0'
+  spec.license     = 'MIT'
 
   spec.metadata = {
     'bug_tracker_uri' => 'https://github.com/motor-admin/motor-admin-rails/issues',

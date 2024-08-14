@@ -214,4 +214,4 @@ MOTOR_DEVELOPMENT=true rails s
 
 ## License
 
-Motor Admin is licensed under the AGPL v3 license.
+Motor Admin is licensed under the MIT license.
