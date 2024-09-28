@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails/generators'
+
 namespace :motor do
   desc 'Create migratione and add route'
 
