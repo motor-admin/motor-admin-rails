@@ -187,6 +187,7 @@ module Motor
         end
 
         klass._reflections = klass.reflections
+        klass._reflections.symbolize_keys! if Rails.gem_version >= Gem::Version.new("7.2")
 
         klass
       end
