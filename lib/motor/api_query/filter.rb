@@ -48,7 +48,13 @@ module Motor
 
         rel = apply_predicates(rel, filters)
 
-        alias_tracker = ActiveRecord::Associations::AliasTracker.create(rel.connection, rel.table.name, [])
+        alias_tracker =
+          if Rails.version.to_f >= 7.2
+            rel.alias_tracker
+          else
+            ActiveRecord::Associations::AliasTracker.create(rel.connection, rel.table.name, [])
+          end
+
         filter_clause_factory = ActiveRecord::Relation::FilterClauseFactory.new(rel.klass, rel.predicate_builder)
 
         where_clause = filter_clause_factory.build(filters, alias_tracker)
