@@ -7,6 +7,8 @@ module Motor
     include Motor::WrapIoParams
     include Motor::LoadAndAuthorizeDynamicResource
 
+    before_action :wrap_io_params, only: %i[update create]
+
     def index
       @resources = Motor::ApiQuery.call(@resources, params)
 
