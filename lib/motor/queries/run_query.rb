@@ -70,7 +70,7 @@ module Motor
         when 'ActiveRecord::ConnectionAdapters::PostgreSQLAdapter'
           PostgresqlExecQuery.call(connection_class.connection, statement)
         else
-          statement = normalize_statement_for_sql(statement)
+          statement = normalize_statement_for_sql(connection_class.connection, statement)
 
           connection_class.connection.exec_query(*statement)
         end
@@ -219,12 +219,12 @@ module Motor
 
       # @param array [Array]
       # @return [Array]
-      def normalize_statement_for_sql(statement)
+      def normalize_statement_for_sql(conn, statement)
         sql, _, attributes = statement
 
-        sql = ActiveRecord::Base.send(:replace_bind_variables,
-                                      sql.gsub(STATEMENT_VARIABLE_REGEXP, '?'),
-                                      attributes.map(&:value))
+        params = [sql.gsub(STATEMENT_VARIABLE_REGEXP, '?'), attributes.map(&:value)]
+        params.unshift(conn) if Rails.version.to_f >= 7.2
+        sql = ActiveRecord::Base.send(:replace_bind_variables, *params)
 
         [sql, 'SQL', []]
       end
