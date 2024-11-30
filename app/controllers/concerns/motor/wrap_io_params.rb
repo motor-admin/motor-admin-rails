@@ -2,12 +2,6 @@
 
 module Motor
   module WrapIoParams
-    extend ActiveSupport::Concern
-
-    included do
-      before_action :wrap_io_params, only: %i[update create]
-    end
-
     private
 
     def wrap_io_params(hash = params)

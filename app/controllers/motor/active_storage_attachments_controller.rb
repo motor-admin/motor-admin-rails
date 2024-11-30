@@ -4,6 +4,8 @@ module Motor
   class ActiveStorageAttachmentsController < ApiBaseController
     include Motor::WrapIoParams
 
+    before_action :wrap_io_params, only: :create
+
     wrap_parameters :data, except: %i[include fields]
 
     load_and_authorize_resource :attachment, class: 'ActiveStorage::Attachment', parent: false
