@@ -67,16 +67,18 @@ module Motor
     end
 
     initializer 'motor.basic_auth' do
-      next if ENV['MOTOR_AUTH_PASSWORD'].blank?
+      motor_username = ENV['MOTOR_AUTH_USERNAME'].presence || Rails.application.credentials.dig(:motor, :username)
+      motor_password = ENV['MOTOR_AUTH_PASSWORD'].presence || Rails.application.credentials.dig(:motor, :password)
+      next if motor_username.blank? || motor_password.blank?
 
       config.middleware.use Rack::Auth::Basic do |username, password|
         ActiveSupport::SecurityUtils.secure_compare(
           ::Digest::SHA256.hexdigest(username),
-          ::Digest::SHA256.hexdigest(ENV['MOTOR_AUTH_USERNAME'].to_s)
+          ::Digest::SHA256.hexdigest(motor_username.to_s)
         ) &
           ActiveSupport::SecurityUtils.secure_compare(
             ::Digest::SHA256.hexdigest(password),
-            ::Digest::SHA256.hexdigest(ENV['MOTOR_AUTH_PASSWORD'].to_s)
+            ::Digest::SHA256.hexdigest(motor_password.to_s)
           )
       end
     end
