@@ -110,15 +110,27 @@ module Motor
 
         columns = Resources::CustomSqlColumnsCache.call(config[:custom_sql])
 
+        base_column = klass.connection.schema_cache.columns_hash(klass.table_name).first.last
+
         columns_hash =
           columns.each_with_object({}) do |column, acc|
             acc[column[:name]] =
-              ActiveRecord::ConnectionAdapters::Column.new(
-                column[:name],
-                nil,
-                ActiveRecord::ConnectionAdapters::SqlTypeMetadata.new(sql_type: column[:column_type],
-                                                                      type: column[:column_type].to_sym)
-              )
+              if Rails.version.to_f >= 7.2
+                base_column.class.new(
+                  column[:name],
+                  nil,
+                  base_column.sql_type_metadata.class.new(
+                  ActiveRecord::ConnectionAdapters::SqlTypeMetadata.new(sql_type: column[:column_type],
+                                                                        type: column[:column_type].to_sym))
+                )
+              else
+                ActiveRecord::ConnectionAdapters::Column.new(
+                  column[:name],
+                  nil,
+                  ActiveRecord::ConnectionAdapters::SqlTypeMetadata.new(sql_type: column[:column_type],
+                                                                        type: column[:column_type].to_sym)
+                )
+              end
           end
 
         klass.instance_variable_set(:@__motor_custom_sql_columns_hash, columns_hash)
