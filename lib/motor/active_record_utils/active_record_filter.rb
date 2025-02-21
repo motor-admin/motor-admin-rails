@@ -97,7 +97,7 @@ module ActiveRecord
                 relations << js
               end
             end
-          elsif reflection = klass._reflections[key.to_s]
+          elsif reflection = klass._reflections[key.to_s] || klass._reflections[key.to_sym]
             if value.is_a?(Hash)
               relations <<
                 if reflection.polymorphic?
