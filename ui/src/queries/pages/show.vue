@@ -105,6 +105,7 @@
         :preferences="dataQuery.preferences"
         :columns="columns"
         :with-variables-editor="queryType === 'api'"
+        :with-iframe="queryType === 'api'"
         style="height: 100%"
         @close="toggleSettings"
       />
@@ -184,7 +185,7 @@
             fix
           />
           <div
-            v-else-if="!data.length && !errors.length && !dataHTML"
+            v-else-if="!data.length && !errors.length && !dataHTML && !isIframe"
             class="d-flex justify-content-center align-items-center h-100"
           >
             {{ i18n['no_data'] }}
@@ -203,6 +204,15 @@
             :preferences="dataQuery.preferences"
             @settings="toggleSettings"
           />
+          <div
+            v-else-if="isIframe"
+            style="overflow: hidden; height: 100%"
+          >
+            <iframe
+              :src="iframeSrc"
+              :style="{ height: withFooter ? '100%' : '100%', border: 0, width: '100%' }"
+            />
+          </div>
           <div
             v-else-if="dataHTML"
             class="h-100 overflow-auto"
@@ -304,7 +314,7 @@ import QueryForm from '../components/form'
 import Settings from '../components/settings'
 import throttle from 'view3/src/utils/throttle'
 import VariablesForm from '../components/variables_form'
-import { titleize } from 'utils/scripts/string'
+import { interpolateForQueryParams, titleize } from 'utils/scripts/string'
 import singularize from 'inflected/src/singularize'
 import { widthLessThan } from 'utils/scripts/dimensions'
 import { modelNameMap } from 'data_resources/scripts/schema'
@@ -359,7 +369,8 @@ export default {
       errors: [],
       columns: [],
       data: [],
-      dataHTML: ''
+      dataHTML: '',
+      iframeSrc: ''
     }
   },
   computed: {
@@ -376,6 +387,9 @@ export default {
     },
     showApiUi () {
       return this.queryType === 'api' || (!this.isNewPage && this.dataQuery.preferences.api_path)
+    },
+    isIframe () {
+      return this.dataQuery.preferences.visualization === 'iframe'
     },
     queryTypes () {
       return [
@@ -696,7 +710,13 @@ export default {
     loadQueryData () {
       this.maybeUpdateVariablesQueryParams()
 
-      if (this.queryType === 'api') {
+      if (this.queryType === 'api' && this.isIframe) {
+        const [apiPath, queryParams] = interpolateForQueryParams(this.dataQuery.preferences.api_path, this.variablesData)
+
+        this.iframeSrc = `${apiPath}?${new URLSearchParams(queryParams).toString()}`
+
+        return Promise.resolve({ src: this.iframeSrc })
+      } else if (this.queryType === 'api') {
         return this.runApiQuery()
       } else {
         if (this.dataQuery.sql_body && (this.isEdited || !this.query.id)) {

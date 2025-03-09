@@ -17,7 +17,7 @@
         fix
       />
       <div
-        v-else-if="!data.length"
+        v-else-if="!data.length && !isIframe"
         class="d-flex justify-content-center align-items-center"
         style="height: 100%"
       >
@@ -35,12 +35,22 @@
         :header-border="showVariablesForm"
         :preferences="query.preferences"
       />
+      <div
+        v-else-if="isIframe"
+        style="overflow: hidden; height: 100%"
+      >
+        <iframe
+          :src="iframeSrc"
+          :style="{ height: '100%', border: 0, width: '100%' }"
+        />
+      </div>
     </template>
   </div>
 </template>
 
 <script>
 import QueryResult from 'queries/components/result'
+import { interpolateForQueryParams } from 'utils/scripts/string'
 import VariablesForm from 'queries/components/variables_form'
 import api from 'api'
 
@@ -69,12 +79,16 @@ export default {
       errors: [],
       data: [],
       columns: [],
+      iframeSrc: '',
       query: {}
     }
   },
   computed: {
     queryId () {
       return this.tab.preferences.query_id
+    },
+    isIframe () {
+      return this.query?.preferences?.visualization === 'iframe'
     },
     style () {
       if (this.isLoadingQuery || !this.showVariablesForm) {
@@ -91,8 +105,19 @@ export default {
     }
   },
   mounted () {
-    this.loadQuery()
-    this.runQuery()
+    this.loadQuery().then(() => {
+      if (this.isIframe) {
+        const [apiPath, queryParams] = interpolateForQueryParams(this.query.preferences.api_path, {
+            ...this.dataVariables,
+            ...this.variables
+        })
+
+        console.log(this.query.preferences.api_path, this.variables)
+        this.iframeSrc = `${apiPath}?${new URLSearchParams(queryParams).toString()}`
+      } else {
+        this.runQuery()
+      }
+    })
   },
   methods: {
     loadQuery () {
