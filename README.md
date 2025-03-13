@@ -182,9 +182,15 @@ MOTOR_SYNC_REMOTE_URL=https://remote-app-url/ MOTOR_SYNC_API_KEY=secure-random-s
 
 ## Authentication
 
-Admin panel can be secured with 'Basic authentication' by specifying `MOTOR_AUTH_USERNAME` and `MOTOR_AUTH_PASSWORD` environment variables.
+Admin panel can be secured with 'Basic authentication' by specifying `MOTOR_AUTH_USERNAME` and `MOTOR_AUTH_PASSWORD` environment variables. Alternatively, the username and password can be added to the credentials file:
 
-Alternatively, it can be secured with [devise](https://github.com/heartcombo/devise/wiki/How-To:-Define-resource-actions-that-require-authentication-using-routes.rb) or any other authentication library used by the application:
+```yaml
+motor:
+  username: <username>
+  password: <password>
+```
+
+The admin panel can also be secured using [devise](https://github.com/heartcombo/devise/wiki/How-To:-Define-resource-actions-that-require-authentication-using-routes.rb) or any other authentication library used by the application:
 
 ```ruby
 authenticate :admin_user do
