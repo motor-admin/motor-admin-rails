@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.4.32)
+    motor-admin (0.4.36)
       ar_lazy_preload (~> 1.0)
       audited (~> 5.0)
       cancancan (~> 3.0)
@@ -124,7 +124,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    csv (3.3.0)
+    csv (3.3.4)
     cuprite (0.14.3)
       capybara (~> 3.0)
       ferrum (~> 0.13.0)
