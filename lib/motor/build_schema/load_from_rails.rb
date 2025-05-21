@@ -78,7 +78,7 @@ module Motor
           tabs: BuildSchema::Defaults.tabs,
           searchable_columns: FindSearchableColumns.call(model),
           custom_sql: nil,
-          visible: true,
+          visible: Motor.configuration.models_visible_by_default,
           display_primary_key: true,
           preferences: {
             display_as: 'table'
