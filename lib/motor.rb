@@ -66,6 +66,7 @@ module Motor
 end
 
 require 'motor/version'
+require 'motor/configuration'
 require 'motor/admin'
 require 'motor/assets'
 require 'motor/active_record_utils'
