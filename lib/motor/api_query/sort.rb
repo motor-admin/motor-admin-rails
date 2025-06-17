@@ -45,9 +45,7 @@ module Motor
 
           arel_column = reflection_model.arel_table[field]
 
-          arel_direction = direction.present? ? arel_column.desc : arel_column.asc
-
-          maybe_add_null_last(model, arel_direction)
+          direction.present? ? arel_column.desc : maybe_add_null_last(model, arel_column.asc)
         end
       end
 
