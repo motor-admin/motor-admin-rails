@@ -23,10 +23,15 @@ module Motor
 
           next unless file_timestamp
 
-          FILE_TIMESTAMPS_STORE.fetch(file_timestamp.to_s) do
+          cache_key = file_timestamp.to_s
+
+          unless FILE_TIMESTAMPS_STORE.exist?(cache_key)
             Motor::Configs::SyncFromHash.call(
               YAML.safe_load(file.read, permitted_classes: [Time, Date])
             )
+
+            # Store a primitive value to avoid marshalling complex objects under Rails 8.1
+            FILE_TIMESTAMPS_STORE.write(cache_key, true)
           end
         end
       end
