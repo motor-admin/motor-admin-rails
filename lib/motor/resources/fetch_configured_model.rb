@@ -3,21 +3,6 @@
 module Motor
   module Resources
     module FetchConfiguredModel
-      # Wrapper to satisfy AR 8.1 Column default contract when constructing synthetic columns
-      DEFAULT_WRAPPER =
-        if defined?(ActiveRecord::ConnectionAdapters::Default)
-          ActiveRecord::ConnectionAdapters::Default.new(nil, false)
-        else
-          Class.new do
-            def initialize(value = nil, _from_db = false)
-              @value = value
-            end
-
-            def mutable?
-              false
-            end
-          end.new(nil, false)
-        end
       CACHE_HASH = ActiveSupport::HashWithIndifferentAccess.new
 
       HAS_AND_BELONGS_TO_MANY_JOIN_MODEL_PREFIX = 'HABTM_'
@@ -129,41 +114,7 @@ module Motor
 
         columns_hash =
           columns.each_with_object({}) do |column, acc|
-            acc[column[:name]] =
-              if Rails.version.to_f >= 7.2
-                # Clone an existing column to preserve all internal invariants, then override
-                # just the parts we need (name, sql_type_metadata, cast_type)
-                col = base_column.dup
-
-                # Build adapter-specific SqlTypeMetadata from a generic one
-                generic_meta = ActiveRecord::ConnectionAdapters::SqlTypeMetadata.new(
-                  sql_type: column[:column_type],
-                  type: column[:column_type].to_sym
-                )
-                adapter_meta = base_column.sql_type_metadata.class.new(generic_meta)
-
-                # Resolve a proper cast type instance
-                begin
-                  cast_type = ActiveRecord::Type.lookup(column[:column_type].to_sym)
-                rescue StandardError
-                  cast_type = ActiveRecord::Type.lookup(:string)
-                end
-
-                col.instance_variable_set(:@name, column[:name])
-                col.instance_variable_set(:@sql_type_metadata, adapter_meta)
-                col.instance_variable_set(:@cast_type, cast_type)
-
-                col
-              else
-                ActiveRecord::ConnectionAdapters::Column.new(
-                  column[:name],
-                  nil,
-                  ActiveRecord::ConnectionAdapters::SqlTypeMetadata.new(
-                    sql_type: column[:column_type],
-                    type: column[:column_type].to_sym
-                  )
-                )
-              end
+            acc[column[:name]] = synthesize_column(base_column, column[:name], column[:column_type])
           end
 
         klass.instance_variable_set(:@__motor_custom_sql_columns_hash, columns_hash)
@@ -175,6 +126,29 @@ module Motor
           end
         end
         # rubocop:enable Naming/MemoizedInstanceVariableName
+      end
+
+      def synthesize_column(template_column, name, sql_type)
+        column = template_column.dup
+
+        generic_meta = ActiveRecord::ConnectionAdapters::SqlTypeMetadata.new(
+          sql_type: sql_type,
+          type: sql_type.to_sym
+        )
+
+        adapter_meta = template_column.sql_type_metadata.class.new(generic_meta)
+
+        begin
+          cast_type = ActiveRecord::Type.lookup(sql_type.to_sym)
+        rescue StandardError
+          cast_type = ActiveRecord::Type.lookup(:string)
+        end
+
+        column.instance_variable_set(:@name, name)
+        column.instance_variable_set(:@sql_type_metadata, adapter_meta)
+        column.instance_variable_set(:@cast_type, cast_type)
+
+        column
       end
 
       def define_column_reflections(klass, config)
