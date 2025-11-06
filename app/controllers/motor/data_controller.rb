@@ -80,11 +80,11 @@ module Motor
     private
 
     def resource_params
-      if params[:data].present?
-        params.require(:data).permit!
-      else
-        {}
-      end
+      return {} unless params[:data].present?
+
+      allowed = resource_class.column_names
+
+      params.require(:data).permit(*allowed)
     end
   end
 end
