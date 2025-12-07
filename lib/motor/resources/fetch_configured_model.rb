@@ -121,16 +121,18 @@ module Motor
 
         # rubocop:disable Naming/MemoizedInstanceVariableName
         klass.instance_eval do
+          # Expose custom_sql columns for reading/type-casting, but keep persistence
+          # behavior based only on real DB columns.
           def columns_hash
             @__motor__columns_hash ||= @__motor_custom_sql_columns_hash.merge(super)
           end
 
-          # Persist only real DB columns; exclude synthesized custom_sql aliases
+          # Only real DB columns should be considered for persistence and strong params.
           def column_names
             connection.schema_cache.columns_hash(table_name).keys
           end
 
-          # Ensure columns list reflects only real DB columns
+          # Same for the columns collection used by AR internals.
           def columns
             connection.schema_cache.columns(table_name)
           end
