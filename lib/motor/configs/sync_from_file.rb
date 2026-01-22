@@ -27,6 +27,8 @@ module Motor
             Motor::Configs::SyncFromHash.call(
               YAML.safe_load(file.read, permitted_classes: [Time, Date])
             )
+
+            true
           end
         end
       end
