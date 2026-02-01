@@ -114,34 +114,53 @@ module Motor
 
         columns_hash =
           columns.each_with_object({}) do |column, acc|
-            acc[column[:name]] =
-              if Rails.version.to_f >= 7.2
-                base_column.class.new(
-                  column[:name],
-                  nil,
-                  base_column.sql_type_metadata.class.new(
-                  ActiveRecord::ConnectionAdapters::SqlTypeMetadata.new(sql_type: column[:column_type],
-                                                                        type: column[:column_type].to_sym))
-                )
-              else
-                ActiveRecord::ConnectionAdapters::Column.new(
-                  column[:name],
-                  nil,
-                  ActiveRecord::ConnectionAdapters::SqlTypeMetadata.new(sql_type: column[:column_type],
-                                                                        type: column[:column_type].to_sym)
-                )
-              end
+            acc[column[:name]] = synthesize_column(base_column, column[:name], column[:column_type])
           end
 
         klass.instance_variable_set(:@__motor_custom_sql_columns_hash, columns_hash)
 
         # rubocop:disable Naming/MemoizedInstanceVariableName
         klass.instance_eval do
+          # Expose custom_sql columns for reading/type-casting, but keep persistence
+          # behavior based only on real DB columns.
           def columns_hash
             @__motor__columns_hash ||= @__motor_custom_sql_columns_hash.merge(super)
           end
+
+          # Only real DB columns should be considered for persistence and strong params.
+          def column_names
+            connection.schema_cache.columns_hash(table_name).keys
+          end
+
+          # Same for the columns collection used by AR internals.
+          def columns
+            connection.schema_cache.columns(table_name)
+          end
         end
         # rubocop:enable Naming/MemoizedInstanceVariableName
+      end
+
+      def synthesize_column(template_column, name, sql_type)
+        column = template_column.dup
+
+        generic_meta = ActiveRecord::ConnectionAdapters::SqlTypeMetadata.new(
+          sql_type: sql_type,
+          type: sql_type.to_sym
+        )
+
+        adapter_meta = template_column.sql_type_metadata.class.new(generic_meta)
+
+        begin
+          cast_type = ActiveRecord::Type.lookup(sql_type.to_sym)
+        rescue StandardError
+          cast_type = ActiveRecord::Type.lookup(:string)
+        end
+
+        column.instance_variable_set(:@name, name)
+        column.instance_variable_set(:@sql_type_metadata, adapter_meta)
+        column.instance_variable_set(:@cast_type, cast_type)
+
+        column
       end
 
       def define_column_reflections(klass, config)

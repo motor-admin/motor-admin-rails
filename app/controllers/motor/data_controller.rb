@@ -81,6 +81,7 @@ module Motor
 
     def resource_params
       if params[:data].present?
+        # Allow all attributes through; dynamic model class limits what is actually persisted
         params.require(:data).permit!
       else
         {}
