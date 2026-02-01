@@ -118,7 +118,7 @@ module Motor
         case value
         when Integer
           'integer'
-        when Float
+        when Float, BigDecimal
           'float'
         when Time
           'datetime'
