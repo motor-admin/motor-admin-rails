@@ -340,41 +340,53 @@ module ActiveRecord
       if relation.polymorphic?
         value = value.dup
         klass = value.delete(:as).safe_constantize
+        new_trail = relation_trail + ["#{klass.table_name}_as_#{relation.name}"]
 
-        builder = self.class.new(TableMetadata.new(
-                                   klass,
-                                   alias_tracker.aliased_table_for_relation(relation_trail + ["#{klass.table_name}_as_#{relation.name}"],
-                                                                            klass.arel_table) do
-                                     klass.arel_table.name
-                                   end,
-                                   relation
-                                 ))
-        builder.build_from_filter_hash(value, relation_trail + ["#{klass.table_name}_as_#{relation.name}"],
-                                       alias_tracker)
+        arel_table = alias_tracker.aliased_table_for_relation(new_trail, klass.arel_table) do
+          klass.arel_table.name
+        end
+
+        metadata = build_table_metadata(klass, arel_table, relation)
+        builder = self.class.new(metadata)
+        builder.build_from_filter_hash(value, new_trail, alias_tracker)
       else
-        builder = self.class.new(TableMetadata.new(
-                                   relation.klass,
-                                   alias_tracker.aliased_table_for_relation(relation_trail + [relation.name],
-                                                                            relation.klass.arel_table) do
-                                     relation.alias_candidate(table.arel_table.name || relation.klass.arel_table)
-                                   end,
-                                   relation
-                                 ))
-        builder.build_from_filter_hash(value, relation_trail + [relation.name], alias_tracker)
+        new_trail = relation_trail + [relation.name]
+
+        arel_table = alias_tracker.aliased_table_for_relation(new_trail, relation.klass.arel_table) do
+          relation.alias_candidate(table.arel_table.name || relation.klass.arel_table)
+        end
+
+        metadata = build_table_metadata(relation.klass, arel_table, relation)
+        builder = self.class.new(metadata)
+        builder.build_from_filter_hash(value, new_trail, alias_tracker)
       end
     end
 
     def expand_filter_for_join_table(relation, value, relation_trail, alias_tracker)
       relation = relation.active_record._reflections[relation.active_record._reflections[relation.name.to_s].send(:delegate_reflection).options[:through].to_s]
-      builder = self.class.new(TableMetadata.new(
-                                 relation.klass,
-                                 alias_tracker.aliased_table_for_relation(relation_trail + [relation.name],
-                                                                          relation.klass.arel_table) do
-                                   relation.alias_candidate(table.arel_table.name || relation.klass.arel_table)
-                                 end,
-                                 relation
-                               ))
-      builder.build_from_filter_hash(value, relation_trail + [relation.name], alias_tracker)
+      new_trail = relation_trail + [relation.name]
+
+      arel_table = alias_tracker.aliased_table_for_relation(new_trail, relation.klass.arel_table) do
+        relation.alias_candidate(table.arel_table.name || relation.klass.arel_table)
+      end
+
+      metadata = build_table_metadata(relation.klass, arel_table, relation)
+      builder = self.class.new(metadata)
+      builder.build_from_filter_hash(value, new_trail, alias_tracker)
+    end
+
+    private
+
+    def build_table_metadata(klass, arel_table, reflection = nil)
+      if table_metadata_supports_reflection?
+        ::ActiveRecord::TableMetadata.new(klass, arel_table, reflection)
+      else
+        ::ActiveRecord::TableMetadata.new(klass, arel_table)
+      end
+    end
+
+    def table_metadata_supports_reflection?
+      @table_metadata_supports_reflection ||= ::ActiveRecord::TableMetadata.instance_method(:initialize).arity != 2
     end
   end
 end
