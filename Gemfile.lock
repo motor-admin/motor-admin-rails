@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motor-admin (0.4.37)
+    motor-admin (0.4.38)
       ar_lazy_preload (~> 1.0)
       audited (~> 5.0)
       cancancan (~> 3.0)
@@ -405,7 +405,7 @@ DEPENDENCIES
   pg
   pry-rails
   puma
-  rails (= 8.1.2)
+  rails
   rspec-rails
   rubocop
   rubocop-performance
