@@ -30,8 +30,7 @@ module Motor
               YAML.safe_load(file.read, permitted_classes: [Time, Date])
             )
 
-            # Store a primitive value to avoid marshalling complex objects under Rails 8.1
-            FILE_TIMESTAMPS_STORE.write(cache_key, true)
+            true
           end
         end
       end

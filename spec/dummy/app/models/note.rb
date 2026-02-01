@@ -5,7 +5,5 @@ class Note < ApplicationRecord
 
   has_many_attached :images
 
-  attribute :sentiment, :integer, default: 0
-
-  enum sentiment: %i[negative neutral positive]
+  enum :sentiment, %i[negative neutral positive], default: :negative
 end

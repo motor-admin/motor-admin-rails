@@ -4,17 +4,17 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'activerecord-sqlserver-adapter'
 gem 'bootsnap', require: false
 gem 'devise'
 gem 'faker'
 gem 'image_processing'
-gem 'mysql2'
 gem 'oj'
 gem 'pg'
 gem 'puma'
+gem 'ostruct'
+gem 'observer'
+gem 'benchmark'
 gem 'rails', ENV.fetch('RAILS_VERSION', '>= 0')
-gem 'tiny_tds'
 
 group :development do
   gem 'brakeman', require: false
