@@ -1,8 +1,13 @@
 <template>
   <Spin
-    v-if="isLoading"
+    v-if="isLoading && progressIndicatorType == 'spinner'"
     fix
   />
+  <progress 
+    v-if="isLoading && progressIndicatorType === 'progress-bar'" 
+    max="100" 
+    :value="uploadProgressValue"
+    style="display: block;" />
   <input
     v-if="isFile"
     type="file"
@@ -109,6 +114,7 @@ import QueryValueSelect from 'queries/components/value_select'
 import VueTrix from 'utils/components/vue_trix'
 import { isActiveStorageDirectUploadsEnabled } from 'utils/scripts/configs'
 import { titleize } from 'utils/scripts/string'
+import ActiveStorageDirectUploader from 'utils/scripts/active_storage_direct_uploader'
 import OptionsInput from 'utils/components/options_input'
 import ColorPicker from 'view3/src/components/color-picker'
 import { divide, times } from 'number-precision'
@@ -145,6 +151,7 @@ export default {
   data () {
     return {
       isLoading: false,
+      uploadProgressValue: 0,
       dataValue: this.modelValue
     }
   },
@@ -190,6 +197,9 @@ export default {
     },
     isTextareaList () {
       return this.type === 'chart'
+    },
+    progressIndicatorType() {
+      return isActiveStorageDirectUploadsEnabled ? 'progress-bar' : 'spinner'
     }
   },
   watch: {
@@ -248,12 +258,17 @@ export default {
                 reject(error)
               })
             } else if (isActiveStorageDirectUploadsEnabled) {
-              new DirectUpload(file, '/rails/active_storage/direct_uploads').create((error, blob) => {
-                if (error) {
-                  reject(error)
-                } else {
-                  resolve(blob.signed_id)
-                }
+              const onProgress = (event) => {
+                this.uploadProgressValue = event.loaded / event.total * 100
+              }
+
+              const uploader = new ActiveStorageDirectUploader(file, '/rails/active_storage/direct_uploads',
+                { onProgress: onProgress })
+
+              uploader.uploadFile(file).then(blob => {
+                resolve(blob.signed_id)
+              }).catch(error => {
+                reject(error)
               })
             } else {
               resolve({ filename: file.name, io: reader.result })
