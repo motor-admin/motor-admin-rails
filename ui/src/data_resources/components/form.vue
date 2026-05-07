@@ -89,7 +89,7 @@
 
 <script>
 import api from 'api'
-import { modelNameMap } from '../scripts/schema'
+import { modelNameMap, primaryKeyParam } from '../scripts/schema'
 import { isJsonColumn, buildColumnValidator } from '../scripts/form_utils'
 import { scrollToErrors } from 'data_forms/scripts/form_utils'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
@@ -197,7 +197,7 @@ export default {
     },
     apiRequest () {
       if (this.action === 'edit') {
-        return api.put(`data/${this.model.slug}/${this.resource[this.model.primary_key]}`, this.requestParams)
+        return api.put(`data/${this.model.slug}/${primaryKeyParam(this.model, this.resource)}`, this.requestParams)
       } else if (this.action === 'new' && this.parentResourceName) {
         const parentModel = modelNameMap[this.parentResourceName]
         const associationModelName = parentModel.associations.find((assoc) => assoc.name === this.associationName).model_name
@@ -303,7 +303,7 @@ export default {
 
       const accessTypes = ['read_only', 'read_write', 'write_only']
 
-      return api.get(`data/${this.model.slug}/${this.resource[this.model.primary_key]}`, {
+      return api.get(`data/${this.model.slug}/${primaryKeyParam(this.model, this.resource)}`, {
         params: {
           fields: fieldsParams(this.model, accessTypes),
           include: includeParams(this.model, accessTypes)

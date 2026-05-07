@@ -85,6 +85,14 @@ ActiveRecord::Schema.define(version: 2021_11_18_093032) do
     t.index ["product_id"], name: "index_line_items_on_product_id"
   end
 
+  create_table "inventories", primary_key: %w[product_id warehouse_code], force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.string "warehouse_code", null: false
+    t.integer "quantity", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "motor_alert_locks", force: :cascade do |t|
     t.bigint "alert_id", null: false
     t.string "lock_timestamp", null: false
@@ -352,6 +360,7 @@ ActiveRecord::Schema.define(version: 2021_11_18_093032) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "inventories", "products"
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "products"
   add_foreign_key "motor_alert_locks", "motor_alerts", column: "alert_id"

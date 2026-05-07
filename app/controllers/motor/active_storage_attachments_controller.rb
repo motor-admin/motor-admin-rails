@@ -33,11 +33,12 @@ module Motor
       @record ||=
         if @attachment.record
           record_pk = @attachment.record.class.primary_key
+          record_pk_values = Array(record_pk).index_with { |pk| @attachment.record[pk] }
 
           Motor::Resources::FetchConfiguredModel.call(
             @attachment.record.class,
             cache_key: Motor::Resource.maximum(:updated_at)
-          ).find_by(record_pk => @attachment.record[record_pk])
+          ).find_by(record_pk_values)
         else
           current_user
         end

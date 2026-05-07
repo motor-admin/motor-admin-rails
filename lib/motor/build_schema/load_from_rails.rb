@@ -123,7 +123,7 @@ module Motor
 
       def build_table_column(column, model, default_attrs)
         access_type =
-          if model.primary_key == column.name
+          if Array(model.primary_key).include?(column.name)
             ColumnAccessTypes::READ_ONLY
           else
             COLUMN_NAME_ACCESS_TYPES.fetch(column.name, ColumnAccessTypes::READ_WRITE)
@@ -204,7 +204,15 @@ module Motor
 
         column_name = ref.belongs_to? ? ref.foreign_key.to_s : name
         is_attachment = !ref.polymorphic? && ref.klass.name == 'ActiveStorage::Attachment'
-        access_type = ref.belongs_to? || is_attachment ? ColumnAccessTypes::READ_WRITE : ColumnAccessTypes::READ_ONLY
+        is_primary_key_column = Array(model.primary_key).include?(column_name)
+        access_type =
+          if is_primary_key_column
+            ColumnAccessTypes::READ_ONLY
+          elsif ref.belongs_to? || is_attachment
+            ColumnAccessTypes::READ_WRITE
+          else
+            ColumnAccessTypes::READ_ONLY
+          end
         column_type = is_attachment ? ColumnTypes::FILE : ColumnTypes::REFERENCE
         column_source = model.columns_hash[column_name] ? ColumnSources::TABLE : ColumnSources::REFLECTION
 

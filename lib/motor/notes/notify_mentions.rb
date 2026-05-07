@@ -48,7 +48,7 @@ module Motor
         display_value = note.record.attributes[configs['display_column']]
 
         I18n.t('motor.new_mention_for',
-               resource: ["#{configs['display_name'].singularize} ##{note.record[note.record.class.primary_key]}",
+               resource: ["#{configs['display_name'].singularize} ##{note.record.to_param}",
                           display_value].join(' '))
       end
 

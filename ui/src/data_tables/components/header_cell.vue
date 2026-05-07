@@ -71,7 +71,8 @@ export default {
         const referenceModel = modelNameMap[this.column.reference.model_name]
 
         if (referenceModel) {
-          return `${this.column.key}.${referenceModel.primary_key}`
+          const pk = Array.isArray(referenceModel.primary_key) ? referenceModel.primary_key[0] : referenceModel.primary_key
+          return `${this.column.key}.${pk}`
         } else {
           return this.column.key
         }

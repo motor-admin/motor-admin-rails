@@ -87,7 +87,7 @@
 
 <script>
 import api from 'api'
-import { modelNameMap } from '../scripts/schema'
+import { modelNameMap, isPrimaryKeyColumn, primaryKeyColumns, primaryKeyParam } from '../scripts/schema'
 import DataTable from 'data_tables/components/table'
 import ResourceNavbar from './navbar'
 import ResourceActions from './actions'
@@ -184,9 +184,15 @@ export default {
     },
     defaultSortParams () {
       if (this.model.primary_key && !this.model.custom_sql && !this.currentScope) {
+        const pkColumns = primaryKeyColumns(this.model)
+        const firstPkColumn = this.model.columns.find((c) => c.name === pkColumns[0])
+        const allInteger = pkColumns.every((pk) => {
+          return this.model.columns.find((c) => c.name === pk)?.column_type === 'integer'
+        })
+
         return {
-          order: this.model.columns.find((c) => c.name === this.model.primary_key).column_type === 'integer' ? 'desc' : 'asc',
-          key: this.model.primary_key
+          order: firstPkColumn && allInteger ? 'desc' : 'asc',
+          key: pkColumns.join(',')
         }
       } else {
         return {}
@@ -272,7 +278,8 @@ export default {
       }
 
       if (this.sortParams.key) {
-        params.sort = `${this.sortParams.order === 'desc' ? '-' : ''}${this.sortParams.key}`
+        const prefix = this.sortParams.order === 'desc' ? '-' : ''
+        params.sort = this.sortParams.key.split(',').map((k) => `${prefix}${k}`).join(',')
       }
 
       if (this.includeParams) {
@@ -335,7 +342,7 @@ export default {
             }
           }
 
-          if (column.name === this.model.primary_key) {
+          if (isPrimaryKeyColumn(this.model, column.name)) {
             tableColumn.reference = {
               model_name: this.model.name
             }
@@ -529,7 +536,7 @@ export default {
       return {
         name: 'resources',
         params: {
-          fragments: [...this.$route.params.fragments, row[this.model.primary_key]]
+          fragments: [...this.$route.params.fragments, primaryKeyParam(this.model, row)]
         }
       }
     },

@@ -54,6 +54,8 @@ module Motor
       end
 
       def define_audited_class(klass)
+        return klass if klass.primary_key.is_a?(Array)
+
         default_audit_class = Audited.audit_class
 
         Audited.audit_class = 'Motor::Audit'

@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { modelNameMap } from '../scripts/schema'
+import { modelNameMap, primaryKeyColumns, primaryKeyParam } from '../scripts/schema'
 import singularize from 'inflected/src/singularize'
 import { formsStore } from 'custom_forms/scripts/store'
 import { openSettingsDrawer } from 'settings/scripts/drawer'
@@ -96,8 +96,9 @@ export default {
       return `${this.modelAction.display_name} ${this.resourceTitle}`
     },
     resourceTitle () {
-      if (this.model.primary_key in this.resource) {
-        return `${singularize(this.model.display_name)} #${this.resource[this.model.primary_key]}`
+      const pkColumns = primaryKeyColumns(this.model)
+      if (pkColumns.length && pkColumns.every((pk) => pk in this.resource)) {
+        return `${singularize(this.model.display_name)} #${primaryKeyParam(this.model, this.resource)}`
       } else {
         return singularize(this.model.display_name)
       }

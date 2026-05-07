@@ -72,7 +72,7 @@
 
 <script>
 import InfoCell from './info_cell'
-import { modelNameMap } from '../scripts/schema'
+import { modelNameMap, primaryKeyParam } from '../scripts/schema'
 import ResourceActions from './actions'
 import singularize from 'inflected/src/singularize'
 
@@ -111,7 +111,7 @@ export default {
       return modelNameMap[this.resourceName]
     },
     title () {
-      const primaryKeyValue = this.resource[this.model.primary_key]
+      const primaryKeyValue = primaryKeyParam(this.model, this.resource)
       const isNumber = primaryKeyValue?.toString()?.match(/^\d+$/)
 
       return `${singularize(this.model.display_name)}${isNumber ? ' #' : ': '}${primaryKeyValue}`
@@ -141,7 +141,7 @@ export default {
         this.$router.push({
           name: 'resources',
           params: {
-            fragments: [...this.$route.params.fragments, this.resource[this.model.primary_key]]
+            fragments: [...this.$route.params.fragments, primaryKeyParam(this.model, this.resource)]
           }
         })
       }
