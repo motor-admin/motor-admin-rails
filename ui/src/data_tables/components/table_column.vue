@@ -22,8 +22,8 @@
       >
         <Reference
           v-for="item in row[column.format.association_name]"
-          :key="item[associationColumnModel.primary_key]"
-          :resource-id="item[associationColumnModel.primary_key]"
+          :key="primaryKeyParam(associationColumnModel, item)"
+          :resource-id="primaryKeyParam(associationColumnModel, item)"
           :reference-name="associationColumnModel.name"
           class="me-1 mb-1"
           :show-popover="true"
@@ -58,7 +58,7 @@
 <script>
 import DataCell from 'data_cells/components/data_cell'
 import Reference from 'data_cells/components/reference'
-import { modelNameMap } from 'data_resources/scripts/schema'
+import { modelNameMap, primaryKeyParam } from 'data_resources/scripts/schema'
 import { underscore } from 'utils/scripts/string'
 
 export default {
@@ -105,11 +105,18 @@ export default {
       const referenceModel = modelNameMap[this.column.reference.model_name]
 
       if (referenceModel) {
-        return this.row[this.column.key][referenceModel.primary_key] || this.row[this.column.key]
+        const cellValue = this.row[this.column.key]
+        if (cellValue && typeof cellValue === 'object') {
+          return primaryKeyParam(referenceModel, cellValue) ?? cellValue
+        }
+        return cellValue
       } else {
         return this.row[this.column.key]
       }
     }
+  },
+  methods: {
+    primaryKeyParam
   }
 }
 </script>

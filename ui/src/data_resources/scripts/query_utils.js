@@ -1,8 +1,8 @@
-import { modelNameMap } from '../scripts/schema'
+import { modelNameMap, isPrimaryKeyColumn } from '../scripts/schema'
 
 function selectReadableColumns (model, accessTypes = ['read_only', 'read_write']) {
   return model.columns.map((column) => {
-    return column.column_type !== 'association' && (accessTypes.includes(column.access_type) || model.primary_key === column.name || column.name.endsWith('currency') || column.name.endsWith('_type'))
+    return column.column_type !== 'association' && (accessTypes.includes(column.access_type) || isPrimaryKeyColumn(model, column.name) || column.name.endsWith('currency') || column.name.endsWith('_type'))
       ? column.name
       : null
   }).filter(Boolean).join(',')

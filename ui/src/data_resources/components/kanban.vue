@@ -57,7 +57,7 @@
           >
             <KanbanCard
               v-for="(item, index) in values"
-              :key="item[model.primary_key] || index"
+              :key="primaryKeyParam(model, item) || index"
               :resource="item"
               :resource-name="model.name"
               :reference-popover="false"
@@ -82,7 +82,7 @@
 
 <script>
 import api from 'api'
-import { modelNameMap } from '../scripts/schema'
+import { modelNameMap, primaryKeyParam } from '../scripts/schema'
 import ResourceNavbar from './navbar'
 import KanbanCard from './kanban_card'
 
@@ -300,6 +300,7 @@ export default {
   methods: {
     widthLessThan,
     titleize,
+    primaryKeyParam,
     buildGroupedRows () {
       const options = this.model.preferences.kanban_columns?.length
         ? this.model.preferences.kanban_columns
@@ -353,7 +354,7 @@ export default {
       }
     },
     applyDefaultUpdate (key, item) {
-      return api.put(`data/${this.model.slug}/${item[this.model.primary_key]}`, {
+      return api.put(`data/${this.model.slug}/${primaryKeyParam(this.model, item)}`, {
         data: {
           [this.kanbanColumn.name]: key
         }

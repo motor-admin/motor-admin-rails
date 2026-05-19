@@ -57,8 +57,8 @@
       >
         <Reference
           v-for="item in resource[column.format.association_name]"
-          :key="item[associationColumnModel.primary_key]"
-          :resource-id="item[associationColumnModel.primary_key]"
+          :key="primaryKeyParam(associationColumnModel, item)"
+          :resource-id="primaryKeyParam(associationColumnModel, item)"
           :reference-name="associationColumnModel.name"
           :max-length="referenceSize"
           class="me-1 mb-1"
@@ -141,7 +141,7 @@ import DataCell from 'data_cells/components/data_cell'
 import FormInput from 'data_forms/components/input'
 import Reference from 'data_cells/components/reference'
 import FormListInput from 'data_forms/components/list_input'
-import { modelNameMap } from 'data_resources/scripts/schema'
+import { modelNameMap, primaryKeyParam } from 'data_resources/scripts/schema'
 import { isJsonColumn, buildColumnValidator } from '../scripts/form_utils'
 import { includeParams, fieldsParams } from '../scripts/query_utils'
 import { underscore } from 'utils/scripts/string'
@@ -284,7 +284,10 @@ export default {
       const referenceModel = modelNameMap[this.column.reference.model_name]
 
       if (referenceModel) {
-        return this.value[referenceModel.primary_key] || this.value
+        if (this.value && typeof this.value === 'object') {
+          return primaryKeyParam(referenceModel, this.value) ?? this.value
+        }
+        return this.value
       } else {
         return this.value
       }
@@ -312,6 +315,7 @@ export default {
     }
   },
   methods: {
+    primaryKeyParam,
     copyToClipboard () {
       let promise
 
@@ -351,7 +355,7 @@ export default {
       try {
         this.isLoading = true
 
-        const result = await api.put(`data/${this.model.slug}/${this.resource[this.model.primary_key]}`, this.requestData)
+        const result = await api.put(`data/${this.model.slug}/${primaryKeyParam(this.model, this.resource)}`, this.requestData)
 
         this.isEdit = false
 

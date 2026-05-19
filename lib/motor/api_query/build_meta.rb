@@ -9,8 +9,7 @@ module Motor
         meta = {}
 
         if params[:meta].to_s.include?('count')
-          meta[:count] =
-            rel.limit(nil).offset(nil).reorder(nil).select(rel.klass.arel_table[rel.klass.primary_key]).count
+          meta[:count] = rel.limit(nil).offset(nil).reorder(nil).count(:all)
         end
 
         meta

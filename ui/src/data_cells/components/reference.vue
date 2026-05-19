@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { modelNameMap } from 'data_resources/scripts/schema'
+import { modelNameMap, primaryKeyParam } from 'data_resources/scripts/schema'
 import { truncate } from 'utils/scripts/string'
 
 export default {
@@ -77,7 +77,7 @@ export default {
       return !!this.resourceId.toString().match(/^\d+$/)
     },
     referenceId () {
-      return this.referenceData[this.model.primary_key]
+      return primaryKeyParam(this.model, this.referenceData)
     },
     isCanRead () {
       return this.$can('read', this.model.class_name, this.referenceData)

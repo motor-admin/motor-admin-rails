@@ -148,7 +148,7 @@
 
 <script>
 import api from 'api'
-import { modelNameMap } from '../scripts/schema'
+import { modelNameMap, primaryKeyParam } from '../scripts/schema'
 import singularize from 'inflected/src/singularize'
 
 import InfoCell from './info_cell'
@@ -216,7 +216,7 @@ export default {
   computed: {
     isShowSettings,
     title () {
-      const primaryKeyValue = this.resource[this.model.primary_key]
+      const primaryKeyValue = primaryKeyParam(this.model, this.resource)
       const isNumber = primaryKeyValue?.toString()?.match(/^\d+$/)
 
       return `${singularize(this.model.display_name)}${isNumber ? ' #' : ': '}${primaryKeyValue}`

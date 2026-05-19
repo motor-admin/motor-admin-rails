@@ -73,7 +73,7 @@
 <script>
 import api from 'api'
 import { h } from 'vue'
-import { modelNameMap } from '../scripts/schema'
+import { modelNameMap, primaryKeyParam, primaryKeyColumns } from '../scripts/schema'
 import ResourceForm from './form'
 import FormHeader from 'data_resources/components/form_header'
 import { interpolate, truncate } from 'utils/scripts/string'
@@ -255,7 +255,7 @@ export default {
       })
     },
     methodRequest (resource, action) {
-      return api.put(`data/${this.model.slug}/${resource[this.model.primary_key]}/${action.preferences.method_name}`, {}, {
+      return api.put(`data/${this.model.slug}/${primaryKeyParam(this.model, resource)}/${action.preferences.method_name}`, {}, {
         responseType: 'blob'
       })
     },
@@ -263,7 +263,7 @@ export default {
       return !formsCache[action.preferences.form_id]?.preferences?.default_values_api_path
     },
     removeRequest (resource) {
-      return api.delete(`data/${this.model.slug}/${resource[this.model.primary_key]}`)
+      return api.delete(`data/${this.model.slug}/${primaryKeyParam(this.model, resource)}`)
     },
     applyAction (action) {
       if (action.name === 'edit' && action.action_type === 'default') {
@@ -390,8 +390,9 @@ export default {
       }
     },
     apiRequest (resource, form) {
+      const pkColumns = primaryKeyColumns(this.model)
       const params = {
-        [this.model.name + '_' + this.model.primary_key]: resource[this.model.primary_key],
+        ...Object.fromEntries(pkColumns.map((pk) => [`${this.model.name}_${pk}`, resource[pk]])),
         ...resource
       }
 
@@ -442,7 +443,7 @@ export default {
         withFooterSubmit: true,
         form,
         triggerRequest: resources.length === 1,
-        excludeFields: ['id', `${this.model.name}_${this.model.primary_key}`],
+        excludeFields: ['id', ...primaryKeyColumns(this.model).map((pk) => `${this.model.name}_${pk}`)],
         onSuccess: (data) => {
           this.$emit('finish-action', action.name)
         },
@@ -484,7 +485,7 @@ export default {
         return
       }
 
-      const resourceTitle = `${singularize(this.model.display_name)} #${this.resource[this.model.primary_key]}`
+      const resourceTitle = `${singularize(this.model.display_name)} #${primaryKeyParam(this.model, this.resource)}`
 
       this.$Drawer.open(ResourceForm, {
         resource: this.resource,

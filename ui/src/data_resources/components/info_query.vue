@@ -94,8 +94,10 @@ export default {
       return this.model.tabs.find((t) => t.name === 'details')
     },
     queryVariables () {
+      const primaryPkColumn = Array.isArray(this.model.primary_key) ? this.model.primary_key[0] : this.model.primary_key
+
       return {
-        [`${this.resourceName}_id`]: this.resourceId,
+        [`${this.resourceName}_id`]: this.resource[primaryPkColumn] ?? this.resourceId,
         ...this.resource
       }
     },

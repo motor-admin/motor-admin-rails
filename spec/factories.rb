@@ -27,4 +27,10 @@ FactoryBot.define do
     sequence(:kind) { Customer::KINDS.sample }
     sequence(:reputation) { (20..90).to_a.sample }
   end
+
+  factory :inventory do
+    product
+    sequence(:warehouse_code) { |i| "WH#{format('%03d', i)}" }
+    sequence(:quantity) { (0..500).to_a.sample }
+  end
 end
