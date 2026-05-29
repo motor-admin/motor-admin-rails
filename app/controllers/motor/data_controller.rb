@@ -28,15 +28,24 @@ module Motor
 
     def create
       if @associated_resource
-        if @resource_class.reflections[params[:association]].through_reflection?
-          @associated_resource.save!
+        reflection = @resource_class.reflections[params[:association]]
 
-          @resource = @associated_resource
-        else
-          @resource.public_send(params[:association].to_sym).create!(resource_params) do |resource|
-            @resource = resource
+        # Build the record through the configured model so that auditing
+        # (enabled on the configured model, not on the raw association class)
+        # is applied to nested/association creates as well.
+        associated_model = Motor::Resources::FetchConfiguredModel.call(
+          reflection.klass,
+          cache_key: Motor::Resource.maximum(:updated_at)
+        )
+
+        @resource =
+          if reflection.through_reflection?
+            @associated_resource.becomes(associated_model)
+          else
+            @resource.public_send(params[:association].to_sym).new(resource_params).becomes(associated_model)
           end
-        end
+
+        @resource.save!
       else
         @resource.save!
       end
