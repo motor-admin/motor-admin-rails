@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.6'
 
-  spec.add_dependency 'ar_lazy_preload', '~> 1.0'
+  spec.add_dependency 'ar_lazy_preload', '>= 1.0', '< 3.0'
   spec.add_dependency 'audited', '~> 5.0'
   spec.add_dependency 'cancancan', '~> 3.0'
   spec.add_dependency 'fugit', '~> 1.0'
