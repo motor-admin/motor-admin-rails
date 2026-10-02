@@ -42,7 +42,7 @@ module Motor
         { version: Motor::VERSION,
           current_user: serialize_current_user(current_user),
           current_rules: current_ability.serialized_rules,
-          audits_count: Motor::Audit.count,
+          audits_count: Motor::Audit.limit(20).count,
           i18n: i18n_data,
           base_path: Motor::Admin.routes.url_helpers.motor_path,
           cable_path: Motor::Admin.routes.url_helpers.try(:motor_cable_path),
