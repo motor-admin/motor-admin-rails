@@ -18,7 +18,11 @@ module Motor
 
     # rubocop:disable Metrics/AbcSize
     def respond_with_result
-      response = Motor::ApiConfigs.run(find_or_initialize_api_config,
+      api_config = find_or_initialize_api_config
+
+      authorize!(api_config.new_record? ? :create : :read, api_config)
+
+      response = Motor::ApiConfigs.run(api_config,
                                        method: request_params[:method],
                                        path: request_params[:path],
                                        body: request_params[:body],

@@ -13,7 +13,11 @@ module Motor
     private
 
     def respond_with_result
-      response = Motor::ApiConfigs.run_grapql(find_or_initialize_api_config,
+      api_config = find_or_initialize_api_config
+
+      authorize!(api_config.new_record? ? :create : :read, api_config)
+
+      response = Motor::ApiConfigs.run_grapql(api_config,
                                               query: request_params[:query],
                                               variables: request_params[:variables],
                                               headers: { 'Authorization' => "Bearer #{current_user_jwt}" })
